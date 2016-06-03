@@ -1,0 +1,147 @@
+= Income Proving API Guide
+include::common/config.adoc[]
+
+(uk.gov.digital.ho.proving.income.service)
+
+= API Overview
+
+== Introduction
+This document describes the Income Proving API, a REST service that exchanges JSON over HTTP and exposes information
+relating to an individual's financial status and income. This guide has three main sections:
+
+ . <<API Overview>> - Information, guidance, and conventions that apply across this API, such as access control or the use of HTTP verbs.
+ . <<Resources>> - Details of the resources exposed through this API and the operations available against those resources.
+ . <<Supplementary>> - Supporting information such as contact details and key terms.
+
+For further assistance see the <<Contact>> section.
+
+== Versioning
+This is version 1 of the income proving API. In this version all resource URIs are prefixed with:
+
+`/incomeproving/v1/`
+
+== Schema
+include::common/schema.adoc[]
+
+== HTTP Conventions
+include::common/http-conventions.adoc[]
+
+== Headers
+include::common/headers.adoc[]
+
+== Errors
+include::common/errors.adoc[]
+
+== Hypermedia
+include::common/hypermedia.adoc[]
+
+== Authentication and Authorization
+include::common/auth.adoc[]
+
+'''
+<<<
+
+= Resources
+
+[.lead]
+This API exposes financial status information relating to an individual. The central resource is the
+`Individual`, which represents a person and is typically identified by National Insurance Number. For a given
+`Individual`, this API provides access to a child resource describing details of the individual's financial status, the
+`Financial Status` resource. The API also provides access to the individuals `Income` details.
+
+
+
+== Individual
+
+The Individual resource represents a person, typically identified by their National Insurance Number (NINO).
+
+There are currently no operations for directly accessing the `Individual`.
+
+== Financial Status
+
+`Financial Status` is a child of the `Individual` resource. All operations regarding Financial Status are descendants
+of an identified individual.
+
+=== Find Financial Status of an individual
+
+To get the financial status for a given individual you need to know their NINO, which should be
+provided as part of the URI.
+
+
+==== Example request
+
+include::{snippets}/financial-status/http-request.adoc[]
+
+include::{snippets}/financial-status/curl-request.adoc[]
+
+
+==== Request Parameters
+
+include::{snippets}/financial-status/path-parameters.adoc[]
+
+include::{snippets}/financial-status/request-parameters.adoc[]
+
+
+==== Example of a successful response
+
+include::{snippets}/financial-status/http-response.adoc[]
+
+
+==== Financial Status response content
+
+include::{snippets}/financial-status/response-fields.adoc[]
+
+== Income
+
+`Income` is a child resource of the `Individual` resource. All operations regarding Financial Status are descendants
+of an identified individual.
+
+=== Income payment details
+
+The `Income` resource contains a list of income payment details that have the following structure.
+
+include::{snippets}/income-details-entry/response-fields.adoc[]
+
+=== Find Income details of an individual for a date range
+
+Get a list of the individual's income payment details for a given date range. The response contains a list of income payment details
+and the total of the total of all income payments appearing in the result. Note that the list of income details may be empty,
+and so the total will be 0.
+
+==== Example request
+
+include::{snippets}/income-details-date-range/http-request.adoc[]
+
+include::{snippets}/income-details-date-range/curl-request.adoc[]
+
+
+==== Request Parameters
+
+include::{snippets}/income-details-date-range/path-parameters.adoc[]
+
+include::{snippets}/income-details-date-range/request-parameters.adoc[]
+
+
+==== Example of a successful response
+
+include::{snippets}/income-details-date-range/http-response.adoc[]
+
+==== Example of a successful response where 0 income entries match the query
+
+include::{snippets}/income-details-date-range-empty-list/http-response.adoc[]
+
+==== Income details response content
+
+include::{snippets}/income-details-date-range/response-fields.adoc[]
+
+
+<<<
+= Supplementary
+
+== Support
+include::common/contact.adoc[]
+
+include::common/licence.adoc[]
+
+== Glossary
+include::common/glossary.adoc[]

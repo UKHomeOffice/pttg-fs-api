@@ -1,0 +1,1 @@
+This API does not currently use hypermedia.

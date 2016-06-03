@@ -1,0 +1,12 @@
+=== Request Headers
+
+This API accepts the following headers on all requests. See individual resource documentation for any specific header
+requirements or support.
+
+include::{snippets}/common-headers/request-headers.adoc[]
+
+=== Response Headers
+All responses from this API will include the following headers. See individual resource documentation for any additional
+headers.
+
+include::{snippets}/common-headers/response-headers.adoc[]

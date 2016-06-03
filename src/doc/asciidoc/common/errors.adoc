@@ -1,0 +1,30 @@
+Errors may occur for several reasons. In the event of any error, the correct HTTP status code will be returned.
+See <<HTTP Conventions>>. Where possible, in the event of an error the API will return a response body containing
+further details to help diagnose the error, in JSON format.
+
+=== Client Errors
+
+Requests that are invalid due to missing mandatory parameters or incorrectly formatted request bodies etc, will result
+in an HTTP 400 status code, and a response body that provides further details. For example, when a mandatory parameter
+is missing, a response such as the following example will be provided:
+
+include::{snippets}/missing-parameter-error/http-response.adoc[]
+
+The response body includes the following details:
+
+include::{snippets}/missing-parameter-error/response-fields.adoc[]
+
+=== Detailed Error Codes
+
+Where an error response occurs, one or more of the following error codes may appear and can be used to understand the
+cause of the error.
+
+[caption=]
+.Informational error codes
+[cols="1,3"]
+|===
+| Code | Meaning
+
+| `to do`
+| to do - Pending details of Home Office standard error codes
+|===

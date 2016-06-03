@@ -1,0 +1,73 @@
+=== HTTP verbs
+
+This API tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP verbs.
+
+NOTE: Not all verbs are supported by resources exposed by this API. Refer to individual resources for specific support.
+
+WARNING: This policy is subject to variation in future versions.
+
+[caption=]
+.Usage of HTTP verbs available in this API
+[cols="1,3"]
+|===
+| Verb | Usage
+
+| `HEAD`
+| Can be issued against any resource to get just the HTTP header info.
+
+| `GET`
+| Used to retrieve a resource
+
+| `POST`
+| Used to create a new resource
+
+| `PATCH`
+| Used to update an existing resource with a partial update
+
+| `PUT`
+| Used to replace an existing resource, not allowing partial updates
+
+| `DELETE`
+| Used to delete an existing resource
+|===
+
+
+
+=== HTTP status codes
+
+This API uses standard HTTP status codes and does not override the meaning of any of the status codes. Refer to eg
+https://en.wikipedia.org/wiki/List_of_HTTP_status_codes for explanations of the meaning of standard HTTP status codes.
+
+The status codes listed below are the ones most likely to emerge from any of the resource operations defined in this API.
+Some other status codes may result from infrastructure components between your client and the API server and should be
+treated in accordance with the standard meaning of that status.
+
+The documentation for each resource operation in this API will usually declare the specific status codes that may emerge
+from that operation in addition to this list.
+
+[caption=]
+.Common status codes used across this API
+[cols="1,3"]
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `201 Created`
+| A new resource has been created successfully. The resource's URI is available from the response's
+`Location` header
+
+| `204 No Content`
+| An update to an existing resource has been applied successfully
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information. See <<Errors>>
+
+| `404 Not Found`
+| The requested resource did not exist
+
+| `500 Internal Server Error`
+| A generic error message, given when an unexpected condition was encountered and no more specific message is suitable.
+|===
