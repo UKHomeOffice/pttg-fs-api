@@ -2,10 +2,9 @@ package uk.gov.digital.ho.proving.financialstatus.api
 
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.http.{HttpStatus, ResponseEntity}
-import org.springframework.web.bind.annotation.{ControllerAdvice, RequestMapping, RequestMethod, RestController}
+import org.springframework.web.bind.annotation.{RequestMapping, RequestMethod, RestController}
 
 @RestController
-@ControllerAdvice
 class ScalaPingService {
     @RequestMapping(value = Array("/incomeproving/v1/individual/financialstatus/ping/s"), method = Array(RequestMethod.GET))
     def ping: ResponseEntity[String] = {
