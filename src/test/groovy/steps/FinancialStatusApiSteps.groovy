@@ -13,10 +13,12 @@ import org.openqa.selenium.WebElement
 
 import java.text.SimpleDateFormat
 
+import com.jayway.restassured.response.Response
+
 class FinancialStatusApiSteps {
 
-    @Managed
-    public WebDriver driver;
+    public Response resp
+    String jsonAsString
 
     def String toCamelCase(String s) {
         String allUpper = StringUtils.remove(WordUtils.capitalizeFully(s), " ")
@@ -24,62 +26,78 @@ class FinancialStatusApiSteps {
         camelCase
     }
 
-    def parseDate(String dateString) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy")
-        Date date = sdf.parse(dateString)
-        date
-    }
+    def String getTableData(DataTable arg) {
+        //TODO refactor to reject\identify unrecognised keys
 
-    def sendKeys(WebElement element, String v) {
-        element.clear();
-        if (v != null && v.length() != 0) {
-            element.sendKeys(v);
-        }
-    }
+        Map<String, String> entries = arg.asMap(String.class, String.class)
+        String[] tableKey = entries.keySet()
 
-    private void submitFormWithData(DataTable arg1) {
-        // driver.sleep(delay)
-        Map<String, String> entries = arg1.asMap(String.class, String.class)
-        submitForm(entries, driver);
-        driver.findElement(By.className("button")).click();
-    }
+        for (String s : tableKey) {
 
-    public void submitForm(Map<String, String> entries, WebDriver driver) {
-        entries.each { k, v ->
-            String key = toCamelCase(k)
+            if (s.equalsIgnoreCase("application raised date")) {
+                applicationRaisedDate = entries.get(s)
+            }
+            if (s.equalsIgnoreCase("nino")) {
+                nino = entries.get(s)
+            }
+            if (s.equalsIgnoreCase("dependants")) {
+                dependants = entries.get(s)
+            }
+            if (s.equalsIgnoreCase("From Date")) {
+                fromDate = entries.get(s)
 
-            if (key.endsWith("Date")) {
-                if (v != null && v.length() != 0) {
-                    String day = v.substring(0, v.indexOf("/"))
-                    String month = v.substring(v.indexOf("/") + 1, v.lastIndexOf("/"))
-                    String year = v.substring(v.lastIndexOf("/") + 1)
-
-                    sendKeys(driver.findElement(By.id(key + "Day")), day)
-                    sendKeys(driver.findElement(By.id(key + "Month")), month)
-                    sendKeys(driver.findElement(By.id(key + "Year")), year)
-                } else {
-                    driver.findElement(By.id(key + "Day")).clear()
-                    driver.findElement(By.id(key + "Month")).clear()
-                    driver.findElement(By.id(key + "Year")).clear()
-                }
-            } else {
-                sendKeys(driver.findElement(By.id(key)), v)
+            }
+            if(s.equalsIgnoreCase("To Date")){
+                toDate = entries.get(s)
             }
         }
     }
 
-    public void checkOutput(Map<String, String> entries, WebDriver driver) {
-        entries.each { k, v ->
-            String key = toCamelCase(k)
+    //function to loop through three column table
+    def checkIncome(DataTable table){
 
-            if (key != "outcome") {
-                assert v.equals(driver.findElement(By.id(key)).getText())
+        List<List<String>> rawData = table.raw()
+        def incomes = read(jsonAsString, "incomes")
+        assert(incomes.size() >= rawData.size() -1)
+
+        String total = read(jsonAsString, "total")
+
+        int index =0
+
+        for (List<String> row : rawData) {
+
+            if (!row.get(0).startsWith("Total")) {
+                assert (row.get(0).equals(incomes.get(index).get("payDate")))
+                assert (row.get(1).equals(incomes.get(index).get("employer")))
+                assert (row.get(2).equals(incomes.get(index).get("income")))
             } else {
-                WebElement element = driver.findElement(By.id(key))
-                String cssValue = element.getAttribute("class")
-                assert cssValue.contains("panel-fail") == false
+                assert (row.get(2).equals(total))
+            }
+            index++
+        }
+    }
+
+    /**
+     prerequisites:
+     - BDD key can be transformed to valid jsonpath OR key name has been added to FeatureKeyMapper.java
+     - Date values are in the format yyyy-mm-dd
+     - boolean values are lowercase
+     */
+    public void validateJsonResult(DataTable arg) {
+        Map<String, String> entries = arg.asMap(String.class, String.class);
+        String[] tableKey = entries.keySet();
+
+        for (String key : tableKey) {
+            switch (key) {
+                case "HTTP Status":
+                    assert entries.get(key) == resp.getStatusCode().toString();
+                    break;
+                default:
+                    String jsonPath = FeatureKeyMapper.buildJsonPath(key);
+                    assert entries.get(key) == read(jsonAsString, jsonPath).toString();
             }
         }
     }
+
 
 }
