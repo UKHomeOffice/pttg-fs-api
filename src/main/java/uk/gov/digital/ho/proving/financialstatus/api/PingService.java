@@ -20,7 +20,7 @@ class PingService {
     @RequestMapping(value = "/incomeproving/v1/individual/financialstatus/ping", method = RequestMethod.GET)
     public ResponseEntity<String> ping() {
         LOGGER.info("Ping received");
-        return new ResponseEntity<String>("Pong", HttpStatus.OK);
+        return new ResponseEntity<>("Pong", HttpStatus.OK);
     }
 
 }
