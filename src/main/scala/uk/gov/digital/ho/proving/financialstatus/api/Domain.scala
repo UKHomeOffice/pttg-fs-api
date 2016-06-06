@@ -4,9 +4,11 @@ import java.time.LocalDate
 
 import com.fasterxml.jackson.annotation.{JsonFormat, JsonProperty}
 
+import scala.beans.BeanProperty
+
 case class Account(sortCode: String, number: String)
 
-case class AccountTransaction(@JsonProperty("kjk") @JsonFormat(shape=JsonFormat.Shape.STRING) date: LocalDate,
+case class AccountTransaction(@JsonProperty("kjk") date: LocalDate,
                               description: String,
                               amount: BigDecimal,
                               balance: Option[BigDecimal])

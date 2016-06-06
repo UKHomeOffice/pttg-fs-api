@@ -21,7 +21,7 @@ class ScalaPingService {
         val LOGGER: Logger = LoggerFactory.getLogger(classOf[ScalaPingService])
 
         LOGGER.info("Ping received")
-        //   new ResponseEntity[String](mapper.writeValueAsString(AccountTransaction(LocalDate.now(), "Description", BigDecimal(-100.00), Some(BigDecimal(2323.00)))), HttpStatus.OK)
+        //new ResponseEntity[String](mapper.writeValueAsString(AccountTransaction(LocalDate.now(), "Description", BigDecimal(-100.00), Some(BigDecimal(2323.00)))), HttpStatus.OK)
 
         new ResponseEntity[AccountTransaction]((AccountTransaction(LocalDate.now(), "Description", BigDecimal(-100.00), Some(BigDecimal(2323.00)))), HttpStatus.OK)
     }
