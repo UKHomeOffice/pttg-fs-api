@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 @EnableWebMvc
 class SampleConfig
 
- object ServiceRunner {
+object ServiceRunner {
     def main(args: Array[String]) {
         val ctx: ApplicationContext = SpringApplication.run(classOf[SampleConfig])
         val dispatcherServlet: DispatcherServlet = ctx.getBean("dispatcherServlet").asInstanceOf[DispatcherServlet]
