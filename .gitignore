@@ -10,4 +10,4 @@ build
 runtime
 *.log
 *.iml
-
+*.sc
