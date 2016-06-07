@@ -17,7 +17,7 @@ class TransactionService {
   )
   def transactions = {
     val LOGGER: Logger = LoggerFactory.getLogger(classOf[TransactionService])
-    LOGGER.info("Ping received")
+    LOGGER.info("transactions request received")
     new ResponseEntity[TransactionsResponse](
       TransactionsResponse(Account("12-34-56", "878787878"), AccountTransaction(LocalDate.now(), "Description",
         BigDecimal(-100.00, MathContext.DECIMAL64),
@@ -27,4 +27,3 @@ class TransactionService {
     )
   }
 }
-
