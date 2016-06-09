@@ -2,9 +2,12 @@ package uk.gov.digital.ho.proving.financialstatus.api
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include
+import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBalance, AccountDailyBalanceCheck}
 
-case class ResponseStatus(code: String, message: String)
+import scala.beans.BeanProperty
 
-class BaseResponse(status: ResponseStatus = null)
+case class StatusResponse(code: String, message: String)
 
-case class TransactionsResponse(account: Account, @JsonInclude(Include.NON_NULL) transactions: AccountTransaction, @JsonInclude(Include.NON_NULL) status: ResponseStatus) extends BaseResponse(status)
+class BaseResponse(status: StatusResponse = null)
+
+case class AccountDailyBalanceCheckResponse(account: Account, @JsonInclude(Include.NON_NULL) dailyBalanceCheck: AccountDailyBalanceCheck, @JsonInclude(Include.NON_NULL) status: StatusResponse) extends BaseResponse(status)

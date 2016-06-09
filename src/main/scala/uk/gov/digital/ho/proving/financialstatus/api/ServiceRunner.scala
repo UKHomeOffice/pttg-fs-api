@@ -8,11 +8,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
 @SpringBootApplication
 @EnableWebMvc
-class SampleConfig
+class ServerConfig
 
 object ServiceRunner {
   def main(args: Array[String]) {
-    val ctx: ApplicationContext = SpringApplication.run(classOf[SampleConfig])
+    val ctx: ApplicationContext = SpringApplication.run(classOf[ServerConfig])
     val dispatcherServlet: DispatcherServlet = ctx.getBean("dispatcherServlet").asInstanceOf[DispatcherServlet]
     dispatcherServlet.setThrowExceptionIfNoHandlerFound(true)
   }
