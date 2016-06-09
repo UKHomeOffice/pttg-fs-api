@@ -21,9 +21,10 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
       | HTTP Status               | 200        |
       | Financial Requirement met | true       |
       | Unique Reference          | value      |
-      | Total Fund required       | 2530.00    |
-      | Period Checked to         | 2016-05-04 |
+      | Minimum Balance           | 2530.00    |
+      | Minimum Balance Date      | 2016-05-04 |
       | Application raised date   | 2016-06-01 |
+      | Assessment Start Date     | 2016-05-04 |
 
   Scenario: Brian is general student and has sufficient financial funds
 
@@ -43,7 +44,9 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
       | HTTP Status               | 200        |
       | Financial Requirement met | true       |
       | Unique Reference          | value      |
-      | Total Fund required       | 2030.00    |
-      | Period Checked to         | 2016-06-06 |
+      | Minimum Balance           | 2030.00    |
+      | Minimum Balance Date      | 2016-06-06 |
       | Application raised date   | 2016-07-04 |
+      | Assessment Start Date     | 2016-06-06 |
+
 
