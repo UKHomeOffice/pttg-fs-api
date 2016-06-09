@@ -69,6 +69,7 @@ class FinancialStatusApiSteps {
     }
 
 
+
     public void validateJsonResult(DataTable arg) {
         Map<String, String> entries = arg.asMap(String.class, String.class);
         String[] tableKey = entries.keySet();
@@ -81,27 +82,27 @@ class FinancialStatusApiSteps {
                 default:
                     String jsonPath = FeatureKeyMapper.buildJsonPath(key);
                     assert entries.get(key) == read(jsonAsString, jsonPath).toString();
+
             }
         }
     }
 
-
-    @Given("^A service is consuming the Income Proving TM Family API\$")
-    public void a_service_is_consuming_the_Income_Proving_TM_Family_API() throws Throwable {
+    @Given("^a Service is consuming Financial Status API\$")
+    public void a_Service_is_consuming_Financial_Status_API() {
 
     }
 
-    @When("^the Income Proving TM Family API is invoked with the following:\$")
-    public void the_Income_Proving_TM_Family_API_is_invoked_with_the_following(DataTable arg1) throws Throwable {
+    @When("^the Financial Status API is invoked with the following:\$")
+    public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
         resp = get("http://localhost:8080/incomeproving/v1/individual/threshold/")
         jsonAsString = resp.asString()
 
         println ("Family Case Worker API: "+ jsonAsString)
     }
 
-    @Then("^The Income Proving TM Family API provides the following result:\$")
-    public void the_Income_Proving_TM_Family_API_provides_the_following_result(DataTable arg1) throws Throwable {
-      validateJsonResult(arg1)
+    @Then("^The Financial Status API provides the following results:\$")
+    public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
+        validateJsonResult(arg1)
     }
 
 
