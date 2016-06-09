@@ -21,8 +21,6 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
       | HTTP Status               | 200        |
       | Financial Requirement met | true       |
       | Unique Reference          | value      |
-      | Minimum Balance           | 2530.00    |
-      | Minimum Balance Date      | 2016-05-04 |
       | Application raised date   | 2016-06-01 |
       | Assessment Start Date     | 2016-05-04 |
 
@@ -44,8 +42,6 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
       | HTTP Status               | 200        |
       | Financial Requirement met | true       |
       | Unique Reference          | value      |
-      | Minimum Balance           | 2030.00    |
-      | Minimum Balance Date      | 2016-06-06 |
       | Application raised date   | 2016-07-04 |
       | Assessment Start Date     | 2016-06-06 |
 
