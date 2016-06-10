@@ -1,8 +1,6 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import groovy.json.JsonSlurper
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -11,7 +9,6 @@ import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.acl.BarclaysBankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
-import uk.gov.digital.ho.proving.financialstatus.domain.AccountDailyBalance
 
 import java.time.LocalDate
 
@@ -38,10 +35,9 @@ class DailyBalanceServiceSpec extends Specification {
 
     def "daily balance threshold check pass"() {
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> randomDailyBalances(LocalDate.of(2016,6,9), 28, 2700, 3500)
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomDailyBalances(LocalDate.of(2016,6,9), 28, 2560.23, 3500, true, false)
 
         when:
-
         def response = mockMvc.perform(
             get("/incomeproving/v1/individual/dailybalancecheck")
                 .param("accountNumber", "12345678")
@@ -53,22 +49,33 @@ class DailyBalanceServiceSpec extends Specification {
 
         then:
         response.andDo(MockMvcResultHandlers.print())
+        response.andExpect(status().isOk())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.dailyBalanceCheck.minimumAboveThreshold == true
 
+    }
+
+
+    def "daily balance threshold check fail"() {
+
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomDailyBalances(LocalDate.of(2016,6,9), 28, 2560.22, 3500, true, false)
+
+        when:
+        def response = mockMvc.perform(
+            get("/incomeproving/v1/individual/dailybalancecheck")
+                .param("accountNumber", "12345678")
+                .param("sortCode", "12-34-56")
+                .param("applicationRaisedDate", "2016-06-09")
+                .param("threshold", "2560.23")
+                .param("days", "28")
+        )
+
+        then:
+        response.andDo(MockMvcResultHandlers.print())
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.dailyBalanceCheck.minimumAboveThreshold == false
 
-    }
-
-    def randomDailyBalances(LocalDate date, Integer num, Float lower, Float upper) {
-
-        def randomBalances = []
-        (0..num).each {
-            def randomValue = (new java.util.Random().nextFloat() * (upper - lower)) + lower
-            randomBalances << new AccountDailyBalance(date.minusDays(it), new scala.math.BigDecimal(randomValue))
-        }
-
-        println("randomBalances: " + randomBalances)
     }
 
 

@@ -30,6 +30,15 @@ test {
     exclude 'acceptance/**'
 }
 
+compileGroovy.dependsOn "compileScala"
+compileTestGroovy.dependsOn "compileTestScala"
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.with {
+        force = true
+    }
+}
+
 task accept(type: Test) {
     include 'acceptance/**'
 }
