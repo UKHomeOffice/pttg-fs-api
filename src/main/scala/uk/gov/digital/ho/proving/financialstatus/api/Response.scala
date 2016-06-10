@@ -11,3 +11,5 @@ case class StatusResponse(code: String, message: String)
 class BaseResponse(status: StatusResponse = null)
 
 case class AccountDailyBalanceCheckResponse(account: Account, @JsonInclude(Include.NON_NULL) dailyBalanceCheck: AccountDailyBalanceCheck, @JsonInclude(Include.NON_NULL) status: StatusResponse) extends BaseResponse(status)
+
+case class ThresholdResponse(threshold: BigDecimal,  @JsonInclude(Include.NON_NULL) status: StatusResponse) extends BaseResponse
