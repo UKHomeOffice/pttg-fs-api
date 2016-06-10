@@ -11,11 +11,7 @@ class AccountStatusChecker(bankService: BankService) {
     val balances = bankService.fetchAccountDailyBalances(account, applicationRaisedDate, assessmentStartDate)
     val minimumBalance = balances.sortWith((balance1, balance2) => balance1.balance < balance2.balance).head
 
-    if (minimumBalance.balance < threshold) {
-      AccountDailyBalanceCheck(applicationRaisedDate, assessmentStartDate, threshold, false)
-    } else {
-      AccountDailyBalanceCheck(applicationRaisedDate, assessmentStartDate, threshold, true)
-    }
+    AccountDailyBalanceCheck(applicationRaisedDate, assessmentStartDate, threshold, minimumBalance.balance >= threshold)
 
   }
 
