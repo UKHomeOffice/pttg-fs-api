@@ -23,7 +23,7 @@ class BankServiceTest extends Specification {
         def response = accountStatusChecker.checkDailyBalancesAreAboveThreshold(account, LocalDate.of(2016, 6, 9), 28, threshold)
 
         then:
-        response.minimumAboveThreshold() == true
+        response.minimumAboveThreshold()
         response.applicationRaisedDate().equals(LocalDate.of(2016, 6, 9))
         response.assessmentStartDate().equals(LocalDate.of(2016, 5, 12))
         response.threshold() == threshold
@@ -41,7 +41,7 @@ class BankServiceTest extends Specification {
         def response = accountStatusChecker.checkDailyBalancesAreAboveThreshold(account, LocalDate.of(2016, 6, 9), 28, threshold)
 
         then:
-        response.minimumAboveThreshold() == false
+        !response.minimumAboveThreshold()
         response.applicationRaisedDate().equals(LocalDate.of(2016, 6, 9))
         response.assessmentStartDate().equals(LocalDate.of(2016, 5, 12))
         response.threshold() == threshold
