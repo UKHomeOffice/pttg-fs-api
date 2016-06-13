@@ -6,11 +6,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.{HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation.{ControllerAdvice, RequestMapping, RequestMethod, RestController}
 
-//@RestController
-//@ControllerAdvice object ThresholdService {
-//
-//}
-
 @RestController
 @ControllerAdvice class ThresholdService {
   @RequestMapping(value = Array("/incomeproving/v1/individual/threshold"), method = Array(RequestMethod.GET))

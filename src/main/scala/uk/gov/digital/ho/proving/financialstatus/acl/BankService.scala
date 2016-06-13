@@ -2,10 +2,17 @@ package uk.gov.digital.ho.proving.financialstatus.acl
 
 import java.time.LocalDate
 
-import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBalance}
+import com.fasterxml.jackson.databind.ObjectMapper
+import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBalance, AccountDailyBalances}
 
 trait BankService {
 
-  def fetchAccountDailyBalances(account: Account, fromDate: LocalDate, toDate: LocalDate): Seq[AccountDailyBalance]
+  val bankName: String
+  val bankUrl: String
+  val objectMapper: ObjectMapper
+
+  def fetchAccountDailyBalances(account: Account, fromDate: LocalDate, toDate: LocalDate): AccountDailyBalances
+
+  def buildUrl(account: Account, fromDate: LocalDate, toDate: LocalDate): String
 
 }

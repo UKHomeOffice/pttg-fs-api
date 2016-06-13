@@ -104,6 +104,8 @@ dependencies {
     compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.7.4'
     compile 'org.scala-lang:scala-library:2.11.8'
 
+    compile 'org.apache.httpcomponents:httpclient:4.5.2'
+
     testCompile 'org.scala-lang:scala-library:2.11.8'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'

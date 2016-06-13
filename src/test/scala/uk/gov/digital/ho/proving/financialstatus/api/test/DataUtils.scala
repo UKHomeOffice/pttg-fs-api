@@ -2,7 +2,7 @@ package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import java.time.LocalDate
 
-import uk.gov.digital.ho.proving.financialstatus.domain.AccountDailyBalance
+import uk.gov.digital.ho.proving.financialstatus.domain.{AccountDailyBalance, AccountDailyBalances}
 
 import scala.util.Random.{nextBoolean, nextFloat, nextInt}
 
@@ -26,6 +26,18 @@ object DataUtils {
       AccountDailyBalance(date.minusDays(index), BigDecimal(randomValue.toDouble).setScale(2, BigDecimal.RoundingMode.HALF_UP))
     }
     randomValues
+  }
+
+  def randomBankResponseOK(date: LocalDate, num: Int, lower: Float, upper: Float, forceLower: Boolean = false, forceUpper: Boolean = false) = {
+    val dailyBalances = randomDailyBalances(date, num, lower, upper, forceLower, forceUpper)
+    AccountDailyBalances(dailyBalances)
+  }
+
+  def randomBankResponseNonConsecutiveDates(date: LocalDate, num: Int, lower: Float, upper: Float, forceLower: Boolean = false, forceUpper: Boolean = false) = {
+    val dailyBalances = randomDailyBalances(date, num, lower, upper, forceLower, forceUpper)
+    val variance = if (nextBoolean()) 1 else 2
+    dailyBalances.map( dailyBalance => AccountDailyBalance(dailyBalance.date.plusDays(variance), dailyBalance.balance))
+    AccountDailyBalances(dailyBalances)
   }
 
 }
