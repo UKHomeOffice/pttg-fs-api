@@ -116,6 +116,7 @@ class FinancialStatusApiSteps {
         while (jasonKey.hasNext()) {
             String Keys = jasonKey.next()
             if (Keys == "status") {
+                assert entries.get("HTTP Status") == resp.getStatusCode().toString();
                 break;
             }
             println "--------->" + Keys
@@ -127,7 +128,6 @@ class FinancialStatusApiSteps {
             JSONObject innerJson = new JSONObject(jsonValue);
             Iterator<String> innerJasonKey = innerJson.keys()
 
-
             while (innerJasonKey.hasNext()) {
                 String keys2 = innerJasonKey.next()
                 println "***********" + keys2
@@ -138,15 +138,11 @@ class FinancialStatusApiSteps {
                     println ""+ entries.get(s)
                    assert entries.containsValue(innerjsonValue)
 
-
                 }
 
             }
 
-
         }
-
-
     }
 
     @Given("^a Service is consuming Financial Status API\$")
@@ -158,9 +154,9 @@ class FinancialStatusApiSteps {
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
 
         getTableData(arg1)
-        resp = get("http://localhost:8080/incomeproving/v1/individual/dailybalancecheck?accountNumber={accountNumber}&sortCode={sortCode}&applicationRaisedDate={applicationRaisedDate}&threshold={threshold}&days={days}",accountNumber,sortCode, applicationRaisedDate, threshold, days)
+        resp = get("http://localhost:8080/incomeproving/v1/individual/dailybalancecheck/{sortCode}/{accountNumber}?applicationRaisedDate={applicationRaisedDate}&threshold={threshold}&days={days}",accountNumber,sortCode, applicationRaisedDate, threshold, days)
         jsonAsString = resp.asString()
-
+//"http://localhost:8081/incomeproving/v1/individual/{nino}/financialstatus?applicationRaisedDate={applicationRaisedDate}&dependants={dependants}", nino, applicationRaisedDate, dependants
         println ("Family Case Worker API: "+ jsonAsString)
     }
 
