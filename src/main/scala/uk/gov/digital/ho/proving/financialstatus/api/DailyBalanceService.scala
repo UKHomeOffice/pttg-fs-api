@@ -28,7 +28,7 @@ class DailyBalanceService @Autowired()(barclaysBankService: BarclaysBankService)
     val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
     LOGGER.info("dailybalancecheck request received")
 
-    val bankAccount = Account(sortCode, accountNumber)
+    val bankAccount = Account(sortCode.replace("-",""), accountNumber)
     val accountStatusChecker = new AccountStatusChecker(barclaysBankService)
     val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveThreshold(bankAccount, LocalDate.parse(applicationRaisedDate, DateTimeFormatter.ofPattern("yyyy-M-d")), days, BigDecimal(threshold))
 
