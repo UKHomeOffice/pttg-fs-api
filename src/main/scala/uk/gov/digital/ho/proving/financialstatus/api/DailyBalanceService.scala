@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.{HttpStatus, MediaType, ResponseEntity}
-import org.springframework.web.bind.annotation.{RequestMapping, RequestMethod, RequestParam, RestController}
+import org.springframework.web.bind.annotation._
 import uk.gov.digital.ho.proving.financialstatus.acl.BarclaysBankService
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker}
 
@@ -16,11 +16,11 @@ class DailyBalanceService @Autowired()(barclaysBankService: BarclaysBankService)
 
   // TODO get spring to handle LocalDate objects
 
-  @RequestMapping(value = Array("/incomeproving/v1/individual/dailybalancecheck"),
+  @RequestMapping(value = Array("/incomeproving/v1/individual/dailybalancecheck/{sortCode}/{accountNumber}"),
     method = Array(RequestMethod.GET),
     produces = Array(MediaType.APPLICATION_JSON_VALUE))
-  def dailyBalanceCheck(@RequestParam(value = "accountNumber") accountNumber: String,
-                        @RequestParam(value = "sortCode") sortCode: String,
+  def dailyBalanceCheck(@PathVariable(value = "sortCode") sortCode: String,
+                        @PathVariable(value = "accountNumber") accountNumber: String,
                         @RequestParam(value = "threshold") threshold: JBigDecimal,
                         @RequestParam(value = "applicationRaisedDate") applicationRaisedDate: String,
                         @RequestParam(value = "days") days: Int) = {

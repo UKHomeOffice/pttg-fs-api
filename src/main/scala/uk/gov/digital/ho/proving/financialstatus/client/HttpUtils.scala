@@ -3,6 +3,8 @@ package uk.gov.digital.ho.proving.financialstatus.client
 import org.springframework.http.{HttpEntity, HttpHeaders, HttpMethod, HttpStatus}
 import org.springframework.web.client.RestTemplate
 
+import scala.util.Try
+
 case class HttpClientResponse(httpStatus: HttpStatus, body: String)
 
 object HttpUtils {

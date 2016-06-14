@@ -39,9 +39,7 @@ class DailyBalanceServiceSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get("/incomeproving/v1/individual/dailybalancecheck")
-                .param("accountNumber", "12345678")
-                .param("sortCode", "12-34-56")
+            get("/incomeproving/v1/individual/dailybalancecheck/12-34-56/12345678")
                 .param("applicationRaisedDate", "2016-06-09")
                 .param("threshold", "2560.23")
                 .param("days", "28")
@@ -62,9 +60,7 @@ class DailyBalanceServiceSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get("/incomeproving/v1/individual/dailybalancecheck")
-                .param("accountNumber", "12345678")
-                .param("sortCode", "12-34-56")
+            get("/incomeproving/v1/individual/dailybalancecheck/12-34-56/12345678")
                 .param("applicationRaisedDate", "2016-06-09")
                 .param("threshold", "2560.23")
                 .param("days", "28")
