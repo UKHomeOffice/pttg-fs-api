@@ -11,7 +11,7 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
     Given a Service is consuming Financial Status API
     When the Financial Status API is invoked with the following:
       | Account number          | 01010312   |
-      | Sort code               | 12-34-56   |
+      | Sort code               | 123456   |
       | Threshold               | 2530.00    |
       | Application Raised Date | 2016-06-01 |
       | Days                    | 28         |
