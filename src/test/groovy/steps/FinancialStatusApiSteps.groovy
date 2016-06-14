@@ -154,9 +154,9 @@ class FinancialStatusApiSteps {
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
 
         getTableData(arg1)
-        resp = get("http://localhost:8080/incomeproving/v1/individual/dailybalancecheck/{sortCode}/{accountNumber}?applicationRaisedDate={applicationRaisedDate}&threshold={threshold}&days={days}",accountNumber,sortCode, applicationRaisedDate, threshold, days)
+        resp = get("http://localhost:8080/incomeproving/v1/individual/dailybalancecheck/{sortCode}/{accountNumber}?applicationRaisedDate={applicationRaisedDate}&threshold={threshold}&days={days}",sortCode, accountNumber, applicationRaisedDate, threshold, days)
         jsonAsString = resp.asString()
-//"http://localhost:8081/incomeproving/v1/individual/{nino}/financialstatus?applicationRaisedDate={applicationRaisedDate}&dependants={dependants}", nino, applicationRaisedDate, dependants
+
         println ("Family Case Worker API: "+ jsonAsString)
     }
 
