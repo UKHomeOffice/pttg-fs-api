@@ -12,17 +12,17 @@ import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBa
 class BarclaysBankService @Autowired()(val objectMapper: ObjectMapper) extends BankService {
 
   val bankName = "Barclays"
-  val bankUrl = "http://localhost:8082/financialstatus/v1/transactions"
+  val bankUrl = "http://localhost:8082/financialstatus/v1"
 
   private def bankResponseMapper(bankResponse: BankResponse): AccountDailyBalances =
     AccountDailyBalances(
-      bankResponse.dailyBalances.transactions.map {
+      bankResponse.dailyBalances.balanceRecords.map {
         balance => AccountDailyBalance(balance.date, balance.balance)
       }
     )
 
   def buildUrl(account: Account, fromDate: LocalDate, toDate: LocalDate) =
-    s"""$bankUrl/${account.sortCode}/${account.accountNumber}?fromDate=$fromDate&toDate=$toDate"""
+    s"""$bankUrl/${account.sortCode}/${account.accountNumber}/balances?fromDate=$fromDate&toDate=$toDate"""
 
   def fetchAccountDailyBalances(account: Account, fromDate: LocalDate, toDate: LocalDate) = {
 
