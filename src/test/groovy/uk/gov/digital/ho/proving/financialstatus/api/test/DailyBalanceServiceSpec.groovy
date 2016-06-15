@@ -35,7 +35,8 @@ class DailyBalanceServiceSpec extends Specification {
 
     def "daily balance threshold check pass"() {
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomBankResponseOK(LocalDate.of(2016,6,9), 28, 2560.23, 3500, true, false)
+        given:
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(LocalDate.of(2016,6,9), 28, 2560.23, 3500, true, false)
 
         when:
         def response = mockMvc.perform(
@@ -56,7 +57,9 @@ class DailyBalanceServiceSpec extends Specification {
 
     def "daily balance threshold check fail (minimum below threshold)"() {
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomBankResponseOK(LocalDate.of(2016,6,9), 28, 2560.22, 3500, true, false)
+
+        given:
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(LocalDate.of(2016,6,9), 28, 2560.22, 3500, true, false)
 
         when:
         def response = mockMvc.perform(
@@ -76,7 +79,8 @@ class DailyBalanceServiceSpec extends Specification {
 
     def "daily balance threshold check fail (not enough entries)"() {
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomBankResponseOK(LocalDate.of(2016,6,9), 26, 2560.23, 3500, true, false)
+        given:
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(LocalDate.of(2016,6,9), 26, 2560.23, 3500, true, false)
 
         when:
         def response = mockMvc.perform(
