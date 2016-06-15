@@ -54,9 +54,29 @@ class DailyBalanceServiceSpec extends Specification {
     }
 
 
-    def "daily balance threshold check fail"() {
+    def "daily balance threshold check fail (minimum below threshold)"() {
 
         1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomBankResponseOK(LocalDate.of(2016,6,9), 28, 2560.22, 3500, true, false)
+
+        when:
+        def response = mockMvc.perform(
+            get("/incomeproving/v1/individual/dailybalancecheck/12-34-56/12345678")
+                .param("applicationRaisedDate", "2016-06-09")
+                .param("threshold", "2560.23")
+                .param("days", "28")
+        )
+
+        then:
+        response.andDo(MockMvcResultHandlers.print())
+        response.andExpect(status().isOk())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.dailyBalanceCheck.minimumAboveThreshold == false
+
+    }
+
+    def "daily balance threshold check fail (not enough entries)"() {
+
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomBankResponseOK(LocalDate.of(2016,6,9), 26, 2560.23, 3500, true, false)
 
         when:
         def response = mockMvc.perform(
