@@ -2,23 +2,33 @@ package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import java.time.LocalDate
 
+import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.domain.{AccountDailyBalance, AccountDailyBalances}
 
+import scala.beans.BeanProperty
 import scala.util.Random.{nextBoolean, nextFloat, nextInt}
 
 object DataUtils {
 
-  private def getLowerandUpperIndexValues(num: Int) =
+  case class StubBalance(date: LocalDate, balance: BigDecimal)
+  case class StubAccount(firstname: String, surname: String, sortCode: String, accountNumber: String, balances: Seq[StubBalance])
+
+  private val serviceConfig = new ServiceConfiguration()
+  private val converter = serviceConfig.mappingJackson2HttpMessageConverter
+  private val mapper = serviceConfig.requestMappingHandlerAdapter
+  private val objectMapper = serviceConfig.objectMapper
+
+  private def generateLowerandUpperIndexValues(num: Int) =
     if (nextBoolean) {
       (nextInt(num / 2), nextInt(num / 2) * 2)
     } else {
       (nextInt(num / 2) * 2, nextInt(num / 2))
     }
 
-  def randomDailyBalances(date: LocalDate, num: Int, lower: Float, upper: Float, forceLower: Boolean = false, forceUpper: Boolean = false) = {
-    val (lowerIndex, upperIndex) = getLowerandUpperIndexValues(num)
+  def generateRandomDailyBalances(date: LocalDate, num: Int, lower: Float, upper: Float, forceLower: Boolean = false, forceUpper: Boolean = false) = {
+    val (lowerIndex, upperIndex) = generateLowerandUpperIndexValues(num)
 
-    val randomValues = 0 to num map { index =>
+    val randomValues = 0 until num map { index =>
       val randomValue = if (forceLower && index == lowerIndex) lower
       else if (forceUpper && index == upperIndex) upper
       else (nextFloat * (upper - lower)) + lower
@@ -28,15 +38,15 @@ object DataUtils {
     randomValues
   }
 
-  def randomBankResponseOK(date: LocalDate, num: Int, lower: Float, upper: Float, forceLower: Boolean = false, forceUpper: Boolean = false) = {
-    val dailyBalances = randomDailyBalances(date, num, lower, upper, forceLower, forceUpper)
+  def generateRandomBankResponseOK(date: LocalDate, num: Int, lower: Float, upper: Float, forceLower: Boolean = false, forceUpper: Boolean = false) = {
+    val dailyBalances = generateRandomDailyBalances(date, num, lower, upper, forceLower, forceUpper)
     AccountDailyBalances(dailyBalances)
   }
 
-  def randomBankResponseNonConsecutiveDates(date: LocalDate, num: Int, lower: Float, upper: Float, forceLower: Boolean = false, forceUpper: Boolean = false) = {
-    val dailyBalances = randomDailyBalances(date, num, lower, upper, forceLower, forceUpper)
+  def generateRandomBankResponseNonConsecutiveDates(date: LocalDate, num: Int, lower: Float, upper: Float, forceLower: Boolean = false, forceUpper: Boolean = false) = {
+    val dailyBalances = generateRandomDailyBalances(date, num, lower, upper, forceLower, forceUpper)
     val variance = if (nextBoolean()) 1 else 2
-    dailyBalances.map( dailyBalance => AccountDailyBalance(dailyBalance.date.plusDays(variance), dailyBalance.balance))
+    dailyBalances.map(dailyBalance => AccountDailyBalance(dailyBalance.date.plusDays(variance), dailyBalance.balance))
     AccountDailyBalances(dailyBalances)
   }
 

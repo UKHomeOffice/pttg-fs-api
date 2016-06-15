@@ -16,7 +16,7 @@ class AccountStatusChecker(bankService: BankService) {
     val assessmentStartDate = applicationRaisedDate.minusDays(days)
     val accountDailyBalances = bankService.fetchAccountDailyBalances(account, assessmentStartDate, applicationRaisedDate)
 
-    val thresholdPassed = accountDailyBalances.balances.length >= days &&
+    val thresholdPassed = accountDailyBalances.balances.length == days &&
       areDatesConsecutive(accountDailyBalances) &&
       !accountDailyBalances.balances.exists(balance => balance.balance < threshold)
 
