@@ -30,7 +30,12 @@ class DailyBalanceService @Autowired()(barclaysBankService: BarclaysBankService)
 
     val bankAccount = Account(sortCode.replace("-",""), accountNumber)
     val accountStatusChecker = new AccountStatusChecker(barclaysBankService)
-    val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveThreshold(bankAccount, LocalDate.parse(applicationRaisedDate, DateTimeFormatter.ofPattern("yyyy-M-d")), days, BigDecimal(threshold))
+    val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveThreshold(
+      bankAccount,
+      LocalDate.parse(applicationRaisedDate, DateTimeFormatter.ofPattern("yyyy-M-d")),
+      days,
+      BigDecimal(threshold).setScale(2,BigDecimal.RoundingMode.HALF_UP)
+    )
 
     new ResponseEntity(AccountDailyBalanceCheckResponse(bankAccount, dailyAccountBalanceCheck, StatusResponse("200", "OK")),HttpStatus.OK)
 

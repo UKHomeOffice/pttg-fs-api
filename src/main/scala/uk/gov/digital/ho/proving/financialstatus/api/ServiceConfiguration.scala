@@ -3,7 +3,8 @@ package uk.gov.digital.ho.proving.financialstatus.api
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper, SerializationFeature}
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
@@ -31,6 +32,12 @@ class ServiceConfiguration{
     mapper.registerModule(javaTimeModule)
     mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
     mapper.enable(SerializationFeature.INDENT_OUTPUT)
+
+    val simpleModule = new SimpleModule
+    val customSerializer = new CustomSerializer()
+    simpleModule.addSerializer(classOf[BigDecimal],customSerializer)
+    mapper.registerModule(simpleModule)
+
     mapper
   }
 
