@@ -15,75 +15,86 @@ class BankServiceTest extends Specification {
     def "Check bankService returns a pass for correct data"() {
 
         given:
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomBankResponseOK(LocalDate.of(2016, 6, 9), 28, 2560.23, 3500, true, false)
+        def account = new Account("12-34-56", "87654321")
+        def minimum = new scala.math.BigDecimal(2560.23)
+        def toDate = LocalDate.of(2016, 6, 9)
+        def fromDate = toDate.minusDays(27)
+
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
 
         when:
-        def account = new Account("12-34-56", "87654321")
-        def threshold = new scala.math.BigDecimal(2560.23)
-        def response = accountStatusChecker.checkDailyBalancesAreAboveThreshold(account, LocalDate.of(2016, 6, 9), 28, threshold)
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum)
 
         then:
-        response.minimumAboveThreshold()
-        response.applicationRaisedDate().equals(LocalDate.of(2016, 6, 9))
-        response.assessmentStartDate().equals(LocalDate.of(2016, 5, 12))
-        response.threshold() == threshold
+        response.pass()
+        response.toDate().equals(LocalDate.of(2016, 6, 9))
+        response.fromDate().equals(LocalDate.of(2016, 5, 13))
+        response.minimum() == minimum
 
     }
 
     def "Check bankService returns a failure for incorrect data"() {
 
         given:
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomBankResponseOK(LocalDate.of(2016, 6, 9), 28, 2060.23, 3500, true, false)
+        def account = new Account("12-34-56", "87654321")
+        def minimum = new scala.math.BigDecimal(2560.23)
+        def toDate = LocalDate.of(2016, 6, 9)
+        def fromDate = toDate.minusDays(27)
+
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
-        def account = new Account("12-34-56", "87654321")
-        def threshold = new scala.math.BigDecimal(2560.23)
-        def response = accountStatusChecker.checkDailyBalancesAreAboveThreshold(account, LocalDate.of(2016, 6, 9), 28, threshold)
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum)
 
         then:
-        !response.minimumAboveThreshold()
-        response.applicationRaisedDate().equals(LocalDate.of(2016, 6, 9))
-        response.assessmentStartDate().equals(LocalDate.of(2016, 5, 12))
-        response.threshold() == threshold
+        !response.pass()
+        response.toDate().equals(LocalDate.of(2016, 6, 9))
+        response.fromDate().equals(LocalDate.of(2016, 5, 13))
+        response.minimum() == minimum
 
     }
 
     def "Check bankService returns a failure for nonconsecutive date"() {
 
         given:
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomBankResponseNonConsecutiveDates(LocalDate.of(2016, 6, 9), 28, 2060.23, 3500, true, false)
+        def account = new Account("12-34-56", "87654321")
+        def minimum = new scala.math.BigDecimal(2560.23)
+        def toDate = LocalDate.of(2016, 6, 9)
+        def fromDate = toDate.minusDays(27)
+
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseNonConsecutiveDates(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
-        def account = new Account("12-34-56", "87654321")
-        def threshold = new scala.math.BigDecimal(2560.23)
-        def response = accountStatusChecker.checkDailyBalancesAreAboveThreshold(account, LocalDate.of(2016, 6, 9), 28, threshold)
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum)
 
         then:
-        !response.minimumAboveThreshold()
-        response.applicationRaisedDate().equals(LocalDate.of(2016, 6, 9))
-        response.assessmentStartDate().equals(LocalDate.of(2016, 5, 12))
-        response.threshold() == threshold
+        !response.pass()
+        response.toDate().equals(LocalDate.of(2016, 6, 9))
+        response.fromDate().equals(LocalDate.of(2016, 5, 13))
+        response.minimum() == minimum
 
     }
 
     def "Check bankService returns a failure for not enough data"() {
 
         given:
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.randomBankResponseOK(LocalDate.of(2016, 6, 9), 27, 2060.23, 3500, true, false)
+        def account = new Account("12-34-56", "87654321")
+        def minimum = new scala.math.BigDecimal(2560.23)
+        def toDate = LocalDate.of(2016, 6, 9)
+        def fromDate = toDate.minusDays(27)
+
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
-        def account = new Account("12-34-56", "87654321")
-        def threshold = new scala.math.BigDecimal(2560.23)
-        def response = accountStatusChecker.checkDailyBalancesAreAboveThreshold(account, LocalDate.of(2016, 6, 9), 28, threshold)
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum)
 
         then:
-        !response.minimumAboveThreshold()
-        response.applicationRaisedDate().equals(LocalDate.of(2016, 6, 9))
-        response.assessmentStartDate().equals(LocalDate.of(2016, 5, 12))
-        response.threshold() == threshold
+        !response.pass()
+        response.toDate().equals(LocalDate.of(2016, 6, 9))
+        response.fromDate().equals(LocalDate.of(2016, 5, 13))
+        response.minimum() == minimum
 
     }
-
 
 
 }
