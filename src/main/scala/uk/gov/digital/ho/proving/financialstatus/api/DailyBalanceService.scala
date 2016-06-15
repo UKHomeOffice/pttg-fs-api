@@ -2,6 +2,7 @@ package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.math.{BigDecimal => JBigDecimal}
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,8 +23,8 @@ class DailyBalanceService @Autowired()(barclaysBankService: BarclaysBankService)
   def dailyBalanceCheck(@PathVariable(value = "sortCode") sortCode: String,
                         @PathVariable(value = "accountNumber") accountNumber: String,
                         @RequestParam(value = "minimum") minimum: JBigDecimal,
-                        @RequestParam(value = "toDate") @DateTimeFormat(pattern="yyyy-M-d") toDate: LocalDate,
-                        @RequestParam(value = "fromDate") @DateTimeFormat(pattern="yyyy-M-d") fromDate: LocalDate) = {
+                        @RequestParam(value = "toDate") toDate: String,
+                        @RequestParam(value = "fromDate") fromDate: String) = {
 
     val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
     LOGGER.info("dailybalancecheck request received")
@@ -31,7 +32,7 @@ class DailyBalanceService @Autowired()(barclaysBankService: BarclaysBankService)
     val bankAccount = Account(sortCode.replace("-", ""), accountNumber)
     val accountStatusChecker = new AccountStatusChecker(barclaysBankService)
     val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(
-      bankAccount, fromDate, toDate, BigDecimal(minimum).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+      bankAccount, LocalDate.parse(fromDate, DateTimeFormatter.ofPattern("yyyy-M-d")), LocalDate.parse(toDate, DateTimeFormatter.ofPattern("yyyy-M-d")), BigDecimal(minimum).setScale(2, BigDecimal.RoundingMode.HALF_UP)
     )
 
     new ResponseEntity(AccountDailyBalanceStatusResponse(bankAccount, dailyAccountBalanceCheck, StatusResponse("200", "OK")), HttpStatus.OK)

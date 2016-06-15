@@ -106,6 +106,9 @@ dependencies {
 
     compile 'org.apache.httpcomponents:httpclient:4.5.2'
 
+    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.5.4'
+    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.22.2'
+
     testCompile 'org.scala-lang:scala-library:2.11.8'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
@@ -134,5 +137,9 @@ dependencies {
     testCompile 'org.springframework.restdocs:spring-restdocs-core:1.1.0.RC1'
     testCompile 'org.springframework.restdocs:spring-restdocs-restassured:1.1.0.RC1'
     testCompile 'org.mockito:mockito-all:1.10.19:'
+
+    testCompile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.5.4'
+    testCompile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.22.2'
+
 }
 
