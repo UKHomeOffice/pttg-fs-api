@@ -17,15 +17,11 @@ class FinancialStatusApiSteps {
     public Response resp
     String jsonAsString
     String dependants = ""
-    String applicationRaisedDate
-    String applicantDateOfBirth
+    String fromDate
+    String toDate
     String accountNumber = ""
     String sortCode
-    String courseLength
-    String tutionFee
-    String tutionFeePaid
-    String accomodationFeePaid
-    String threshold
+    String minimum
     String days
 
     def String toCamelCase(String s) {
@@ -39,38 +35,20 @@ class FinancialStatusApiSteps {
         String[] tableKey = entries.keySet()
 
         for (String s : tableKey) {
-
-            if (s.equalsIgnoreCase("application raised date")) {
-                applicationRaisedDate = entries.get(s)
-            }
-            if (s.equalsIgnoreCase("appilcation date of birth")) {
-                applicantDateOfBirth = entries.get(s)
-            }
-
             if (s.equalsIgnoreCase("Account Number")) {
                 accountNumber = entries.get(s)
             }
-
+            if(s.equalsIgnoreCase("Minimum")){
+                minimum = entries.get(s)
+            }
+            if(s.equalsIgnoreCase("From Date")){
+                fromDate = entries.get(s)
+            }
             if(s.equalsIgnoreCase("Sort Code")){
                 sortCode = entries.get(s)
             }
-            if(s.equalsIgnoreCase("course length")){
-                courseLength = entries.get(s)
-            }
-            if(s.equalsIgnoreCase("tution fee")){
-                tutionFee = entries.get(s)
-            }
-            if(s.equalsIgnoreCase("tution fee paid")){
-                tutionFeePaid = entries.get(s)
-            }
-            if(s.equalsIgnoreCase("accomodation fee paid")){
-                accomodationFeePaid = entries.get(s)
-            }
-            if(s.equalsIgnoreCase("threshold")){
-                threshold = entries.get(s)
-            }
-            if(s.equalsIgnoreCase("days")){
-                days = entries.get(s)
+            if(s.equalsIgnoreCase("To Date")){
+                toDate = entries.get(s)
             }
         }
 
@@ -123,24 +101,31 @@ class FinancialStatusApiSteps {
 
             String jsonValue = json.get(Keys)
 
+            if(Keys != "account") {
+
+                   assert entries.containsValue(jsonValue)
+            }
+
             println "===========>" + jsonValue
 
-            JSONObject innerJson = new JSONObject(jsonValue);
-            Iterator<String> innerJasonKey = innerJson.keys()
+           if(Keys == "account") {
+               JSONObject innerJson = new JSONObject(jsonValue);
+               Iterator<String> innerJasonKey = innerJson.keys()
 
-            while (innerJasonKey.hasNext()) {
-                String keys2 = innerJasonKey.next()
-                println "***********" + keys2
-                //json.getJSONObject()
-                String innerjsonValue =  innerJson.get(keys2).toString()
-                println ">>>>>>>>>>>>>>>" + innerjsonValue
-                for(String s: tableKey){
-                    println ""+ entries.get(s)
-                   assert entries.containsValue(innerjsonValue)
+               while (innerJasonKey.hasNext()) {
+                   String keys2 = innerJasonKey.next()
+                   println "***********" + keys2
+                   //json.getJSONObject()
+                   String innerjsonValue = innerJson.get(keys2).toString()
+                   println ">>>>>>>>>>>>>>>" + innerjsonValue
+                   for (String s : tableKey) {
+                       println "" + entries.get(s)
+                       assert entries.containsValue(innerjsonValue)
 
-                }
+                   }
 
-            }
+               }
+           }
 
         }
     }
@@ -152,9 +137,8 @@ class FinancialStatusApiSteps {
 
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
-
         getTableData(arg1)
-        resp = get("http://localhost:8080/incomeproving/v1/individual/dailybalancecheck/{sortCode}/{accountNumber}?applicationRaisedDate={applicationRaisedDate}&threshold={threshold}&days={days}",sortCode, accountNumber, applicationRaisedDate, threshold, days)
+        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}",sortCode, accountNumber, fromDate, toDate, minimum)
         jsonAsString = resp.asString()
 
         println ("Family Case Worker API: "+ jsonAsString)
