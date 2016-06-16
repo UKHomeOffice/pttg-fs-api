@@ -3,9 +3,7 @@ package uk.gov.digital.ho.proving.financialstatus.domain
 import java.time.LocalDate
 import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 
-class AccountStatusChecker(bankService: BankService) {
-
-  private val REQUIRED_NUMBER_BALANCES = 28
+class AccountStatusChecker(bankService: BankService, numberConsecutiveDays: Int) {
 
   private def areDatesConsecutive(accountDailyBalances: AccountDailyBalances) = {
     val dates = accountDailyBalances.balances.map { _.date }.sortWith((date1, date2) => date1.isBefore(date2))
@@ -17,7 +15,7 @@ class AccountStatusChecker(bankService: BankService) {
 
     val accountDailyBalances = bankService.fetchAccountDailyBalances(account, fromDate, toDate)
 
-    val thresholdPassed = accountDailyBalances.balances.length == REQUIRED_NUMBER_BALANCES &&
+    val thresholdPassed = accountDailyBalances.balances.length == numberConsecutiveDays &&
       areDatesConsecutive(accountDailyBalances) &&
       !accountDailyBalances.balances.exists(balance => balance.balance < threshold)
 

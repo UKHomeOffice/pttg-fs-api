@@ -6,7 +6,7 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.acl.BarclaysBankService
+import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 
@@ -24,9 +24,9 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 class DailyBalanceServiceSpec extends Specification {
 
 
-    def barlcaysBankService = Mock(BarclaysBankService)
+    def mockBankService = Mock(MockBankService)
 
-    def dailyBalanceService = new DailyBalanceService(barlcaysBankService)
+    def dailyBalanceService = new DailyBalanceService(mockBankService, 28)
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
     def "daily balance threshold check pass"() {
@@ -36,7 +36,7 @@ class DailyBalanceServiceSpec extends Specification {
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
 
         when:
         def response = mockMvc.perform(
@@ -62,7 +62,7 @@ class DailyBalanceServiceSpec extends Specification {
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.22, 3500, true, false)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.22, 3500, true, false)
 
         when:
         def response = mockMvc.perform(
@@ -87,7 +87,7 @@ class DailyBalanceServiceSpec extends Specification {
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(26)
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
 
         when:
         def response = mockMvc.perform(

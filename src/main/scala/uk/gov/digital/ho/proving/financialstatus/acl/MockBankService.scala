@@ -10,12 +10,12 @@ import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBalance, AccountDailyBalances}
 
 @Service()
-class BarclaysBankService @Autowired()(val objectMapper: ObjectMapper) extends BankService {
+class MockBankService @Autowired()(val objectMapper: ObjectMapper) extends BankService {
 
-  val bankName = "Barclays"
+  val bankName = "MockBarclays"
   val bankUrl = "http://localhost:8082/financialstatus/v1"
 
-  val LOGGER: Logger = LoggerFactory.getLogger(classOf[BarclaysBankService])
+  val LOGGER: Logger = LoggerFactory.getLogger(classOf[MockBankService])
 
   private def bankResponseMapper(bankResponse: BankResponse): AccountDailyBalances =
     AccountDailyBalances(
