@@ -26,5 +26,5 @@ cause of the error.
 | Code | Meaning
 
 | `to do`
-| to do - Pending details of Home Office standard error codes
+| to do - Pending details of Barclays Bank standard error codes
 |===
