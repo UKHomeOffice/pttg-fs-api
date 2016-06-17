@@ -1,7 +1,7 @@
 Feature: Validation of the API fields and data
 
   Fields mandatory to fill in:
-  Maintenance Period End Date - Format should be dd/mm/yyyy
+  Maintenance Period End Date - Format should be yyyy-mm-dd
   #Total Funds Required - Format should be (tbc)
   Sort code - Format should be three pairs of digits 13-56-09 (always numbers 0-9, no letters and cannot be all 0's)
   Account Number - Format should be 12345678 (always 8 numbers, 0-9, no letters, cannot be all 0's)
@@ -23,7 +23,7 @@ Feature: Validation of the API fields and data
   Scenario: The API provides incorrect End date of 28-day period - in the future
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 27/07/2016 |
+      | Maintenance Period End Date | 2016-07-27 |
       | Total Funds Required        | 2350.00    |
       | Sort Code                   | 13-56-09   |
       | Account Number              | 23568498   |
@@ -49,7 +49,7 @@ Feature: Validation of the API fields and data
   Scenario: The API is not provided with Total Funds Required
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        |            |
       | Sort Code                   | 13-56-09   |
       | Account Number              | 23568498   |
@@ -61,7 +61,7 @@ Feature: Validation of the API fields and data
   Scenario: The API provides incorrect Total Funds Required - just 0
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 0          |
       | Sort Code                   | 13-56-09   |
       | Account Number              | 23568498   |
@@ -73,7 +73,7 @@ Feature: Validation of the API fields and data
   Scenario: The API provides incorrect Total Funds Required - not numbers 0-9 (letters)
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 23g50.00   |
       | Sort Code                   | 13-56-09   |
       | Account Number              | 23568498   |
@@ -85,7 +85,7 @@ Feature: Validation of the API fields and data
   Scenario: The API provides incorrect Total Funds Required - not numbers 0-9 (negative)
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | -2350.00   |
       | Sort Code                   | 13-56-09   |
       | Account Number              | 23568498   |
@@ -100,7 +100,7 @@ Feature: Validation of the API fields and data
   Scenario: The API is not provided with Sort code
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date      | 01/06/2016 |
+      | Maintenance Period End Date      | 2016-06-01 |
       | Total Funds Required             | 2350.00 |
       | Sort Code                        |    |
       | Account Number                   | 23568498    |
@@ -113,7 +113,7 @@ Feature: Validation of the API fields and data
   Scenario: The API is not provided with Sort Code
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 2350.00    |
       | Sort Code                   |            |
       | Account Number              | 23568498   |
@@ -125,7 +125,7 @@ Feature: Validation of the API fields and data
   Scenario: The API provides incorrect Sort Code - mising digits
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 2350.00    |
       | Sort Code                   | 13-56-0    |
       | Account Number              | 23568498   |
@@ -137,7 +137,7 @@ Feature: Validation of the API fields and data
   Scenario: The API provides incorrect Sort Code - all 0's
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 2350.00    |
       | Sort Code                   | 00-00-00   |
       | Account Number              | 23568498   |
@@ -149,7 +149,7 @@ Feature: Validation of the API fields and data
   Scenario: The API provides incorrect Sort Code - not numbers 0-9
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 2350.00    |
       | Sort Code                   | 13-56-0q   |
       | Account Number              | 23568498   |
@@ -164,7 +164,7 @@ Feature: Validation of the API fields and data
   Scenario: The API is not provided with Account Number
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date      | 01/06/2016 |
+      | Maintenance Period End Date      | 2016-06-01 |
       | Total Funds Required             | 2350.00 |
       | Sort Code                        | 13-56-09   |
       | Account Number                   |    |
@@ -177,7 +177,7 @@ Feature: Validation of the API fields and data
   Scenario: The API is not provided with Account Number
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 2350.00    |
       | Sort Code                   | 13-56-09   |
       | Account Number              |            |
@@ -189,7 +189,7 @@ Feature: Validation of the API fields and data
   Scenario: The API is not provided with Account Number - too short
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 2350.00    |
       | Sort Code                   | 13-56-09   |
       | Account Number              | 2356849    |
@@ -201,7 +201,7 @@ Feature: Validation of the API fields and data
   Scenario: The API is not provided with Account Number - too long
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 2350.00    |
       | Sort Code                   | 13-56-09   |
       | Account Number              | 235684988  |
@@ -213,7 +213,7 @@ Feature: Validation of the API fields and data
   Scenario: The API is not provided with Account Number - all 0's
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 2350.00    |
       | Sort Code                   | 13-56-09   |
       | Account Number              | 00000000   |
@@ -225,7 +225,7 @@ Feature: Validation of the API fields and data
   Scenario: The API is not provided with Account Number - not numbers 0-9
     Given A service is consuming Financial Status Service Case Worker API
     When the Financial Status API is invoked with the following
-      | Maintenance Period End Date | 01/06/2016 |
+      | Maintenance Period End Date | 2016-06-01 |
       | Total Funds Required        | 2350.00    |
       | Sort Code                   | 13-56-09   |
       | Account Number              | 23568a98   |
