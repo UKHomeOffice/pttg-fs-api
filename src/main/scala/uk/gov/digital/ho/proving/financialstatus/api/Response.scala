@@ -6,7 +6,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBa
 
 case class StatusResponse(code: String, message: String)
 /*
-  Providing to more constructors which pass null as the value for the 'account' and 'dailyBalanceCheck' fields.  This
+  Providing two more constructors which pass null as the value for the 'account' and 'dailyBalanceCheck' fields.  This
   is to stop nulls leaking into the main Scala codebase.
 
   Jackson's Scala module serializes None to 'null' which we don't want, so we have to set the value of these to null
