@@ -23,7 +23,7 @@ class BankServiceTest extends Specification {
         1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
 
         when:
-        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum)
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum).get()
 
         then:
         response.pass()
@@ -44,7 +44,7 @@ class BankServiceTest extends Specification {
         1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
-        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum)
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum).get()
 
         then:
         !response.pass()
@@ -65,7 +65,7 @@ class BankServiceTest extends Specification {
         1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseNonConsecutiveDates(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
-        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum)
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum).get()
 
         then:
         !response.pass()
@@ -86,7 +86,7 @@ class BankServiceTest extends Specification {
         1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
-        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum)
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum).get()
 
         then:
         !response.pass()
