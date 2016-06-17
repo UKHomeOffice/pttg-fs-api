@@ -26,8 +26,8 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
   val sortCodePattern = """^[0-9]{6}$""".r
   val accountNumberPattern = """^[0-9]{8}$""".r
 
-  val headers = new HttpHeaders();
-  headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+  val headers = new HttpHeaders()
+  headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
   // TODO get spring to handle LocalDate objects
   @RequestMapping(value = Array("{sortCode}/{accountNumber}/dailybalancestatus"),
@@ -60,12 +60,12 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
 
     dailyAccountBalanceCheck match {
       case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(bankAccount, balanceCheck, StatusResponse("200", "OK")), HttpStatus.OK)
-      case Failure(exception:HttpClientErrorException) =>new ResponseEntity(AccountDailyBalanceStatusResponse(
+      case Failure(exception: HttpClientErrorException) => new ResponseEntity(AccountDailyBalanceStatusResponse(
         StatusResponse(exception.getStatusCode.toString, exception.getStatusText)), exception.getStatusCode)
       case Failure(exception: Throwable) =>
         LOGGER.info("Unexpected error form bank service: " + exception.getMessage)
         new ResponseEntity(AccountDailyBalanceStatusResponse(
-        StatusResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Unknown error")), HttpStatus.INTERNAL_SERVER_ERROR)
+          StatusResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Unknown bank service error")), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
   }
