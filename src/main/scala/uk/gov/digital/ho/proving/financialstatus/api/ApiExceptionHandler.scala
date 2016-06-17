@@ -36,8 +36,8 @@ class ApiExceptionHandler {
     buildErrorResponse(headers, "0000", "Parameter error: Invalid value for " + exception.getName, HttpStatus.BAD_REQUEST)
   }
 
-  private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[BaseResponse] = {
-    val response: BaseResponse = new BaseResponse(StatusResponse(statusCode, statusMessage))
+  private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus)= {
+    val response = AccountDailyBalanceStatusResponse(StatusResponse(statusCode, statusMessage))
     new ResponseEntity(response, headers, status)
   }
 
