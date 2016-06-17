@@ -2,7 +2,7 @@ Feature: Validation of the API fields and data
 
   Fields mandatory to fill in:
   Maintenance Period End Date - Format should be yyyy-mm-dd
-  #Total Funds Required - Format should be (tbc)
+  Total Funds Required - Format should not contain commas or currency symbols
   Sort code - Format should be three pairs of digits 13-56-09 (always numbers 0-9, no letters and cannot be all 0's)
   Account Number - Format should be 12345678 (always 8 numbers, 0-9, no letters, cannot be all 0's)
 
@@ -17,7 +17,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498 |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                                |
-      | Status code    | 0004                                               |
+      | Status code    | 0000                                               |
       | Status message | Parameter error: Invalid end date of 28-day period |
 
   Scenario: The API provides incorrect End date of 28-day period - in the future
@@ -29,7 +29,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                                |
-      | Status code    | 0004                                               |
+      | Status code    | 0000                                               |
       | Status message | Parameter error: Invalid end date of 28-day period |
 
   Scenario: The API provides incorrect End date of 28-day period - not numbers 0-9
@@ -41,7 +41,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                                |
-      | Status code    | 0004                                               |
+      | Status code    | 0000                                               |
       | Status message | Parameter error: Invalid end date of 28-day period |
 
 ######################### Validation on the Total Funds Required field #########################
@@ -55,7 +55,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
-      | Status code    | 0004                                          |
+      | Status code    | 0000                                          |
       | Status message | Parameter error: Invalid Total Funds Required |
 
   Scenario: The API provides incorrect Total Funds Required - just 0
@@ -67,7 +67,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
-      | Status code    | 0004                                          |
+      | Status code    | 0000                                          |
       | Status message | Parameter error: Invalid Total Funds Required |
 
   Scenario: The API provides incorrect Total Funds Required - not numbers 0-9 (letters)
@@ -79,7 +79,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
-      | Status code    | 0004                                          |
+      | Status code    | 0000                                          |
       | Status message | Parameter error: Invalid Total Funds Required |
 
   Scenario: The API provides incorrect Total Funds Required - not numbers 0-9 (negative)
@@ -91,7 +91,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
-      | Status code    | 0004                                          |
+      | Status code    | 0000                                          |
       | Status message | Parameter error: Invalid Total Funds Required |
 
 ######################### Validation on the Sort Code Field #########################
@@ -106,7 +106,7 @@ Feature: Validation of the API fields and data
       | Account Number                   | 23568498    |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 404                                                               |
-      | Status code    | 0008                                                              |
+      | Status code    | 0000                                                              |
       | Status message | Resource not found: /incomeproving/v1/individual//financialstatus |
 
 
@@ -119,8 +119,8 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                |
-      | Status code    | 0004                               |
-      | Status message | Parameter error: Invalid Sort code |
+      | Status code    | 0000                               |
+      | Status message | Parameter error: Invalid sort code |
 
   Scenario: The API provides incorrect Sort Code - mising digits
     Given A service is consuming Financial Status Service Case Worker API
@@ -131,8 +131,8 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                |
-      | Status code    | 0004                               |
-      | Status message | Parameter error: Invalid Sort code |
+      | Status code    | 0000                               |
+      | Status message | Parameter error: Invalid sort code |
 
   Scenario: The API provides incorrect Sort Code - all 0's
     Given A service is consuming Financial Status Service Case Worker API
@@ -143,8 +143,8 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                |
-      | Status code    | 0004                               |
-      | Status message | Parameter error: Invalid Sort code |
+      | Status code    | 0000                               |
+      | Status message | Parameter error: Invalid sort code |
 
   Scenario: The API provides incorrect Sort Code - not numbers 0-9
     Given A service is consuming Financial Status Service Case Worker API
@@ -155,8 +155,8 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568498   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                |
-      | Status code    | 0004                               |
-      | Status message | Parameter error: Invalid Sort code |
+      | Status code    | 0000                               |
+      | Status message | Parameter error: Invalid sort code |
 
 ######################### Validation on the Account Number Field #########################
 
@@ -170,7 +170,7 @@ Feature: Validation of the API fields and data
       | Account Number                   |    |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 404                                                               |
-      | Status code    | 0008                                                              |
+      | Status code    | 0000                                                              |
       | Status message | Resource not found: /incomeproving/v1/individual//financialstatus |
 
 
@@ -183,7 +183,7 @@ Feature: Validation of the API fields and data
       | Account Number              |            |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                |
-      | Status code    | 0004                               |
+      | Status code    | 0000                               |
       | Status message | Parameter error: Invalid account number|
 
   Scenario: The API is not provided with Account Number - too short
@@ -195,7 +195,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 2356849    |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                |
-      | Status code    | 0004                               |
+      | Status code    | 0000                               |
       | Status message | Parameter error: Invalid account number |
 
   Scenario: The API is not provided with Account Number - too long
@@ -207,7 +207,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 235684988  |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
-      | Status code    | 0004                                          |
+      | Status code    | 0000                                          |
       | Status message | Parameter error: Invalid account number |
 
   Scenario: The API is not provided with Account Number - all 0's
@@ -219,7 +219,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 00000000   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
-      | Status code    | 0004                                          |
+      | Status code    | 0000                                          |
       | Status message | Parameter error: Invalid account number |
 
   Scenario: The API is not provided with Account Number - not numbers 0-9
@@ -231,7 +231,7 @@ Feature: Validation of the API fields and data
       | Account Number              | 23568a98   |
     Then FSPS Tier 4 general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
-      | Status code    | 0004                                          |
+      | Status code    | 0000                                          |
       | Status message | Parameter error: Invalid account number |
 
 
