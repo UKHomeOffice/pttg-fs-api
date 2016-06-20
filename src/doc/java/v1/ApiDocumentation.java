@@ -119,7 +119,7 @@ public class ApiDocumentation {
                 )
             ))
 
-            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "12-34-56", "01010312")
+            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
             .then().assertThat().statusCode(is(200));
     }
 
@@ -154,25 +154,43 @@ public class ApiDocumentation {
                 )
             ))
 
-            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "12-34-56", "01010312")
+            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
             .then().assertThat().statusCode(is(200));
     }
 
 
-//    @Test
-//    public void missingParameterError() throws Exception {
-//
-//        given(documentationSpec)
-//            .spec(requestSpec)
-//            .filter(document.snippets(
-//                responseFields(
-//                    fieldWithPath("status.code").description("A specific error code to identify further details of this error"),
-//                    fieldWithPath("status.message").description("A description of the error, in this case identifying the missing mandatory parameter")
-//                )
-//            ))
-//
-//            .when().get("/individual/{nino}/financialstatus", "AA123456A")
-//            .then().assertThat().statusCode(is(400));
-//    }
+    @Test
+    public void missingParameterError() throws Exception {
+
+        given(documentationSpec)
+            .spec(requestSpec)
+            .filter(document.snippets(
+                responseFields(
+                    fieldWithPath("status.code").description("A specific error code to identify further details of this error"),
+                    fieldWithPath("status.message").description("A description of the error, in this case identifying the missing mandatory parameter")
+                )
+            ))
+
+            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
+            .then().assertThat().statusCode(is(400));
+    }
+
+    @Test
+    public void missingFromDateError() throws Exception {
+
+        given(documentationSpec)
+            .spec(requestSpec)
+            .param("toDate", "2016-06-01")
+            .param("minimum", 1000)
+            .filter(document.snippets(
+                responseFields(
+                    fieldWithPath("status.code").description("A specific error code to identify further details of this error"),
+                    fieldWithPath("status.message").description("A description of the error, in this case identifying the missing mandatory parameter")
+                )
+            ))
+
+            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
+            .then().assertThat().statusCode(is(400));
+    }
 
 }
