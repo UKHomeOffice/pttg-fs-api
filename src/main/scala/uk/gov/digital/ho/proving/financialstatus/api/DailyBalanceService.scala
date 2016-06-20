@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.context.annotation.PropertySource
-import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
+import org.springframework.http.{ResponseEntity, _}
 import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{HttpClientErrorException, RestClientException}
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
@@ -30,7 +30,7 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
   headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
   // TODO get spring to handle LocalDate objects
-  @RequestMapping(value = Array("{sortCode}/{accountNumber}/dailybalancestatus"),
+  @RequestMapping(value = Array("{sortCode:[0-9]+|[0-9-]+}/{accountNumber:[0-9]+}/dailybalancestatus"),
     method = Array(RequestMethod.GET),
     produces = Array(MediaType.APPLICATION_JSON_VALUE))
   def dailyBalanceStatus(@PathVariable(value = "sortCode") sortCode: String,
@@ -60,8 +60,17 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
 
     dailyAccountBalanceCheck match {
       case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(bankAccount, balanceCheck, StatusResponse("200", "OK")), HttpStatus.OK)
-      case Failure(exception: HttpClientErrorException) => new ResponseEntity(AccountDailyBalanceStatusResponse(
-        StatusResponse(exception.getStatusCode.toString, exception.getStatusText)), exception.getStatusCode)
+
+      case Failure(exception: HttpClientErrorException) =>
+        exception.getStatusCode match {
+          case HttpStatus.NOT_FOUND => new ResponseEntity(
+            AccountDailyBalanceStatusResponse(StatusResponse(s"No records for sort code ${sortCode} and account number ${accountNumber}", HttpStatus.NOT_FOUND.toString)), HttpStatus.NOT_FOUND
+          )
+          case _ => new ResponseEntity(
+            AccountDailyBalanceStatusResponse(
+              StatusResponse(exception.getStatusCode.toString, exception.getStatusText)), HttpStatus.INTERNAL_SERVER_ERROR)
+        }
+
       case Failure(exception: Throwable) =>
         LOGGER.info("Unknown bank service error: " + exception.getMessage)
         new ResponseEntity(AccountDailyBalanceStatusResponse(
@@ -80,18 +89,14 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
 
   def validateMinimum(minimum: BigDecimal) = minimum > 0
 
-  /**
-    * Takes two dates in string format, tries to converts them to LocalDate objects and
-    * ensures fromDate is before toDate.  If sucessfull it returns Right[true] otherwise
-    * it returns a Left[ResponseEntity[AccountDailyBalanceStatusResponse]] containing
-    * the appropriate error message
-    *
-    * This can be simplified once Spring is handling the String to LocalDate conversion
-    *
-    * @param fromDate
-    * @param toDate
-    * @return Either[ResponseEntity[AccountDailyBalanceStatusResponse], Boolean]
-    */
+  /*
+   * Takes two dates in string format, tries to converts them to LocalDate objects and
+   * ensures fromDate is before toDate.  If successful it returns Right[true] otherwise
+   * it returns a Left[ResponseEntity[AccountDailyBalanceStatusResponse]] containing
+   * the appropriate error message
+   *
+   * This can be simplified once Spring is handling the String to LocalDate conversion
+   */
   def validateDates(fromDate: String, toDate: String) = {
     val validFromDate = Try(LocalDate.parse(fromDate, DateTimeFormatter.ISO_DATE))
     val validToDate = Try(LocalDate.parse(toDate, DateTimeFormatter.ISO_DATE))
@@ -102,11 +107,11 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
       val validDates =
         for {vfd <- validFromDate
              vtd <- validToDate} yield {
-          vfd.isBefore(vtd)
+          vfd.isBefore(vtd) && vfd.plusDays(daysToCheck - 1).equals(vtd)
         }
 
       if (validDates.get) Right(true)
-      else Left(buildErrorResponse(headers, "0000", "Parameter error: Invalids dates, from date must be before to date", HttpStatus.BAD_REQUEST))
+      else Left(buildErrorResponse(headers, "0000", s"Parameter error: Invalid dates, from date must be ${daysToCheck - 1} days before to date", HttpStatus.BAD_REQUEST))
     }
 
   }

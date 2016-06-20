@@ -4,13 +4,10 @@ import groovy.json.JsonSlurper
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
-
-import java.time.LocalDate
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -33,12 +30,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def invalidTotalFunds = "Parameter error: Invalid Total Funds Required"
     def invalidFromDate = "Parameter error: Invalid from date"
     def invalidToDate = "Parameter error: Invalid to date"
-    def invalidDateRange = "Parameter error: Invalids dates, from date must be before to date"
+    def invalidDateRange = "Parameter error: Invalid dates, from date must be 27 days before to date"
 
     def "daily balance reject invalid sort code (invalid character)"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456a/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatusservice/v1/accounts/12345a/12345678/dailybalancestatus"
 
         // 1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
 
@@ -49,10 +46,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         then:
         // response.andDo(MockMvcResultHandlers.print())
-        response.andExpect(status().isBadRequest())
-        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidSortCode
+        response.andExpect(status().isNotFound())
     }
 
     def "daily balance reject invalid sort code (too few numbers)"() {
@@ -102,10 +96,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         then:
         // response.andDo(MockMvcResultHandlers.print())
-        response.andExpect(status().isBadRequest())
-        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidAccountNumber
+        response.andExpect(status().isNotFound())
     }
 
     def "daily balance reject invalid account number (too few numbers)"() {
