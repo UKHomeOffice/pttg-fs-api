@@ -31,7 +31,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def invalidSortCode = "Parameter error: Invalid sort code"
     def invalidAccountNumber = "Parameter error: Invalid account number"
-    def invalidTotalFunds = "Parameter error: Invalid Total Funds Required"
+    def invalidTotalFunds = "Parameter error: Invalid total funds required"
     def invalidFromDate = "Parameter error: Invalid from date"
     def invalidToDate = "Parameter error: Invalid to date"
     def invalidDateRange = "Parameter error: Invalid dates, from date must be 27 days before to date"
