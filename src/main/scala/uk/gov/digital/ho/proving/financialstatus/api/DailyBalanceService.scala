@@ -3,14 +3,14 @@ package uk.gov.digital.ho.proving.financialstatus.api
 import java.math.{BigDecimal => JBigDecimal}
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.validation.constraints.NotNull
 
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.context.annotation.PropertySource
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.{ResponseEntity, _}
 import org.springframework.web.bind.annotation._
-import org.springframework.web.client.{HttpClientErrorException, RestClientException}
+import org.springframework.web.client.HttpClientErrorException
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker}
 
@@ -40,19 +40,19 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
   def dailyBalanceStatus(@PathVariable(value = "sortCode") sortCode: String,
                          @PathVariable(value = "accountNumber") accountNumber: String,
                          @RequestParam(value = "minimum") minimum: JBigDecimal,
-                         @RequestParam(value = "toDate") toDate: String,
-                         @RequestParam(value = "fromDate") fromDate: String): ResponseEntity[AccountDailyBalanceStatusResponse] = {
+                         @RequestParam(value = "toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) toDate: LocalDate,
+                         @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: LocalDate): ResponseEntity[AccountDailyBalanceStatusResponse] = {
 
     LOGGER.info("dailybalancestatus request received ")
 
     val cleanSortCode = sortCode.replace("-", "")
     val validDates = validateDates(fromDate, toDate)
 
-    val response = if (validDates.isLeft) validDates.left.get
+    val response = if (!validDates) buildErrorResponse(headers, TEMP_ERROR_CODE, s"Parameter error: Invalid dates, from date must be ${daysToCheck - 1} days before to date", HttpStatus.BAD_REQUEST)
     else if (!validateAccountNumber(accountNumber)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid account number", HttpStatus.BAD_REQUEST)
     else if (!validateSortCode(cleanSortCode)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid sort code", HttpStatus.BAD_REQUEST)
     else if (!validateMinimum(minimum)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid Total Funds Required", HttpStatus.BAD_REQUEST)
-    else validateDailyBalanceStatus(cleanSortCode, accountNumber, BigDecimal(minimum).setScale(2), LocalDate.parse(fromDate, DateTimeFormatter.ISO_DATE), LocalDate.parse(toDate, DateTimeFormatter.ISO_DATE))
+    else validateDailyBalanceStatus(cleanSortCode, accountNumber, BigDecimal(minimum).setScale(2), fromDate, toDate)
 
     response
   }
@@ -101,23 +101,27 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
    *
    * This can be simplified once Spring is handling the String to LocalDate conversion
    */
-  def validateDates(fromDate: String, toDate: String) = {
-    val validFromDate = Try(LocalDate.parse(fromDate, DateTimeFormatter.ISO_DATE))
-    val validToDate = Try(LocalDate.parse(toDate, DateTimeFormatter.ISO_DATE))
+  //  def validateDates(fromDate: String, toDate: String) = {
+  //    val validFromDate = Try(LocalDate.parse(fromDate, DateTimeFormatter.ISO_DATE))
+  //    val validToDate = Try(LocalDate.parse(toDate, DateTimeFormatter.ISO_DATE))
+  //
+  //    if (validFromDate.isFailure) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid from date", HttpStatus.BAD_REQUEST))
+  //    else if (validToDate.isFailure) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid to date", HttpStatus.BAD_REQUEST))
+  //    else {
+  //      val validDates =
+  //        for {vfd <- validFromDate
+  //             vtd <- validToDate} yield {
+  //          vfd.isBefore(vtd) && vfd.plusDays(daysToCheck - 1).equals(vtd)
+  //        }
+  //
+  //      if (validDates.get) Right(true)
+  //      else Left(buildErrorResponse(headers, TEMP_ERROR_CODE, s"Parameter error: Invalid dates, from date must be ${daysToCheck - 1} days before to date", HttpStatus.BAD_REQUEST))
+  //    }
+  //
+  //  }
 
-    if (validFromDate.isFailure) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid from date", HttpStatus.BAD_REQUEST))
-    else if (validToDate.isFailure) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid to date", HttpStatus.BAD_REQUEST))
-    else {
-      val validDates =
-        for {vfd <- validFromDate
-             vtd <- validToDate} yield {
-          vfd.isBefore(vtd) && vfd.plusDays(daysToCheck - 1).equals(vtd)
-        }
-
-      if (validDates.get) Right(true)
-      else Left(buildErrorResponse(headers, TEMP_ERROR_CODE, s"Parameter error: Invalid dates, from date must be ${daysToCheck - 1} days before to date", HttpStatus.BAD_REQUEST))
-    }
-
+  def validateDates(fromDate: LocalDate, toDate: LocalDate) = {
+    fromDate.isBefore(toDate) && fromDate.plusDays(daysToCheck - 1).equals(toDate)
   }
 
 }
