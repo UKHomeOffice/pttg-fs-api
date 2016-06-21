@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
 import org.json.JSONObject
 
+import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
 
 class FinancialStatusApiSteps {
@@ -17,12 +18,12 @@ class FinancialStatusApiSteps {
     public Response resp
     String jsonAsString
     String dependants = ""
-    String fromDate
-    String toDate
+    String fromDate = ""
+    String toDate = ""
     String accountNumber = ""
-    String sortCode
-    String minimum
-    String days
+    String sortCode = ""
+    String minimum = ""
+    String days = ""
 
     def String toCamelCase(String s) {
         String allUpper = StringUtils.remove(WordUtils.capitalizeFully(s), " ")
@@ -130,10 +131,27 @@ class FinancialStatusApiSteps {
         }
     }
 
+    public void validateResult(DataTable arg) {
+        Map<String, String> entries = arg.asMap(String.class, String.class);
+        String[] tableKey = entries.keySet();
+
+        for (String key : tableKey) {
+            switch (key) {
+                case "HTTP Status":
+                    assert entries.get(key) == resp.getStatusCode().toString();
+                    break;
+                default:
+                    String jsonPath = FeatureKeyMapper.buildJsonPath(key);
+                    assert entries.get(key) == read(jsonAsString, jsonPath).toString();
+            }
+        }
+    }
+
     @Given("^a Service is consuming Financial Status API\$")
     public void a_Service_is_consuming_Financial_Status_API() {
 
     }
+
 
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
@@ -147,6 +165,11 @@ class FinancialStatusApiSteps {
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
               validateJsonResult(arg1)
+    }
+
+    @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")
+    public void fsps_Tier_four_general_Case_Worker_tool_API_provides_the_following_result(DataTable arg1) {
+        validateResult(arg1)
     }
 
 

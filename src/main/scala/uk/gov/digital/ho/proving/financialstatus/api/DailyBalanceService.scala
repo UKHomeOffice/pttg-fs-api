@@ -67,7 +67,7 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
       case Failure(exception: HttpClientErrorException) =>
         exception.getStatusCode match {
           case HttpStatus.NOT_FOUND => new ResponseEntity(
-            AccountDailyBalanceStatusResponse(StatusResponse(HttpStatus.NOT_FOUND.toString, s"No records for sort code ${sortCode} and account number ${accountNumber}")), HttpStatus.NOT_FOUND
+            AccountDailyBalanceStatusResponse(StatusResponse(TEMP_ERROR_CODE, s"No records for sort code ${sortCode} and account number ${accountNumber}")), HttpStatus.NOT_FOUND
           )
           case _ => new ResponseEntity(
             AccountDailyBalanceStatusResponse(
