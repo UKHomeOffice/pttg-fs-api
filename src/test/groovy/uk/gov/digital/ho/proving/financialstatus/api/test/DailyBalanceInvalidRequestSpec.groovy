@@ -3,7 +3,6 @@ package uk.gov.digital.ho.proving.financialstatus.api.test
 import cucumber.api.java.Before
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -36,7 +35,6 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def invalidFromDate = "Parameter error: Invalid from date"
     def invalidToDate = "Parameter error: Invalid to date"
     def invalidDateRange = "Parameter error: Invalid dates, from date must be 27 days before to date"
-    def invalidValueFor = "Parameter error: Invalid value for "
 
     @Before
     def setup() {
