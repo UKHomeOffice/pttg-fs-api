@@ -21,7 +21,7 @@ class ApiExceptionHandler @Autowired()(objectMapper: ObjectMapper){
   private val headers: HttpHeaders = new HttpHeaders
   headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
-  private val parameterMap = Map("toDate" -> "to date", "fromDate" -> "from date", "minimum" -> "total funds required", "sortCode" -> "sort code", "accountNumber" -> "account number")
+  private val parameterMap = Map("toDate" -> "to date", "fromDate" -> "from date", "minimum" -> "value for minimum", "sortCode" -> "sort code", "accountNumber" -> "account number")
 
   @ExceptionHandler(Array(classOf[MissingServletRequestParameterException]))
   def missingParameterHandler(exception: MissingServletRequestParameterException) = {

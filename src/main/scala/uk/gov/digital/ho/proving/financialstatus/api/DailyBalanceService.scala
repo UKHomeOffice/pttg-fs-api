@@ -50,7 +50,7 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
     val response = if (validDates.isLeft) validDates.left.get
     else if (!validateAccountNumber(accountNumber)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid account number", HttpStatus.BAD_REQUEST)
     else if (!validateSortCode(cleanSortCode)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid sort code", HttpStatus.BAD_REQUEST)
-    else if (!validateMinimum(minimum)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid total funds required", HttpStatus.BAD_REQUEST)
+    else if (!validateMinimum(minimum)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid value for minimum", HttpStatus.BAD_REQUEST)
     else validateDailyBalanceStatus(cleanSortCode, accountNumber, BigDecimal(minimum).setScale(2), fromDate, toDate)
 
     response
