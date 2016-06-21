@@ -2,6 +2,9 @@ package steps
 
 import com.jayway.restassured.response.Response
 import cucumber.api.DataTable
+import cucumber.api.Scenario
+import cucumber.api.java.After
+import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
@@ -24,6 +27,21 @@ class FinancialStatusApiSteps {
     String sortCode = ""
     String minimum = ""
     String days = ""
+
+    def barclaysStubHost = "localhost"
+    def barclaysStubPort = 8082
+    def testDataLoader
+
+    @Before
+    def setUp(Scenario scenario) {
+        testDataLoader = new TestDataLoader(barclaysStubHost, barclaysStubPort)
+        testDataLoader.prepareFor(scenario)
+    }
+
+    @After
+    def tearDown() {
+        testDataLoader?.clearTestData()
+    }
 
     def String toCamelCase(String s) {
         String allUpper = StringUtils.remove(WordUtils.capitalizeFully(s), " ")
@@ -145,6 +163,11 @@ class FinancialStatusApiSteps {
                     assert entries.get(key) == read(jsonAsString, jsonPath).toString();
             }
         }
+    }
+
+    @Given("^the test data for account (.+)\$")
+    public void the_test_data_for_account_number(String fileName) {
+        testDataLoader.loadTestData(fileName)
     }
 
     @Given("^a Service is consuming Financial Status API\$")
