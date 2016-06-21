@@ -1,6 +1,8 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import groovy.json.JsonSlurper
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -24,7 +26,13 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def mockBankService = Mock(MockBankService)
 
     def dailyBalanceService = new DailyBalanceService(mockBankService, 28)
-    MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
+
+    @Autowired
+    ServiceConfiguration serviceConfiguration
+
+    MockMvc mockMvc = standaloneSetup(dailyBalanceService)
+        .setMessageConverters(serviceConfiguration.mappingJackson2HttpMessageConverter())
+        .build()
 
     def invalidSortCode = "Parameter error: Invalid sort code"
     def invalidAccountNumber = "Parameter error: Invalid account number"
