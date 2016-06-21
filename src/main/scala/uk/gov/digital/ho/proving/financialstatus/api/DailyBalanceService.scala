@@ -2,7 +2,6 @@ package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.math.{BigDecimal => JBigDecimal}
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.{Autowired, Value}
@@ -48,7 +47,7 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
     val cleanSortCode = sortCode.replace("-", "")
     val validDates = validateDates(fromDate, toDate)
 
-    val response = if (!validDates) buildErrorResponse(headers, TEMP_ERROR_CODE, s"Parameter error: Invalid dates, from date must be ${daysToCheck - 1} days before to date", HttpStatus.BAD_REQUEST)
+    val response = if (validDates.isLeft) validDates.left.get
     else if (!validateAccountNumber(accountNumber)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid account number", HttpStatus.BAD_REQUEST)
     else if (!validateSortCode(cleanSortCode)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid sort code", HttpStatus.BAD_REQUEST)
     else if (!validateMinimum(minimum)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid Total Funds Required", HttpStatus.BAD_REQUEST)
@@ -121,7 +120,11 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
   //  }
 
   def validateDates(fromDate: LocalDate, toDate: LocalDate) = {
-    fromDate.isBefore(toDate) && fromDate.plusDays(daysToCheck - 1).equals(toDate)
+    if (fromDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid from date", HttpStatus.BAD_REQUEST))
+    else if (toDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid to date", HttpStatus.BAD_REQUEST))
+    else if (!fromDate.isBefore(toDate) || (!fromDate.plusDays(daysToCheck - 1).equals(toDate)))
+      Left(buildErrorResponse(headers, TEMP_ERROR_CODE, s"Parameter error: Invalid dates, from date must be ${daysToCheck - 1} days before to date", HttpStatus.BAD_REQUEST))
+    else Right(true)
   }
 
 }

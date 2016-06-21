@@ -1,38 +1,32 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
+import cucumber.api.java.Before
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.test.context.ContextConfiguration
+import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
-import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
+import uk.gov.digital.ho.proving.financialstatus.ServiceRunner
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup
 
 /**
  * @Author Home Office Digital
  */
+@SpringApplicationConfiguration(ServiceConfiguration.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = ServiceConfiguration.class)
 class DailyBalanceInvalidRequestSpec extends Specification {
 
-    def mockBankService = Mock(MockBankService)
-
-    def dailyBalanceService = new DailyBalanceService(mockBankService, 28)
-
     @Autowired
-    ServiceConfiguration serviceConfiguration
-
-    MockMvc mockMvc = standaloneSetup(dailyBalanceService)
-        .setMessageConverters(serviceConfiguration.mappingJackson2HttpMessageConverter())
-        .build()
+    private WebApplicationContext webApplicationContext;
+    private MockMvc mockMvc;
 
     def invalidSortCode = "Parameter error: Invalid sort code"
     def invalidAccountNumber = "Parameter error: Invalid account number"
@@ -40,6 +34,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def invalidFromDate = "Parameter error: Invalid from date"
     def invalidToDate = "Parameter error: Invalid to date"
     def invalidDateRange = "Parameter error: Invalid dates, from date must be 27 days before to date"
+    def invalidValueFor = "Parameter error: Invalid value for "
+
+    @Before
+    def setup() {
+        this.mockMvc = webAppContextSetup(webApplicationContext).build();
+    }
 
     def "daily balance reject invalid sort code (invalid character)"() {
 
@@ -188,7 +188,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidFromDate
+        jsonContent.status.message == invalidValueFor +"fromDate"
     }
 
     def "daily balance reject invalid from date (invalid month)"() {
@@ -204,7 +204,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidFromDate
+        jsonContent.status.message == invalidValueFor +"fromDate"
     }
 
     def "daily balance reject invalid from date (invalid day)"() {
@@ -220,7 +220,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidFromDate
+        jsonContent.status.message == invalidValueFor +"fromDate"
     }
 
     // Invalid to date tests
@@ -238,7 +238,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidToDate
+        jsonContent.status.message == invalidValueFor +"toDate"
     }
 
     def "daily balance reject invalid to date (invalid month)"() {
@@ -254,7 +254,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidToDate
+        jsonContent.status.message == invalidValueFor +"toDate"
     }
 
     def "daily balance reject invalid to date (invalid day)"() {
@@ -270,7 +270,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidToDate
+        jsonContent.status.message == invalidValueFor +"toDate"
     }
 
     // Invalid range of dates
