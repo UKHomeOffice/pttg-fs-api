@@ -21,6 +21,8 @@ class ApiExceptionHandler @Autowired()(objectMapper: ObjectMapper){
   private val headers: HttpHeaders = new HttpHeaders
   headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
+  private val parameterMap = Map("toDate" -> "to date", "fromDate" -> "from date", "minimum" -> "total funds required", "sortCode" -> "sort code", "accountNumber" -> "account number")
+
   @ExceptionHandler(Array(classOf[MissingServletRequestParameterException]))
   def missingParameterHandler(exception: MissingServletRequestParameterException) = {
     LOGGER.debug(exception.getMessage)
@@ -42,7 +44,8 @@ class ApiExceptionHandler @Autowired()(objectMapper: ObjectMapper){
   @ExceptionHandler(Array(classOf[MethodArgumentTypeMismatchException]))
   def methodArgumentTypeMismatchException(exception: MethodArgumentTypeMismatchException) = {
     LOGGER.debug(exception.getMessage)
-    buildErrorResponse(headers, "0000", "Parameter error: Invalid value for " + exception.getName, HttpStatus.BAD_REQUEST)
+    val param = parameterMap.getOrElse(exception.getName, exception.getName)
+    buildErrorResponse(headers, "0000", "Parameter error: Invalid " + param, HttpStatus.BAD_REQUEST)
   }
 
   private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus) = {
