@@ -78,7 +78,7 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
       case Failure(exception: Throwable) =>
         LOGGER.info("Unknown bank service error: " + exception.getMessage)
         new ResponseEntity(AccountDailyBalanceStatusResponse(
-          StatusResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Unknown bank service error")), HttpStatus.INTERNAL_SERVER_ERROR)
+          StatusResponse(TEMP_ERROR_CODE, "Unknown bank service error")), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
   }
