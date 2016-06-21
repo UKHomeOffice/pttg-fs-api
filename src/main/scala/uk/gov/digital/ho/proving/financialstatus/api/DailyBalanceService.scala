@@ -3,6 +3,7 @@ package uk.gov.digital.ho.proving.financialstatus.api
 import java.math.{BigDecimal => JBigDecimal}
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import javax.validation.constraints.NotNull
 
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.{Autowired, Value}
@@ -87,7 +88,7 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
 
   def validateSortCode(sortCode: String) = sortCodePattern.findFirstIn(sortCode).nonEmpty
 
-  def validateMinimum(minimum: BigDecimal) = minimum > 0
+  def validateMinimum(minimum: JBigDecimal) = minimum != null && JBigDecimal.ZERO.compareTo(minimum) == -1
 
   /*
    * Takes two dates in string format, tries to converts them to LocalDate objects and

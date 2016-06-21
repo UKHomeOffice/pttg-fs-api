@@ -4,6 +4,7 @@ import groovy.json.JsonSlurper
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
@@ -298,4 +299,55 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         jsonContent.status.message == invalidDateRange
     }
 
+    // Missing values
+
+    def "daily balance reject missing from date value"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", "").param("minimum", "2560.23").param("toDate", "2016-06-13")
+        )
+
+        then:
+        response.andDo(MockMvcResultHandlers.print())
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0000"
+        jsonContent.status.message == invalidFromDate
+    }
+
+    def "daily balance reject missing to date value"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", "2016-05-13").param("minimum", "2560.23").param("toDate", "")
+        )
+
+        then:
+        response.andDo(MockMvcResultHandlers.print())
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0000"
+        jsonContent.status.message == invalidToDate
+    }
+
+    def "daily balance reject missing minimum value"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("toDate", "2016-06-09").param("fromDate", "2016-05-13").param("minimum","")
+        )
+
+        then:
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0000"
+        jsonContent.status.message == invalidTotalFunds
+    }
 }
