@@ -24,6 +24,9 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
+  // TODO Temporary error code until these are finalised or removed
+  val TEMP_ERROR_CODE = "0000"
+
   val sortCodePattern = """^[0-9]{6}$""".r
   val accountNumberPattern = """^[0-9]{8}$""".r
 
@@ -46,9 +49,9 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
     val validDates = validateDates(fromDate, toDate)
 
     val response = if (validDates.isLeft) validDates.left.get
-    else if (!validateAccountNumber(accountNumber)) buildErrorResponse(headers, "0000", "Parameter error: Invalid account number", HttpStatus.BAD_REQUEST)
-    else if (!validateSortCode(cleanSortCode)) buildErrorResponse(headers, "0000", "Parameter error: Invalid sort code", HttpStatus.BAD_REQUEST)
-    else if (!validateMinimum(minimum)) buildErrorResponse(headers, "0000", "Parameter error: Invalid Total Funds Required", HttpStatus.BAD_REQUEST)
+    else if (!validateAccountNumber(accountNumber)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid account number", HttpStatus.BAD_REQUEST)
+    else if (!validateSortCode(cleanSortCode)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid sort code", HttpStatus.BAD_REQUEST)
+    else if (!validateMinimum(minimum)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid Total Funds Required", HttpStatus.BAD_REQUEST)
     else validateDailyBalanceStatus(cleanSortCode, accountNumber, BigDecimal(minimum).setScale(2), LocalDate.parse(fromDate, DateTimeFormatter.ISO_DATE), LocalDate.parse(toDate, DateTimeFormatter.ISO_DATE))
 
     response
@@ -102,8 +105,8 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
     val validFromDate = Try(LocalDate.parse(fromDate, DateTimeFormatter.ISO_DATE))
     val validToDate = Try(LocalDate.parse(toDate, DateTimeFormatter.ISO_DATE))
 
-    if (validFromDate.isFailure) Left(buildErrorResponse(headers, "0000", "Parameter error: Invalid from date", HttpStatus.BAD_REQUEST))
-    else if (validToDate.isFailure) Left(buildErrorResponse(headers, "0000", "Parameter error: Invalid to date", HttpStatus.BAD_REQUEST))
+    if (validFromDate.isFailure) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid from date", HttpStatus.BAD_REQUEST))
+    else if (validToDate.isFailure) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid to date", HttpStatus.BAD_REQUEST))
     else {
       val validDates =
         for {vfd <- validFromDate
@@ -112,7 +115,7 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
         }
 
       if (validDates.get) Right(true)
-      else Left(buildErrorResponse(headers, "0000", s"Parameter error: Invalid dates, from date must be ${daysToCheck - 1} days before to date", HttpStatus.BAD_REQUEST))
+      else Left(buildErrorResponse(headers, TEMP_ERROR_CODE, s"Parameter error: Invalid dates, from date must be ${daysToCheck - 1} days before to date", HttpStatus.BAD_REQUEST))
     }
 
   }
