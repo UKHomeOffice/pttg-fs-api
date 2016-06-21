@@ -64,7 +64,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
       | Status code    | 0000                                          |
-      | Status message | Parameter error: Invalid Total Funds Required |
+      | Status message | Parameter error: Invalid total funds required |
 
   Scenario: The API provides incorrect Total Funds Required - just 0
 
@@ -78,7 +78,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
       | Status code    | 0000                                          |
-      | Status message | Parameter error: Invalid Total Funds Required |
+      | Status message | Parameter error: Invalid total funds required |
 
   Scenario: The API provides incorrect Total Funds Required - not numbers 0-9 (letters)
 
@@ -106,7 +106,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
       | Status code    | 0000                                          |
-      | Status message | Parameter error: Invalid Total Funds Required |
+      | Status message | Parameter error: Invalid value for minimum |
 
 ######################### Validation on the Sort Code Field #########################
 
