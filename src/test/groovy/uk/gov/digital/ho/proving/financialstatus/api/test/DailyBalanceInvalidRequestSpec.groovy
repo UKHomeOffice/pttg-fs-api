@@ -4,13 +4,12 @@ import cucumber.api.java.Before
 import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationConfiguration
-import org.springframework.http.converter.HttpMessageConverter
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.ServiceRunner
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -20,8 +19,11 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 /**
  * @Author Home Office Digital
  */
-@SpringApplicationConfiguration(ServiceConfiguration.class)
+
+//@SpringApplicationConfiguration(ServiceConfiguration.class)
+//@WebAppConfiguration
 @WebAppConfiguration
+@ContextConfiguration(classes = ServiceConfiguration.class)
 class DailyBalanceInvalidRequestSpec extends Specification {
 
     @Autowired
