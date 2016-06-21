@@ -1,8 +1,9 @@
 Feature: Validation of the API fields and data
 
   Fields mandatory to fill in:
-  Maintenance Period End Date - Format should be yyyy-mm-dd
-  Total Funds Required - Format should not contain commas or currency symbols
+  To Date - Format should be yyyy-mm-dd
+  From Date - Format should be yyyy-mm-dd
+  Minimum Funds Required - Format should not contain commas or currency symbols
   Sort code - Format should be three pairs of digits 13-56-09 (always numbers 0-9, no letters and cannot be all 0's)
   Account Number - Format should be 12345678 (always 8 numbers, 0-9, no letters, cannot be all 0's)
 
@@ -64,7 +65,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
       | Status code    | 0000                                          |
-      | Status message | Parameter error: Invalid total funds required |
+      | Status message | Parameter error: Invalid value for minimum |
 
   Scenario: The API provides incorrect Total Funds Required - just 0
 
@@ -78,7 +79,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 400                                           |
       | Status code    | 0000                                          |
-      | Status message | Parameter error: Invalid total funds required |
+      | Status message | Parameter error: Invalid value for minimum |
 
   Scenario: The API provides incorrect Total Funds Required - not numbers 0-9 (letters)
 
