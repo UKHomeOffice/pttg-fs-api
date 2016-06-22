@@ -26,8 +26,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 class DailyBalanceInvalidRequestSpec extends Specification {
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
-    private MockMvc mockMvc;
+    private WebApplicationContext webApplicationContext
+    private MockMvc mockMvc
 
     def invalidSortCode = "Parameter error: Invalid sort code"
     def invalidAccountNumber = "Parameter error: Invalid account number"
