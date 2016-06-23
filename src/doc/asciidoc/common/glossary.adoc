@@ -1,3 +1,18 @@
-Financial Status:: to do
 
-Sponsor:: to do
+Please refer to the link:https://homeofficegovuk.sharepoint.com/teams/HomeOfficeDigital/Sheffield%20Hub/_layouts/15/guestaccess.aspx?guestaccesstoken=o9EgBQ0KHD7LebawhK0TuEkbhGoJd5bdwaesZzWVTEo%3d&docid=010a58383e193416c8c8d22124c97a265[Proving Things Ubiquitous Language^] reference
+
+
+Payment Frequency:: One of the following codes
+[caption=]
+.Payment Frequency Codes
+|===
+|Code|Meaning
+
+|M1
+|Calendar Monthly
+|W1
+|Weekly
+|?
+| to do
+
+|===
