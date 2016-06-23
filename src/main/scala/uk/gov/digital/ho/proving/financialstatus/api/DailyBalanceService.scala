@@ -92,33 +92,6 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
 
   def validateMinimum(minimum: JBigDecimal) = minimum != null && JBigDecimal.ZERO.compareTo(minimum) == -1
 
-  /*
-   * Takes two dates in string format, tries to converts them to LocalDate objects and
-   * ensures fromDate is before toDate.  If successful it returns Right[true] otherwise
-   * it returns a Left[ResponseEntity[AccountDailyBalanceStatusResponse]] containing
-   * the appropriate error message
-   *
-   * This can be simplified once Spring is handling the String to LocalDate conversion
-   */
-  //  def validateDates(fromDate: String, toDate: String) = {
-  //    val validFromDate = Try(LocalDate.parse(fromDate, DateTimeFormatter.ISO_DATE))
-  //    val validToDate = Try(LocalDate.parse(toDate, DateTimeFormatter.ISO_DATE))
-  //
-  //    if (validFromDate.isFailure) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid from date", HttpStatus.BAD_REQUEST))
-  //    else if (validToDate.isFailure) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid to date", HttpStatus.BAD_REQUEST))
-  //    else {
-  //      val validDates =
-  //        for {vfd <- validFromDate
-  //             vtd <- validToDate} yield {
-  //          vfd.isBefore(vtd) && vfd.plusDays(daysToCheck - 1).equals(vtd)
-  //        }
-  //
-  //      if (validDates.get) Right(true)
-  //      else Left(buildErrorResponse(headers, TEMP_ERROR_CODE, s"Parameter error: Invalid dates, from date must be ${daysToCheck - 1} days before to date", HttpStatus.BAD_REQUEST))
-  //    }
-  //
-  //  }
-
   def validateDates(fromDate: LocalDate, toDate: LocalDate) = {
     if (fromDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid from date", HttpStatus.BAD_REQUEST))
     else if (toDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid to date", HttpStatus.BAD_REQUEST))

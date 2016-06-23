@@ -1,33 +1,68 @@
-group 'uk.gov.digital.ho.proving.income'
-version '1.0-SNAPSHOT'
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
-}
-
 buildscript {
     repositories {
         mavenCentral()
         jcenter()
+        maven { url "https://github.com/UKHomeOffice/pttg-gradle-repo/raw/master/releases" }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.5.RELEASE")
-        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.3")
-        classpath("org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11")
         classpath 'net.serenity-bdd:serenity-gradle-plugin:1.1.31'
+
+        classpath 'pttg-gradle-common:pttgCommonGradle:1.2.RELEASE'
+        classpath 'pttg-gradle-common:pttgApiDocsGradle:1.1.RELEASE'
+        classpath 'pttg-gradle-common:pttgSpringBootGradle:1.1.RELEASE'
+
+        // This shouldn't be needed. It should pull transitively from the plugin. Don't know why it isn't working.
+        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.3"
+        classpath "org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11"
     }
 }
 
 apply plugin: 'scala'
-apply plugin: 'java'
-apply plugin: 'groovy'
-apply plugin: 'spring-boot'
-apply plugin: 'application'
-apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'net.serenity-bdd.aggregator'
+apply plugin: 'pttgCommonGradle'
+apply plugin: 'pttgSpringBootGradle'
+apply plugin: 'pttgApiDocsGradle'
 
-test {
-    exclude 'acceptance/**'
+group 'uk.gov.digital.ho.proving.income'
+version '1.0-SNAPSHOT'
+
+mainClassName = "uk.gov.digital.ho.proving.financialstatus.ServiceRunner"
+
+commonLibraries{
+    springBootVersion = '1.3.5.RELEASE'
+}
+
+dependencies {
+
+    compile libraries.groovy
+    compile libraries.logging
+    compile libraries.jackson
+    compile libraries.jersey
+    compile libraries.json
+    compile libraries.springboot
+
+    compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.7.4'
+    compile 'org.apache.httpcomponents:httpclient:4.5.2'
+    compile 'org.scala-lang:scala-library:2.11.8'
+
+    testCompile libraries.cucumber
+    testCompile libraries.groovy
+    testCompile libraries.jackson
+    testCompile libraries.jersey
+    testCompile libraries.json
+    testCompile libraries.restassured
+    testCompile libraries.spock
+    testCompile libraries.springTest
+    testCompile libraries.testUtils
+
+    testCompile 'cglib:cglib-nodep:3.2.1'
+    testCompile 'org.objenesis:objenesis:2.2'
+    testCompile 'org.scala-lang:scala-library:2.11.8'
+}
+
+springboot{
+    port = 8080
 }
 
 compileGroovy.dependsOn "compileScala"
@@ -39,108 +74,20 @@ tasks.withType(ScalaCompile) {
     }
 }
 
+test {
+    exclude 'acceptance/**'
+}
+
 task accept(type: Test) {
     include 'acceptance/**'
+    finalizedBy aggregate
+    outputs.upToDateWhen {false}
 }
 
-accept.finalizedBy aggregate
-
-repositories {
-    mavenCentral()
-    mavenLocal()    // Pick up the domain jar locally until we have a central repo server.
-    maven { url 'https://repo.spring.io/libs-milestone' }
-}
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-// API documentation tests are separated from unit tests and are not run automatically.
-// Use the asciidoctor task to execute tests and generate HTML documentation (output to build/asciidoc)
-// Use the apiDocTests task to execute tests (output to build/generated-snippets)
-sourceSets {
-    doc {
-        java.srcDir file('src/doc/java')
-        resources.srcDir file('src/doc/resources')
-        compileClasspath += main.output + test.output + configurations.testRuntime
-        runtimeClasspath += output + compileClasspath
-    }
-}
-
-task apiDocTests(type: Test) {
-    description = 'Runs the API documentation tests'
-    group = 'documentation'
-    testClassesDir = sourceSets.doc.output.classesDir
-    classpath = sourceSets.doc.runtimeClasspath
-    reports.junitXml.destination = 'build/doc-test-results'
-    reports.html.destination = 'build/reports/doc-tests'
-}
-
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
-
-asciidoctor {
-    backends    'pdf', 'html5'
-    attributes 'snippets': snippetsDir
-    inputs.dir snippetsDir
-    outputDir "build/asciidoc"
-    dependsOn apiDocTests
-    sourceDir 'src/doc/asciidoc'
-}
-
-mainClassName = "uk.gov.digital.ho.proving.financialstatus.ServiceRunner"
-
-dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-web:1.3.5.RELEASE'
-    compile 'org.springframework.boot:spring-boot:1.3.5.RELEASE'
-    compile 'org.json:json:20160212'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.4'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.4'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.4'
-    compile 'org.codehaus.groovy:groovy-all:2.4.3'
-    compile 'org.slf4j:slf4j-parent:1.7.14'
-    compile 'ch.qos.logback:logback-core:1.1.3'
-    compile 'ch.qos.logback:logback-classic:1.1.3'
-
-    compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.7.4'
-    compile 'org.scala-lang:scala-library:2.11.8'
-
-    compile 'org.apache.httpcomponents:httpclient:4.5.2'
-
-    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.5.4'
-    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.22.2'
-
-    testCompile 'org.scala-lang:scala-library:2.11.8'
-
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile 'org.codehaus.groovy:groovy-all:2.4.3'
-    testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
-    testCompile 'org.spockframework:spock-spring:1.0-groovy-2.4'
-    testCompile 'org.springframework:spring-test:4.2.5.RELEASE'
-    testCompile 'com.jayway.jsonpath:json-path:2.2.0'
-    testCompile 'cglib:cglib-nodep:3.2.1'
-    testCompile 'org.objenesis:objenesis:2.2'
-
-    testCompile 'org.json:json:20090211'
-    testCompile 'com.jayway.restassured:rest-assured:2.9.0'
-    testCompile 'com.jayway.restassured:json-schema-validator:2.9.0'
-
-    testCompile 'net.serenity-bdd:serenity-cucumber:1.1.6'
-    testCompile 'net.serenity-bdd:serenity-junit:1.1.1'
-    testCompile 'net.serenity-bdd:serenity-core:1.1.28'
-
-    testCompile 'info.cukes:cucumber-java:1.2.4'
-    testCompile 'info.cukes:cucumber-junit:1.2.4'
-    testCompile 'junit:junit:4.12'
-    testCompile 'info.cukes:gherkin:2.12.2'
-
-    testCompile 'com.jayway.jsonpath:json-path'
-    testCompile 'org.springframework.restdocs:spring-restdocs-core:1.1.0.RC1'
-    testCompile 'org.springframework.restdocs:spring-restdocs-restassured:1.1.0.RC1'
-    testCompile 'org.mockito:mockito-all:1.10.19:'
-
-    testCompile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.5.4'
-    testCompile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.22.2'
-
-    testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+task acceptanceTest(type: Test) {
+    description 'Runs the acceptance tests.'
+    dependsOn 'accept'
+    group 'verification'
+    outputs.upToDateWhen {false}
 }
 

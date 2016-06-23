@@ -1,19 +1,23 @@
 Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctorate In London (single current account and no dependants)
 
-  Requirement to meet Tier 4 pass
+    Requirement to meet Tier 4 pass
 
-  Required Maintenance threshold regulation to pass this feature file
-  Required Maintenance threshold non doctorate inner London borough = £1265 (the amount for when the student is studying in London)
-  Course length - this can be within the period of 1-9 months
-  Total tuition fees - total amount of the tuition fees for the course
+    Required Maintenance threshold regulation to pass this feature file
+    Required Maintenance threshold non doctorate inner London borough = £1265 (the amount for when the student is studying in London)
+    Course length - this can be within the period of 1-9 months
+    Total tuition fees - total amount of the tuition fees for the course
+    Tuition fees already paid -
+    Accommodation fees already paid - The maximum amount paid can be £1265
 
-  Required Maintenance threshold calculation to pass this feature file
+    Required Maintenance threshold calculation to pass this feature file
 
-  Maintenance threshold amount- (Required Maintenance funds non doctorate inner London borough * course length) + total tuition fees
+    Maintenance threshold amount- (Required Maintenance funds non doctorate inner London borough * course length) + (total tuition fees - tuition fees paid - accommodation fees paid)
 
-  Tier 4 (General) Student - non doctorate - London, In Country - (£1265 x 6) + £10,000 = £17,590
-  Tier 4 (General) Student - non doctorate - London, In Country - (£1265 x 9) + £7,000 = £18,385
-  Tier 4 (General) Student - non doctorate - London, In Country - (£1265 x 2) + £2,000 = £4,530
+    ((£1265 x 6) + (£10,000 - fees paid - accommodation fees))
+
+    Tier 4 (General) Student - non doctorate - London, In Country - (£1265 x 6) + (£10,000 - 0 - 0) = £17,590
+    Tier 4 (General) Student - non doctorate - London, In Country - (£1265 x 9) + (£7,000 - 300 - 500) = £17,585
+    Tier 4 (General) Student - non doctorate - London, In Country - (£1265 x 2) + (£2,000 - 0 - 300.50) = £4,229.50
 
     Scenario: Tony's maintenance threshold amount calculated
     He is on a 6 month course
@@ -22,9 +26,11 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Inner London Borough | Yes     |
-            | Course Length        | 6       |
-            | Total tuition fees   | 6530.12 |
+            | Inner London Borough            | Yes     |
+            | Course Length                   | 6       |
+            | Total tuition fees              | 6530.12 |
+            | Tuition fees already paid       | 0       |
+            | Accommodation fees already paid | 0       |
         Then the service displays the following result
             | HTTP Status                  | 200      |
             | Maintenance Threshold amount | 14120.12 |
@@ -36,9 +42,11 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Inner London Borough | Yes      |
-            | Course Length        | 9        |
-            | Total tuition fees   | 12500.00 |
+            | Inner London Borough            | Yes      |
+            | Course Length                   | 9        |
+            | Total tuition fees              | 12500.00 |
+            | Tuition fees already paid       | 250.50   |
+            | Accommodation fees already paid | 300      |
         Then the service displays the following result
             | HTTP Status                  | 200      |
-            | Maintenance Threshold amount | 23885.00 |
+            | Maintenance Threshold amount | 23334.50 |

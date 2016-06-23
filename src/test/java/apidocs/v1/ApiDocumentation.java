@@ -1,4 +1,4 @@
-package v1;
+package apidocs.v1;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
