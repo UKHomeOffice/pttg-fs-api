@@ -20,7 +20,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
     His total tuition fees are £6,530.12
     He is studying in London at LSE University
 
-        Given A service is consuming the FSPS Calculator API
+        Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Inner London Borough | Yes     |
             | Course Length        | 6       |
@@ -34,7 +34,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
     His total tuition fees are £12,500.00
     He is studying in London at LSE University
 
-        Given A service is consuming the FSPS Calculator API
+        Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Inner London Borough | Yes      |
             | Course Length        | 9        |
