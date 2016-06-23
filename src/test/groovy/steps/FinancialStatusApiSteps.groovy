@@ -27,6 +27,9 @@ class FinancialStatusApiSteps {
     String sortCode = ""
     String minimum = ""
     String days = ""
+    boolean innerLondon
+    String courseLength = ""
+    String tuitionFees = ""
 
     def barclaysStubHost = "localhost"
     def barclaysStubPort = 8082
@@ -69,8 +72,19 @@ class FinancialStatusApiSteps {
             if(s.equalsIgnoreCase("To Date")){
                 toDate = entries.get(s)
             }
+            if(s.equalsIgnoreCase("Course Length")){
+                courseLength  = entries.get(s)
+            }
+            if(s.equalsIgnoreCase("Total tuition fees")){
+                tuitionFees = entries.get(s)
+            }
+            if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("Yes")){
+                innerLondon = true
+            }
+            if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("No")){
+                innerLondon = false
+            }
         }
-
     }
 
     public String tocamelcase(String g) {
@@ -175,6 +189,12 @@ class FinancialStatusApiSteps {
 
     }
 
+    @Given("^A Service is consuming the FSPS Calculator API\$")
+    public void a_Service_is_consuming_the_FSPS_Calculator_API() {
+
+    }
+
+
 
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
@@ -185,6 +205,17 @@ class FinancialStatusApiSteps {
         println ("Family Case Worker API: "+ jsonAsString)
     }
 
+    @When("^the FSPS Calculator API is invoked with the following\$")
+    public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
+        getTableData(arg1)
+        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/maintenance/threshold?innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}",innerLondon, courseLength, tuitionFees)
+        jsonAsString = resp.asString()
+
+        println ("FSPS API Calculator: "+ jsonAsString)
+    }
+
+
+
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
               validateJsonResult(arg1)
@@ -192,6 +223,11 @@ class FinancialStatusApiSteps {
 
     @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")
     public void fsps_Tier_four_general_Case_Worker_tool_API_provides_the_following_result(DataTable arg1) {
+        validateResult(arg1)
+    }
+
+    @Then("^the service displays the following result\$")
+    public void the_service_displays_the_following_result(DataTable arg1) {
         validateResult(arg1)
     }
 
