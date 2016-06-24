@@ -30,7 +30,8 @@ class FinancialStatusApiSteps {
     boolean innerLondon
     String courseLength = ""
     String tuitionFees = ""
-
+    String tuitionFeesPaid = ""
+    String accommodationFeesPaid = ""
     def barclaysStubHost = "localhost"
     def barclaysStubPort = 8082
     def testDataLoader
@@ -84,6 +85,15 @@ class FinancialStatusApiSteps {
             if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("No")){
                 innerLondon = false
             }
+
+            if(s.equalsIgnoreCase("Tuition fees already paid")){
+                tuitionFeesPaid = entries.get(s)
+            }
+
+            if(s.equalsIgnoreCase("Accommodation fees already paid")){
+                accommodationFeesPaid = entries.get(s)
+            }
+
         }
     }
 
@@ -208,7 +218,7 @@ class FinancialStatusApiSteps {
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/maintenance/threshold?innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}",innerLondon, courseLength, tuitionFees)
+        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/maintenance/threshold?innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}",innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         jsonAsString = resp.asString()
 
         println ("FSPS API Calculator: "+ jsonAsString)
@@ -228,7 +238,7 @@ class FinancialStatusApiSteps {
 
     @Then("^the service displays the following result\$")
     public void the_service_displays_the_following_result(DataTable arg1) {
-        validateResult(arg1)
+        validateJsonResult(arg1)
     }
 
 
