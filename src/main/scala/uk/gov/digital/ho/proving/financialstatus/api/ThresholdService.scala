@@ -11,15 +11,22 @@ import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalc
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(value = Array("/pttg/financialstatusservice/v1/maintenance"))
-class ThresholdService /* @Autowired() */ {
+class ThresholdService {
 
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET))
-  def calculateThreshold(innerLondon: Boolean, courseLength: Int, tuitionFees: JBigDecimal): ResponseEntity[ThresholdResponse] = {
+  def calculateThreshold(innerLondon: Boolean,
+                         courseLength: Int,
+                         tuitionFees: JBigDecimal,
+                         tuitionFeesPaid: JBigDecimal,
+                         accommodationFeesPaid: JBigDecimal
+                        ): ResponseEntity[ThresholdResponse] = {
+
     val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
     LOGGER.info("Calculating threshold")
 
     val thresholdResponse: ThresholdResponse = new ThresholdResponse(
-      MaintenanceThresholdCalculator.calculate(innerLondon, courseLength, BigDecimal(tuitionFees).setScale(2)),
+      MaintenanceThresholdCalculator.calculate(innerLondon, courseLength,
+        BigDecimal(tuitionFees).setScale(2), BigDecimal(tuitionFeesPaid).setScale(2), BigDecimal(accommodationFeesPaid).setScale(2)),
       StatusResponse("200", "OK")
     )
 
