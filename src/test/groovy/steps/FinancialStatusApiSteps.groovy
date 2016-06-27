@@ -183,7 +183,8 @@ class FinancialStatusApiSteps {
                     assert entries.get(key) == resp.getStatusCode().toString();
                     break;
                 default:
-                    String jsonPath = FeatureKeyMapper.buildJsonPath(key);
+                    String jsonPath = FeatureKeyMapper.buildJsonPath(key)
+
                     assert entries.get(key) == read(jsonAsString, jsonPath).toString();
             }
         }
