@@ -365,7 +365,6 @@ Feature:
             | Status message | Resource not found: Please check the sort code and account number are valid values/pttg/financialstatusservice/v1/accounts/13-56-09/23568a98/dailybalancestatus |
 
 
-
     Scenario: The API is provided with an Account Number that does not exist
 
         Given a Service is consuming Financial Status API
