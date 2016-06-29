@@ -36,6 +36,8 @@ class FinancialStatusApiSteps {
     def barclaysStubPort = 8082
     def testDataLoader
 
+FeatureKeyMapper fkm = new FeatureKeyMapper()
+
     @Before
     def setUp(Scenario scenario) {
         testDataLoader = new TestDataLoader(barclaysStubHost, barclaysStubPort)
@@ -186,7 +188,7 @@ class FinancialStatusApiSteps {
                     assert entries.get(key) == resp.getStatusCode().toString();
                     break;
                 default:
-                    String jsonPath = FeatureKeyMapper.buildJsonPath(key)
+                    String jsonPath = fkm.buildJsonPath(key)
 
                     assert entries.get(key) == read(jsonAsString, jsonPath).toString();
             }
@@ -242,7 +244,7 @@ class FinancialStatusApiSteps {
 
     @Then("^the service displays the following result\$")
     public void the_service_displays_the_following_result(DataTable arg1) {
-        validateJsonResult(arg1)
+        validateResult(arg1)
     }
 
 
