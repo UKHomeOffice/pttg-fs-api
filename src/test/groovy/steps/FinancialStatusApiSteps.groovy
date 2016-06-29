@@ -85,6 +85,9 @@ class FinancialStatusApiSteps {
             if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("No")){
                 innerLondon = false
             }
+            if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase(" ")){
+                innerLondon = null
+            }
 
             if(s.equalsIgnoreCase("Tuition fees already paid")){
                 tuitionFeesPaid = entries.get(s)
