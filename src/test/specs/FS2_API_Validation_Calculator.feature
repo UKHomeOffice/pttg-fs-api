@@ -141,7 +141,8 @@ Feature: Validation of the API fields and data
             | Accommodation fees already paid |        |
         Then the service displays the following result
             | HTTP Status                  | 200      |
-            | Maintenance Threshold amount | 14120.12 |
+            | Status code    | 0000                                               |
+            | Status message | Parameter error: Tuition fees already paid Invalid |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
@@ -152,5 +153,6 @@ Feature: Validation of the API fields and data
             | Tuition fees already paid       | 0       |
             | Accommodation fees already paid | %%       |
         Then the service displays the following result
-            | HTTP Status                  | 200      |
-            | Maintenance Threshold amount | 14120.12 |
+            | HTTP Status                  | 400      |
+            | Status code    | 0000                                               |
+            | Status message | Parameter error: Tuition fees already paid Invalid |
