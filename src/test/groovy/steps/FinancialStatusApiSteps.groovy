@@ -27,7 +27,7 @@ class FinancialStatusApiSteps {
     String sortCode = ""
     String minimum = ""
     String days = ""
-    boolean innerLondon
+    String innerLondon = ""
     String courseLength = ""
     String tuitionFees = ""
     String tuitionFeesPaid = ""
@@ -35,9 +35,11 @@ class FinancialStatusApiSteps {
     def barclaysStubHost = "localhost"
     def barclaysStubPort = 8082
     def testDataLoader
+FeatureKeyMapper fkm = new FeatureKeyMapper();
 
     @Before
     def setUp(Scenario scenario) {
+
         testDataLoader = new TestDataLoader(barclaysStubHost, barclaysStubPort)
         testDataLoader.prepareFor(scenario)
     }
@@ -80,10 +82,10 @@ class FinancialStatusApiSteps {
                 tuitionFees = entries.get(s)
             }
             if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("Yes")){
-                innerLondon = true
+                innerLondon = "true"
             }
             if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("No")){
-                innerLondon = false
+                innerLondon = "false"
             }
 
             if(s.equalsIgnoreCase("Tuition fees already paid")){
@@ -174,6 +176,7 @@ class FinancialStatusApiSteps {
     }
 
     public void validateResult(DataTable arg) {
+
         Map<String, String> entries = arg.asMap(String.class, String.class);
         String[] tableKey = entries.keySet();
 
@@ -183,7 +186,7 @@ class FinancialStatusApiSteps {
                     assert entries.get(key) == resp.getStatusCode().toString();
                     break;
                 default:
-                    String jsonPath = FeatureKeyMapper.buildJsonPath(key)
+                    String jsonPath = fkm.buildJsonPath(key)
 
                     assert entries.get(key) == read(jsonAsString, jsonPath).toString();
             }
@@ -239,7 +242,7 @@ class FinancialStatusApiSteps {
 
     @Then("^the service displays the following result\$")
     public void the_service_displays_the_following_result(DataTable arg1) {
-        validateJsonResult(arg1)
+        validateResult(arg1)
     }
 
 

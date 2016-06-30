@@ -4,33 +4,59 @@ import java.math.{BigDecimal => JBigDecimal}
 
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
-import org.springframework.http.{HttpStatus, ResponseEntity}
-import org.springframework.web.bind.annotation.{RequestMapping, RequestMethod, RestController}
+import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
+import org.springframework.web.bind.annotation._
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(value = Array("/pttg/financialstatusservice/v1/maintenance"))
+@ControllerAdvice
 class ThresholdService {
 
-  @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET))
-  def calculateThreshold(innerLondon: Boolean,
-                         courseLength: Int,
-                         tuitionFees: JBigDecimal,
-                         tuitionFeesPaid: JBigDecimal,
-                         accommodationFeesPaid: JBigDecimal
+  val courseLengthPattern = """^[0-9]$""".r
+
+  val headers = new HttpHeaders()
+  headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+
+  val TEMP_ERROR_CODE: String = "000"
+
+  @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
+  def calculateThreshold(@RequestParam(required = true) innerLondon: Boolean,
+                         @RequestParam(required = true) courseLength: Int,
+                         @RequestParam(required = true) tuitionFees: JBigDecimal,
+                         @RequestParam(required = true) tuitionFeesPaid: JBigDecimal,
+                         @RequestParam(required = true) accommodationFeesPaid: JBigDecimal
                         ): ResponseEntity[ThresholdResponse] = {
 
     val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
     LOGGER.info("Calculating threshold")
 
-    val thresholdResponse: ThresholdResponse = new ThresholdResponse(
-      MaintenanceThresholdCalculator.calculate(innerLondon, courseLength,
-        BigDecimal(tuitionFees).setScale(2), BigDecimal(tuitionFeesPaid).setScale(2), BigDecimal(accommodationFeesPaid).setScale(2)),
-      StatusResponse("200", "OK")
-    )
 
-    new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
+    val response =
+      if (!validateCourseLength(courseLength)) {
+        buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid courseLength", HttpStatus.BAD_REQUEST)
+      } else {
+        val thresholdResponse: ThresholdResponse = new ThresholdResponse(
+          MaintenanceThresholdCalculator.calculate(innerLondon, courseLength,
+            BigDecimal(tuitionFees).setScale(2), BigDecimal(tuitionFeesPaid).setScale(2), BigDecimal(accommodationFeesPaid).setScale(2)), StatusResponse("200", "OK"))
+        new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
+      }
+    response
   }
+
+
+  def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus) = {
+    new ResponseEntity(ThresholdResponse(null, StatusResponse(statusCode, statusMessage)), headers, status)
+  }
+
+  def validateCourseLength(courseLength: Int) = {
+    val m = courseLength match {
+      case x if (0 <= x && x < 10) => true
+      case _ => false
+    }
+    m
+  }
+
 
 }

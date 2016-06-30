@@ -1,22 +1,25 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import groovy.json.JsonSlurper
-import org.junit.Before
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.web.context.WebApplicationContext
+import org.springframework.web.method.HandlerMethod
+import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver
+import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
+import uk.gov.digital.ho.proving.financialstatus.api.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
 
-import java.time.LocalDate
+import java.lang.reflect.Method
 
+import static org.hamcrest.core.StringContains.containsString
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 
@@ -28,7 +31,12 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 class MaintenanceThresholdServiceSpec extends Specification {
 
     def thresholdService = new ThresholdService()
-    MockMvc mockMvc = standaloneSetup(thresholdService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
+    //MockMvc mockMvc = standaloneSetup(thresholdService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper())).build()
+    MockMvc mockMvc = standaloneSetup(thresholdService)
+        .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
+        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper()))
+        .build()
+
 
     def url = "/pttg/financialstatusservice/v1/maintenance/threshold"
 
@@ -162,4 +170,18 @@ class MaintenanceThresholdServiceSpec extends Specification {
 
     }
 
+    def "Check invalid course length parameters"() {
+        expect:
+        def response = callApi(innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter error: Invalid courseLength")))
+
+        where:
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
+        false       | 10                   | 9244.00     | 1855.00         | 454.00                || 10995.00
+        true        | -1                   | 9411.00     | 4612.00         | 336.00                || 13318.00
+        false       | 20                   | 7191.00     | 2720.00         | 1044.00               || 7487.00
+        false       | "bb"                 | 7191.00     | 2720.00         | 1044.00               || 7487.00
+    }
 }

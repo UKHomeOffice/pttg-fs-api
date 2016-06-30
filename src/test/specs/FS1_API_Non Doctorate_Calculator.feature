@@ -31,7 +31,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Total tuition fees              | 6530.12 |
             | Tuition fees already paid       | 0       |
             | Accommodation fees already paid | 0       |
-        Then the service displays the following result
+        Then The Financial Status API provides the following results:
             | HTTP Status                  | 200      |
             | Maintenance Threshold amount | 14120.12 |
 
@@ -47,7 +47,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Total tuition fees              | 12500.00 |
             | Tuition fees already paid       | 250.50   |
             | Accommodation fees already paid | 300      |
-        Then the service displays the following result
+        Then The Financial Status API provides the following results:
             | HTTP Status                  | 200      |
             | Maintenance Threshold amount | 23334.50 |
 
@@ -64,6 +64,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Total tuition fees              | 12500.00 |
             | Tuition fees already paid       | 250.50   |
             | Accommodation fees already paid | 300      |
-        Then the service displays the following result
+        Then The Financial Status API provides the following results:
             | HTTP Status                  | 200      |
             | Maintenance Threshold amount | 27129.50 |
