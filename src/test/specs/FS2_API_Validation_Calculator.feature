@@ -1,3 +1,4 @@
+@InnerLondonBorough
 Feature: Validation of the API fields and data
 
 
@@ -15,7 +16,6 @@ Feature: Validation of the API fields and data
 
 
       ######################### Validation on the Inner London borough Field #########################
-
     Scenario: The API is not provided with Inner London borough Yes or No field
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -27,7 +27,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                           |
             | Status code    | 0000                                          |
-            | Status message | Parameter error: Invalid Inner London Borough |
+            | Status message | Parameter error: Invalid innerLondon |
 ######################### Validation on the Course Length Field #########################
 
     Scenario: The API is not provided with the Course length
@@ -138,9 +138,9 @@ Feature: Validation of the API fields and data
             | Course Length                   | 6       |
             | Total tuition fees              | 6530.12 |
             | Tuition fees already paid       | 0       |
-            | Accommodation fees already paid |        |
+            | Accommodation fees already paid |         |
         Then the service displays the following result
-            | HTTP Status                  | 200      |
+            | HTTP Status    | 200                                                |
             | Status code    | 0000                                               |
             | Status message | Parameter error: Tuition fees already paid Invalid |
 
@@ -151,8 +151,8 @@ Feature: Validation of the API fields and data
             | Course Length                   | 6       |
             | Total tuition fees              | 6530.12 |
             | Tuition fees already paid       | 0       |
-            | Accommodation fees already paid | %%       |
+            | Accommodation fees already paid | %%      |
         Then the service displays the following result
-            | HTTP Status                  | 400      |
+            | HTTP Status    | 400                                                |
             | Status code    | 0000                                               |
             | Status message | Parameter error: Tuition fees already paid Invalid |
