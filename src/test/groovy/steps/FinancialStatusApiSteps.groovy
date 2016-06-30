@@ -35,7 +35,7 @@ class FinancialStatusApiSteps {
     def barclaysStubHost = "localhost"
     def barclaysStubPort = 8082
     def testDataLoader
-
+FeatureKeyMapper fkm = new FeatureKeyMapper();
 
     @Before
     def setUp(Scenario scenario) {
@@ -189,7 +189,7 @@ class FinancialStatusApiSteps {
                     assert entries.get(key) == resp.getStatusCode().toString();
                     break;
                 default:
-                    String jsonPath = FeatureKeyMapper.buildJsonPath(key)
+                    String jsonPath = fkm.buildJsonPath(key)
 
                     assert entries.get(key) == read(jsonAsString, jsonPath).toString();
             }
