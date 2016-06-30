@@ -1,7 +1,9 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.math.{BigDecimal => JBigDecimal}
+import javax.validation.constraints.NotNull
 
+import org.hibernate.validator.constraints.NotEmpty
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
@@ -19,7 +21,7 @@ class ThresholdService {
   val headers = new HttpHeaders()
   headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
-  val TEMP_ERROR_CODE: String = "000"
+  val TEMP_ERROR_CODE: String = "0000"
 
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
   def calculateThreshold(@RequestParam(required = true) innerLondon: Boolean,
@@ -36,6 +38,12 @@ class ThresholdService {
     val response =
       if (!validateCourseLength(courseLength)) {
         buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid courseLength", HttpStatus.BAD_REQUEST)
+      } else if (!validateTuitionFees(tuitionFees)) {
+        buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid tuitionFees", HttpStatus.BAD_REQUEST)
+      } else if (!validateTuitionFeesPaid(tuitionFeesPaid)) {
+        buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid tuitionFeesPaid", HttpStatus.BAD_REQUEST)
+      } else if (!validateAccommodationFeesPaid(accommodationFeesPaid)) {
+        buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid accommodationFeesPaid", HttpStatus.BAD_REQUEST)
       } else {
         val thresholdResponse: ThresholdResponse = new ThresholdResponse(
           MaintenanceThresholdCalculator.calculate(innerLondon, courseLength,
@@ -56,6 +64,18 @@ class ThresholdService {
       case _ => false
     }
     m
+  }
+
+  def validateTuitionFees(tuitionFees: JBigDecimal) = {
+    tuitionFees != null
+  }
+
+  def validateTuitionFeesPaid(tuitionFeesPaid: JBigDecimal) = {
+    tuitionFeesPaid != null
+  }
+
+  def validateAccommodationFeesPaid(accommodationFeesPaid: JBigDecimal) = {
+    accommodationFeesPaid != null
   }
 
 
