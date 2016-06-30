@@ -36,10 +36,10 @@ class FinancialStatusApiSteps {
     def barclaysStubPort = 8082
     def testDataLoader
 
-FeatureKeyMapper fkm = new FeatureKeyMapper()
 
     @Before
     def setUp(Scenario scenario) {
+
         testDataLoader = new TestDataLoader(barclaysStubHost, barclaysStubPort)
         testDataLoader.prepareFor(scenario)
     }
@@ -179,6 +179,7 @@ FeatureKeyMapper fkm = new FeatureKeyMapper()
     }
 
     public void validateResult(DataTable arg) {
+
         Map<String, String> entries = arg.asMap(String.class, String.class);
         String[] tableKey = entries.keySet();
 
@@ -188,7 +189,7 @@ FeatureKeyMapper fkm = new FeatureKeyMapper()
                     assert entries.get(key) == resp.getStatusCode().toString();
                     break;
                 default:
-                    String jsonPath = fkm.buildJsonPath(key)
+                    String jsonPath = FeatureKeyMapper.buildJsonPath(key)
 
                     assert entries.get(key) == read(jsonAsString, jsonPath).toString();
             }
