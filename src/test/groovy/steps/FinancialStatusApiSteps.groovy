@@ -27,7 +27,7 @@ class FinancialStatusApiSteps {
     String sortCode = ""
     String minimum = ""
     String days = ""
-    String innerLondon
+    String innerLondon = ""
     String courseLength = ""
     String tuitionFees = ""
     String tuitionFeesPaid = ""
@@ -53,11 +53,6 @@ FeatureKeyMapper fkm = new FeatureKeyMapper();
         String allUpper = StringUtils.remove(WordUtils.capitalizeFully(s), " ")
         String camelCase = allUpper[0].toLowerCase() + allUpper.substring(1)
         camelCase
-    }
-
-    @Override
-    String toString() {
-        return super.toString()
     }
 
     def String getTableData(DataTable arg) {
@@ -87,13 +82,10 @@ FeatureKeyMapper fkm = new FeatureKeyMapper();
                 tuitionFees = entries.get(s)
             }
             if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("Yes")){
-                innerLondon = true
+                innerLondon = "true"
             }
             if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("No")){
-                innerLondon = false
-            }
-            if(s.equalsIgnoreCase("Inner London Borough") && (entries.get(s)== "")){
-                innerLondon = ""
+                innerLondon = "false"
             }
 
             if(s.equalsIgnoreCase("Tuition fees already paid")){

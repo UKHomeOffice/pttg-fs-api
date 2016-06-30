@@ -1,4 +1,3 @@
-@InnerLondonBorough
 Feature: Validation of the API fields and data
 
 
@@ -16,6 +15,7 @@ Feature: Validation of the API fields and data
 
 
       ######################### Validation on the Inner London borough Field #########################
+
     Scenario: The API is not provided with Inner London borough Yes or No field
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -25,8 +25,8 @@ Feature: Validation of the API fields and data
             | Tuition fees already paid       | 0       |
             | Accommodation fees already paid | 0       |
         Then the service displays the following result
-            | HTTP Status    | 400                                  |
-            | Status code    | 0000                                 |
+            | HTTP Status    | 400                                           |
+            | Status code    | 0000                                          |
             | Status message | Parameter error: Invalid innerLondon |
 ######################### Validation on the Course Length Field #########################
 
@@ -39,8 +39,8 @@ Feature: Validation of the API fields and data
             | Tuition fees already paid       | 0       |
             | Accommodation fees already paid | 0       |
         Then the service displays the following result
-            | HTTP Status    | 400                                   |
-            | Status code    | 0000                                  |
+            | HTTP Status    | 400                                    |
+            | Status code    | 0000                                   |
             | Status message | Parameter error: Invalid courseLength |
 
 
@@ -53,8 +53,8 @@ Feature: Validation of the API fields and data
             | Tuition fees already paid       | 0       |
             | Accommodation fees already paid | 0       |
         Then the service displays the following result
-            | HTTP Status    | 400                                   |
-            | Status code    | 0000                                  |
+            | HTTP Status    | 400                                    |
+            | Status code    | 0000                                   |
             | Status message | Parameter error: Invalid courseLength |
 
     Scenario: The API is provided with incorrect Course Length - more than 9
@@ -66,8 +66,8 @@ Feature: Validation of the API fields and data
             | Tuition fees already paid       | 0       |
             | Accommodation fees already paid | 0       |
         Then the service displays the following result
-            | HTTP Status    | 400                                   |
-            | Status code    | 0000                                  |
+            | HTTP Status    | 400                                    |
+            | Status code    | 0000                                   |
             | Status message | Parameter error: Invalid courseLength |
 
 
@@ -82,9 +82,9 @@ Feature: Validation of the API fields and data
             | Tuition fees already paid       | 0   |
             | Accommodation fees already paid | 0   |
         Then the service displays the following result
-            | HTTP Status    | 400                                  |
-            | Status code    | 0000                                 |
-            | Status message | Parameter error: Invalid tuitionFees |
+            | HTTP Status    | 400                                   |
+            | Status code    | 0000                                  |
+            | Status message | Parameter error: Invalid tuition fees |
 
 
     Scenario: The API is provided with incorrect  tuition fees - not numbers 0-9
@@ -96,9 +96,9 @@ Feature: Validation of the API fields and data
             | Tuition fees already paid       | 0     |
             | Accommodation fees already paid | 0     |
         Then the service displays the following result
-            | HTTP Status    | 400                                  |
-            | Status code    | 0000                                 |
-            | Status message | Parameter error: Invalid tuitionFees |
+            | HTTP Status    | 400                                   |
+            | Status code    | 0000                                  |
+            | Status message | Parameter error: Invalid tuition fees |
 
 
 ######################### Validation on the Tuition fees already paid Field #########################
@@ -112,9 +112,9 @@ Feature: Validation of the API fields and data
             | Tuition fees already paid       |         |
             | Accommodation fees already paid | 0       |
         Then the service displays the following result
-            | HTTP Status    | 400                                      |
-            | Status code    | 0000                                     |
-            | Status message | Parameter error: Invalid tuitionFeesPaid |
+            | HTTP Status    | 400                                                |
+            | Status code    | 0000                                               |
+            | Status message | Parameter error: Tuition fees already paid Invalid |
 
     Scenario: The API is not provided with Tuition fees already paid - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
@@ -125,9 +125,9 @@ Feature: Validation of the API fields and data
             | Tuition fees already paid       | xxxxxx  |
             | Accommodation fees already paid | 0       |
         Then the service displays the following result
-            | HTTP Status    | 400                                      |
-            | Status code    | 0000                                     |
-            | Status message | Parameter error: Invalid tuitionFeesPaid |
+            | HTTP Status    | 400                                                |
+            | Status code    | 0000                                               |
+            | Status message | Parameter error: Tuition fees already paid Invalid |
 
 ######################### Validation on the Accommodation fees already paid Field #########################
 
@@ -138,11 +138,11 @@ Feature: Validation of the API fields and data
             | Course Length                   | 6       |
             | Total tuition fees              | 6530.12 |
             | Tuition fees already paid       | 0       |
-            | Accommodation fees already paid |         |
+            | Accommodation fees already paid |        |
         Then the service displays the following result
-            | HTTP Status    | 400                                      |
-            | Status code    | 0000                                     |
-            | Status message | Parameter error: Invalid tuitionFeesPaid |
+            | HTTP Status                  | 200      |
+            | Status code    | 0000                                               |
+            | Status message | Parameter error: Tuition fees already paid Invalid |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
@@ -151,8 +151,8 @@ Feature: Validation of the API fields and data
             | Course Length                   | 6       |
             | Total tuition fees              | 6530.12 |
             | Tuition fees already paid       | 0       |
-            | Accommodation fees already paid | %%      |
+            | Accommodation fees already paid | %%       |
         Then the service displays the following result
-            | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
-            | Status message | Parameter error: Invalid accommodationFeesPaid |
+            | HTTP Status                  | 400      |
+            | Status code    | 0000                                               |
+            | Status message | Parameter error: Tuition fees already paid Invalid |
