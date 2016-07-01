@@ -124,7 +124,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 404                                                                                                                                                     |
       | Status code    | 0000                                                                                                                                                    |
-      | Status message | Resource not found: Please check the sort code and account number are valid values/pttg/financialstatusservice/v1/accounts//23568498/dailybalancestatus |
+      | Status message | Resource not found: Please check URL and parameters are valid/pttg/financialstatusservice/v1/accounts//23568498/dailybalancestatus |
 
 
   Scenario: The API provides incorrect Sort Code - mising digits
@@ -167,7 +167,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 404                                |
       | Status code    | 0000                               |
-      | Status message | Resource not found: Please check the sort code and account number are valid values/pttg/financialstatusservice/v1/accounts/13-56-0q/23568498/dailybalancestatus |
+      | Status message | Resource not found: Please check URL and parameters are valid/pttg/financialstatusservice/v1/accounts/13-56-0q/23568498/dailybalancestatus |
 
 ######################### Validation on the Account Number Field #########################
 
@@ -184,7 +184,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 404                                                                                                                                                     |
       | Status code    | 0000                                                                                                                                                    |
-      | Status message | Resource not found: Please check the sort code and account number are valid values/pttg/financialstatusservice/v1/accounts/13-56-09//dailybalancestatus |
+      | Status message | Resource not found: Please check URL and parameters are valid/pttg/financialstatusservice/v1/accounts/13-56-09//dailybalancestatus |
 
 
   Scenario: The API is not provided with Account Number - too short
@@ -241,7 +241,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 404                                     |
       | Status code    | 0000                                    |
-      | Status message | Resource not found: Please check the sort code and account number are valid values/pttg/financialstatusservice/v1/accounts/13-56-09/23568a98/dailybalancestatus |
+      | Status message | Resource not found: Please check URL and parameters are valid/pttg/financialstatusservice/v1/accounts/13-56-09/23568a98/dailybalancestatus |
 
 
 
