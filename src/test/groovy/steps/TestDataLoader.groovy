@@ -5,8 +5,6 @@ import groovyx.net.http.RESTClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import static groovyx.net.http.ContentType.JSON
-
 /**
  * @Author Home Office Digital
  */

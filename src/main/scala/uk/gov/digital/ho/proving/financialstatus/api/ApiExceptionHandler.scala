@@ -32,7 +32,7 @@ class ApiExceptionHandler @Autowired()(objectMapper: ObjectMapper){
   @ExceptionHandler(Array(classOf[NoHandlerFoundException]))
   def requestHandlingNoHandlerFound(exception: NoHandlerFoundException) = {
     LOGGER.debug(exception.getMessage)
-    buildErrorResponse(headers, "0000", "Resource not found: Please check the sort code and account number are valid values" + exception.getRequestURL, HttpStatus.NOT_FOUND)
+    buildErrorResponse(headers, "0000", "Resource not found: Please check URL and parameters are valid" + exception.getRequestURL, HttpStatus.NOT_FOUND)
   }
 
   @ExceptionHandler(Array(classOf[MissingPathVariableException]))

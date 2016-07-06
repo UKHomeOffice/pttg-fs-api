@@ -27,16 +27,19 @@ class FinancialStatusApiSteps {
     String sortCode = ""
     String minimum = ""
     String days = ""
-    boolean innerLondon
+    String innerLondon = ""
     String courseLength = ""
     String tuitionFees = ""
-
+    String tuitionFeesPaid = ""
+    String accommodationFeesPaid = ""
     def barclaysStubHost = "localhost"
     def barclaysStubPort = 8082
     def testDataLoader
+FeatureKeyMapper fkm = new FeatureKeyMapper();
 
     @Before
     def setUp(Scenario scenario) {
+
         testDataLoader = new TestDataLoader(barclaysStubHost, barclaysStubPort)
         testDataLoader.prepareFor(scenario)
     }
@@ -79,11 +82,20 @@ class FinancialStatusApiSteps {
                 tuitionFees = entries.get(s)
             }
             if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("Yes")){
-                innerLondon = true
+                innerLondon = "true"
             }
             if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("No")){
-                innerLondon = false
+                innerLondon = "false"
             }
+
+            if(s.equalsIgnoreCase("Tuition fees already paid")){
+                tuitionFeesPaid = entries.get(s)
+            }
+
+            if(s.equalsIgnoreCase("Accommodation fees already paid")){
+                accommodationFeesPaid = entries.get(s)
+            }
+
         }
     }
 
@@ -164,6 +176,7 @@ class FinancialStatusApiSteps {
     }
 
     public void validateResult(DataTable arg) {
+
         Map<String, String> entries = arg.asMap(String.class, String.class);
         String[] tableKey = entries.keySet();
 
@@ -173,7 +186,8 @@ class FinancialStatusApiSteps {
                     assert entries.get(key) == resp.getStatusCode().toString();
                     break;
                 default:
-                    String jsonPath = FeatureKeyMapper.buildJsonPath(key);
+                    String jsonPath = fkm.buildJsonPath(key)
+
                     assert entries.get(key) == read(jsonAsString, jsonPath).toString();
             }
         }
@@ -208,7 +222,7 @@ class FinancialStatusApiSteps {
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/maintenance/threshold?innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}",innerLondon, courseLength, tuitionFees)
+        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/maintenance/threshold?innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}",innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         jsonAsString = resp.asString()
 
         println ("FSPS API Calculator: "+ jsonAsString)
