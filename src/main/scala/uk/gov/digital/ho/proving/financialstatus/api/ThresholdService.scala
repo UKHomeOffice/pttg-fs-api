@@ -55,7 +55,7 @@ class ThresholdService {
 
 
   def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus) = {
-    new ResponseEntity(ThresholdResponse(null, StatusResponse(statusCode, statusMessage)), headers, status)
+    new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
   }
 
   def validateCourseLength(courseLength: Int) = {
