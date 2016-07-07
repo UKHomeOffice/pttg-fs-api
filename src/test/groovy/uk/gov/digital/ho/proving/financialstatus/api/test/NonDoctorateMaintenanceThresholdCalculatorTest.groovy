@@ -3,14 +3,14 @@ package uk.gov.digital.ho.proving.financialstatus.api.test
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
-class MaintenanceThresholdCalculatorTest extends Specification {
+class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
     def bd(a) { new scala.math.BigDecimal(a) }
 
-    def "Check 'Non Inner London Borough'"() {
+    def "Tier 4 Non Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        MaintenanceThresholdCalculator.calculate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
+        MaintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
@@ -26,10 +26,10 @@ class MaintenanceThresholdCalculatorTest extends Specification {
 
     }
 
-    def "Check 'Inner London Borough'"() {
+    def "Tier 4 Non Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        MaintenanceThresholdCalculator.calculate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
+        MaintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
@@ -45,10 +45,10 @@ class MaintenanceThresholdCalculatorTest extends Specification {
 
     }
 
-    def "Check 'Tuition Fees paid'"() {
+    def "Tier 4 Non Doctorate - Check 'Tuition Fees paid'"() {
 
         expect:
-        MaintenanceThresholdCalculator.calculate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
+        MaintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
@@ -64,29 +64,29 @@ class MaintenanceThresholdCalculatorTest extends Specification {
 
     }
 
-    def "Check 'Accommodation Fees paid'"() {
+    def "Tier 4 Non Doctorate - Check 'Accommodation Fees paid'"() {
 
         expect:
-        MaintenanceThresholdCalculator.calculate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
+        MaintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
         true        | 1                    | 14325.00    | 0.00            | 612.00                || 14978.00
         true        | 2                    | 8174.00     | 0.00            | 419.00                || 10285.00
-        true        | 3                    | 8816.00     | 0.00            | 1281.00               || 11346.00  // Trigger max accommodation cap
+        true        | 3                    | 8816.00     | 0.00            | 1281.00               || 11346.00
         true        | 4                    | 11674.00    | 0.00            | 252.00                || 16482.00
         true        | 5                    | 13873.00    | 0.00            | 464.00                || 19734.00
-        false       | 6                    | 7280.00     | 0.00            | 1485.00               || 12105.00  // Trigger max accommodation cap
-        false       | 7                    | 14322.00    | 0.00            | 1460.00               || 20162.00  // Trigger max accommodation cap
+        false       | 6                    | 7280.00     | 0.00            | 1485.00               || 12105.00
+        false       | 7                    | 14322.00    | 0.00            | 1460.00               || 20162.00
         false       | 8                    | 13170.00    | 0.00            | 850.00                || 20440.00
         false       | 9                    | 9301.00     | 0.00            | 1086.00               || 17350.00
 
     }
 
-    def "Check 'All variants'"() {
+    def "Tier 4 Non Doctorate - Check 'All variants'"() {
 
         expect:
-        MaintenanceThresholdCalculator.calculate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
+        MaintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
@@ -94,18 +94,18 @@ class MaintenanceThresholdCalculatorTest extends Specification {
         true        | 8                    | 9729.00     | 2271.00         | 810.00                || 16768.00
         false       | 9                    | 7104.00     | 1073.00         | 1046.00               || 14120.00
         true        | 8                    | 8437.00     | 2399.00         | 977.00                || 15181.00
-        false       | 5                    | 10122.00    | 3747.00         | 1367.00               || 10185.00  // Trigger max accommodation cap
+        false       | 5                    | 10122.00    | 3747.00         | 1367.00               || 10185.00
         false       | 2                    | 6347.00     | 4108.00         | 561.00                || 3708.00
-        false       | 9                    | 7187.00     | 1989.00         | 1497.00               || 13068.00  // Trigger max accommodation cap
-        false       | 9                    | 12789.00    | 1506.00         | 1713.00               || 19153.00  // Trigger max accommodation cap
+        false       | 9                    | 7187.00     | 1989.00         | 1497.00               || 13068.00
+        false       | 9                    | 12789.00    | 1506.00         | 1713.00               || 19153.00
         true        | 7                    | 12636.00    | 1716.00         | 726.00                || 19049.00
-        false       | 4                    | 6817.00     | 2646.00         | 1349.00               || 6966.00   // Trigger max accommodation cap
-        false       | 3                    | 5673.00     | 2605.00         | 1508.00               || 4848.00   // Trigger max accommodation cap
+        false       | 4                    | 6817.00     | 2646.00         | 1349.00               || 6966.00
+        false       | 3                    | 5673.00     | 2605.00         | 1508.00               || 4848.00
         false       | 8                    | 12500.00    | 2490.00         | 273.00                || 17857.00
         false       | 6                    | 5186.00     | 4203.00         | 452.00                || 6621.00
         true        | 9                    | 12578.00    | 1223.00         | 628.00                || 22112.00
         false       | 7                    | 9685.00     | 578.00          | 1088.00               || 15124.00
-        true        | 7                    | 5317.00     | 2959.00         | 1768.00               || 9948.00   // Trigger max accommodation cap
+        true        | 7                    | 5317.00     | 2959.00         | 1768.00               || 9948.00
         true        | 2                    | 6004.00     | 563.00          | 834.00                || 7137.00
         true        | 7                    | 10967.00    | 2381.00         | 616.00                || 16825.00
 

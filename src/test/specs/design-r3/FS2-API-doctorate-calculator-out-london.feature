@@ -19,15 +19,15 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
   He is studying out of London at Nottingham University
 
 
-    Given A service is consuming the FSPS Calculator API
-    When the FSPS Calculator API is invoked with the following
-      | The end of 28-day period        | 01/06/2016 |
-      | Inner London borough            | No         |
-      | Remaining course length         | 1          |
-      | Accommodation fees already paid | 0          |
-    Then the service displays the following result
-      | HTTP Status                  | 200     |
-      | Maintenance Threshold amount | 1015.00 |
+      Given A service is consuming the FSPS Calculator API
+      When the FSPS Calculator API is invoked with the following
+          | The end of 28-day period        | 01/06/2016 |
+          | Inner London borough            | No         |
+          | Remaining course length         | 1          |
+          | Accommodation fees already paid | 0          |
+      Then the service displays the following result
+          | HTTP Status                  | 200     |
+          | Maintenance Threshold amount | 1015.00 |
 
 
   Scenario: Ann's maintenance threshold amount calculated
@@ -35,12 +35,12 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
   She has paid £250.00 of her accommodation fees
   She is studying out of London at Nottingham University
 
-    Given A service is consuming the FSPS Calculator API
-    When the FSPS Calculator API is invoked with the following
-      | The end of 28-day period        | 25/06/2016 |
-      | Inner London borough            | No         |
-      | Remaining course length         | 2          |
-      | Accommodation fees already paid | 0          |
-    Then the service displays the following result
-      | HTTP Status                  | 200     |
-      | Maintenance Threshold amount | 1780.00 |
+      Given A service is consuming the FSPS Calculator API
+      When the FSPS Calculator API is invoked with the following
+          | The end of 28-day period        | 25/06/2016 |
+          | Inner London borough            | No         |
+          | Remaining course length         | 2          |
+          | Accommodation fees already paid | 250        |
+      Then the service displays the following result
+          | HTTP Status                  | 200     |
+          | Maintenance Threshold amount | 1780.00 |

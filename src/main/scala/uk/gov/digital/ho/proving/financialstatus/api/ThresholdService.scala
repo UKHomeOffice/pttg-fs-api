@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
 import org.springframework.web.bind.annotation._
-import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
+import uk.gov.digital.ho.proving.financialstatus.domain._
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
@@ -24,35 +24,21 @@ class ThresholdService {
   val TEMP_ERROR_CODE: String = "0000"
 
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
-  def calculateThreshold(@RequestParam(required = true) innerLondon: Boolean,
-                         @RequestParam(required = true) courseLength: Int,
-                         @RequestParam(required = true) tuitionFees: JBigDecimal,
-                         @RequestParam(required = true) tuitionFeesPaid: JBigDecimal,
-                         @RequestParam(required = true) accommodationFeesPaid: JBigDecimal
+  def calculateThreshold(@RequestParam(value = "studentType") studentType: String,
+                         @RequestParam(value = "innerLondon") innerLondon: Boolean,
+                         @RequestParam(value = "courseLength") courseLength: Int,
+                         @RequestParam(value = "tuitionFees", required = false, defaultValue = "0") tuitionFees: JBigDecimal ,
+                         @RequestParam(value = "tuitionFeesPaid", required = false, defaultValue = "0") tuitionFeesPaid: JBigDecimal,
+                         @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: JBigDecimal
                         ): ResponseEntity[ThresholdResponse] = {
 
     val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
     LOGGER.info("Calculating threshold")
 
+    val validatedStudentType = validateStudentType(studentType)
+    calculateThresholdForStudentType(validatedStudentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
 
-    val response =
-      if (!validateCourseLength(courseLength)) {
-        buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid courseLength", HttpStatus.BAD_REQUEST)
-      } else if (!validateTuitionFees(tuitionFees)) {
-        buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid tuitionFees", HttpStatus.BAD_REQUEST)
-      } else if (!validateTuitionFeesPaid(tuitionFeesPaid)) {
-        buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid tuitionFeesPaid", HttpStatus.BAD_REQUEST)
-      } else if (!validateAccommodationFeesPaid(accommodationFeesPaid)) {
-        buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid accommodationFeesPaid", HttpStatus.BAD_REQUEST)
-      } else {
-        val thresholdResponse: ThresholdResponse = new ThresholdResponse(
-          MaintenanceThresholdCalculator.calculate(innerLondon, courseLength,
-            BigDecimal(tuitionFees).setScale(2), BigDecimal(tuitionFeesPaid).setScale(2), BigDecimal(accommodationFeesPaid).setScale(2)), StatusResponse("200", "OK"))
-        new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
-      }
-    response
   }
-
 
   def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus) = {
     new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
@@ -66,17 +52,66 @@ class ThresholdService {
     m
   }
 
-  def validateTuitionFees(tuitionFees: JBigDecimal) = {
+  def validateTuitionFees(tuitionFees: BigDecimal) = {
     tuitionFees != null
   }
 
-  def validateTuitionFeesPaid(tuitionFeesPaid: JBigDecimal) = {
+  def validateTuitionFeesPaid(tuitionFeesPaid: BigDecimal) = {
     tuitionFeesPaid != null
   }
 
-  def validateAccommodationFeesPaid(accommodationFeesPaid: JBigDecimal) = {
+  def validateAccommodationFeesPaid(accommodationFeesPaid: BigDecimal) = {
     accommodationFeesPaid != null
   }
 
+  def validateStudentType(studentType: String) = {
+    StudentType.getStudentType(studentType)
+  }
+
+  def calculateThresholdForStudentType(studentType: StudentType, innerLondon: Boolean, courseLength: Int,
+                                       tuitionFees: BigDecimal, tuitionFeesPaid: BigDecimal, accommodationFeesPaid: BigDecimal) = {
+    val INVALID_COURSE_LENGTH = "Parameter error: Invalid courseLength"
+    val INVALID_TUITION_FEES = "Parameter error: Invalid tuitionFees"
+    val INVALID_TUITION_FEES_PAID = "Parameter error: Invalid tuitionFeesPaid"
+    val INVALID_ACCOMMODATION_FEES_PAID = "Parameter error: Invalid accommodationFeesPaid"
+
+    val INVALID_STUDENT_TYPE = "Parameter error: Invalid studentType"
+
+    val BIG_DECIMAL_SCALE = 2
+    val OK = "OK"
+
+    studentType match {
+
+      case NonDoctorate =>
+        if (!validateCourseLength(courseLength)) {
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
+        } else if (!validateTuitionFees(tuitionFees)) {
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST)
+        } else if (!validateTuitionFeesPaid(tuitionFeesPaid)) {
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TUITION_FEES_PAID, HttpStatus.BAD_REQUEST)
+        } else if (!validateAccommodationFeesPaid(accommodationFeesPaid)) {
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
+        } else {
+          val thresholdResponse: ThresholdResponse = new ThresholdResponse(
+            MaintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLength,
+              tuitionFees.setScale(2), tuitionFeesPaid.setScale(BIG_DECIMAL_SCALE), accommodationFeesPaid.setScale(BIG_DECIMAL_SCALE)), StatusResponse(HttpStatus.OK.toString, OK))
+          new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
+        }
+
+      case Doctorate =>
+        if (!validateCourseLength(courseLength)) {
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
+        } else if (!validateAccommodationFeesPaid(accommodationFeesPaid)) {
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
+        } else {
+          val thresholdResponse: ThresholdResponse = new ThresholdResponse(
+            MaintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLength,
+              accommodationFeesPaid.setScale(BIG_DECIMAL_SCALE)), StatusResponse(HttpStatus.OK.toString, OK))
+          new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
+        }
+      case Unknown(unknownType) =>
+        buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE + unknownType, HttpStatus.BAD_REQUEST)
+    }
+  }
 
 }
