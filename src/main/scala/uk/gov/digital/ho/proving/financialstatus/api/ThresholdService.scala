@@ -27,8 +27,8 @@ class ThresholdService {
   def calculateThreshold(@RequestParam(value = "studentType") studentType: String,
                          @RequestParam(value = "innerLondon") innerLondon: Boolean,
                          @RequestParam(value = "courseLength") courseLength: Int,
-                         @RequestParam(value = "tuitionFees", required = false, defaultValue = "0") tuitionFees: JBigDecimal ,
-                         @RequestParam(value = "tuitionFeesPaid", required = false, defaultValue = "0") tuitionFeesPaid: JBigDecimal,
+                         @RequestParam(value = "tuitionFees", required = false) tuitionFees: JBigDecimal ,
+                         @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: JBigDecimal,
                          @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: JBigDecimal
                         ): ResponseEntity[ThresholdResponse] = {
 
@@ -45,22 +45,18 @@ class ThresholdService {
   }
 
   def validateCourseLength(courseLength: Int) = {
-    val m = courseLength match {
-      case x if (0 <= x && x < 10) => true
-      case _ => false
-    }
-    m
+    0 <= courseLength && courseLength < 10
   }
 
-  def validateTuitionFees(tuitionFees: BigDecimal) = {
+  def validateTuitionFees(tuitionFees: JBigDecimal) = {
     tuitionFees != null
   }
 
-  def validateTuitionFeesPaid(tuitionFeesPaid: BigDecimal) = {
+  def validateTuitionFeesPaid(tuitionFeesPaid: JBigDecimal) = {
     tuitionFeesPaid != null
   }
 
-  def validateAccommodationFeesPaid(accommodationFeesPaid: BigDecimal) = {
+  def validateAccommodationFeesPaid(accommodationFeesPaid: JBigDecimal) = {
     accommodationFeesPaid != null
   }
 
@@ -69,7 +65,7 @@ class ThresholdService {
   }
 
   def calculateThresholdForStudentType(studentType: StudentType, innerLondon: Boolean, courseLength: Int,
-                                       tuitionFees: BigDecimal, tuitionFeesPaid: BigDecimal, accommodationFeesPaid: BigDecimal) = {
+                                       tuitionFees: JBigDecimal, tuitionFeesPaid: JBigDecimal, accommodationFeesPaid: JBigDecimal) = {
     val INVALID_COURSE_LENGTH = "Parameter error: Invalid courseLength"
     val INVALID_TUITION_FEES = "Parameter error: Invalid tuitionFees"
     val INVALID_TUITION_FEES_PAID = "Parameter error: Invalid tuitionFeesPaid"
@@ -94,7 +90,7 @@ class ThresholdService {
         } else {
           val thresholdResponse: ThresholdResponse = new ThresholdResponse(
             MaintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLength,
-              tuitionFees.setScale(2), tuitionFeesPaid.setScale(BIG_DECIMAL_SCALE), accommodationFeesPaid.setScale(BIG_DECIMAL_SCALE)), StatusResponse(HttpStatus.OK.toString, OK))
+              tuitionFees.setScale(BIG_DECIMAL_SCALE), tuitionFeesPaid.setScale(BIG_DECIMAL_SCALE), accommodationFeesPaid.setScale(BIG_DECIMAL_SCALE)), StatusResponse(HttpStatus.OK.toString, OK))
           new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
         }
 
