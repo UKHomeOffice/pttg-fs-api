@@ -44,10 +44,7 @@ include::common/auth.adoc[]
 = Resources
 
 [.lead]
-This API exposes financial status information relating to an individual. The central resource is the
-`Individual`, which represents a person and is typically identified by National Insurance Number. For a given
-`Individual`, this API provides access to a child resource describing details of the individual's financial status, the
-`Financial Status` resource. The API also provides access to the individuals `Bank Account` details.
+
 
 
 == Account
@@ -84,6 +81,38 @@ include::{snippets}/financial-status/http-response.adoc[]
 ==== Financial Status response content
 
 include::{snippets}/financial-status/response-fields.adoc[]
+
+
+== Maintenance
+
+
+== Threshold calculation
+
+Calculates the maintenance threshold value for student based on student type, course length, tuition and accommodation fees and any costs already paid.
+
+==== Example request
+
+include::{snippets}/threshold-calculation/http-request.adoc[]
+
+include::{snippets}/threshold-calculation/curl-request.adoc[]
+
+
+==== Request Parameters
+
+include::{snippets}/threshold-calculation/path-parameters.adoc[]
+
+include::{snippets}/threshold-calculation/request-parameters.adoc[]
+
+
+==== Example of a successful response
+
+include::{snippets}/threshold-calculation/http-response.adoc[]
+
+
+==== Financial Status response content
+
+include::{snippets}/threshold-calculation/response-fields.adoc[]
+
 
 
 <<<
