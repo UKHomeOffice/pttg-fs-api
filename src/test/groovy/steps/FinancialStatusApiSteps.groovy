@@ -32,6 +32,7 @@ class FinancialStatusApiSteps {
     String tuitionFees = ""
     String tuitionFeesPaid = ""
     String accommodationFeesPaid = ""
+    String studentType = ""
     def barclaysStubHost = "localhost"
     def barclaysStubPort = 8082
     def testDataLoader
@@ -60,6 +61,10 @@ FeatureKeyMapper fkm = new FeatureKeyMapper();
         String[] tableKey = entries.keySet()
 
         for (String s : tableKey) {
+
+            if (s.equalsIgnoreCase("Student Type")) {
+                studentType = entries.get(s)
+            }
             if (s.equalsIgnoreCase("Account Number")) {
                 accountNumber = entries.get(s)
             }
@@ -76,6 +81,9 @@ FeatureKeyMapper fkm = new FeatureKeyMapper();
                 toDate = entries.get(s)
             }
             if(s.equalsIgnoreCase("Course Length")){
+                courseLength  = entries.get(s)
+            }
+            if(s.equalsIgnoreCase("Remaining course length")){
                 courseLength  = entries.get(s)
             }
             if(s.equalsIgnoreCase("Total tuition fees")){
@@ -222,7 +230,7 @@ FeatureKeyMapper fkm = new FeatureKeyMapper();
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/maintenance/threshold?innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}",innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}",studentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         jsonAsString = resp.asString()
 
         println ("FSPS API Calculator: "+ jsonAsString)

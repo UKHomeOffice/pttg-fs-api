@@ -25,11 +25,12 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Inner London Borough            | No      |
-            | Course Length                   | 2       |
-            | Total tuition fees              | 3500.50 |
-            | Tuition fees already paid       | 0       |
-            | Accommodation fees already paid | 0       |
+            | Student Type                    | nondoctorate |
+            | Inner London Borough            | No           |
+            | Course Length                   | 2            |
+            | Total tuition fees              | 3500.50      |
+            | Tuition fees already paid       | 0            |
+            | Accommodation fees already paid | 0            |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance Threshold amount | 5530.50 |
@@ -41,11 +42,12 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
+            | Student Type                    | nondoctorate |
             | Inner London Borough            | No      |
             | Course Length                   | 9       |
             | Total tuition fees              | 9355.00 |
             | Tuition fees already paid       | 500     |
             | Accommodation fees already paid | 600.50  |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
+            | HTTP Status                  | 200      |
             | Maintenance Threshold amount | 17389.50 |

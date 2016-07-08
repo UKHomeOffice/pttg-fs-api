@@ -26,6 +26,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
+            | Student Type                    | nondoctorate |
             | Inner London Borough            | Yes     |
             | Course Length                   | 6       |
             | Total tuition fees              | 6530.12 |
@@ -42,6 +43,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
+            | Student Type                    | nondoctorate |
             | Inner London Borough            | Yes      |
             | Course Length                   | 9        |
             | Total tuition fees              | 12500.00 |
@@ -59,6 +61,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
+            | Student Type                    | nondoctorate |
             | Inner London Borough            | Yes      |
             | Course Length                   | 9        |
             | Total tuition fees              | 12500.00 |
