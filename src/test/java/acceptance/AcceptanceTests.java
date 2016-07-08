@@ -1,12 +1,16 @@
 package acceptance;
 
 import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
-import net.serenitybdd.cucumber.*;
-import org.junit.runner.*;
+import net.serenitybdd.cucumber.CucumberWithSerenity;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-@RunWith(Cucumber.class)
+
+@RunWith(CucumberWithSerenity.class)
 @CucumberOptions(features={"src/test/specs"} , glue={"steps"}, tags = {"@wiremock"})
-
 public class AcceptanceTests {
+    @Test
+    public void test(){
+
+    }
 }

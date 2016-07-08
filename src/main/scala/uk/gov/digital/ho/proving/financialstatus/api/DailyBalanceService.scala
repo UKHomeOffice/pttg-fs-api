@@ -18,6 +18,7 @@ import scala.util._
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(path = Array("/pttg/financialstatusservice/v1/accounts/"))
+@ControllerAdvice
 class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
                                        @Value("${daily-balance.days-to-check}") val daysToCheck: Int) {
 

@@ -1,6 +1,7 @@
 package steps
 
 import com.jayway.restassured.response.Response
+import cucumber.api.CucumberOptions
 import cucumber.api.DataTable
 import cucumber.api.Scenario
 import cucumber.api.java.After
@@ -8,27 +9,38 @@ import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import cucumber.api.junit.Cucumber
+import net.serenitybdd.cucumber.CucumberWithSerenity
 import net.thucydides.core.annotations.Managed
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
 import org.json.JSONObject
 import org.junit.runner.RunWith
 import org.springframework.boot.test.IntegrationTest
+import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.boot.test.WebIntegrationTest
+import org.springframework.context.annotation.PropertySource
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import uk.gov.digital.ho.proving.financialstatus.ServerConfig
 import uk.gov.digital.ho.proving.financialstatus.ServiceRunner
+import uk.gov.digital.ho.proving.financialstatus.api.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ServiceConfiguration.class, loader = SpringApplicationContextLoader.class)
-@IntegrationTest
+//@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = [ServiceConfiguration.class])
+@WebAppConfiguration
+@IntegrationTest("server.port:8080")
+@PropertySource("classpath:application.properties")
 class FinancialStatusApiSteps {
     @Managed
     public Response resp
@@ -55,8 +67,8 @@ class FinancialStatusApiSteps {
     @Before
     def setUp(Scenario scenario) {
 
-        testDataLoader = new WireMockTestDataLoader(barclaysStubHost, barclaysStubPort)
-        testDataLoader.prepareFor(scenario)
+        //testDataLoader = new WireMockTestDataLoader(barclaysStubHost, barclaysStubPort)
+       // testDataLoader.prepareFor(scenario)
     }
 
     @After
