@@ -56,14 +56,6 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
         false       | 1                    | 0.00                  || 1015.00
         false       | 2                    | 0.00                  || 2030.00
-        false       | 3                    | 0.00                  || 2030.00
-        false       | 4                    | 0.00                  || 2030.00
-        false       | 5                    | 0.00                  || 2030.00
-        false       | 6                    | 0.00                  || 2030.00
-        false       | 7                    | 0.00                  || 2030.00
-        false       | 8                    | 0.00                  || 2030.00
-        false       | 9                    | 0.00                  || 2030.00
-
 
     }
 
@@ -79,13 +71,6 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
         true        | 1                    | 0.00                  || 1265.00
         true        | 2                    | 0.00                  || 2530.00
-        true        | 3                    | 0.00                  || 2530.00
-        true        | 4                    | 0.00                  || 2530.00
-        true        | 5                    | 0.00                  || 2530.00
-        true        | 6                    | 0.00                  || 2530.00
-        true        | 7                    | 0.00                  || 2530.00
-        true        | 8                    | 0.00                  || 2530.00
-        true        | 9                    | 0.00                  || 2530.00
 
     }
 
@@ -98,15 +83,15 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
-        true        | 1                    | 1184.00               || 81.00
-        true        | 2                    | 655.00                || 1875.00
-        true        | 3                    | 896.00                || 1634.00
-        true        | 4                    | 893.00                || 1637.00
-        true        | 5                    | 979.00                || 1551.00
-        false       | 6                    | 531.00                || 1499.00
-        false       | 7                    | 1619.00               || 765.00
-        false       | 8                    | 1808.00               || 765.00
-        false       | 9                    | 1674.00               || 765.00
+        true        | 1                    | 1989.00               || 0.00
+        true        | 2                    | 246.00                || 2284.00
+        true        | 1                    | 774.00                || 491.00
+        true        | 2                    | 822.00                || 1708.00
+        true        | 1                    | 280.00                || 985.00
+        false       | 2                    | 1722.00               || 765.00
+        false       | 1                    | 255.00                || 760.00
+        false       | 2                    | 908.00                || 1122.00
+        false       | 1                    | 1203.00               || 0.00
 
     }
 
@@ -119,24 +104,24 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
-        true        | 4                    | 1115.00               || 1415.00
-        true        | 4                    | 1139.00               || 1391.00
-        false       | 1                    | 1997.00               || 0.00
-        true        | 6                    | 661.00                || 1869.00
-        false       | 8                    | 541.00                || 1489.00
-        true        | 2                    | 1286.00               || 1265.00
-        true        | 9                    | 1263.00               || 1267.00
-        false       | 8                    | 1887.00               || 765.00
-        false       | 5                    | 1634.00               || 765.00
-        true        | 5                    | 967.00                || 1563.00
-        true        | 3                    | 781.00                || 1749.00
-        false       | 7                    | 1858.00               || 765.00
-        true        | 6                    | 1826.00               || 1265.00
-        true        | 5                    | 1223.00               || 1307.00
-        false       | 6                    | 547.00                || 1483.00
-        false       | 4                    | 1209.00               || 821.00
-        true        | 6                    | 1260.00               || 1270.00
-        false       | 1                    | 202.00                || 813.00
+        false       | 2                    | 823.00                || 1207.00
+        true        | 2                    | 1747.00               || 1265.00
+        true        | 1                    | 1203.00               || 62.00
+        false       | 1                    | 1732.00               || 0.00
+        false       | 1                    | 1783.00               || 0.00
+        false       | 1                    | 1397.00               || 0.00
+        true        | 1                    | 205.00                || 1060.00
+        true        | 2                    | 1249.00               || 1281.00
+        false       | 2                    | 611.00                || 1419.00
+        true        | 2                    | 309.00                || 2221.00
+        false       | 2                    | 1425.00               || 765.00
+        true        | 2                    | 1547.00               || 1265.00
+        true        | 2                    | 1006.00               || 1524.00
+        true        | 2                    | 1848.00               || 1265.00
+        true        | 1                    | 752.00                || 513.00
+        true        | 2                    | 1762.00               || 1265.00
+        true        | 2                    | 1643.00               || 1265.00
+        true        | 2                    | 1676.00               || 1265.00
     }
 
     def "Tier 4 Doctorate - Check invalid course length parameters"() {

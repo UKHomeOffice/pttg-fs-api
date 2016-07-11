@@ -44,8 +44,8 @@ class ThresholdService {
     new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
   }
 
-  def validateCourseLength(courseLength: Int) = {
-    0 <= courseLength && courseLength < 10
+  def validateCourseLength(courseLength: Int, min: Int, max: Int) = {
+    min <= courseLength && courseLength <= max
   }
 
   def validateTuitionFees(tuitionFees: JBigDecimal) = {
@@ -79,7 +79,9 @@ class ThresholdService {
     studentType match {
 
       case NonDoctorate =>
-        if (!validateCourseLength(courseLength)) {
+        val courseMinLength = 1
+        val courseMaxLength = 9
+        if (!validateCourseLength(courseLength, courseMinLength,courseMaxLength)) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
         } else if (!validateTuitionFees(tuitionFees)) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST)
@@ -95,7 +97,9 @@ class ThresholdService {
         }
 
       case Doctorate =>
-        if (!validateCourseLength(courseLength)) {
+        val courseMinLength = 1
+        val courseMaxLength = 2
+        if (!validateCourseLength(courseLength, courseMinLength,courseMaxLength)) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
         } else if (!validateAccommodationFeesPaid(accommodationFeesPaid)) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
