@@ -24,7 +24,7 @@ class ThresholdService {
   val TEMP_ERROR_CODE: String = "0000"
 
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
-  def calculateThreshold(@RequestParam(value = "studentType") studentType: String,
+  def calculateThreshold(@RequestParam(value = "studentType", required = false, defaultValue = "nondoctorate") studentType: String,
                          @RequestParam(value = "innerLondon") innerLondon: Boolean,
                          @RequestParam(value = "courseLength") courseLength: Int,
                          @RequestParam(value = "tuitionFees", required = false) tuitionFees: JBigDecimal ,
