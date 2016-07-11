@@ -49,15 +49,15 @@ class ThresholdService {
   }
 
   def validateTuitionFees(tuitionFees: JBigDecimal) = {
-    tuitionFees != null
+    tuitionFees != null && tuitionFees.compareTo(JBigDecimal.ZERO) > -1
   }
 
   def validateTuitionFeesPaid(tuitionFeesPaid: JBigDecimal) = {
-    tuitionFeesPaid != null
+    tuitionFeesPaid != null && tuitionFeesPaid.compareTo(JBigDecimal.ZERO) > -1
   }
 
   def validateAccommodationFeesPaid(accommodationFeesPaid: JBigDecimal) = {
-    accommodationFeesPaid != null
+    accommodationFeesPaid != null && accommodationFeesPaid.compareTo(JBigDecimal.ZERO) > -1
   }
 
   def validateStudentType(studentType: String) = {

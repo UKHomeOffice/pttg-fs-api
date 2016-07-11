@@ -133,9 +133,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
-        false       | 10                   | 454.00                || 10995.00
+        false       | 3                    | 454.00                || 10995.00
         true        | -1                   | 336.00                || 13318.00
-        false       | 20                   | 1044.00               || 7487.00
+        false       | 0                    | 1044.00               || 7487.00
         false       | "bb"                 | 1044.00               || 7487.00
     }
 }
