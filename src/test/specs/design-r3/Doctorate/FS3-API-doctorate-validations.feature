@@ -72,7 +72,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 404                                                                                                                                                     |
       | Status code    | 0000                                                                                                                                                    |
-      | Status message | Resource not found: Please check the sort code and account number are valid values/pttg/financialstatusservice/v1/accounts//23568498/dailybalancestatus |
+      | Status message | Resource not found: Please check URL and parameters are valid/pttg/financialstatusservice/v1/accounts//23568498/dailybalancestatus |
 
 
   Scenario: The API provides incorrect Sort Code - mising digits
@@ -115,7 +115,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 404                                                                                                                                                             |
       | Status code    | 0000                                                                                                                                                            |
-      | Status message | Resource not found: Please check the sort code and account number are valid values/pttg/financialstatusservice/v1/accounts/13-56-0q/23568498/dailybalancestatus |
+      | Status message | Resource not found: Please check URL and parameters are valid/pttg/financialstatusservice/v1/accounts/13-56-0q/23568498/dailybalancestatus |
 
 ######################### Validation on the Account Number Field #########################
 
@@ -132,7 +132,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 404                                                                                                                                                     |
       | Status code    | 0000                                                                                                                                                    |
-      | Status message | Resource not found: Please check the sort code and account number are valid values/pttg/financialstatusservice/v1/accounts/13-56-09//dailybalancestatus |
+      | Status message | Resource not found: Please check URL and parameters are valid/pttg/financialstatusservice/v1/accounts/13-56-09//dailybalancestatus |
 
 
   Scenario: The API is not provided with Account Number - too short
@@ -189,7 +189,7 @@ Feature: Validation of the API fields and data
     Then FSPS Tier four general Case Worker tool API provides the following result
       | HTTP Status    | 404                                                                                                                                                             |
       | Status code    | 0000                                                                                                                                                            |
-      | Status message | Resource not found: Please check the sort code and account number are valid values/pttg/financialstatusservice/v1/accounts/13-56-09/23568a98/dailybalancestatus |
+      | Status message | Resource not found: Please check URL and parameters are valid/pttg/financialstatusservice/v1/accounts/13-56-09/23568a98/dailybalancestatus |
 
 
   Scenario: The API is provided with an Account Number that does not exist
@@ -206,126 +206,4 @@ Feature: Validation of the API fields and data
       | Status code    | 0000                                                        |
       | Status message | No records for sort code 100908 and account number 21568198 |
 
-      ######################### Validation on the Inner London borough Field #########################
 
-  Scenario: The API is not provided with Inner London borough Yes or No field
-    Given a Service is consuming Financial Status API
-    When the Financial Status API is invoked with the following:
-      | The end of 28-day period        | 20/06/2016 |
-      | Inner London borough            |            |
-      | Course length                   | 2          |
-      | Accommodation fees already paid | 250.50     |
-      | To Date                         | 23/05/2016 |
-      | From Date                       | 20/06/2016 |
-      | Sort code                       | 14-00-11   |
-      | Account number                  | 24568599   |
-    Then FSPS Tier four general Case Worker tool API provides the following result
-      | HTTP Status    | 400                                           |
-      | Status code    | 0000                                          |
-      | Status message | Parameter error: Invalid Inner London borough |
-
-######################### Validation on the Remaining course length Field #########################
-
-  Scenario: The API is not provided with the Course length
-    Given a Service is consuming Financial Status API
-    When the Financial Status API is invoked with the following:
-      | The end of 28-day period        | 20/06/2016 |
-      | Inner London borough            | Yes        |
-      | Course length                   |            |
-      | Accommodation fees already paid | 250.50     |
-      | To Date                         | 23/05/2016 |
-      | From Date                       | 20/06/2016 |
-      | Sort code                       | 14-00-11   |
-      | Account number                  | 24568599   |
-    Then FSPS Tier four general Case Worker tool API provides the following result
-      | HTTP Status    | 400                                    |
-      | Status code    | 0000                                   |
-      | Status message | Parameter error: Invalid Course length |
-
-  Scenario: The API is provided with incorrect Course Length - not numbers 1-2
-    Given a Service is consuming Financial Status API
-    When the Financial Status API is invoked with the following:
-      | The end of 28-day period        | 20/06/2016 |
-      | Inner London borough            | Yes        |
-      | Course length                   | a          |
-      | Accommodation fees already paid | 250.50     |
-      | To Date                         | 23/05/2016 |
-      | From Date                       | 20/06/2016 |
-      | Minimum                         | 2350.00    |
-      | Sort code                       | 14-00-11   |
-      | Account number                  | 24568599   |
-    Then FSPS Tier four general Case Worker tool API provides the following result
-      | HTTP Status    | 400                                    |
-      | Status code    | 0000                                   |
-      | Status message | Parameter error: Invalid Course length |
-
-  Scenario: The API is provided with incorrect Course Length - more than 2
-    Given caseworker is using the financial status service ui
-    When the financial status check is performed with
-      | The end of 28-day period        | 20/06/2016 |
-      | Inner London borough            | Yes        |
-      | Course length                   | 4          |
-      | Accommodation fees already paid | 250.50     |
-      | To Date                         | 23/05/2016 |
-      | From Date                       | 20/06/2016 |
-      | Minimum                         | 2350.00    |
-      | Sort code                       | 14-00-11   |
-      | Account number                  | 24568599   |
-    Then FSPS Tier four general Case Worker tool API provides the following result
-      | HTTP Status    | 400                                    |
-      | Status code    | 0000                                   |
-      | Status message | Parameter error: Invalid Course length |
-
-
-######################## Validation on the Accommodation fees already paid Field #########################
-
-  Scenario: The API is not provided with Accommodation fees already paid
-    Given caseworker is using the financial status service ui
-    When the financial status check is performed with
-      | The end of 28-day period        | 20/06/2016 |
-      | Inner London borough            | Yes        |
-      | Course length                   | 1          |
-      | Accommodation fees already paid | 250.50     |
-      | To Date                         | 23/05/2016 |
-      | From Date                       | 20/06/2016 |
-      | Minimum                         | 2350.00    |
-      | Sort code                       | 14-00-11   |
-      | Account number                  | 24568599   |
-    Then FSPS Tier four general Case Worker tool API provides the following result
-      | HTTP Status    | 400                                                      |
-      | Status code    | 0000                                                     |
-      | Status message | Parameter error: Invalid Accommodation fees already paid |
-
-  Scenario: The API is provided with incorrect  Accommodation fees already paid - not numbers 0-9
-    Given caseworker is using the financial status service ui
-    When the financial status check is performed with
-      | The end of 28-day period        | 20/06/2016 |
-      | Inner London borough            | Yes        |
-      | Course length                   | -          |
-      | Accommodation fees already paid | 250.50     |
-      | To Date                         | 23/05/2016 |
-      | From Date                       | 20/06/2016 |
-      | Minimum                         | 2350.00    |
-      | Sort code                       | 14-00-11   |
-      | Account number                  | 24568599   |
-    Then FSPS Tier four general Case Worker tool API provides the following result
-      | HTTP Status    | 400                                                      |
-      | Status code    | 0000                                                     |
-      | Status message | Parameter error: Invalid Accommodation fees already paid |
-
-  Scenario: The API is provided with incorrect  Accommodation fees already paid - >£1,265
-    Given caseworker is using the financial status service ui
-    When the financial status check is performed with
-      | The end of 28-day period        | 20/06/2016 |
-      | Inner London borough            | Yes        |
-      | Course length                   | -          |
-      | Accommodation fees already paid | 250.50     |
-      | To Date                         | 23/05/2016 |
-      | From Date                       | 20/06/2016 |
-      | Minimum                         | 2350.00    |
-      | Sort code                       | 14-00-11   |
-      | Account number                  | 24568599   |
-    Then FSPS Tier four general Case Worker tool API provides the following result
-      | HTTP Status    | 400                                                      |
-      | Status code    | 0000                                                     |
-      | Status message | Parameter error: Invalid Accommodation fees already paid |
