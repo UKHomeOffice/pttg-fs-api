@@ -59,6 +59,18 @@ dependencies {
     testCompile 'cglib:cglib-nodep:3.2.1'
     testCompile 'org.objenesis:objenesis:2.2'
     testCompile 'org.scala-lang:scala-library:2.11.8'
+    testCompile 'com.github.tomakehurst:wiremock:1.58'
+
+
+    testCompile 'info.cukes:cucumber-java:1.2.4'
+    testCompile 'info.cukes:cucumber-junit:1.2.4'
+    testCompile 'info.cukes:gherkin:2.12.2'
+    testCompile 'net.serenity-bdd:serenity-core:1.1.31'
+    testCompile 'net.serenity-bdd:serenity-cucumber:1.1.6'
+    testCompile 'net.serenity-bdd:serenity-junit:1.1.31'
+    testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+    testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '1.1.31'
+
 }
 
 springboot{

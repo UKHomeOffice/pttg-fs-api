@@ -13,6 +13,7 @@ import org.springframework.context.annotation.{Bean, ComponentScan, Configuratio
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.config.annotation.{EnableWebMvc, WebMvcConfigurationSupport, WebMvcConfigurerAdapter}
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
@@ -21,7 +22,8 @@ import scala.collection.JavaConverters._
 
 @Configuration
 @ComponentScan(Array("uk.gov.digital.ho.proving.financialstatus"))
-class ServiceConfiguration extends WebMvcConfigurationSupport {
+@ControllerAdvice
+class ServiceConfiguration extends WebMvcConfigurationSupport{
 
   @Bean
   @Primary

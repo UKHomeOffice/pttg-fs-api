@@ -32,10 +32,12 @@ class ServiceErrorsSpec extends Specification {
 
     def mockHttpUtils = Mock(HttpUtils)
 
+    def serviceName = "mongoservice"
+
     @Autowired
     RestTemplate restTemplate
 
-    MockBankService bankService = new MockBankService(new ObjectMapper(), mockHttpUtils)
+    MockBankService bankService = new MockBankService(new ObjectMapper(), mockHttpUtils, serviceName)
 
 
     def dailyBalanceService = new DailyBalanceService(bankService, 28)

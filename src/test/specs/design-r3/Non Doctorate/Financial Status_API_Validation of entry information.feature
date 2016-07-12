@@ -1,3 +1,4 @@
+@wiremock
 Feature: Validation of the API fields and data
 
     Fields mandatory to fill in:

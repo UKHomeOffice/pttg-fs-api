@@ -1,3 +1,4 @@
+@DataDir=records @wiremock
 Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student (single current account and no dependants)
 
   Requirement to meet Tier 4 pass
@@ -11,6 +12,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
 
 
     Given a Service is consuming Financial Status API
+    Given the test data for account 23568498
     When the Financial Status API is invoked with the following:
       | To Date        | 2016-06-01 |
       | From Date      | 2016-05-05 |
@@ -36,6 +38,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
   He has < than the Total Funds Required of £2030 for the previous 28 days
 
     Given a Service is consuming Financial Status API
+    Given the test data for account 01078911
     When the Financial Status API is invoked with the following:
       | To Date        | 2016-07-01 |
       | From Date      | 2016-06-04 |
@@ -62,6 +65,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
 
 
     Given a Service is consuming Financial Status API
+    Given the test data for account 17926767
     When the Financial Status API is invoked with the following:
       | To Date        | 2016-07-01 |
       | From Date      | 2016-06-04 |

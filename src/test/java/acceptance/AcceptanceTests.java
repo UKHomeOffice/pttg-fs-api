@@ -1,8 +1,9 @@
 package acceptance;
 
 import cucumber.api.CucumberOptions;
-import net.serenitybdd.cucumber.*;
-import org.junit.runner.*;
+import net.serenitybdd.cucumber.CucumberWithSerenity;
+import org.junit.runner.RunWith;
+
 
 @RunWith(CucumberWithSerenity.class)
 @CucumberOptions(features={"src/test/specs/design-r3"} , glue={"steps"})

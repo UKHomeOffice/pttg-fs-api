@@ -1,6 +1,7 @@
 package steps
 
 import com.jayway.restassured.response.Response
+import cucumber.api.CucumberOptions
 import cucumber.api.DataTable
 import cucumber.api.Scenario
 import cucumber.api.java.After
@@ -8,15 +9,61 @@ import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import cucumber.api.junit.Cucumber
+import net.serenitybdd.cucumber.CucumberWithSerenity
 import net.thucydides.core.annotations.Managed
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
 import org.json.JSONObject
+import org.junit.runner.RunWith
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.test.IntegrationTest
+import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.boot.test.SpringApplicationContextLoader
+import org.springframework.boot.test.WebIntegrationTest
+import org.springframework.context.annotation.Profile
+import org.springframework.context.annotation.PropertySource
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.TestPropertySource
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
+import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import uk.gov.digital.ho.proving.financialstatus.ServerConfig
+import uk.gov.digital.ho.proving.financialstatus.ServiceRunner
+import uk.gov.digital.ho.proving.financialstatus.api.ApiExceptionHandler
+import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
 
+
+/**
+ * For wiremock-backed tests use the "test" profile in the @ActiveProfiles annotation:
+ *           - This will launch the wiremock server using the application-test.properties
+ *
+ * To switch to end to end tests use the "endtoendtest" profile in the @ActiveProfiles annotation:
+ *            - This will use the application-endtoend.properties
+ *
+ */
+@SpringApplicationConfiguration(classes = [ServiceConfiguration.class])
+@WebAppConfiguration
+@IntegrationTest()
+@ActiveProfiles("test")
+//@ActiveProfiles("endtoend")
 class FinancialStatusApiSteps {
+
+    @Value('${local.server.port}')
+    private String serverPort;
+
+    @Value('${barclays.stub.service}')
+    private String barclaysService;
+
+    @Value('${wiremock}')
+    private boolean wiremock;
+
     @Managed
     public Response resp
     String jsonAsString
@@ -33,16 +80,20 @@ class FinancialStatusApiSteps {
     String tuitionFeesPaid = ""
     String accommodationFeesPaid = ""
     String studentType = ""
-    def barclaysStubHost = "localhost"
-    def barclaysStubPort = 8082
+
+
     def testDataLoader
-FeatureKeyMapper fkm = new FeatureKeyMapper();
+    FeatureKeyMapper fkm = new FeatureKeyMapper();
+
+    def balancesUrlRegex = "/financialstatus/v1.*"
 
     @Before
     def setUp(Scenario scenario) {
 
-        testDataLoader = new TestDataLoader(barclaysStubHost, barclaysStubPort)
-        testDataLoader.prepareFor(scenario)
+        if (wiremock) {
+            testDataLoader = new WireMockTestDataLoader(barclaysService)
+            testDataLoader.prepareFor(scenario)
+        }
     }
 
     @After
@@ -68,39 +119,39 @@ FeatureKeyMapper fkm = new FeatureKeyMapper();
             if (s.equalsIgnoreCase("Account Number")) {
                 accountNumber = entries.get(s)
             }
-            if(s.equalsIgnoreCase("Minimum")){
+            if (s.equalsIgnoreCase("Minimum")) {
                 minimum = entries.get(s)
             }
-            if(s.equalsIgnoreCase("From Date")){
+            if (s.equalsIgnoreCase("From Date")) {
                 fromDate = entries.get(s)
             }
-            if(s.equalsIgnoreCase("Sort Code")){
+            if (s.equalsIgnoreCase("Sort Code")) {
                 sortCode = entries.get(s)
             }
-            if(s.equalsIgnoreCase("To Date")){
+            if (s.equalsIgnoreCase("To Date")) {
                 toDate = entries.get(s)
             }
-            if(s.equalsIgnoreCase("Course Length")){
-                courseLength  = entries.get(s)
+            if (s.equalsIgnoreCase("Course Length")) {
+                courseLength = entries.get(s)
             }
-            if(s.equalsIgnoreCase("Remaining course length")){
-                courseLength  = entries.get(s)
+            if (s.equalsIgnoreCase("Remaining course length")) {
+                courseLength = entries.get(s)
             }
-            if(s.equalsIgnoreCase("Total tuition fees")){
+            if (s.equalsIgnoreCase("Total tuition fees")) {
                 tuitionFees = entries.get(s)
             }
-            if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("Yes")){
+            if (s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("Yes")) {
                 innerLondon = "true"
             }
-            if(s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("No")){
+            if (s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("No")) {
                 innerLondon = "false"
             }
 
-            if(s.equalsIgnoreCase("Tuition fees already paid")){
+            if (s.equalsIgnoreCase("Tuition fees already paid")) {
                 tuitionFeesPaid = entries.get(s)
             }
 
-            if(s.equalsIgnoreCase("Accommodation fees already paid")){
+            if (s.equalsIgnoreCase("Accommodation fees already paid")) {
                 accommodationFeesPaid = entries.get(s)
             }
 
@@ -154,31 +205,31 @@ FeatureKeyMapper fkm = new FeatureKeyMapper();
 
             String jsonValue = json.get(Keys)
 
-            if(Keys != "account") {
+            if (Keys != "account") {
 
-                   assert entries.containsValue(jsonValue)
+                assert entries.containsValue(jsonValue)
             }
 
             println "===========>" + jsonValue
 
-           if(Keys == "account") {
-               JSONObject innerJson = new JSONObject(jsonValue);
-               Iterator<String> innerJasonKey = innerJson.keys()
+            if (Keys == "account") {
+                JSONObject innerJson = new JSONObject(jsonValue);
+                Iterator<String> innerJasonKey = innerJson.keys()
 
-               while (innerJasonKey.hasNext()) {
-                   String keys2 = innerJasonKey.next()
-                   println "***********" + keys2
-                   //json.getJSONObject()
-                   String innerjsonValue = innerJson.get(keys2).toString()
-                   println ">>>>>>>>>>>>>>>" + innerjsonValue
-                   for (String s : tableKey) {
-                       println "" + entries.get(s)
-                       assert entries.containsValue(innerjsonValue)
+                while (innerJasonKey.hasNext()) {
+                    String keys2 = innerJasonKey.next()
+                    println "***********" + keys2
+                    //json.getJSONObject()
+                    String innerjsonValue = innerJson.get(keys2).toString()
+                    println ">>>>>>>>>>>>>>>" + innerjsonValue
+                    for (String s : tableKey) {
+                        println "" + entries.get(s)
+                        assert entries.containsValue(innerjsonValue)
 
-                   }
+                    }
 
-               }
-           }
+                }
+            }
 
         }
     }
@@ -202,8 +253,12 @@ FeatureKeyMapper fkm = new FeatureKeyMapper();
     }
 
     @Given("^the test data for account (.+)\$")
-    public void the_test_data_for_account_number(String fileName) {
-        testDataLoader.loadTestData(fileName)
+    public void the_test_data_for_account_number(String accountNumber) {
+        if (wiremock) {
+            testDataLoader.stubTestData(accountNumber, balancesUrlRegex)
+        } else {
+            throw new RuntimeException("Trying to run wiremock step when not in wiremock mode - please ensure test is the active profile (annotion at the top of FinancialStatusApiSteps.groovy)")
+        }
     }
 
     @Given("^a Service is consuming Financial Status API\$")
@@ -216,31 +271,28 @@ FeatureKeyMapper fkm = new FeatureKeyMapper();
 
     }
 
-
-
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}",sortCode, accountNumber, fromDate, toDate, minimum)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}", sortCode, accountNumber, fromDate, toDate, minimum)
         jsonAsString = resp.asString()
 
-        println ("Family Case Worker API: "+ jsonAsString)
+        println("Family Case Worker API: " + jsonAsString)
     }
 
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}",studentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}", studentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         jsonAsString = resp.asString()
 
-        println ("FSPS API Calculator: "+ jsonAsString)
+        println("FSPS API Calculator: " + jsonAsString)
     }
-
 
 
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
-              validateJsonResult(arg1)
+        validateJsonResult(arg1)
     }
 
     @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")

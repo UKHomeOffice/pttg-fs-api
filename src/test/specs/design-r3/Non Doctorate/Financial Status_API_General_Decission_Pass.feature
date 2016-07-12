@@ -1,4 +1,4 @@
-@DataDir=records
+@DataDir=records @wiremock
 Feature: Pass Threshold Calculation - Tier 4 (General) student (single current account and no dependants)
 
     Requirement to meet Tier 4 pass
@@ -37,6 +37,7 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
 
 
         Given a Service is consuming Financial Status API
+        Given the test data for account 01078912
         When the Financial Status API is invoked with the following:
             | Account number | 01078912   |
             | Sort code      | 23-53-68   |
