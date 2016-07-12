@@ -171,10 +171,54 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         response.andExpect(content().string(containsString("Parameter error: Invalid courseLength")))
 
         where:
-        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
-        false       | 10                   | 9244.00     | 1855.00         | 454.00                || 10995.00
-        true        | -1                   | 9411.00     | 4612.00         | 336.00                || 13318.00
-        false       | 20                   | 7191.00     | 2720.00         | 1044.00               || 7487.00
-        false       | "bb"                 | 7191.00     | 2720.00         | 1044.00               || 7487.00
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid
+        false       | 10                   | 9244.00     | 1855.00         | 454.00
+        true        | -1                   | 9411.00     | 4612.00         | 336.00
+        false       | 20                   | 7191.00     | 2720.00         | 1044.00
+        false       | "bb"                 | 7191.00     | 2720.00         | 1044.00
     }
+
+    def "Tier 4 Non Doctorate - Check invalid tuition fees parameters"() {
+        expect:
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter error: Invalid tuitionFees")))
+
+        where:
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid
+        false       | 1                    | -2          | 1855.00         | 454.00
+        true        | 2                    | -0.05       | 4612.00         | 336.00
+        false       | 3                    | "hh"        | 2720.00         | 1044.00
+    }
+
+    def "Tier 4 Non Doctorate - Check invalid tuition fees paid parameters"() {
+        expect:
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter error: Invalid tuitionFeesPaid")))
+
+        where:
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid
+        false       | 1                    | 1855.00     | -2              | 454.00
+        true        | 2                    | 4612.00     | -0.05           | 336.00
+        false       | 3                    | 2720.00     | "kk"            | 1044.00
+    }
+
+    def "Tier 4 Non Doctorate - Check invalid accommodation fees paid parameters"() {
+        expect:
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter error: Invalid accommodationFeesPaid")))
+
+        where:
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid
+        false       | 1                    | 454.00      | 1855.00         | -2
+        true        | 2                    | 336.00      | 4612.00         | -0.05
+        false       | 3                    | 1044.00     | 2720.00         | "hh"
+    }
+
+
 }
