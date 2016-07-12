@@ -16,12 +16,16 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
 import org.json.JSONObject
 import org.junit.runner.RunWith
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.boot.test.WebIntegrationTest
+import org.springframework.context.annotation.Profile
 import org.springframework.context.annotation.PropertySource
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -35,13 +39,22 @@ import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
 
-
-//@RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = [ServiceConfiguration.class])
 @WebAppConfiguration
-@IntegrationTest("server.port:8080")
-@PropertySource("classpath:application.properties")
+@IntegrationTest()
+@ActiveProfiles("test")
+//@ActiveProfiles("endtoendtest")
 class FinancialStatusApiSteps {
+
+    @Value('${local.server.port}')
+    private String serverPort;
+
+    @Value('${barclays.stub.service}')
+    private String barclaysService;
+
+    @Value('${wiremock}')
+    private boolean wiremock;
+
     @Managed
     public Response resp
     String jsonAsString
@@ -57,18 +70,21 @@ class FinancialStatusApiSteps {
     String tuitionFees = ""
     String tuitionFeesPaid = ""
     String accommodationFeesPaid = ""
-    def barclaysStubHost = "localhost"
-    def barclaysStubPort = 8082
+    String studentType = ""
+
+
     def testDataLoader
     FeatureKeyMapper fkm = new FeatureKeyMapper();
 
-    def balancesUrlRegex = "/pttg/financialstatus/v1.*"
+    def balancesUrlRegex = "/financialstatus/v1.*"
 
     @Before
     def setUp(Scenario scenario) {
 
-        //testDataLoader = new WireMockTestDataLoader(barclaysStubHost, barclaysStubPort)
-       // testDataLoader.prepareFor(scenario)
+        if (wiremock) {
+            testDataLoader = new WireMockTestDataLoader(barclaysService)
+            testDataLoader.prepareFor(scenario)
+        }
     }
 
     @After
@@ -87,6 +103,10 @@ class FinancialStatusApiSteps {
         String[] tableKey = entries.keySet()
 
         for (String s : tableKey) {
+
+            if (s.equalsIgnoreCase("Student Type")) {
+                studentType = entries.get(s)
+            }
             if (s.equalsIgnoreCase("Account Number")) {
                 accountNumber = entries.get(s)
             }
@@ -103,6 +123,9 @@ class FinancialStatusApiSteps {
                 toDate = entries.get(s)
             }
             if (s.equalsIgnoreCase("Course Length")) {
+                courseLength = entries.get(s)
+            }
+            if (s.equalsIgnoreCase("Remaining course length")) {
                 courseLength = entries.get(s)
             }
             if (s.equalsIgnoreCase("Total tuition fees")) {
@@ -221,8 +244,12 @@ class FinancialStatusApiSteps {
     }
 
     @Given("^the test data for account (.+)\$")
-    public void the_test_data_for_account_number(String fileName) {
-        testDataLoader.loadTestData(fileName)
+    public void the_test_data_for_account_number(String accountNumber) {
+        if (wiremock) {
+            testDataLoader.stubTestData(accountNumber, balancesUrlRegex)
+        } else {
+            throw new RuntimeException("Trying to run wiremock step when not in wiremock mode - please ensure test is the active profile (annotion at the top of FinancialStatusApiSteps.groovy)")
+        }
     }
 
     @Given("^a Service is consuming Financial Status API\$")
@@ -235,20 +262,10 @@ class FinancialStatusApiSteps {
 
     }
 
-    @Given("^the account has sufficient funds\$")
-    public void the_account_has_sufficient_funds() {
-        testDataLoader.stubTestData("balancesPass", balancesUrlRegex)
-    }
-
-    @Given("^the account does not have sufficient funds\$")
-    public void the_account_does_not_have_sufficient_funds() {
-        testDataLoader.stubTestData("balancesFail", balancesUrlRegex)
-    }
-
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}", sortCode, accountNumber, fromDate, toDate, minimum)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}", sortCode, accountNumber, fromDate, toDate, minimum)
         jsonAsString = resp.asString()
 
         println("Family Case Worker API: " + jsonAsString)
@@ -257,7 +274,7 @@ class FinancialStatusApiSteps {
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:8080/pttg/financialstatusservice/v1/maintenance/threshold?innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}", innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}", studentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         jsonAsString = resp.asString()
 
         println("FSPS API Calculator: " + jsonAsString)

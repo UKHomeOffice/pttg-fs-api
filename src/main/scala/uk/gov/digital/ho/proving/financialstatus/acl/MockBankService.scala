@@ -4,16 +4,21 @@ import java.time.LocalDate
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.{Logger, LoggerFactory}
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.stereotype.Service
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBalance, AccountDailyBalances}
 
+import scala.annotation.meta.beanSetter
+import scala.beans.BeanProperty
+
 @Service()
-class MockBankService @Autowired()(val objectMapper: ObjectMapper) extends BankService {
+class MockBankService @Autowired()(val objectMapper: ObjectMapper, httpUtils: HttpUtils, @Value("${barclays.stub.service}") val bankService: String) extends BankService {
 
   val bankName = "MockBarclays"
-  val bankUrl = "http://localhost:8082/financialstatus/v1"
+
+  //todo hardcoded scheme will need to be externalised
+  val bankUrl = s"http://${bankService}/financialstatus/v1"
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[MockBankService])
 
@@ -32,7 +37,7 @@ class MockBankService @Autowired()(val objectMapper: ObjectMapper) extends BankS
     val url = buildUrl(account, fromDate, toDate)
     LOGGER.info(s"call URL: $url")
 
-    val httpResponse = HttpUtils.performRequest(url)
+    val httpResponse = httpUtils.performRequest(url)
     val bankResponse = objectMapper.readValue(httpResponse.body, classOf[DailyBalances])
     bankResponseMapper(BankResponse(httpResponse.httpStatus, bankResponse))
 

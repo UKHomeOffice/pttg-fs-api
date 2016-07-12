@@ -8,10 +8,13 @@ import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper, Ser
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.{Bean, ComponentScan, Configuration, Primary}
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.bind.annotation.ControllerAdvice
+import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.config.annotation.{EnableWebMvc, WebMvcConfigurationSupport, WebMvcConfigurerAdapter}
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
 
@@ -36,7 +39,7 @@ class ServiceConfiguration extends WebMvcConfigurationSupport{
 
     val simpleModule = new SimpleModule
     val customSerializer = new CustomSerializer()
-    simpleModule.addSerializer(classOf[BigDecimal],customSerializer)
+    simpleModule.addSerializer(classOf[BigDecimal], customSerializer)
     mapper.registerModule(simpleModule)
 
     mapper
@@ -54,6 +57,17 @@ class ServiceConfiguration extends WebMvcConfigurationSupport{
     val requestMappingHandlerAdapter = super.requestMappingHandlerAdapter
     requestMappingHandlerAdapter.setMessageConverters(List[HttpMessageConverter[_]](mappingJackson2HttpMessageConverter).asJava)
     requestMappingHandlerAdapter
+  }
+
+  @Bean
+  @ConfigurationProperties(prefix = "rest.connection")
+  def customHttpRequestFactory = {
+    new HttpComponentsClientHttpRequestFactory()
+  }
+
+  @Bean
+  def customRestTemplate = {
+    new RestTemplate(customHttpRequestFactory)
   }
 
 }

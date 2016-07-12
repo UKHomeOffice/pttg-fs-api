@@ -1,3 +1,4 @@
+@wiremock
 Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctorate In London (single current account and no dependants)
 
     Requirement to meet Tier 4 pass

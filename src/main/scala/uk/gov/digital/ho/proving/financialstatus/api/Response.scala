@@ -13,7 +13,6 @@ case class StatusResponse(code: String, message: String)
   and use the @JsonInclude(Include.NON_NULL) annotation to ignore them.
  */
 case object AccountDailyBalanceStatusResponse {
-
   def apply(dailyBalanceCheck: AccountDailyBalanceCheck, status: StatusResponse): AccountDailyBalanceStatusResponse = {
     AccountDailyBalanceStatusResponse(null, dailyBalanceCheck, status)
   }
@@ -21,12 +20,13 @@ case object AccountDailyBalanceStatusResponse {
   def apply(status: StatusResponse): AccountDailyBalanceStatusResponse = {
     AccountDailyBalanceStatusResponse(null, null, status)
   }
-
 }
-
 case class AccountDailyBalanceStatusResponse(@JsonInclude(Include.NON_NULL) account: Account,
                                              @JsonInclude(Include.NON_NULL) @JsonUnwrapped dailyBalanceCheck: AccountDailyBalanceCheck,
                                              @JsonInclude(Include.NON_NULL) status: StatusResponse)
 
-
+case object ThresholdResponse {
+  def apply(status: StatusResponse): ThresholdResponse = ThresholdResponse(null, status)
+}
 case class ThresholdResponse(threshold: BigDecimal, @JsonInclude(Include.NON_NULL) status: StatusResponse)
+

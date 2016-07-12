@@ -1,15 +1,17 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.math.{BigDecimal => JBigDecimal}
+import java.net.SocketTimeoutException
 import java.time.LocalDate
 
+import org.apache.http.conn.HttpHostConnectException
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.context.annotation.PropertySource
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.{ResponseEntity, _}
 import org.springframework.web.bind.annotation._
-import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.{HttpClientErrorException, ResourceAccessException}
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker}
 
@@ -75,10 +77,20 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
               StatusResponse(exception.getStatusCode.toString, exception.getStatusText)), HttpStatus.INTERNAL_SERVER_ERROR)
         }
 
+      case Failure(exception: ResourceAccessException) =>
+        LOGGER.info("Connection refused by bank service : " + exception.getMessage)
+        val message = exception.getCause match {
+          case e: SocketTimeoutException => "Connection timeout"
+          case e: HttpHostConnectException => "Connection refused"
+          case _ => "Unknown connection exception"
+        }
+        new ResponseEntity(AccountDailyBalanceStatusResponse(
+          StatusResponse(TEMP_ERROR_CODE, message)), HttpStatus.INTERNAL_SERVER_ERROR)
+
       case Failure(exception: Throwable) =>
         LOGGER.info("Unknown bank service error: " + exception.getMessage)
         new ResponseEntity(AccountDailyBalanceStatusResponse(
-          StatusResponse(TEMP_ERROR_CODE, "Unknown bank service error")), HttpStatus.INTERNAL_SERVER_ERROR)
+          StatusResponse(TEMP_ERROR_CODE, exception.getMessage)), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
   }

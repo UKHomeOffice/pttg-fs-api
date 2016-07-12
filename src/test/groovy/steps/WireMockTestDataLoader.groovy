@@ -3,6 +3,7 @@ package steps
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import com.google.common.net.HostAndPort
 import cucumber.api.Scenario
 import groovyx.net.http.RESTClient
 import org.slf4j.Logger
@@ -24,12 +25,12 @@ class WireMockTestDataLoader {
 
     def WireMockServer wireMockServer
 
-    WireMockTestDataLoader(String host, int port) {
+    WireMockTestDataLoader(String service) {
 
-        //todo port from test context
-        wireMockServer = new WireMockServer(8082)
+        HostAndPort hostAndPort = HostAndPort.fromString(service)
+        wireMockServer = new WireMockServer(hostAndPort.getPort())
         wireMockServer.start()
-        WireMock.configureFor("localhost", 8082);
+        WireMock.configureFor(hostAndPort.getHostText(), hostAndPort.getPort())
     }
 
     def prepareFor(Scenario scenario) {

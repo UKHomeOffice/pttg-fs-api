@@ -5,21 +5,14 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.web.method.HandlerMethod
-import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver
-import org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.api.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
 
-import java.lang.reflect.Method
-
 import static org.hamcrest.core.StringContains.containsString
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 
@@ -28,10 +21,9 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
  */
 @WebAppConfiguration
 @ContextConfiguration(classes = ServiceConfiguration.class)
-class MaintenanceThresholdServiceSpec extends Specification {
+class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def thresholdService = new ThresholdService()
-    //MockMvc mockMvc = standaloneSetup(thresholdService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper())).build()
     MockMvc mockMvc = standaloneSetup(thresholdService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
         .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper()))
@@ -40,9 +32,10 @@ class MaintenanceThresholdServiceSpec extends Specification {
 
     def url = "/pttg/financialstatusservice/v1/maintenance/threshold"
 
-    def callApi(innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid) {
+    def callApi(studentType, innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid) {
         def response = mockMvc.perform(
             get(url)
+                .param("studentType", studentType)
                 .param("innerLondon", innerLondon.toString())
                 .param("courseLength", courseLengthInMonths.toString())
                 .param("tuitionFees", tuitionFees.toString())
@@ -53,10 +46,10 @@ class MaintenanceThresholdServiceSpec extends Specification {
         response
     }
 
-    def "Check 'Non Inner London Borough'"() {
+    def "Tier 4 Non Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        def response = callApi(innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold.toString()
@@ -75,10 +68,10 @@ class MaintenanceThresholdServiceSpec extends Specification {
 
     }
 
-    def "Check 'Inner London Borough'"() {
+    def "Tier 4 Non Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        def response = callApi(innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold.toString()
@@ -97,9 +90,9 @@ class MaintenanceThresholdServiceSpec extends Specification {
 
     }
 
-    def "Check 'Tuition Fees paid'"() {
+    def "Tier 4 Non Doctorate - Check 'Tuition Fees paid'"() {
         expect:
-        def response = callApi(innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold.toString()
@@ -119,9 +112,9 @@ class MaintenanceThresholdServiceSpec extends Specification {
     }
 
 
-    def "Check 'Accommodation Fees paid'"() {
+    def "Tier 4 Non Doctorate - Check 'Accommodation Fees paid'"() {
         expect:
-        def response = callApi(innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold.toString()
@@ -136,13 +129,13 @@ class MaintenanceThresholdServiceSpec extends Specification {
         false       | 6                    | 5821.00     | 0.00            | 430.00                || 11481.00
         false       | 7                    | 10536.00    | 0.00            | 892.00                || 16749.00
         false       | 8                    | 6696.00     | 0.00            | 241.00                || 14575.00
-        false       | 9                    | 6613.00     | 0.00            | 1277.00               || 14483.00  // Trigger max accommodation cap
+        false       | 9                    | 6613.00     | 0.00            | 1277.00               || 14483.00
 
     }
 
-    def "Check 'All variants'"() {
+    def "Tier 4 Non Doctorate - Check 'All variants'"() {
         expect:
-        def response = callApi(innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold.toString()
@@ -152,27 +145,27 @@ class MaintenanceThresholdServiceSpec extends Specification {
         false       | 4                    | 9244.00     | 1855.00         | 454.00                || 10995.00
         true        | 7                    | 9411.00     | 4612.00         | 336.00                || 13318.00
         false       | 4                    | 7191.00     | 2720.00         | 1044.00               || 7487.00
-        true        | 1                    | 14867.00    | 1938.00         | 1739.00               || 12929.00  // Trigger max accommodation cap
-        false       | 7                    | 13722.00    | 1593.00         | 1613.00               || 17969.00  // Trigger max accommodation cap
-        false       | 5                    | 8155.00     | 998.00          | 1715.00               || 10967.00  // Trigger max accommodation cap
-        false       | 5                    | 7776.00     | 4101.00         | 1382.00               || 7485.00   // Trigger max accommodation cap
+        true        | 1                    | 14867.00    | 1938.00         | 1739.00               || 12929.00
+        false       | 7                    | 13722.00    | 1593.00         | 1613.00               || 17969.00
+        false       | 5                    | 8155.00     | 998.00          | 1715.00               || 10967.00
+        false       | 5                    | 7776.00     | 4101.00         | 1382.00               || 7485.00
         false       | 6                    | 9627.00     | 3153.00         | 224.00                || 12340.00
         true        | 2                    | 13479.00    | 221.00          | 1036.00               || 14752.00
-        true        | 3                    | 6360.00     | 4823.00         | 1915.00               || 4067.00   // Trigger max accommodation cap
-        false       | 3                    | 10986.00    | 2023.00         | 1926.00               || 10743.00  // Trigger max accommodation cap
-        false       | 7                    | 12188.00    | 4338.00         | 1824.00               || 13690.00  // Trigger max accommodation cap
-        true        | 5                    | 8809.00     | 3050.00         | 1581.00               || 10819.00  // Trigger max accommodation cap
-        true        | 9                    | 12511.00    | 1233.00         | 1831.00               || 21398.00  // Trigger max accommodation cap
+        true        | 3                    | 6360.00     | 4823.00         | 1915.00               || 4067.00
+        false       | 3                    | 10986.00    | 2023.00         | 1926.00               || 10743.00
+        false       | 7                    | 12188.00    | 4338.00         | 1824.00               || 13690.00
+        true        | 5                    | 8809.00     | 3050.00         | 1581.00               || 10819.00
+        true        | 9                    | 12511.00    | 1233.00         | 1831.00               || 21398.00
         true        | 2                    | 11505.00    | 2486.00         | 401.00                || 11148.00
-        true        | 2                    | 10700.00    | 1392.00         | 1670.00               || 10573.00  // Trigger max accommodation cap
+        true        | 2                    | 10700.00    | 1392.00         | 1670.00               || 10573.00
         false       | 5                    | 5589.00     | 4090.00         | 720.00                || 5854.00
         false       | 5                    | 5889.00     | 2017.00         | 312.00                || 8635.00
 
     }
 
-    def "Check invalid course length parameters"() {
+    def "Tier 4 Non Doctorate - Check invalid course length parameters"() {
         expect:
-        def response = callApi(innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid courseLength")))

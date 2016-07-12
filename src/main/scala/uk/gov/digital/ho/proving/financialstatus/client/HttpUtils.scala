@@ -1,16 +1,16 @@
 package uk.gov.digital.ho.proving.financialstatus.client
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.{HttpEntity, HttpHeaders, HttpMethod, HttpStatus}
+import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-
-import scala.util.Try
 
 case class HttpClientResponse(httpStatus: HttpStatus, body: String)
 
-object HttpUtils {
+@Service()
+class HttpUtils @Autowired()(rest: RestTemplate) {
 
   private val headers = new HttpHeaders()
-  private val rest = new RestTemplate()
   private val emptyBody = ""
 
   def performRequest(url: String) = {

@@ -25,9 +25,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.restassured.operation.preprocess.RestAssuredPreprocessors.modifyUris;
@@ -37,7 +35,7 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 @WebIntegrationTest("server.port=8080")
 @ContextConfiguration(classes = ServiceConfiguration.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ApiDocumentation {
+public class ThresholdCalculator {
 
     public static final String BASEPATH = "/pttg/financialstatusservice/v1/";
 
@@ -45,7 +43,7 @@ public class ApiDocumentation {
     public JUnitRestDocumentation restDocumentationRule = new JUnitRestDocumentation("build/generated-snippets");
 
     @Value("${server.port}")
-    private int port ;
+    private int port;
 
     private RequestSpecification documentationSpec;
 
@@ -66,11 +64,6 @@ public class ApiDocumentation {
             )
         );
 
-    private FieldDescriptor[] accountModelFields = new FieldDescriptor[]{
-        fieldWithPath("account").description("The account corresponding to this request"),
-        fieldWithPath("account.sortCode").description("The accounts's sort code"),
-        fieldWithPath("account.accountNumber").description("The account number"),
-    };
 
     private FieldDescriptor[] statusModelFields = new FieldDescriptor[]{
         fieldWithPath("status").description("to do - i don't know what this means"),
@@ -79,10 +72,7 @@ public class ApiDocumentation {
     };
 
     private FieldDescriptor[] bodyModelFields = new FieldDescriptor[]{
-        fieldWithPath("fromDate").description("start date for the financial check"),
-        fieldWithPath("toDate").description("end date of the financial check"),
-        fieldWithPath("minimum").description("minimum allowed daily balance"),
-        fieldWithPath("pass").description("status of minimum balance check")
+        fieldWithPath("threshold").description("minimum daily balance"),
     };
 
     @Before
@@ -107,9 +97,12 @@ public class ApiDocumentation {
 
         given(documentationSpec)
             .spec(requestSpec)
-            .param("fromDate", "2015-05-05")
-            .param("toDate", "2015-06-01")
-            .param("minimum", 1000)
+            .param("innerLondon", "true")
+            .param("courseLength", "4")
+            .param("tuitionFees", "12500")
+            .param("tuitionFeesPaid", "250.50")
+            .param("accommodationFeesPaid", "300")
+            .param("studentType", "nondoctorate")
             .filter(document.snippets(
                 requestHeaders(
                     headerWithName("Accept").description("The requested media type eg application/json. See <<Schema>> for supported media types.")
@@ -119,42 +112,48 @@ public class ApiDocumentation {
                 )
             ))
 
-            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
+            .when().get("/maintenance/threshold")
             .then().assertThat().statusCode(is(200));
     }
 
     @Test
-    public void financialStatus() throws Exception {
+    public void thresholdCalculation() throws Exception {
 
         given(documentationSpec)
             .spec(requestSpec)
-            .param("fromDate", "2016-05-05")
-            .param("toDate", "2016-06-01")
-            .param("minimum", 1000)
-            .filter(document.snippets(
+            .param("innerLondon", "true")
+            .param("courseLength", "4")
+            .param("tuitionFees", "12500")
+            .param("tuitionFeesPaid", "250.50")
+            .param("accommodationFeesPaid", "300")
+            .param("studentType", "nondoctorate")
+             .filter(document.snippets(
                 responseFields(bodyModelFields)
-                    .and(accountModelFields)
                     .and(statusModelFields),
                 requestParameters(
-                    parameterWithName("fromDate")
-                        .description("the start date of the financial check `yyyy-mm-dd` eg `2015-09-23`")
+                    parameterWithName("innerLondon")
+                        .description("whether the location is an inner London Borough")
                         .attributes(key("optional").value(false)),
-                    parameterWithName("toDate")
-                        .description("the end date of the financial check `yyyy-mm-dd` eg `2015-09-23`")
+                    parameterWithName("courseLength")
+                        .description("the length of the course in months")
                         .attributes(key("optional").value(false)),
-                    parameterWithName("minimum")
-                        .description("the minimum value allowed for the daily closing balance")
+                    parameterWithName("tuitionFees")
+                        .description("total tuition fees (non required for 'doctorate' student type)")
+                        .attributes(key("optional").value(true)),
+                    parameterWithName("tuitionFeesPaid")
+                        .description("tuition fees already paid (non required for 'doctorate' student type)")
+                        .attributes(key("optional").value(true)),
+                    parameterWithName("accommodationFeesPaid")
+                        .description("accommodation fees already paid")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("studentType")
+                        .description("type of student, current possible values are 'doctorate' and 'nondoctorate'")
                         .attributes(key("optional").value(false))
-                ),
-                pathParameters(
-                    parameterWithName("sortCode")
-                        .description("The bank account sort code"),
-                    parameterWithName("accountNumber")
-                        .description("The bank account number")
                 )
+
             ))
 
-            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
+            .when().get("/maintenance/threshold")
             .then().assertThat().statusCode(is(200));
     }
 
@@ -171,26 +170,9 @@ public class ApiDocumentation {
                 )
             ))
 
-            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
+            .when().get("/maintenance/threshold")
             .then().assertThat().statusCode(is(400));
     }
 
-    @Test
-    public void missingFromDateError() throws Exception {
-
-        given(documentationSpec)
-            .spec(requestSpec)
-            .param("toDate", "2016-06-01")
-            .param("minimum", 1000)
-            .filter(document.snippets(
-                responseFields(
-                    fieldWithPath("status.code").description("A specific error code to identify further details of this error"),
-                    fieldWithPath("status.message").description("A description of the error, in this case identifying the missing mandatory parameter")
-                )
-            ))
-
-            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
-            .then().assertThat().statusCode(is(400));
-    }
 
 }

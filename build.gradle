@@ -69,8 +69,6 @@ dependencies {
     testCompile 'net.serenity-bdd:serenity-cucumber:1.1.6'
     testCompile 'net.serenity-bdd:serenity-junit:1.1.31'
     testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
-   // testCompile 'info.cukes:cucumber-spring:1.2.4'
-    // https://mvnrepository.com/artifact/net.serenity-bdd/serenity-spring
     testCompile group: 'net.serenity-bdd', name: 'serenity-spring', version: '1.1.31'
 
 }
