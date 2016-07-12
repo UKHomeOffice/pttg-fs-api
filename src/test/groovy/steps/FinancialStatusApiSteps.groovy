@@ -1,7 +1,6 @@
 package steps
 
 import com.jayway.restassured.response.Response
-import cucumber.api.CucumberOptions
 import cucumber.api.DataTable
 import cucumber.api.Scenario
 import cucumber.api.java.After
@@ -9,36 +8,24 @@ import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
-import cucumber.api.junit.Cucumber
-import net.serenitybdd.cucumber.CucumberWithSerenity
 import net.thucydides.core.annotations.Managed
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
 import org.json.JSONObject
-import org.junit.runner.RunWith
+import org.springframework.beans.BeansException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationConfiguration
-import org.springframework.boot.test.SpringApplicationContextLoader
-import org.springframework.boot.test.WebIntegrationTest
-import org.springframework.context.annotation.Profile
-import org.springframework.context.annotation.PropertySource
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.TestPropertySource
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.context.web.WebAppConfiguration
-import org.springframework.web.bind.annotation.ControllerAdvice
-import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
-import uk.gov.digital.ho.proving.financialstatus.ServerConfig
-import uk.gov.digital.ho.proving.financialstatus.ServiceRunner
+import org.springframework.web.servlet.DispatcherServlet
 import uk.gov.digital.ho.proving.financialstatus.api.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
-
 
 /**
  * For wiremock-backed tests use the "test" profile in the @ActiveProfiles annotation:
@@ -48,12 +35,19 @@ import static com.jayway.restassured.RestAssured.get
  *            - This will use the application-endtoend.properties
  *
  */
-@SpringApplicationConfiguration(classes = [ServiceConfiguration.class])
+@SpringApplicationConfiguration(classes = [ServiceConfiguration.class, ApiExceptionHandler.class])
 @WebAppConfiguration
 @IntegrationTest()
 @ActiveProfiles("test")
 //@ActiveProfiles("endtoend")
-class FinancialStatusApiSteps {
+class FinancialStatusApiSteps implements ApplicationContextAware {
+
+    @Override
+    void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        //required for @controllerAdvice to work
+        DispatcherServlet ds = applicationContext.getBean("dispatcherServlet");
+        ds.setThrowExceptionIfNoHandlerFound(true)
+    }
 
     @Value('${local.server.port}')
     private String serverPort;
