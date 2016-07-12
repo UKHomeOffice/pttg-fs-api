@@ -28,7 +28,7 @@ appender("FILE", FileAppender) {
 // Define logging levels for specific packages
 logger("org.springframework", INFO)
 
-root(DEBUG, ["STDOUT","FILE"])
+root(DEBUG, ["STDOUT"])
 
 // Check config file every 30 seconds and reload if changed
 scan("30 seconds")

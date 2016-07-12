@@ -132,10 +132,42 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         response.andExpect(content().string(containsString("Parameter error: Invalid courseLength")))
 
         where:
+        innerLondon | courseLengthInMonths | accommodationFeesPaid
+        false       | 3                    | 454.00
+        true        | -1                   | 336.00
+        false       | 0                    | 1044.00
+        false       | "bb"                 | 1044.00
+    }
+
+    def "Tier 4 Doctorate - Check invalid accommodation fees parameters"() {
+        expect:
+        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter error: Invalid accommodationFeesPaid")))
+
+        where:
+        innerLondon | courseLengthInMonths | accommodationFeesPaid
+        false       | 1                    | -1
+        false       | 2                    | "ddd"
+    }
+
+    def "Tier 4 Doctorate - Check rounding accommodation fees parameters"() {
+        expect:
+        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid)
+        response.andExpect(status().isOk())
+
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.threshold == threshold.toString()
+
+        where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
-        false       | 3                    | 454.00                || 10995.00
-        true        | -1                   | 336.00                || 13318.00
-        false       | 0                    | 1044.00               || 7487.00
-        false       | "bb"                 | 1044.00               || 7487.00
+        false       | 1                    | 0.0000                || 1015.00
+        false       | 2                    | 0.010                 || 2029.99
+        false       | 2                    | 0.0010                || 2030.00
+        false       | 2                    | 0.005                 || 2029.99
+        false       | 2                    | 0.004                 || 2030.00
+        false       | 2                    | -0.004                 || 2030.00
+
     }
 }
