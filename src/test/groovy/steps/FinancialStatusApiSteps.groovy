@@ -39,11 +39,20 @@ import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
 
+
+/**
+ * For wiremock-backed tests use the "test" profile in the @ActiveProfiles annotation:
+ *           - This will launch the wiremock server using the application-test.properties
+ *
+ * To switch to end to end tests use the "endtoendtest" profile in the @ActiveProfiles annotation:
+ *            - This will use the application-endtoend.properties
+ *
+ */
 @SpringApplicationConfiguration(classes = [ServiceConfiguration.class])
 @WebAppConfiguration
 @IntegrationTest()
 @ActiveProfiles("test")
-//@ActiveProfiles("endtoendtest")
+//@ActiveProfiles("endtoend")
 class FinancialStatusApiSteps {
 
     @Value('${local.server.port}')
