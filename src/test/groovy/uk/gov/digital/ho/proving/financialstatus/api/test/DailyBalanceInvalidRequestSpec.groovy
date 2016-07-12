@@ -91,6 +91,22 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         jsonContent.status.message == invalidSortCode
     }
 
+    def "daily balance reject invalid sort code (all zeroes)"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/000000/12345678/dailybalancestatus"
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-13")
+        )
+
+        then:
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0000"
+        jsonContent.status.message == invalidSortCode
+    }
+
     def "daily balance reject invalid account number (invalid character)"() {
 
         given:
@@ -128,6 +144,22 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def "daily balance reject invalid account number (too many numbers)"() {
         given:
         def url = "/pttg/financialstatusservice/v1/accounts/123456/123456789/dailybalancestatus"
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-13")
+        )
+
+        then:
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0000"
+        jsonContent.status.message == invalidAccountNumber
+    }
+
+    def "daily balance reject invalid account number (all zeroes)"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/00000000/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(

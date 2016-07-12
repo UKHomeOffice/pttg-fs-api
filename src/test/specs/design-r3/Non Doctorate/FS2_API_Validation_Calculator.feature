@@ -8,13 +8,8 @@ Feature: Validation of the API fields and data
     Accommodation fees already paid - Format should not contain commas or currency symbols
     To Date - Format should be yyyy-mm-dd
     From Date - Format should be yyyy-mm-dd
-    Minimum Funds Required - Format should not contain commas or currency symbols
-    Sort code - Format should be three pairs of digits 13-56-09 (always numbers 0-9, no letters and cannot be all 0's)
-    Account Number - Format should be 12345678 (always 8 numbers, 0-9, no letters, cannot be all 0's)
 
-
-
-      ######################### Validation on the Inner London borough Field #########################
+######################### Validation on the Inner London borough Field #########################
 
     Scenario: The API is not provided with Inner London borough Yes or No field
         Given A Service is consuming the FSPS Calculator API
@@ -29,6 +24,7 @@ Feature: Validation of the API fields and data
             | HTTP Status    | 400                                  |
             | Status code    | 0000                                 |
             | Status message | Parameter error: Invalid innerLondon |
+
 ######################### Validation on the Course Length Field #########################
 
     Scenario: The API is not provided with the Course length
@@ -106,6 +102,20 @@ Feature: Validation of the API fields and data
             | Status code    | 0000                                 |
             | Status message | Parameter error: Invalid tuitionFees |
 
+    Scenario: The API is provided with incorrect  tuition fees - not numbers 0-9
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Student Type                    | nondoctorate |
+            | Inner London Borough            | Yes          |
+            | Course Length                   | 9            |
+            | Total tuition fees              | -100         |
+            | Tuition fees already paid       | 0            |
+            | Accommodation fees already paid | 0            |
+        Then the service displays the following result
+            | HTTP Status    | 400                                  |
+            | Status code    | 0000                                 |
+            | Status message | Parameter error: Invalid tuitionFees |
+
 
 ######################### Validation on the Tuition fees already paid Field #########################
 
@@ -137,6 +147,20 @@ Feature: Validation of the API fields and data
             | Status code    | 0000                                     |
             | Status message | Parameter error: Invalid tuitionFeesPaid |
 
+    Scenario: The API is not provided with Tuition fees already paid - less than zero
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Student Type                    | nondoctorate |
+            | Inner London Borough            | Yes          |
+            | Course Length                   | 6            |
+            | Total tuition fees              | 6530.12      |
+            | Tuition fees already paid       | -100         |
+            | Accommodation fees already paid | 0            |
+        Then the service displays the following result
+            | HTTP Status    | 400                                      |
+            | Status code    | 0000                                     |
+            | Status message | Parameter error: Invalid tuitionFeesPaid |
+
 ######################### Validation on the Accommodation fees already paid Field #########################
 
     Scenario: The API is not provided with Accommodation fees already paid
@@ -162,6 +186,20 @@ Feature: Validation of the API fields and data
             | Total tuition fees              | 6530.12      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | %%           |
+        Then the service displays the following result
+            | HTTP Status    | 400                                            |
+            | Status code    | 0000                                           |
+            | Status message | Parameter error: Invalid accommodationFeesPaid |
+
+    Scenario: The API is provided with incorrect  Accommodation fees already paid - less than zero
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Student Type                    | nondoctorate |
+            | Inner London Borough            | Yes          |
+            | Course Length                   | 6            |
+            | Total tuition fees              | 6530.12      |
+            | Tuition fees already paid       | 0            |
+            | Accommodation fees already paid | -100         |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0000                                           |

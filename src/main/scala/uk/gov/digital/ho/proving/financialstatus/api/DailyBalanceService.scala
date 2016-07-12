@@ -13,6 +13,7 @@ import org.springframework.http.{ResponseEntity, _}
 import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{HttpClientErrorException, ResourceAccessException}
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
+import uk.gov.digital.ho.proving.financialstatus.monitor.{Auditor, Timer}
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker}
 
 import scala.util._
@@ -21,7 +22,7 @@ import scala.util._
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(path = Array("/pttg/financialstatusservice/v1/accounts/"))
 class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
-                                       @Value("${daily-balance.days-to-check}") val daysToCheck: Int) {
+                                       @Value("${daily-balance.days-to-check}") val daysToCheck: Int) extends Auditor with Timer {
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
@@ -44,7 +45,6 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
                          @RequestParam(value = "toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) toDate: LocalDate,
                          @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: LocalDate): ResponseEntity[AccountDailyBalanceStatusResponse] = {
 
-    LOGGER.info("dailybalancestatus request received ")
 
     val cleanSortCode = sortCode.replace("-", "")
     val validDates = validateDates(fromDate, toDate)
@@ -55,7 +55,12 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
     else if (!validateMinimum(minimum)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid value for minimum", HttpStatus.BAD_REQUEST)
     else validateDailyBalanceStatus(cleanSortCode, accountNumber, BigDecimal(minimum).setScale(2), fromDate, toDate)
 
-    response
+    timer("dailyBalances") {
+      val auditMessage = s"validateDailyBalance: accountNumber = $accountNumber, sortCode = $cleanSortCode, minimum = $minimum, fromDate = $fromDate, toDate = $toDate"
+      audit(auditMessage) {
+        response
+      }
+    }
   }
 
   def validateDailyBalanceStatus(sortCode: String, accountNumber: String, minimum: BigDecimal, fromDate: LocalDate, toDate: LocalDate) = {
@@ -98,9 +103,9 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
     new ResponseEntity(AccountDailyBalanceStatusResponse(StatusResponse(statusCode, statusMessage)), headers, status)
   }
 
-  def validateAccountNumber(accountNumber: String) = accountNumberPattern.findFirstIn(accountNumber).nonEmpty
+  def validateAccountNumber(accountNumber: String) = accountNumberPattern.findFirstIn(accountNumber).nonEmpty && accountNumber != "00000000"
 
-  def validateSortCode(sortCode: String) = sortCodePattern.findFirstIn(sortCode).nonEmpty
+  def validateSortCode(sortCode: String) = sortCodePattern.findFirstIn(sortCode).nonEmpty && sortCode != "000000"
 
   def validateMinimum(minimum: JBigDecimal) = minimum != null && JBigDecimal.ZERO.compareTo(minimum) == -1
 

@@ -1,20 +1,21 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.math.{BigDecimal => JBigDecimal}
-import javax.validation.constraints.NotNull
 
-import org.hibernate.validator.constraints.NotEmpty
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.PropertySource
 import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
 import org.springframework.web.bind.annotation._
+import uk.gov.digital.ho.proving.financialstatus.monitor.{Auditor, Timer}
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(value = Array("/pttg/financialstatusservice/v1/maintenance"))
 @ControllerAdvice
-class ThresholdService {
+class ThresholdService extends Auditor with Timer {
+
+  val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
 
   val BIG_DECIMAL_SCALE = 2
   val courseLengthPattern = """^[0-9]$""".r
@@ -32,12 +33,16 @@ class ThresholdService {
                          @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: JBigDecimal
                         ): ResponseEntity[ThresholdResponse] = {
 
-    val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
-    LOGGER.info("Calculating threshold")
-
     val validatedStudentType = validateStudentType(studentType)
-    calculateThresholdForStudentType(validatedStudentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
 
+    timer("calculateThresholdForStudentType") {
+      val auditMessage = s"calculateThreshold: validatedStudentType = $validatedStudentType, innerLondon = $innerLondon, " +
+        s"courseLength = $courseLength, tuitionFees = $tuitionFees, tuitionFeesPaid = $tuitionFeesPaid, " +
+        s"accommodationFeesPaid = $accommodationFeesPaid"
+      audit(auditMessage) {
+        calculateThresholdForStudentType(validatedStudentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+      }
+    }
   }
 
   def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus) = {
@@ -64,7 +69,7 @@ class ThresholdService {
     StudentType.getStudentType(studentType)
   }
 
-  def setScale(value: JBigDecimal) = value.setScale(BIG_DECIMAL_SCALE, JBigDecimal.ROUND_HALF_UP)
+  def setScale(value: JBigDecimal) = if (value != null) value.setScale(BIG_DECIMAL_SCALE, JBigDecimal.ROUND_HALF_UP) else value
 
   def calculateThresholdForStudentType(studentType: StudentType, innerLondon: Boolean, courseLength: Int,
                                        tuitionFees: JBigDecimal, tuitionFeesPaid: JBigDecimal, accommodationFeesPaid: JBigDecimal) = {
