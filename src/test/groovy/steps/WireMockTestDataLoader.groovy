@@ -2,26 +2,18 @@ package steps
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.google.common.net.HostAndPort
-import cucumber.api.Scenario
-import groovyx.net.http.RESTClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
-import static com.github.tomakehurst.wiremock.client.WireMock.*
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 
 class WireMockTestDataLoader {
 
 
     private static Logger LOGGER = LoggerFactory.getLogger(WireMockTestDataLoader.class);
 
-    def dataDirTagName = "@DataDir="
-    def dataDirPath = "src/test/resources/account-data"
-    def dataDirName
-    def dataDir
+    def dataDirName = "account-data"
 
     def WireMockServer wireMockServer
 
@@ -33,50 +25,25 @@ class WireMockTestDataLoader {
         WireMock.configureFor(hostAndPort.getHostText(), hostAndPort.getPort())
     }
 
-    def prepareFor(Scenario scenario) {
-
-        def dataDirTag = scenario.getSourceTagNames().find {
-            it.startsWith(dataDirTagName)
-        }
-
-        if (dataDirTag != null) {
-            dataDirName = dataDirTag - dataDirTagName
-
-        } else {
-            println ''
-            LOGGER.warn('WARNING: No data directory specified. Tag the feature to specify the directory containing test data files, eg @DataDir=name')
-        }
-
-        dataDir = new File("$dataDirPath/$dataDirName")
-
-        if (!dataDir.isDirectory()) {
-            println ''
-            LOGGER.warn("WARNING: $dataDir.absolutePath is not a directory. No test data files will be loaded")
-        }
-    }
-
     def stubTestData(String fileName, String url) {
 
         def json = jsonFromFile(fileName)
 
         if (json == null) {
-            assert false: "No test data file was loaded for $fileName from directory $dataDirName - " +
+            assert false: "No test data file was loaded for $fileName from the resources/account-data directory - " +
                 "Please add it or check filename is correct"
         }
 
         addStub(fileName, json, url)
-
     }
-
 
     private def jsonFromFile(String fileName) {
 
         println ''
-        LOGGER.debug("Loading test data for $fileName from: $dataDir")
+        def fileLocation = "/$dataDirName/$fileName" + ".json"
+        LOGGER.debug("Loading test data for {}", fileLocation.toString())
 
-        def file = dataDir.listFiles().find {
-            it.name.contains(fileName)
-        }
+        def file =  this.getClass().getResource( fileLocation)
 
         if (file == null) {
             return null

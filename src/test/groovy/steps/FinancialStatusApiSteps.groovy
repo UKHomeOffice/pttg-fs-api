@@ -86,7 +86,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
         if (wiremock) {
             testDataLoader = new WireMockTestDataLoader(barclaysService)
-            testDataLoader.prepareFor(scenario)
         }
     }
 

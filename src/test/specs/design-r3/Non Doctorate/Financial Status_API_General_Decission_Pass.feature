@@ -1,4 +1,4 @@
-@DataDir=records @wiremock
+@wiremock
 Feature: Pass Threshold Calculation - Tier 4 (General) student (single current account and no dependants)
 
     Requirement to meet Tier 4 pass
