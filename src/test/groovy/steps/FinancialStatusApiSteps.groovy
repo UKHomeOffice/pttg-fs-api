@@ -38,8 +38,8 @@ import static com.jayway.restassured.RestAssured.get
 @SpringApplicationConfiguration(classes = [ServiceConfiguration.class, ApiExceptionHandler.class])
 @WebAppConfiguration
 @IntegrationTest()
-//@ActiveProfiles("test")
-@ActiveProfiles("endtoend")
+@ActiveProfiles("test")
+//@ActiveProfiles("endtoend")
 class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @Override
