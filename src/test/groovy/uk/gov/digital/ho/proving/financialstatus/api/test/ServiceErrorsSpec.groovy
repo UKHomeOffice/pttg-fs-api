@@ -16,6 +16,7 @@ import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
+import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
 import java.time.LocalDate
 
@@ -37,10 +38,10 @@ class ServiceErrorsSpec extends Specification {
     @Autowired
     RestTemplate restTemplate
 
-    MockBankService bankService = new MockBankService(new ObjectMapper(), mockHttpUtils, serviceName)
+    MockBankService mockBankService = new MockBankService(new ObjectMapper(), mockHttpUtils, serviceName)
 
 
-    def dailyBalanceService = new DailyBalanceService(bankService, 28)
+    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28))
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
 

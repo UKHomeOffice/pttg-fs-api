@@ -5,12 +5,14 @@ import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalc
 
 class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
+    MaintenanceThresholdCalculator maintenanceThresholdCalculator = new MaintenanceThresholdCalculator(1265, 1015, 1265, 2)
+
     def bd(a) { new scala.math.BigDecimal(a) }
 
     def "Tier 4 Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        MaintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid)) == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid)) == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
@@ -29,7 +31,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        MaintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid)) == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid)) == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
@@ -48,7 +50,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Accommodation Fees paid'"() {
 
         expect:
-        MaintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid)) == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid)) == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
@@ -67,7 +69,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'All variants'"() {
 
         expect:
-        MaintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid)) == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid)) == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold

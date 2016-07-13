@@ -9,6 +9,7 @@ import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.api.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
+import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
 import static org.hamcrest.core.StringContains.containsString
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
 
-    def thresholdService = new ThresholdService()
+    def thresholdService = new ThresholdService(new MaintenanceThresholdCalculator(1265, 1015, 1265, 2))
     MockMvc mockMvc = standaloneSetup(thresholdService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
         .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper()))

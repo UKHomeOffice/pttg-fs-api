@@ -3,17 +3,18 @@ package uk.gov.digital.ho.proving.financialstatus.api
 import java.math.{BigDecimal => JBigDecimal}
 
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.PropertySource
 import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
 import org.springframework.web.bind.annotation._
-import uk.gov.digital.ho.proving.financialstatus.monitor.{Auditor, Timer}
 import uk.gov.digital.ho.proving.financialstatus.domain._
+import uk.gov.digital.ho.proving.financialstatus.monitor.{Auditor, Timer}
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(value = Array("/pttg/financialstatusservice/v1/maintenance"))
 @ControllerAdvice
-class ThresholdService extends Auditor with Timer {
+class ThresholdService @Autowired()(maintenanceThresholdCalculator: MaintenanceThresholdCalculator) extends Auditor with Timer {
 
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
 
@@ -24,8 +25,10 @@ class ThresholdService extends Auditor with Timer {
 
   headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
+  logStartupInformation()
+
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
-  def calculateThreshold(@RequestParam(value = "studentType", required = false, defaultValue = "nondoctorate") studentType: String,
+  def calculateThreshold(@RequestParam(value = "studentType", required = false) studentType: String,
                          @RequestParam(value = "innerLondon") innerLondon: Boolean,
                          @RequestParam(value = "courseLength") courseLength: Int,
                          @RequestParam(value = "tuitionFees", required = false) tuitionFees: JBigDecimal,
@@ -97,7 +100,7 @@ class ThresholdService extends Auditor with Timer {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
         } else {
           val thresholdResponse: ThresholdResponse = new ThresholdResponse(
-            MaintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLength,
+            maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLength,
               setScale(tuitionFees),
               setScale(tuitionFeesPaid),
               setScale(accommodationFeesPaid)),
@@ -114,13 +117,17 @@ class ThresholdService extends Auditor with Timer {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
         } else {
           val thresholdResponse: ThresholdResponse = new ThresholdResponse(
-            MaintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLength,
+            maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLength,
               setScale(accommodationFeesPaid)), StatusResponse(HttpStatus.OK.toString, OK))
           new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
         }
       case Unknown(unknownType) =>
         buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE + unknownType, HttpStatus.BAD_REQUEST)
     }
+  }
+
+  def logStartupInformation() = {
+    LOGGER.info(maintenanceThresholdCalculator.parameters)
   }
 
 }

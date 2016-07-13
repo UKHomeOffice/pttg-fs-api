@@ -8,7 +8,7 @@ Feature: Validation of the API fields and data
 
 ######################### Validation on the Student type field #########################
 
-    Scenario: The API is not provided with Stydent type field
+    Scenario: The API is not provided with Student type field
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |     |
@@ -18,7 +18,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                  |
             | Status code    | 0000                                 |
-            | Status message | Parameter error: Invalid innerLondon |
+            | Status message | Parameter error: Invalid studentType |
 
 ######################### Validation on the Inner london borough field #########################
 
@@ -87,7 +87,7 @@ Feature: Validation of the API fields and data
             | Status code    | 0000                                           |
             | Status message | Parameter error: Invalid accommodationFeesPaid |
 
-    Scenario: The API is provided with incorrect  Accommodation fees already paid - not numbers 0-9
+    Scenario: The API is provided with incorrect  Accommodation fees already paid - not numbers 1-2
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
@@ -117,8 +117,8 @@ Feature: Validation of the API fields and data
             | Student Type                    | doctorate  |
             | The end of 28-day period        | 20/06/2016 |
             | Inner London borough            | Yes        |
-            | Course length                   | -          |
-            | Accommodation fees already paid | 250.50     |
+            | Course length                   | 1          |
+            | Accommodation fees already paid | 3214       |
 
         Then the service displays the following result
             | HTTP Status    | 400                                            |
