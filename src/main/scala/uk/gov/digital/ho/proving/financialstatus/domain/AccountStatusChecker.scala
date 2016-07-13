@@ -2,11 +2,14 @@ package uk.gov.digital.ho.proving.financialstatus.domain
 
 import java.time.LocalDate
 
+import org.springframework.beans.factory.annotation.{Autowired, Value}
+import org.springframework.stereotype.Service
 import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 
 import scala.util.Try
 
-class AccountStatusChecker(bankService: BankService, numberConsecutiveDays: Int) {
+@Service
+class AccountStatusChecker @Autowired()(bankService: BankService, @Value("${daily-balance.days-to-check}") val numberConsecutiveDays: Int) {
 
   private def areDatesConsecutive(accountDailyBalances: AccountDailyBalances) = {
     val dates = accountDailyBalances.balances.map {
@@ -29,4 +32,10 @@ class AccountStatusChecker(bankService: BankService, numberConsecutiveDays: Int)
     }
   }
 
+  def parameters = {
+    s"""
+       | ---------- External parameters values ----------
+       |     daily-balance.days-to-check = $numberConsecutiveDays
+     """.stripMargin
+  }
 }

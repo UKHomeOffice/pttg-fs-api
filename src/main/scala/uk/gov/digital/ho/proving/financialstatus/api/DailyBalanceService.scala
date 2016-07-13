@@ -22,8 +22,11 @@ import scala.util._
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(path = Array("/pttg/financialstatusservice/v1/accounts/"))
 @ControllerAdvice
-class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
-                                       @Value("${daily-balance.days-to-check}") val daysToCheck: Int) extends Auditor with Timer {
+class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker) extends Auditor with Timer {
+
+  //class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
+  //                                       @Value("${daily-balance.days-to-check}") val daysToCheck: Int) extends Auditor with Timer {
+
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
@@ -36,7 +39,10 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
   val headers = new HttpHeaders()
   headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
-  // TODO get spring to handle LocalDate objects
+  // val accountStatusChecker = new AccountStatusChecker(barclaysBankService, daysToCheck)
+
+  logStartupInformation()
+
   @RequestMapping(value = Array("{sortCode:[0-9]+|[0-9-]+}/{accountNumber:[0-9]+}/dailybalancestatus"),
     method = Array(RequestMethod.GET),
     produces = Array(MediaType.APPLICATION_JSON_VALUE))
@@ -66,7 +72,7 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
 
   def validateDailyBalanceStatus(sortCode: String, accountNumber: String, minimum: BigDecimal, fromDate: LocalDate, toDate: LocalDate) = {
     val bankAccount = Account(sortCode, accountNumber)
-    val accountStatusChecker = new AccountStatusChecker(barclaysBankService, daysToCheck)
+
     val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum)
 
     dailyAccountBalanceCheck match {
@@ -113,9 +119,13 @@ class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
   def validateDates(fromDate: LocalDate, toDate: LocalDate) = {
     if (fromDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid from date", HttpStatus.BAD_REQUEST))
     else if (toDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid to date", HttpStatus.BAD_REQUEST))
-    else if (!fromDate.isBefore(toDate) || (!fromDate.plusDays(daysToCheck - 1).equals(toDate)))
-      Left(buildErrorResponse(headers, TEMP_ERROR_CODE, s"Parameter error: Invalid dates, from date must be ${daysToCheck - 1} days before to date", HttpStatus.BAD_REQUEST))
+    else if (!fromDate.isBefore(toDate) || (!fromDate.plusDays(accountStatusChecker.numberConsecutiveDays - 1).equals(toDate)))
+      Left(buildErrorResponse(headers, TEMP_ERROR_CODE, s"Parameter error: Invalid dates, from date must be ${accountStatusChecker.numberConsecutiveDays - 1} days before to date", HttpStatus.BAD_REQUEST))
     else Right(true)
+  }
+
+  def logStartupInformation() = {
+    LOGGER.info(accountStatusChecker.parameters)
   }
 
 }
