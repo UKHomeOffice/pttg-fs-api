@@ -38,8 +38,8 @@ import static com.jayway.restassured.RestAssured.get
 @SpringApplicationConfiguration(classes = [ServiceConfiguration.class, ApiExceptionHandler.class])
 @WebAppConfiguration
 @IntegrationTest()
-@ActiveProfiles("test")
-//@ActiveProfiles("endtoend")
+//@ActiveProfiles("test")
+@ActiveProfiles("endtoend")
 class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @Override
@@ -56,7 +56,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     private String barclaysService;
 
     @Value('${wiremock}')
-    private boolean wiremock;
+    private Boolean wiremock;
 
     @Managed
     public Response resp
@@ -77,13 +77,12 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
 
     def testDataLoader
-    FeatureKeyMapper fkm = new FeatureKeyMapper();
+    FeatureKeyMapper fkm = new FeatureKeyMapper()
 
     def balancesUrlRegex = "/financialstatus/v1.*"
 
     @Before
     def setUp(Scenario scenario) {
-
         if (wiremock) {
             testDataLoader = new WireMockTestDataLoader(barclaysService)
         }

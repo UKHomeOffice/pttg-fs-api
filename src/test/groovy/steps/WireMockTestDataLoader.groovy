@@ -1,7 +1,6 @@
 package steps
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.google.common.net.HostAndPort
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -22,7 +21,7 @@ class WireMockTestDataLoader {
         HostAndPort hostAndPort = HostAndPort.fromString(service)
         wireMockServer = new WireMockServer(hostAndPort.getPort())
         wireMockServer.start()
-        WireMock.configureFor(hostAndPort.getHostText(), hostAndPort.getPort())
+        configureFor(hostAndPort.getHostText(), hostAndPort.getPort())
     }
 
     def stubTestData(String fileName, String url) {
