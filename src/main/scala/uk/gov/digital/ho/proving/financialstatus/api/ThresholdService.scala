@@ -38,7 +38,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   logStartupInformation()
 
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
-  def calculateThreshold(@RequestParam(value = "studentType", required = false) studentType: String,
+  def calculateThreshold(@RequestParam(value = "studentType") studentType: String,
                          @RequestParam(value = "innerLondon") innerLondon: Boolean,
                          @RequestParam(value = "courseLength") courseLength: Int,
                          @RequestParam(value = "tuitionFees", required = false) tuitionFees: JBigDecimal,
