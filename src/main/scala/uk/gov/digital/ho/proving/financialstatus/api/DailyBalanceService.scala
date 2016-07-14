@@ -24,10 +24,6 @@ import scala.util._
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker) extends Auditor with Timer {
 
-  //class DailyBalanceService @Autowired()(val barclaysBankService: MockBankService,
-  //                                       @Value("${daily-balance.days-to-check}") val daysToCheck: Int) extends Auditor with Timer {
-
-
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
   // TODO Temporary error code until these are finalised or removed
@@ -38,8 +34,6 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
   val headers = new HttpHeaders()
   headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-
-  // val accountStatusChecker = new AccountStatusChecker(barclaysBankService, daysToCheck)
 
   logStartupInformation()
 
