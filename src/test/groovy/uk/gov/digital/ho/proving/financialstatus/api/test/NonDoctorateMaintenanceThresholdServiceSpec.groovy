@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
+import static TestUtils.getMessageSource
 
 /**
  * @Author Home Office Digital
@@ -24,14 +25,15 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
 
-    def thresholdService = new ThresholdService(new MaintenanceThresholdCalculator(1265, 1015, 1265, 2))
+    def thresholdService = new ThresholdService(new MaintenanceThresholdCalculator(1265, 1015, 1265, 2), getMessageSource())
     MockMvc mockMvc = standaloneSetup(thresholdService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
         .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper()))
+    .setLocaleResolver(new ServiceConfiguration().localeResolver())
         .build()
 
 
-    def url = "/pttg/financialstatusservice/v1/maintenance/threshold"
+    def url = TestUtils.thresholdUrl
 
     def callApi(studentType, innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid) {
         def response = mockMvc.perform(

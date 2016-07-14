@@ -9,7 +9,6 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.web.client.ResourceAccessException
-import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
@@ -23,6 +22,7 @@ import java.time.LocalDate
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
+import static TestUtils.getMessageSource
 
 /**
  * @Author Home Office Digital
@@ -41,7 +41,7 @@ class ServiceErrorsSpec extends Specification {
     MockBankService mockBankService = new MockBankService(new ObjectMapper(), mockHttpUtils, serviceName)
 
 
-    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28))
+    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), getMessageSource())
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
 
@@ -94,6 +94,5 @@ class ServiceErrorsSpec extends Specification {
         jsonContent.status.message=="Connection refused"
 
     }
-
 
 }

@@ -16,6 +16,7 @@ import java.time.LocalDate
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
+import static TestUtils.getMessageSource
 
 /**
  * @Author Home Office Digital
@@ -27,7 +28,7 @@ class DailyBalanceServiceSpec extends Specification {
 
     def mockBankService = Mock(MockBankService)
 
-    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28))
+    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), getMessageSource())
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
     def "daily balance threshold check pass"() {

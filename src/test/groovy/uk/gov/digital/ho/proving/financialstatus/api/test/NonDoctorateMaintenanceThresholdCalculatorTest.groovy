@@ -7,7 +7,6 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
     MaintenanceThresholdCalculator maintenanceThresholdCalculator = new MaintenanceThresholdCalculator(1265, 1015, 1265, 2)
 
-
     def bd(a) { new scala.math.BigDecimal(a) }
 
     def "Tier 4 Non Doctorate - Check 'Non Inner London Borough'"() {

@@ -5,16 +5,18 @@ import java.math.{BigDecimal => JBigDecimal}
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.PropertySource
+import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
 import org.springframework.web.bind.annotation._
 import uk.gov.digital.ho.proving.financialstatus.domain._
-import uk.gov.digital.ho.proving.financialstatus.monitor.{Auditor, Timer}
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(value = Array("/pttg/financialstatusservice/v1/maintenance"))
 @ControllerAdvice
-class ThresholdService @Autowired()(maintenanceThresholdCalculator: MaintenanceThresholdCalculator) extends Auditor with Timer {
+class ThresholdService @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
+                                    val messageSource: ResourceBundleMessageSource
+                                   ) extends FinancialStatusBaseController {
 
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
 
@@ -22,6 +24,14 @@ class ThresholdService @Autowired()(maintenanceThresholdCalculator: MaintenanceT
   val courseLengthPattern = """^[0-9]$""".r
   val TEMP_ERROR_CODE: String = "0000"
   val headers = new HttpHeaders()
+
+  val INVALID_COURSE_LENGTH = getMessage("invalid.course.length")
+  val INVALID_TUITION_FEES = getMessage("invalid.tuition.fees")
+  val INVALID_TUITION_FEES_PAID = getMessage("invalid.tuition.fees.paid")
+  val INVALID_ACCOMMODATION_FEES_PAID = getMessage("invalid.accommodation.fees.paid")
+  val INVALID_STUDENT_TYPE = getMessage("invalid.student.type")
+
+  val OK = "OK"
 
   headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
@@ -76,14 +86,6 @@ class ThresholdService @Autowired()(maintenanceThresholdCalculator: MaintenanceT
 
   def calculateThresholdForStudentType(studentType: StudentType, innerLondon: Boolean, courseLength: Int,
                                        tuitionFees: JBigDecimal, tuitionFeesPaid: JBigDecimal, accommodationFeesPaid: JBigDecimal) = {
-    val INVALID_COURSE_LENGTH = "Parameter error: Invalid courseLength"
-    val INVALID_TUITION_FEES = "Parameter error: Invalid tuitionFees"
-    val INVALID_TUITION_FEES_PAID = "Parameter error: Invalid tuitionFeesPaid"
-    val INVALID_ACCOMMODATION_FEES_PAID = "Parameter error: Invalid accommodationFeesPaid"
-
-    val INVALID_STUDENT_TYPE = "Parameter error: Invalid studentType"
-
-    val OK = "OK"
 
     studentType match {
 
@@ -126,7 +128,7 @@ class ThresholdService @Autowired()(maintenanceThresholdCalculator: MaintenanceT
     }
   }
 
-  def logStartupInformation() = {
+  override def logStartupInformation() = {
     LOGGER.info(maintenanceThresholdCalculator.parameters)
   }
 

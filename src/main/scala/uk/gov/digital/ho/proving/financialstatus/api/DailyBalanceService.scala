@@ -6,14 +6,13 @@ import java.time.LocalDate
 
 import org.apache.http.conn.HttpHostConnectException
 import org.slf4j.{Logger, LoggerFactory}
-import org.springframework.beans.factory.annotation.{Autowired, Value}
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.PropertySource
+import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.{ResponseEntity, _}
 import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{HttpClientErrorException, ResourceAccessException}
-import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
-import uk.gov.digital.ho.proving.financialstatus.monitor.{Auditor, Timer}
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker}
 
 import scala.util._
@@ -22,7 +21,8 @@ import scala.util._
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(path = Array("/pttg/financialstatusservice/v1/accounts/"))
 @ControllerAdvice
-class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker) extends Auditor with Timer {
+class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
+                                       val messageSource: ResourceBundleMessageSource) extends FinancialStatusBaseController {
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
@@ -33,6 +33,25 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
   val accountNumberPattern = """^[0-9]{8}$""".r
 
   val headers = new HttpHeaders()
+
+  val INVALID_ACCOUNT_NUMBER = getMessage("invalid.account.number")
+  val INVALID_SORT_CODE = getMessage("invalid.sort.code")
+  val INVALID_MINIMUM_VALUE = getMessage("invalid.minimum.value")
+
+  val CONNECTION_TIMEOUT = getMessage("connection.timeout")
+  val CONNECTION_REFUSED = getMessage("connection.refused")
+  val UNKNOWN_CONNECTION_EXCEPTION = getMessage("unknown.connection.exception")
+  val INVALID_FROM_DATE = getMessage("invalid.from.date")
+  val INVALID_TO_DATE = getMessage("invalid.to.date")
+
+  def NO_RECORDS_FOR_ACCOUNT(params: String*) = getMessage("no.records.for.account", params)
+
+  def INVALID_DATES(params: Int*) = getMessage("invalid.dates", params)
+
+  val INVALID_SORT_CODE_VALUE = "000000"
+  val INVALID_ACCOUNT_NUMBER_VALUE = "00000000"
+  val OK = "OK"
+
   headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
   logStartupInformation()
@@ -46,14 +65,13 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                          @RequestParam(value = "toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) toDate: LocalDate,
                          @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: LocalDate): ResponseEntity[AccountDailyBalanceStatusResponse] = {
 
-
     val cleanSortCode = sortCode.replace("-", "")
     val validDates = validateDates(fromDate, toDate)
 
     val response = if (validDates.isLeft) validDates.left.get
-    else if (!validateAccountNumber(accountNumber)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid account number", HttpStatus.BAD_REQUEST)
-    else if (!validateSortCode(cleanSortCode)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid sort code", HttpStatus.BAD_REQUEST)
-    else if (!validateMinimum(minimum)) buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid value for minimum", HttpStatus.BAD_REQUEST)
+    else if (!validateAccountNumber(accountNumber)) buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOUNT_NUMBER, HttpStatus.BAD_REQUEST)
+    else if (!validateSortCode(cleanSortCode)) buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_SORT_CODE, HttpStatus.BAD_REQUEST)
+    else if (!validateMinimum(minimum)) buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_MINIMUM_VALUE, HttpStatus.BAD_REQUEST)
     else validateDailyBalanceStatus(cleanSortCode, accountNumber, BigDecimal(minimum).setScale(2), fromDate, toDate)
 
     timer("dailyBalances") {
@@ -70,12 +88,12 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
     val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum)
 
     dailyAccountBalanceCheck match {
-      case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(bankAccount, balanceCheck, StatusResponse("200", "OK")), HttpStatus.OK)
+      case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(bankAccount, balanceCheck, StatusResponse("200", OK)), HttpStatus.OK)
 
       case Failure(exception: HttpClientErrorException) =>
         exception.getStatusCode match {
           case HttpStatus.NOT_FOUND => new ResponseEntity(
-            AccountDailyBalanceStatusResponse(StatusResponse(TEMP_ERROR_CODE, s"No records for sort code ${sortCode} and account number ${accountNumber}")), HttpStatus.NOT_FOUND
+            AccountDailyBalanceStatusResponse(StatusResponse(TEMP_ERROR_CODE, NO_RECORDS_FOR_ACCOUNT(sortCode, accountNumber))), HttpStatus.NOT_FOUND
           )
           case _ => new ResponseEntity(
             AccountDailyBalanceStatusResponse(
@@ -83,17 +101,17 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
         }
 
       case Failure(exception: ResourceAccessException) =>
-        LOGGER.info("Connection refused by bank service : " + exception.getMessage)
+        LOGGER.error("Connection refused by bank service : " + exception.getMessage)
         val message = exception.getCause match {
-          case e: SocketTimeoutException => "Connection timeout"
-          case e: HttpHostConnectException => "Connection refused"
-          case _ => "Unknown connection exception"
+          case e: SocketTimeoutException => CONNECTION_TIMEOUT
+          case e: HttpHostConnectException => CONNECTION_REFUSED
+          case _ => UNKNOWN_CONNECTION_EXCEPTION
         }
         new ResponseEntity(AccountDailyBalanceStatusResponse(
           StatusResponse(TEMP_ERROR_CODE, message)), HttpStatus.INTERNAL_SERVER_ERROR)
 
       case Failure(exception: Throwable) =>
-        LOGGER.info("Unknown bank service error: " + exception.getMessage)
+        LOGGER.error("Unknown bank service error: " + exception.getMessage)
         new ResponseEntity(AccountDailyBalanceStatusResponse(
           StatusResponse(TEMP_ERROR_CODE, exception.getMessage)), HttpStatus.INTERNAL_SERVER_ERROR)
     }
@@ -104,21 +122,22 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
     new ResponseEntity(AccountDailyBalanceStatusResponse(StatusResponse(statusCode, statusMessage)), headers, status)
   }
 
-  def validateAccountNumber(accountNumber: String) = accountNumberPattern.findFirstIn(accountNumber).nonEmpty && accountNumber != "00000000"
+  def validateAccountNumber(accountNumber: String) = accountNumberPattern.findFirstIn(accountNumber).nonEmpty && accountNumber != INVALID_ACCOUNT_NUMBER_VALUE
 
-  def validateSortCode(sortCode: String) = sortCodePattern.findFirstIn(sortCode).nonEmpty && sortCode != "000000"
+  def validateSortCode(sortCode: String) = sortCodePattern.findFirstIn(sortCode).nonEmpty && sortCode != INVALID_SORT_CODE_VALUE
 
   def validateMinimum(minimum: JBigDecimal) = minimum != null && JBigDecimal.ZERO.compareTo(minimum) == -1
 
   def validateDates(fromDate: LocalDate, toDate: LocalDate) = {
-    if (fromDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid from date", HttpStatus.BAD_REQUEST))
-    else if (toDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid to date", HttpStatus.BAD_REQUEST))
+
+    if (fromDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_FROM_DATE, HttpStatus.BAD_REQUEST))
+    else if (toDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
     else if (!fromDate.isBefore(toDate) || (!fromDate.plusDays(accountStatusChecker.numberConsecutiveDays - 1).equals(toDate)))
-      Left(buildErrorResponse(headers, TEMP_ERROR_CODE, s"Parameter error: Invalid dates, from date must be ${accountStatusChecker.numberConsecutiveDays - 1} days before to date", HttpStatus.BAD_REQUEST))
+      Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DATES(accountStatusChecker.numberConsecutiveDays - 1), HttpStatus.BAD_REQUEST))
     else Right(true)
   }
 
-  def logStartupInformation() = {
+  override def logStartupInformation() = {
     LOGGER.info(accountStatusChecker.parameters)
   }
 

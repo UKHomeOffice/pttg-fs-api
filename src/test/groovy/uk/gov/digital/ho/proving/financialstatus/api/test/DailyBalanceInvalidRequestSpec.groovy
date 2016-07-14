@@ -19,8 +19,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
  * @Author Home Office Digital
  */
 
-//@SpringApplicationConfiguration(ServiceConfiguration.class)
-//@WebAppConfiguration
 @WebAppConfiguration
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class DailyBalanceInvalidRequestSpec extends Specification {
