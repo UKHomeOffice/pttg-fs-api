@@ -85,12 +85,12 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
-        true        | 1                    | 1989.00               || 0.00
+        true        | 1                    | 1265.00               || 0.00
         true        | 2                    | 246.00                || 2284.00
         true        | 1                    | 774.00                || 491.00
         true        | 2                    | 822.00                || 1708.00
         true        | 1                    | 280.00                || 985.00
-        false       | 2                    | 1722.00               || 765.00
+        false       | 2                    | 1265.00               || 765.00
         false       | 1                    | 255.00                || 760.00
         false       | 2                    | 908.00                || 1122.00
         false       | 1                    | 1203.00               || 0.00
@@ -107,23 +107,23 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid || threshold
         false       | 2                    | 823.00                || 1207.00
-        true        | 2                    | 1747.00               || 1265.00
+        true        | 2                    | 1265.00               || 1265.00
         true        | 1                    | 1203.00               || 62.00
-        false       | 1                    | 1732.00               || 0.00
-        false       | 1                    | 1783.00               || 0.00
-        false       | 1                    | 1397.00               || 0.00
+        false       | 1                    | 1265.00               || 0.00
+        false       | 1                    | 1265.00               || 0.00
+        false       | 1                    | 1265.00               || 0.00
         true        | 1                    | 205.00                || 1060.00
         true        | 2                    | 1249.00               || 1281.00
         false       | 2                    | 611.00                || 1419.00
         true        | 2                    | 309.00                || 2221.00
-        false       | 2                    | 1425.00               || 765.00
-        true        | 2                    | 1547.00               || 1265.00
+        false       | 2                    | 1265.00               || 765.00
+        true        | 2                    | 1265.00               || 1265.00
         true        | 2                    | 1006.00               || 1524.00
-        true        | 2                    | 1848.00               || 1265.00
+        true        | 2                    | 1265.00               || 1265.00
         true        | 1                    | 752.00                || 513.00
-        true        | 2                    | 1762.00               || 1265.00
-        true        | 2                    | 1643.00               || 1265.00
-        true        | 2                    | 1676.00               || 1265.00
+        true        | 2                    | 1265.00               || 1265.00
+        true        | 2                    | 1265.00               || 1265.00
+        true        | 2                    | 1265.00               || 1265.00
     }
 
     def "Tier 4 Doctorate - Check invalid course length parameters"() {
