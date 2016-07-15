@@ -141,4 +141,4 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0000                                           |
-            | Status message | Parameter error: Invalid AccommodationFeesPaid |
+            | Status message | Parameter error: Invalid accommodationFeesPaid |
