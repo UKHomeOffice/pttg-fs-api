@@ -27,7 +27,7 @@ apply plugin: 'pttgApiDocsGradle'
 group 'uk.gov.digital.ho.proving.income'
 version '1.0-SNAPSHOT'
 
-mainClassName = "uk.gov.digital.ho.proving.financialstatus.ServiceRunner"
+mainClassName = "uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner"
 
 commonLibraries{
     springBootVersion = '1.3.5.RELEASE'
