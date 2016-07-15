@@ -29,7 +29,6 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     MockMvc mockMvc = standaloneSetup(thresholdService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
         .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper()))
-    .setLocaleResolver(new ServiceConfiguration().localeResolver())
         .build()
 
 
