@@ -55,7 +55,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Accommodation fees already paid | 300          |
             | Number of dependents            | 3            |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
-            | Maintenance Threshold amount | 46149.5 |
+            | HTTP Status                  | 200      |
+            | Maintenance Threshold amount | 46149.50 |
 
 

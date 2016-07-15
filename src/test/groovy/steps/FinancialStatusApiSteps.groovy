@@ -105,6 +105,9 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
         for (String s : tableKey) {
 
+            if (s.equalsIgnoreCase("Number of dependents")) {
+                dependants = entries.get(s)
+            }
             if (s.equalsIgnoreCase("Student Type")) {
                 studentType = entries.get(s)
             }
@@ -275,7 +278,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}", studentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}", studentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
         jsonAsString = resp.asString()
 
         println("FSPS API Calculator: " + jsonAsString)

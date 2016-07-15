@@ -30,6 +30,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   val INVALID_TUITION_FEES_PAID = getMessage("invalid.tuition.fees.paid")
   val INVALID_ACCOMMODATION_FEES_PAID = getMessage("invalid.accommodation.fees.paid")
   val INVALID_STUDENT_TYPE = getMessage("invalid.student.type")
+  val INVALID_DEPENDANTS = getMessage("invalid.dependants.value")
 
   val OK = "OK"
 
@@ -43,7 +44,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                          @RequestParam(value = "courseLength") courseLength: Int,
                          @RequestParam(value = "tuitionFees", required = false) tuitionFees: JBigDecimal,
                          @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: JBigDecimal,
-                         @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: JBigDecimal
+                         @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: JBigDecimal,
+                         @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Int
                         ): ResponseEntity[ThresholdResponse] = {
 
     val validatedStudentType = validateStudentType(studentType)
@@ -51,15 +53,19 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     timer("calculateThresholdForStudentType") {
       val auditMessage = s"calculateThreshold: validatedStudentType = $validatedStudentType, innerLondon = $innerLondon, " +
         s"courseLength = $courseLength, tuitionFees = $tuitionFees, tuitionFeesPaid = $tuitionFeesPaid, " +
-        s"accommodationFeesPaid = $accommodationFeesPaid"
+        s"accommodationFeesPaid = $accommodationFeesPaid, dependants = $dependants"
       audit(auditMessage) {
-        calculateThresholdForStudentType(validatedStudentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid)
+        calculateThresholdForStudentType(validatedStudentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
       }
     }
   }
 
   def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] = {
     new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
+  }
+
+  def validateDependants(dependants: Int): Boolean = {
+    dependants != null && dependants >= 0
   }
 
   def validateCourseLength(courseLength: Int, min: Int, max: Int): Boolean = {
@@ -75,7 +81,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   }
 
   def validateAccommodationFeesPaid(accommodationFeesPaid: JBigDecimal): Boolean = {
-    accommodationFeesPaid != null && accommodationFeesPaid.compareTo(JBigDecimal.ZERO) > -1 &&  accommodationFeesPaid.compareTo(new JBigDecimal(maintenanceThresholdCalculator.maxAccommodation)) < 1
+    accommodationFeesPaid != null && accommodationFeesPaid.compareTo(JBigDecimal.ZERO) > -1 && accommodationFeesPaid.compareTo(new JBigDecimal(maintenanceThresholdCalculator.maxAccommodation)) < 1
   }
 
   def validateStudentType(studentType: String): StudentType = {
@@ -85,7 +91,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   def setScale(value: JBigDecimal): JBigDecimal = if (value != null) value.setScale(BIG_DECIMAL_SCALE, JBigDecimal.ROUND_HALF_UP) else value
 
   def calculateThresholdForStudentType(studentType: StudentType, innerLondon: Boolean, courseLength: Int,
-                                       tuitionFees: JBigDecimal, tuitionFeesPaid: JBigDecimal, accommodationFeesPaid: JBigDecimal
+                                       tuitionFees: JBigDecimal, tuitionFeesPaid: JBigDecimal,
+                                       accommodationFeesPaid: JBigDecimal, dependants: Int
                                       ): ResponseEntity[ThresholdResponse] = {
 
     studentType match {
@@ -101,12 +108,14 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TUITION_FEES_PAID, HttpStatus.BAD_REQUEST)
         } else if (!validateAccommodationFeesPaid(setScale(accommodationFeesPaid))) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
+        } else if (!validateDependants(dependants)) {
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
         } else {
           val thresholdResponse: ThresholdResponse = new ThresholdResponse(
             maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLength,
               setScale(tuitionFees),
               setScale(tuitionFeesPaid),
-              setScale(accommodationFeesPaid), 0), // TODO
+              setScale(accommodationFeesPaid), dependants),
             StatusResponse(HttpStatus.OK.toString, OK))
           new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
         }
@@ -118,10 +127,12 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
         } else if (!validateAccommodationFeesPaid(setScale(accommodationFeesPaid))) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
+        }else if (!validateDependants(dependants)) {
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
         } else {
           val thresholdResponse: ThresholdResponse = new ThresholdResponse(
             maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLength,
-              setScale(accommodationFeesPaid),0), // TODO
+              setScale(accommodationFeesPaid), dependants),
             StatusResponse(HttpStatus.OK.toString, OK))
           new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
         }

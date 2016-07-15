@@ -20,8 +20,6 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   val INNER_LONDON_DEPENDANTS = BigDecimal(innerLondonDependants)
   val NON_INNER_LONDON_DEPENDANTS = BigDecimal(nonInnerLondonDependants)
 
-
-
   def accommodationValue(innerLondon: Boolean): BigDecimal = if (innerLondon) INNER_LONDON_ACCOMMODATION else NON_INNER_LONDON_ACCOMMODATION
   def dependantsValue(innerLondon: Boolean): BigDecimal = if (innerLondon) INNER_LONDON_DEPENDANTS else NON_INNER_LONDON_DEPENDANTS
 
