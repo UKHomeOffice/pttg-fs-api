@@ -16,13 +16,13 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
     ((£1265 x 6) + (845 x 6 x 1) + (£10,000 - 0 - 0))
 
-    Tier 4 (General) Student - non doctorate - London, with dependents In Country - (£1265 x 6) + (845 x 6 x 1) + (£10,000 - 0 - 0) = £22,660
-    Tier 4 (General) Student - non doctorate - London, with dependents In Country - (£1265 x 9) + (845 x 9 x 2) + (£7,000 - 300 - 500) = £32,795
-    Tier 4 (General) Student - non doctorate - London, with dependents  In Country - (£1265 x 2) + (845 x 2 x 3) + (£2,000 - 0 - 300.50) = £9,299.5
+    Tier 4 (General) Student - non doctorate - London, with dependents In Country - (£1265 x 6) + (£845 x 6 x 1) + (£10,000 - £0 - £0) = £22,660
+    Tier 4 (General) Student - non doctorate - London, with dependents In Country - (£1265 x 9) + (£845 x 9 x 2) + (£7,000 - £300 - £500) = £32,795
+    Tier 4 (General) Student - non doctorate - London, with dependents  In Country - (£1265 x 2) + (£845 x 2 x 3) + (£2,000 - £0 - £300.50) = £9,299.5
 
     Scenario: Tony's maintenance threshold amount calculated
     He is on a 6 month course
-    His total tuition fees are £6,530.12
+    His total tuition fees are £6,530.75
     He has 1 dependent
     He is studying in London at LSE University
 
