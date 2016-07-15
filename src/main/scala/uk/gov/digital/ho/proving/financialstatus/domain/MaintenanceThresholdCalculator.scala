@@ -9,7 +9,11 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                                   @Value("${maximum.accommodation.value}") val maxAccommodation: Int,
                                                   @Value("${minimum.doctorate.months.value}") val minDoctorateMonths: Int,
                                                   @Value("${inner.london.dependant.value}") val innerLondonDependants: Int,
-                                                  @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int
+                                                  @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int,
+                                                  @Value("${non.doctorate.minimum.course.length}") val nonDoctorateMinCourseLength: Int,
+                                                  @Value("${non.doctorate.maximum.course.length}") val nonDoctorateMaxCourseLength: Int,
+                                                  @Value("${doctorate.minimum.course.length}") val doctorateMinCourseLength: Int,
+                                                  @Value("${doctorate.maximum.course.length}") val doctorateMaxCourseLength: Int
                                                  ) {
 
   val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon)
@@ -21,6 +25,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   val NON_INNER_LONDON_DEPENDANTS = BigDecimal(nonInnerLondonDependants)
 
   def accommodationValue(innerLondon: Boolean): BigDecimal = if (innerLondon) INNER_LONDON_ACCOMMODATION else NON_INNER_LONDON_ACCOMMODATION
+
   def dependantsValue(innerLondon: Boolean): BigDecimal = if (innerLondon) INNER_LONDON_DEPENDANTS else NON_INNER_LONDON_DEPENDANTS
 
 

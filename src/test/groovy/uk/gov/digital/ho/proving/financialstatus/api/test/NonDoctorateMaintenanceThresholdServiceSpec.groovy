@@ -27,8 +27,10 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
-            TestUtils.maxMaintenanceAllowance, TestUtils.maxDoctorateMonths, TestUtils.innerLondonDependant,
-            TestUtils.nonInnerLondonDependant), getMessageSource()
+            TestUtils.maxMaintenanceAllowance, TestUtils.maxDoctorateMonths, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
+            TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
+            TestUtils.doctorateMinCourseLength, TestUtils.doctorateMaxCourseLength
+        ), getMessageSource()
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)

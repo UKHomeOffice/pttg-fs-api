@@ -98,8 +98,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     studentType match {
 
       case NonDoctorate =>
-        val courseMinLength = 1
-        val courseMaxLength = 9
+        val courseMinLength = maintenanceThresholdCalculator.nonDoctorateMinCourseLength
+        val courseMaxLength = maintenanceThresholdCalculator.nonDoctorateMaxCourseLength
         if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
         } else if (!validateTuitionFees(setScale(tuitionFees))) {
@@ -121,8 +121,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         }
 
       case Doctorate =>
-        val courseMinLength = 1
-        val courseMaxLength = 2
+        val courseMinLength = maintenanceThresholdCalculator.doctorateMinCourseLength
+        val courseMaxLength = maintenanceThresholdCalculator.doctorateMaxCourseLength
         if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
         } else if (!validateAccommodationFeesPaid(setScale(accommodationFeesPaid))) {

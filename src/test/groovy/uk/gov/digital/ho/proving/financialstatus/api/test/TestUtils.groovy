@@ -19,5 +19,10 @@ class TestUtils {
     public static def innerLondonDependant = 845
     public static def nonInnerLondonDependant = 680
 
+    public static def nonDoctorateMinCourseLength = 1
+    public static def nonDoctorateMaxCourseLength = 9
+    public static def doctorateMinCourseLength = 1
+    public static def doctorateMaxCourseLength = 2
+
 
 }
