@@ -74,18 +74,4 @@ class ServiceConfiguration extends WebMvcConfigurationSupport {
     new RestTemplate(customHttpRequestFactory)
   }
 
-  @Bean
-  def messageSource: ResourceBundleMessageSource = {
-    val messageSource = new ResourceBundleMessageSource()
-    messageSource.setBasename("messages")
-    messageSource
-  }
-
-  @Bean
-  def localeResolver: LocaleResolver = {
-    val slr = new SessionLocaleResolver()
-    slr.setDefaultLocale(Locale.ENGLISH)
-    slr
-  }
-
 }
