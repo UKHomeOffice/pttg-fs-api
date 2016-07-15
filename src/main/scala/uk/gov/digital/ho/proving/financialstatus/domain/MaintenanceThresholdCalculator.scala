@@ -15,23 +15,23 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   val MAXIMUM_ACCOMMODATION = BigDecimal(maxAccommodation)
   val MINIMUM_MONTHS_DOCTORATE = minDoctorateMonths
 
-  def accommodation(innerLondon: Boolean) = if (innerLondon) INNER_LONDON_ACCOMMODATION else NON_INNER_LONDON_ACCOMMODATION
+  def accommodation(innerLondon: Boolean): BigDecimal = if (innerLondon) INNER_LONDON_ACCOMMODATION else NON_INNER_LONDON_ACCOMMODATION
 
   def calculateNonDoctorate(innerLondon: Boolean, courseLengthInMonths: Int,
                             tuitionFees: BigDecimal, tuitionFeesPaid: BigDecimal,
-                            accommodationFeesPaid: BigDecimal) = {
+                            accommodationFeesPaid: BigDecimal): BigDecimal = {
 
     ((accommodation(innerLondon) * courseLengthInMonths) + (tuitionFees - tuitionFeesPaid).max(0) - MAXIMUM_ACCOMMODATION.min(accommodationFeesPaid)).max(0)
 
   }
 
-  def calculateDoctorate(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal) = {
+  def calculateDoctorate(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal): BigDecimal = {
 
     ((accommodation(innerLondon) * courseLengthInMonths.min(MINIMUM_MONTHS_DOCTORATE)) - MAXIMUM_ACCOMMODATION.min(accommodationFeesPaid)).max(0)
 
   }
 
-  def parameters = {
+  def parameters: String = {
     s"""
        | ---------- External parameters values ----------
        |     inner.london.accommodation.value = $innerLondon

@@ -10,7 +10,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException
 
 @ControllerAdvice
-class ApiExceptionHandler @Autowired()(objectMapper: ObjectMapper){
+class ApiExceptionHandler @Autowired()(objectMapper: ObjectMapper) {
 
   /* TODO
     For some reason the exception handler is not using the configured ObjectMapper
@@ -21,34 +21,38 @@ class ApiExceptionHandler @Autowired()(objectMapper: ObjectMapper){
   private val headers: HttpHeaders = new HttpHeaders
   headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
-  private val parameterMap = Map("toDate" -> "to date", "fromDate" -> "from date", "minimum" -> "value for minimum", "sortCode" -> "sort code", "accountNumber" -> "account number")
+  private val parameterMap = Map("toDate" -> "to date", "fromDate" -> "from date", "minimum" -> "value for minimum",
+    "sortCode" -> "sort code", "accountNumber" -> "account number")
+
+  val TEMP_ERROR_CODE = "0000"
 
   @ExceptionHandler(Array(classOf[MissingServletRequestParameterException]))
-  def missingParameterHandler(exception: MissingServletRequestParameterException) = {
+  def missingParameterHandler(exception: MissingServletRequestParameterException): ResponseEntity[String] = {
     LOGGER.debug(exception.getMessage)
-    buildErrorResponse(headers, "0000", "Missing parameter: " + exception.getParameterName, HttpStatus.BAD_REQUEST)
+    buildErrorResponse(headers, TEMP_ERROR_CODE, "Missing parameter: " + exception.getParameterName, HttpStatus.BAD_REQUEST)
   }
 
   @ExceptionHandler(Array(classOf[NoHandlerFoundException]))
-  def requestHandlingNoHandlerFound(exception: NoHandlerFoundException) = {
+  def requestHandlingNoHandlerFound(exception: NoHandlerFoundException): ResponseEntity[String] = {
     LOGGER.debug(exception.getMessage)
-    buildErrorResponse(headers, "0000", "Resource not found: Please check URL and parameters are valid" + exception.getRequestURL, HttpStatus.NOT_FOUND)
+    buildErrorResponse(headers, TEMP_ERROR_CODE, "Resource not found: Please check URL and parameters are valid" + exception.getRequestURL
+      , HttpStatus.NOT_FOUND)
   }
 
   @ExceptionHandler(Array(classOf[MissingPathVariableException]))
-  def missingPathVariableException(exception: MissingPathVariableException) = {
+  def missingPathVariableException(exception: MissingPathVariableException): ResponseEntity[String] = {
     LOGGER.debug(exception.getMessage)
-    buildErrorResponse(headers, "0000", "Path error: Missing value for " + exception.getParameter, HttpStatus.BAD_REQUEST)
+    buildErrorResponse(headers, TEMP_ERROR_CODE, "Path error: Missing value for " + exception.getParameter, HttpStatus.BAD_REQUEST)
   }
 
   @ExceptionHandler(Array(classOf[MethodArgumentTypeMismatchException]))
-  def methodArgumentTypeMismatchException(exception: MethodArgumentTypeMismatchException) = {
+  def methodArgumentTypeMismatchException(exception: MethodArgumentTypeMismatchException): ResponseEntity[String] = {
     LOGGER.debug(exception.getMessage)
     val param = parameterMap.getOrElse(exception.getName, exception.getName)
-    buildErrorResponse(headers, "0000", "Parameter error: Invalid " + param, HttpStatus.BAD_REQUEST)
+    buildErrorResponse(headers, TEMP_ERROR_CODE, "Parameter error: Invalid " + param, HttpStatus.BAD_REQUEST)
   }
 
-  private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus) = {
+  private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[String] = {
     val response = AccountDailyBalanceStatusResponse(StatusResponse(statusCode, statusMessage))
     new ResponseEntity(objectMapper.writeValueAsString(response), headers, status)
   }

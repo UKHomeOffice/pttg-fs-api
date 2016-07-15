@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.PropertySource
 import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.http.{ResponseEntity, _}
+import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
 import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{HttpClientErrorException, ResourceAccessException}
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker}
@@ -29,6 +29,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
   // TODO Temporary error code until these are finalised or removed
   val TEMP_ERROR_CODE = "0000"
 
+  val BIG_DECIMAL_SCALE = 2
   val sortCodePattern = """^[0-9]{6}$""".r
   val accountNumberPattern = """^[0-9]{8}$""".r
 
@@ -63,26 +64,29 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                          @PathVariable(value = "accountNumber") accountNumber: String,
                          @RequestParam(value = "minimum") minimum: JBigDecimal,
                          @RequestParam(value = "toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) toDate: LocalDate,
-                         @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: LocalDate): ResponseEntity[AccountDailyBalanceStatusResponse] = {
+                         @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: LocalDate
+                        ): ResponseEntity[AccountDailyBalanceStatusResponse] = {
 
     val cleanSortCode = sortCode.replace("-", "")
     val validDates = validateDates(fromDate, toDate)
 
     val response = if (validDates.isLeft) validDates.left.get
-    else if (!validateAccountNumber(accountNumber)) buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOUNT_NUMBER, HttpStatus.BAD_REQUEST)
+    else if  (!validateAccountNumber(accountNumber)) buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOUNT_NUMBER, HttpStatus.BAD_REQUEST)
     else if (!validateSortCode(cleanSortCode)) buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_SORT_CODE, HttpStatus.BAD_REQUEST)
     else if (!validateMinimum(minimum)) buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_MINIMUM_VALUE, HttpStatus.BAD_REQUEST)
-    else validateDailyBalanceStatus(cleanSortCode, accountNumber, BigDecimal(minimum).setScale(2), fromDate, toDate)
+    else validateDailyBalanceStatus(cleanSortCode, accountNumber, BigDecimal(minimum).setScale(BIG_DECIMAL_SCALE), fromDate, toDate)
 
     timer("dailyBalances") {
-      val auditMessage = s"validateDailyBalance: accountNumber = $accountNumber, sortCode = $cleanSortCode, minimum = $minimum, fromDate = $fromDate, toDate = $toDate"
+      val auditMessage = s"validateDailyBalance: accountNumber = $accountNumber, " +
+        s"sortCode = $cleanSortCode, minimum = $minimum, fromDate = $fromDate, toDate = $toDate"
       audit(auditMessage) {
         response
       }
     }
   }
 
-  def validateDailyBalanceStatus(sortCode: String, accountNumber: String, minimum: BigDecimal, fromDate: LocalDate, toDate: LocalDate) = {
+  def validateDailyBalanceStatus(sortCode: String, accountNumber: String, minimum: BigDecimal,
+                                 fromDate: LocalDate, toDate: LocalDate): ResponseEntity[AccountDailyBalanceStatusResponse] = {
     val bankAccount = Account(sortCode, accountNumber)
 
     val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum)
@@ -118,17 +122,18 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
   }
 
-  def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus) = {
+  def buildErrorResponse(headers: HttpHeaders, statusCode: String,
+                         statusMessage: String, status: HttpStatus): ResponseEntity[AccountDailyBalanceStatusResponse] = {
     new ResponseEntity(AccountDailyBalanceStatusResponse(StatusResponse(statusCode, statusMessage)), headers, status)
   }
 
-  def validateAccountNumber(accountNumber: String) = accountNumberPattern.findFirstIn(accountNumber).nonEmpty && accountNumber != INVALID_ACCOUNT_NUMBER_VALUE
+  def validateAccountNumber(accountNumber: String): Boolean = accountNumberPattern.findFirstIn(accountNumber).nonEmpty && accountNumber != INVALID_ACCOUNT_NUMBER_VALUE
 
-  def validateSortCode(sortCode: String) = sortCodePattern.findFirstIn(sortCode).nonEmpty && sortCode != INVALID_SORT_CODE_VALUE
+  def validateSortCode(sortCode: String): Boolean = sortCodePattern.findFirstIn(sortCode).nonEmpty && sortCode != INVALID_SORT_CODE_VALUE
 
-  def validateMinimum(minimum: JBigDecimal) = minimum != null && JBigDecimal.ZERO.compareTo(minimum) == -1
+  def validateMinimum(minimum: JBigDecimal) : Boolean = minimum != null && JBigDecimal.ZERO.compareTo(minimum) == -1
 
-  def validateDates(fromDate: LocalDate, toDate: LocalDate) = {
+  def validateDates(fromDate: LocalDate, toDate: LocalDate): Either[ResponseEntity[AccountDailyBalanceStatusResponse], Boolean] = {
 
     if (fromDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_FROM_DATE, HttpStatus.BAD_REQUEST))
     else if (toDate == null) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
@@ -137,7 +142,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
     else Right(true)
   }
 
-  override def logStartupInformation() = {
+  override def logStartupInformation(): Unit = {
     LOGGER.info(accountStatusChecker.parameters)
   }
 

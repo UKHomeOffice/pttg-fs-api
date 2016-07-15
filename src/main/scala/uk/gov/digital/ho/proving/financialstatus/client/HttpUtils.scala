@@ -13,7 +13,7 @@ class HttpUtils @Autowired()(rest: RestTemplate) {
   private val headers = new HttpHeaders()
   private val emptyBody = ""
 
-  def performRequest(url: String) = {
+  def performRequest(url: String): HttpClientResponse = {
 
     val requestEntity = new HttpEntity[String](emptyBody, headers)
     val responseEntity = rest.exchange(url, HttpMethod.GET, requestEntity, classOf[String])

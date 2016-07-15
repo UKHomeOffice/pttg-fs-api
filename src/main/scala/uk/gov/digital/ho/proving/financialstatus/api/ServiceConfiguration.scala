@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
 
 import scala.collection.JavaConverters._
 
@@ -30,7 +31,7 @@ class ServiceConfiguration extends WebMvcConfigurationSupport {
 
   @Bean
   @Primary
-  def objectMapper = {
+  def objectMapper: ObjectMapper = {
     val mapper = new ObjectMapper()
     mapper.registerModule(DefaultScalaModule)
 
@@ -49,14 +50,14 @@ class ServiceConfiguration extends WebMvcConfigurationSupport {
   }
 
   @Bean
-  def mappingJackson2HttpMessageConverter = {
+  def mappingJackson2HttpMessageConverter: MappingJackson2HttpMessageConverter = {
     val converter = new MappingJackson2HttpMessageConverter
     converter.setObjectMapper(objectMapper)
     converter
   }
 
   @Bean
-  override def requestMappingHandlerAdapter = {
+  override def requestMappingHandlerAdapter: RequestMappingHandlerAdapter = {
     val requestMappingHandlerAdapter = super.requestMappingHandlerAdapter
     requestMappingHandlerAdapter.setMessageConverters(List[HttpMessageConverter[_]](mappingJackson2HttpMessageConverter).asJava)
     requestMappingHandlerAdapter
@@ -64,17 +65,17 @@ class ServiceConfiguration extends WebMvcConfigurationSupport {
 
   @Bean
   @ConfigurationProperties(prefix = "rest.connection")
-  def customHttpRequestFactory = {
+  def customHttpRequestFactory: HttpComponentsClientHttpRequestFactory = {
     new HttpComponentsClientHttpRequestFactory()
   }
 
   @Bean
-  def customRestTemplate = {
+  def customRestTemplate: RestTemplate = {
     new RestTemplate(customHttpRequestFactory)
   }
 
   @Bean
-  def messageSource = {
+  def messageSource: ResourceBundleMessageSource = {
     val messageSource = new ResourceBundleMessageSource()
     messageSource.setBasename("messages")
     messageSource

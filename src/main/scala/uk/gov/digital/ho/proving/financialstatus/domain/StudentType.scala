@@ -5,7 +5,7 @@ object StudentType {
   val DOCTORATE = "doctorate"
   val NON_DOCTORATE = "nondoctorate"
 
-  def getStudentType(studentType: String) = {
+  def getStudentType(studentType: String): StudentType = {
     studentType match {
       case DOCTORATE => Doctorate
       case NON_DOCTORATE => NonDoctorate

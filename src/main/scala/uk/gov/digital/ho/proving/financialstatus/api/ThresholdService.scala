@@ -58,34 +58,35 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus) = {
+  def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] = {
     new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
   }
 
-  def validateCourseLength(courseLength: Int, min: Int, max: Int) = {
+  def validateCourseLength(courseLength: Int, min: Int, max: Int): Boolean = {
     min <= courseLength && courseLength <= max
   }
 
-  def validateTuitionFees(tuitionFees: JBigDecimal) = {
+  def validateTuitionFees(tuitionFees: JBigDecimal): Boolean = {
     tuitionFees != null && tuitionFees.compareTo(JBigDecimal.ZERO) > -1
   }
 
-  def validateTuitionFeesPaid(tuitionFeesPaid: JBigDecimal) = {
+  def validateTuitionFeesPaid(tuitionFeesPaid: JBigDecimal): Boolean = {
     tuitionFeesPaid != null && tuitionFeesPaid.compareTo(JBigDecimal.ZERO) > -1
   }
 
-  def validateAccommodationFeesPaid(accommodationFeesPaid: JBigDecimal) = {
+  def validateAccommodationFeesPaid(accommodationFeesPaid: JBigDecimal): Boolean = {
     accommodationFeesPaid != null && accommodationFeesPaid.compareTo(JBigDecimal.ZERO) > -1
   }
 
-  def validateStudentType(studentType: String) = {
+  def validateStudentType(studentType: String): StudentType = {
     StudentType.getStudentType(studentType)
   }
 
-  def setScale(value: JBigDecimal) = if (value != null) value.setScale(BIG_DECIMAL_SCALE, JBigDecimal.ROUND_HALF_UP) else value
+  def setScale(value: JBigDecimal): JBigDecimal = if (value != null) value.setScale(BIG_DECIMAL_SCALE, JBigDecimal.ROUND_HALF_UP) else value
 
   def calculateThresholdForStudentType(studentType: StudentType, innerLondon: Boolean, courseLength: Int,
-                                       tuitionFees: JBigDecimal, tuitionFeesPaid: JBigDecimal, accommodationFeesPaid: JBigDecimal) = {
+                                       tuitionFees: JBigDecimal, tuitionFeesPaid: JBigDecimal, accommodationFeesPaid: JBigDecimal
+                                      ): ResponseEntity[ThresholdResponse] = {
 
     studentType match {
 
@@ -128,7 +129,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  override def logStartupInformation() = {
+  override def logStartupInformation(): Unit = {
     LOGGER.info(maintenanceThresholdCalculator.parameters)
   }
 

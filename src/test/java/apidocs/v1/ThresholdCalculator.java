@@ -16,7 +16,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.restassured.RestDocumentationFilter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import uk.gov.digital.ho.proving.financialstatus.ServiceRunner;
+import uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner;
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration;
 
 import static com.jayway.restassured.RestAssured.given;

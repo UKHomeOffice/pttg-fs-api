@@ -9,16 +9,13 @@ import org.springframework.stereotype.Service
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBalance, AccountDailyBalances}
 
-import scala.annotation.meta.beanSetter
-import scala.beans.BeanProperty
-
 @Service()
 class MockBankService @Autowired()(val objectMapper: ObjectMapper, httpUtils: HttpUtils, @Value("${barclays.stub.service}") val bankService: String) extends BankService {
 
   val bankName = "MockBarclays"
 
   //todo hardcoded scheme will need to be externalised
-  val bankUrl = s"http://${bankService}/financialstatus/v1"
+  val bankUrl = s"http://$bankService/financialstatus/v1"
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[MockBankService])
 
@@ -29,10 +26,10 @@ class MockBankService @Autowired()(val objectMapper: ObjectMapper, httpUtils: Ht
       }
     )
 
-  def buildUrl(account: Account, fromDate: LocalDate, toDate: LocalDate) =
+  def buildUrl(account: Account, fromDate: LocalDate, toDate: LocalDate): String =
     s"""$bankUrl/${account.sortCode}/${account.accountNumber}/balances?fromDate=$fromDate&toDate=$toDate"""
 
-  def fetchAccountDailyBalances(account: Account, fromDate: LocalDate, toDate: LocalDate) = {
+  def fetchAccountDailyBalances(account: Account, fromDate: LocalDate, toDate: LocalDate): AccountDailyBalances = {
 
     val url = buildUrl(account, fromDate, toDate)
     LOGGER.info(s"call URL: $url")
