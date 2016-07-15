@@ -11,12 +11,12 @@ import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
+import static TestUtils.getMessageSource
 import static org.hamcrest.core.StringContains.containsString
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-import static TestUtils.getMessageSource
 
 /**
  * @Author Home Office Digital
@@ -25,11 +25,14 @@ import static TestUtils.getMessageSource
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
 
-    def thresholdService = new ThresholdService(new MaintenanceThresholdCalculator(1265, 1015, 1265, 2), getMessageSource())
+    def thresholdService = new ThresholdService(
+        new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
+            TestUtils.maxMaintenanceAllowance, TestUtils.maxDoctorateMonths, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant), getMessageSource()
+    )
+
     MockMvc mockMvc = standaloneSetup(thresholdService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
         .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper()))
-    .setLocaleResolver(new ServiceConfiguration().localeResolver())
         .build()
 
 

@@ -106,7 +106,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
             maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLength,
               setScale(tuitionFees),
               setScale(tuitionFeesPaid),
-              setScale(accommodationFeesPaid)),
+              setScale(accommodationFeesPaid), 0), // TODO
             StatusResponse(HttpStatus.OK.toString, OK))
           new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
         }
@@ -121,7 +121,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         } else {
           val thresholdResponse: ThresholdResponse = new ThresholdResponse(
             maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLength,
-              setScale(accommodationFeesPaid)), StatusResponse(HttpStatus.OK.toString, OK))
+              setScale(accommodationFeesPaid),0), // TODO
+            StatusResponse(HttpStatus.OK.toString, OK))
           new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
         }
       case Unknown(unknownType) =>

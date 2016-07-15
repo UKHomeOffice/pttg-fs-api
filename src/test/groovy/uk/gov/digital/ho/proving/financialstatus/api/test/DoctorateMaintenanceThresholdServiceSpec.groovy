@@ -25,7 +25,11 @@ import static TestUtils.getMessageSource
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
-    def thresholdService = new ThresholdService(new MaintenanceThresholdCalculator(1265, 1015, 1265, 2), getMessageSource())
+    def thresholdService = new ThresholdService(
+        new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
+            TestUtils.maxMaintenanceAllowance, TestUtils.maxDoctorateMonths, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant), getMessageSource()
+    )
+
     MockMvc mockMvc = standaloneSetup(thresholdService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
         .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper()))
