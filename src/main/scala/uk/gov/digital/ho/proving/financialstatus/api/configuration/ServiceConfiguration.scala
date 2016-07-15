@@ -1,8 +1,7 @@
-package uk.gov.digital.ho.proving.financialstatus.api
+package uk.gov.digital.ho.proving.financialstatus.api.configuration
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
@@ -11,15 +10,12 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.{Bean, ComponentScan, Configuration, Primary}
-import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.servlet.LocaleResolver
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport
-import org.springframework.web.servlet.i18n.SessionLocaleResolver
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
 
 import scala.collection.JavaConverters._

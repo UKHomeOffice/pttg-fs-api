@@ -6,8 +6,8 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.api.ApiExceptionHandler
-import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
+import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 

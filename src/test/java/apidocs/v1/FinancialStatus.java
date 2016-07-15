@@ -17,7 +17,7 @@ import org.springframework.restdocs.restassured.RestDocumentationFilter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner;
-import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration;
+import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;

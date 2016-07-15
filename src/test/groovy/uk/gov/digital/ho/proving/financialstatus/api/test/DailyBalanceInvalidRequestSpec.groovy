@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status

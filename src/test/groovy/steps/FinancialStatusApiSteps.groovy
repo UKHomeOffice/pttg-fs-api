@@ -21,8 +21,8 @@ import org.springframework.context.ApplicationContextAware
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.web.servlet.DispatcherServlet
-import uk.gov.digital.ho.proving.financialstatus.api.ApiExceptionHandler
-import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
+import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
