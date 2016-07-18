@@ -27,7 +27,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
-            TestUtils.maxMaintenanceAllowance, TestUtils.maxDoctorateMonths, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
+            TestUtils.maxMaintenanceAllowance, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
             TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
             TestUtils.doctorateMinCourseLength, TestUtils.doctorateMaxCourseLength
         ), getMessageSource()
@@ -185,6 +185,18 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         false       | 10                   | 9244.00     | 1855.00         | 0          | 454.00
         true        | -1                   | 9411.00     | 4612.00         | 0          | 336.00
         false       | 20                   | 7191.00     | 2720.00         | 0          | 1044.00
+    }
+
+    def "Tier 4 Non Doctorate - Check invalid characters course length parameters"() {
+        expect:
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter conversion error: Invalid courseLength")))
+
+        where:
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        false       | "^&"                 | 7191.00     | 2720.00         | 0          | 1044.00
         false       | "bb"                 | 7191.00     | 2720.00         | 0          | 1044.00
     }
 
@@ -199,6 +211,18 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
         false       | 1                    | -2          | 1855.00         | 0          | 454.00
         true        | 2                    | -0.05       | 4612.00         | 0          | 336.00
+    }
+
+    def "Tier 4 Non Doctorate - Check invalid characters intuition fees parameters"() {
+        expect:
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter conversion error: Invalid tuitionFees")))
+
+        where:
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        true        | 2                    | "(*&"       | 4612.00         | 0          | 336.00
         false       | 3                    | "hh"        | 2720.00         | 0          | 1044.00
     }
 
@@ -213,6 +237,18 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
         false       | 1                    | 1855.00     | -2              | 0          | 454.00
         true        | 2                    | 4612.00     | -0.05           | 0          | 336.00
+    }
+
+    def "Tier 4 Non Doctorate - Check invalid characters in tuition fees paid parameters"() {
+        expect:
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter conversion error: Invalid tuitionFeesPaid")))
+
+        where:
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        true        | 2                    | 4612.00     | "*^"            | 0          | 336.00
         false       | 3                    | 2720.00     | "kk"            | 0          | 1044.00
     }
 
@@ -227,6 +263,18 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
         false       | 1                    | 454.00      | 1855.00         | 0          | -2
         true        | 2                    | 336.00      | 4612.00         | 0          | -0.05
+    }
+
+    def "Tier 4 Non Doctorate - Check invalid characters accommodation fees paid parameters"() {
+        expect:
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter conversion error: Invalid accommodationFeesPaid")))
+
+        where:
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        true        | 2                    | 336.00      | 4612.00         | 0          | "*(^"
         false       | 3                    | 1044.00     | 2720.00         | 0          | "hh"
     }
 
@@ -240,6 +288,19 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
         false       | 1                    | 454.00      | 1855.00         | -5         | 0
+        true        | 2                    | 336.00      | 4612.00         | -99        | 0
+    }
+
+    def "Tier 4 Non Doctorate - Check invalid characters dependants parameters"() {
+        expect:
+        def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter conversion error: Invalid dependants")))
+
+        where:
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        false       | 1                    | 454.00      | 1855.00         | ")(&"      | 0
         true        | 2                    | 336.00      | 4612.00         | "h"        | 0
     }
 

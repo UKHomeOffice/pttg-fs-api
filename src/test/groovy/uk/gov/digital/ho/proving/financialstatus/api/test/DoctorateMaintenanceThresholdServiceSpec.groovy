@@ -27,7 +27,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
-            TestUtils.maxMaintenanceAllowance, TestUtils.maxDoctorateMonths, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
+            TestUtils.maxMaintenanceAllowance, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
             TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
             TestUtils.doctorateMinCourseLength, TestUtils.doctorateMaxCourseLength
         ), getMessageSource()
@@ -146,6 +146,18 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         false       | 3                    | 14         | 454.00
         true        | -1                   | 11         | 336.00
         false       | 0                    | 14         | 1044.00
+    }
+
+    def "Tier 4 Doctorate - Check invalid characters course length parameters"() {
+        expect:
+        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter conversion error: Invalid courseLength")))
+
+        where:
+        innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
+        false       | "(*^"                | 14         | 454.00
         false       | "bb"                 | 11         | 1044.00
     }
 
@@ -159,7 +171,20 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         where:
         innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
         false       | 1                    | 14         | -1
-        false       | 2                    | 11         | "ddd"
+        true        | 2                    | 11         | -7
+    }
+
+    def "Tier 4 Doctorate - Check invalid characters accommodation fees parameters"() {
+        expect:
+        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter conversion error: Invalid accommodationFeesPaid")))
+
+        where:
+        innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
+        false       | 1                    | 14         | "(&"
+        true        | 2                    | 11         | "ddd"
     }
 
     def "Tier 4 Doctorate - Check rounding accommodation fees parameters"() {
@@ -190,6 +215,19 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         where:
         innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
         false       | 1                    | -5         | 0
+        true        | 2                    | -986       | 0
+    }
+
+    def "Tier 4 Doctorate - Check invalid characters dependants parameters"() {
+        expect:
+        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        response.andExpect(status().isBadRequest())
+
+        response.andExpect(content().string(containsString("Parameter conversion error: Invalid dependants")))
+
+        where:
+        innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
+        false       | 1                    | "(*&66"    | 0
         true        | 2                    | "h"        | 0
     }
 

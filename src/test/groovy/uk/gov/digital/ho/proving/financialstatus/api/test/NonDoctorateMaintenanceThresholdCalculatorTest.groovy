@@ -7,7 +7,7 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
     MaintenanceThresholdCalculator maintenanceThresholdCalculator =
         new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
-            TestUtils.maxMaintenanceAllowance, TestUtils.maxDoctorateMonths, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
+            TestUtils.maxMaintenanceAllowance,TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
             TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
             TestUtils.doctorateMinCourseLength, TestUtils.doctorateMaxCourseLength
         )

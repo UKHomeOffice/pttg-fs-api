@@ -31,6 +31,9 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def invalidAccountNumber = "Parameter error: Invalid account number"
     def invalidTotalFunds = "Parameter error: Invalid value for minimum"
     def invalidFromDate = "Parameter error: Invalid from date"
+    def invalidConversionFromDate = "Parameter conversion error: Invalid from date"
+    def invalidConversionToDate = "Parameter conversion error: Invalid to date"
+
     def invalidToDate = "Parameter error: Invalid to date"
     def invalidDateRange = "Parameter error: Invalid dates, from date must be 27 days before to date"
 
@@ -218,7 +221,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidFromDate
+        jsonContent.status.message == invalidConversionFromDate
     }
 
     def "daily balance reject invalid from date (invalid month)"() {
@@ -234,7 +237,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidFromDate
+        jsonContent.status.message == invalidConversionFromDate
     }
 
     def "daily balance reject invalid from date (invalid day)"() {
@@ -250,7 +253,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidFromDate
+        jsonContent.status.message == invalidConversionFromDate
     }
 
     // Invalid to date tests
@@ -268,7 +271,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidToDate
+        jsonContent.status.message == invalidConversionToDate
     }
 
     def "daily balance reject invalid to date (invalid month)"() {
@@ -284,7 +287,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidToDate
+        jsonContent.status.message == invalidConversionToDate
     }
 
     def "daily balance reject invalid to date (invalid day)"() {
@@ -300,7 +303,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0000"
-        jsonContent.status.message == invalidToDate
+        jsonContent.status.message == invalidConversionToDate
     }
 
     // Invalid range of dates

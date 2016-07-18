@@ -25,12 +25,13 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   val TEMP_ERROR_CODE: String = "0000"
   val headers = new HttpHeaders()
 
-  val INVALID_COURSE_LENGTH = getMessage("invalid.course.length")
   val INVALID_TUITION_FEES = getMessage("invalid.tuition.fees")
   val INVALID_TUITION_FEES_PAID = getMessage("invalid.tuition.fees.paid")
   val INVALID_ACCOMMODATION_FEES_PAID = getMessage("invalid.accommodation.fees.paid")
-  val INVALID_STUDENT_TYPE = getMessage("invalid.student.type")
   val INVALID_DEPENDANTS = getMessage("invalid.dependants.value")
+
+  def INVALID_COURSE_LENGTH(params: Int*) = getMessage("invalid.course.length", params)
+  def INVALID_STUDENT_TYPE(params: String*) = getMessage("invalid.student.type", params)
 
   val OK = "OK"
 
@@ -41,7 +42,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
   def calculateThreshold(@RequestParam(value = "studentType") studentType: String,
                          @RequestParam(value = "innerLondon") innerLondon: Boolean,
-                         @RequestParam(value = "courseLength") courseLength: Int,
+                         @RequestParam(value = "courseLength", defaultValue = "0") courseLength: Int,
                          @RequestParam(value = "tuitionFees", required = false) tuitionFees: JBigDecimal,
                          @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: JBigDecimal,
                          @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: JBigDecimal,
@@ -65,7 +66,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   }
 
   def validateDependants(dependants: Int): Boolean = {
-    dependants != null && dependants >= 0
+    dependants >= 0
   }
 
   def validateCourseLength(courseLength: Int, min: Int, max: Int): Boolean = {
@@ -101,7 +102,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         val courseMinLength = maintenanceThresholdCalculator.nonDoctorateMinCourseLength
         val courseMaxLength = maintenanceThresholdCalculator.nonDoctorateMaxCourseLength
         if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH(courseMinLength, courseMaxLength), HttpStatus.BAD_REQUEST)
         } else if (!validateTuitionFees(setScale(tuitionFees))) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST)
         } else if (!validateTuitionFeesPaid(setScale(tuitionFeesPaid))) {
@@ -124,7 +125,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         val courseMinLength = maintenanceThresholdCalculator.doctorateMinCourseLength
         val courseMaxLength = maintenanceThresholdCalculator.doctorateMaxCourseLength
         if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH(courseMinLength, courseMaxLength), HttpStatus.BAD_REQUEST)
         } else if (!validateAccommodationFeesPaid(setScale(accommodationFeesPaid))) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
         }else if (!validateDependants(dependants)) {
@@ -137,7 +138,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
           new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
         }
       case Unknown(unknownType) =>
-        buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE + unknownType, HttpStatus.BAD_REQUEST)
+        buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE(StudentType.values.mkString(",")), HttpStatus.BAD_REQUEST)
     }
   }
 

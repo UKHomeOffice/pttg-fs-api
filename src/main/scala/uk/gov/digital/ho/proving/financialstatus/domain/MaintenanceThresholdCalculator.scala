@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommodation.value}") val innerLondon: Int,
                                                   @Value("${non.inner.london.accommodation.value}") val nonInnerLondon: Int,
                                                   @Value("${maximum.accommodation.value}") val maxAccommodation: Int,
-                                                  @Value("${minimum.doctorate.months.value}") val minDoctorateMonths: Int,
+//                                                  @Value("${minimum.doctorate.months.value}") val minDoctorateMonths: Int,
                                                   @Value("${inner.london.dependant.value}") val innerLondonDependants: Int,
                                                   @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int,
                                                   @Value("${non.doctorate.minimum.course.length}") val nonDoctorateMinCourseLength: Int,
@@ -19,7 +19,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon)
   val NON_INNER_LONDON_ACCOMMODATION = BigDecimal(nonInnerLondon)
   val MAXIMUM_ACCOMMODATION = BigDecimal(maxAccommodation)
-  val MINIMUM_MONTHS_DOCTORATE = minDoctorateMonths
+//  val MINIMUM_MONTHS_DOCTORATE = minDoctorateMonths
 
   val INNER_LONDON_DEPENDANTS = BigDecimal(innerLondonDependants)
   val NON_INNER_LONDON_DEPENDANTS = BigDecimal(nonInnerLondonDependants)
@@ -45,7 +45,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
 
   def calculateDoctorate(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal, dependants: Int): BigDecimal = {
 
-    val amount = ((accommodationValue(innerLondon) * courseLengthInMonths.min(MINIMUM_MONTHS_DOCTORATE))
+    val amount = ((accommodationValue(innerLondon) * courseLengthInMonths.min(doctorateMaxCourseLength))
       + (dependantsValue(innerLondon) * courseLengthInMonths * dependants)
       - MAXIMUM_ACCOMMODATION.min(accommodationFeesPaid)).max(0)
     amount
@@ -57,7 +57,6 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
        |     inner.london.accommodation.value = $innerLondon
        | non.inner.london.accommodation.value = $nonInnerLondon
        |          maximum.accommodation.value = $maxAccommodation
-       |       minimum.doctorate.months.value = $minDoctorateMonths
      """.stripMargin
   }
 }
