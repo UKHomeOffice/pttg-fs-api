@@ -24,7 +24,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
     He is on a 5 month course
     His total tuition fees are £4550.50
     He has 2 dependents
-    He is studying in London at LSE University
+    He is studying in Leeds
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -43,7 +43,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
     He is on a 3 month course
     His total tuition fees are £3750.00
     He has 4 dependents
-    He is studying in London at LSE University
+    He is studying in Nottingham
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
