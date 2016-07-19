@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.financialstatus.api
+package uk.gov.digital.ho.proving.financialstatus.api.configuration
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.{JsonSerializer, SerializerProvider}

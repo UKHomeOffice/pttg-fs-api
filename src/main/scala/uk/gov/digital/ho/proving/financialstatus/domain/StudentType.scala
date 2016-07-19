@@ -5,6 +5,8 @@ object StudentType {
   val DOCTORATE = "doctorate"
   val NON_DOCTORATE = "nondoctorate"
 
+  val values = Vector(DOCTORATE, NON_DOCTORATE)
+
   def getStudentType(studentType: String): StudentType = {
     studentType match {
       case DOCTORATE => Doctorate

@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
-import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 

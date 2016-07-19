@@ -5,111 +5,116 @@ import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalc
 
 class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
-    MaintenanceThresholdCalculator maintenanceThresholdCalculator = new MaintenanceThresholdCalculator(1265, 1015, 1265, 2)
+    MaintenanceThresholdCalculator maintenanceThresholdCalculator =
+        new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
+            TestUtils.maxMaintenanceAllowance,TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
+            TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
+            TestUtils.doctorateMinCourseLength, TestUtils.doctorateMaxCourseLength
+        )
 
     def bd(a) { new scala.math.BigDecimal(a) }
 
     def "Tier 4 Non Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
+        maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants) == bd(threshold)
 
         where:
-        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
-        false       | 1                    | 11971.00    | 0.00            | 0.00                  || 12986.00
-        false       | 2                    | 13510.00    | 0.00            | 0.00                  || 15540.00
-        false       | 3                    | 11419.00    | 0.00            | 0.00                  || 14464.00
-        false       | 4                    | 10627.00    | 0.00            | 0.00                  || 14687.00
-        false       | 5                    | 8788.00     | 0.00            | 0.00                  || 13863.00
-        false       | 6                    | 8106.00     | 0.00            | 0.00                  || 14196.00
-        false       | 7                    | 10393.00    | 0.00            | 0.00                  || 17498.00
-        false       | 8                    | 11463.00    | 0.00            | 0.00                  || 19583.00
-        false       | 9                    | 9882.00     | 0.00            | 0.00                  || 19017.00
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
+        false       | 1                    | 10047.00    | 0.00            | 0.00                  | 1          || 11742.00
+        false       | 2                    | 11682.00    | 0.00            | 0.00                  | 14         || 32752.00
+        false       | 3                    | 6160.00     | 0.00            | 0.00                  | 2          || 13285.00
+        false       | 4                    | 7560.00     | 0.00            | 0.00                  | 6          || 27940.00
+        false       | 5                    | 7482.00     | 0.00            | 0.00                  | 10         || 46557.00
+        false       | 6                    | 8713.00     | 0.00            | 0.00                  | 9          || 51523.00
+        false       | 7                    | 7307.00     | 0.00            | 0.00                  | 2          || 23932.00
+        false       | 8                    | 5878.00     | 0.00            | 0.00                  | 4          || 35758.00
+        false       | 9                    | 9180.00     | 0.00            | 0.00                  | 10         || 79515.00
 
     }
 
     def "Tier 4 Non Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
+        maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants) == bd(threshold)
 
         where:
-        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
-        true        | 1                    | 11709.00    | 0.00            | 0.00                  || 12974.00
-        true        | 2                    | 6296.00     | 0.00            | 0.00                  || 8826.00
-        true        | 3                    | 7468.00     | 0.00            | 0.00                  || 11263.00
-        true        | 4                    | 8022.00     | 0.00            | 0.00                  || 13082.00
-        true        | 5                    | 10572.00    | 0.00            | 0.00                  || 16897.00
-        true        | 6                    | 6511.00     | 0.00            | 0.00                  || 14101.00
-        true        | 7                    | 11721.00    | 0.00            | 0.00                  || 20576.00
-        true        | 8                    | 5010.00     | 0.00            | 0.00                  || 15130.00
-        true        | 9                    | 14835.00    | 0.00            | 0.00                  || 26220.00
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
+        true        | 1                    | 6305.00     | 0.00            | 0.00                  | 14         || 19400.00
+        true        | 2                    | 13788.00    | 0.00            | 0.00                  | 7          || 28148.00
+        true        | 3                    | 13890.00    | 0.00            | 0.00                  | 2          || 22755.00
+        true        | 4                    | 9781.00     | 0.00            | 0.00                  | 9          || 45261.00
+        true        | 5                    | 9601.00     | 0.00            | 0.00                  | 12         || 66626.00
+        true        | 6                    | 14502.00    | 0.00            | 0.00                  | 0          || 22092.00
+        true        | 7                    | 12672.00    | 0.00            | 0.00                  | 13         || 98422.00
+        true        | 8                    | 14618.00    | 0.00            | 0.00                  | 10         || 92338.00
+        true        | 9                    | 11896.00    | 0.00            | 0.00                  | 3          || 46096.00
 
     }
 
     def "Tier 4 Non Doctorate - Check 'Tuition Fees paid'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
+        maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants) == bd(threshold)
 
         where:
-        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
-        true        | 1                    | 12519.00    | 3723            | 0.00                  || 10061.00
-        true        | 2                    | 7654.00     | 1628            | 0.00                  || 8556.00
-        true        | 3                    | 14593.00    | 2543            | 0.00                  || 15845.00
-        true        | 4                    | 10560.00    | 2129            | 0.00                  || 13491.00
-        true        | 5                    | 7966.00     | 1732            | 0.00                  || 12559.00
-        false       | 6                    | 13679.00    | 4589            | 0.00                  || 15180.00
-        false       | 7                    | 5556.00     | 2552            | 0.00                  || 10109.00
-        false       | 8                    | 6719.00     | 4566            | 0.00                  || 10273.00
-        false       | 9                    | 5204.00     | 3370            | 0.00                  || 10969.00
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
+        true        | 1                    | 13693.00    | 2214.00         | 0.00                  | 13         || 23729.00
+        true        | 2                    | 12710.00    | 2065.00         | 0.00                  | 4          || 19935.00
+        true        | 3                    | 10591.00    | 2435.00         | 0.00                  | 4          || 22091.00
+        true        | 4                    | 14897.00    | 1287.00         | 0.00                  | 3          || 28810.00
+        true        | 5                    | 13362.00    | 626.00          | 0.00                  | 12         || 69761.00
+        false       | 6                    | 9905.00     | 4601.00         | 0.00                  | 0          || 11394.00
+        false       | 7                    | 9870.00     | 4713.00         | 0.00                  | 12         || 69382.00
+        false       | 8                    | 11031.00    | 395.00          | 0.00                  | 12         || 84036.00
+        false       | 9                    | 12972.00    | 4774.00         | 0.00                  | 5          || 47933.00
 
     }
 
     def "Tier 4 Non Doctorate - Check 'Accommodation Fees paid'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
+        maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants) == bd(threshold)
 
         where:
-        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
-        true        | 1                    | 14325.00    | 0.00            | 612.00                || 14978.00
-        true        | 2                    | 8174.00     | 0.00            | 419.00                || 10285.00
-        true        | 3                    | 8816.00     | 0.00            | 1281.00               || 11346.00
-        true        | 4                    | 11674.00    | 0.00            | 252.00                || 16482.00
-        true        | 5                    | 13873.00    | 0.00            | 464.00                || 19734.00
-        false       | 6                    | 7280.00     | 0.00            | 1485.00               || 12105.00
-        false       | 7                    | 14322.00    | 0.00            | 1460.00               || 20162.00
-        false       | 8                    | 13170.00    | 0.00            | 850.00                || 20440.00
-        false       | 9                    | 9301.00     | 0.00            | 1086.00               || 17350.00
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
+        true        | 1                    | 8072.00     | 0.00            | 876.00                | 11         || 17756.00
+        true        | 2                    | 9714.00     | 0.00            | 201.00                | 0          || 12043.00
+        true        | 3                    | 10426.00    | 0.00            | 903.00                | 11         || 41203.00
+        true        | 4                    | 5266.00     | 0.00            | 566.00                | 15         || 60460.00
+        true        | 5                    | 13156.00    | 0.00            | 560.00                | 8          || 52721.00
+        false       | 6                    | 5693.00     | 0.00            | 1136.00               | 7          || 39207.00
+        false       | 7                    | 10337.00    | 0.00            | 620.00                | 7          || 50142.00
+        false       | 8                    | 6749.00     | 0.00            | 485.00                | 6          || 47024.00
+        false       | 9                    | 6242.00     | 0.00            | 917.00                | 2          || 26700.00
 
     }
 
     def "Tier 4 Non Doctorate - Check 'All variants'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid)) == bd(threshold)
+        maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants) == bd(threshold)
 
         where:
-        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid || threshold
-        false       | 1                    | 5266.00     | 4658.00         | 398.00                || 1225.00
-        true        | 8                    | 9729.00     | 2271.00         | 810.00                || 16768.00
-        false       | 9                    | 7104.00     | 1073.00         | 1046.00               || 14120.00
-        true        | 8                    | 8437.00     | 2399.00         | 977.00                || 15181.00
-        false       | 5                    | 10122.00    | 3747.00         | 1367.00               || 10185.00
-        false       | 2                    | 6347.00     | 4108.00         | 561.00                || 3708.00
-        false       | 9                    | 7187.00     | 1989.00         | 1497.00               || 13068.00
-        false       | 9                    | 12789.00    | 1506.00         | 1713.00               || 19153.00
-        true        | 7                    | 12636.00    | 1716.00         | 726.00                || 19049.00
-        false       | 4                    | 6817.00     | 2646.00         | 1349.00               || 6966.00
-        false       | 3                    | 5673.00     | 2605.00         | 1508.00               || 4848.00
-        false       | 8                    | 12500.00    | 2490.00         | 273.00                || 17857.00
-        false       | 6                    | 5186.00     | 4203.00         | 452.00                || 6621.00
-        true        | 9                    | 12578.00    | 1223.00         | 628.00                || 22112.00
-        false       | 7                    | 9685.00     | 578.00          | 1088.00               || 15124.00
-        true        | 7                    | 5317.00     | 2959.00         | 1768.00               || 9948.00
-        true        | 2                    | 6004.00     | 563.00          | 834.00                || 7137.00
-        true        | 7                    | 10967.00    | 2381.00         | 616.00                || 16825.00
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
+        true        | 3                    | 6751.00     | 1508.00         | 325.00                | 13         || 41668.00
+        true        | 4                    | 8087.00     | 506.00          | 598.00                | 2          || 18803.00
+        false       | 4                    | 6546.00     | 3997.00         | 948.00                | 0          || 5661.00
+        false       | 8                    | 10265.00    | 4912.00         | 95.00                 | 14         || 89538.00
+        true        | 2                    | 6624.00     | 3054.00         | 3.00                  | 8          || 19617.00
+        false       | 4                    | 8476.00     | 1758.00         | 652.00                | 11         || 40046.00
+        false       | 4                    | 11555.00    | 4773.00         | 602.00                | 1          || 12960.00
+        false       | 9                    | 14248.00    | 2354.00         | 1260.00               | 1          || 25889.00
+        true        | 6                    | 12883.00    | 1081.00         | 547.00                | 6          || 49265.00
+        false       | 7                    | 9428.00     | 1688.00         | 126.00                | 10         || 62319.00
+        false       | 6                    | 12320.00    | 4379.00         | 1011.00               | 12         || 61980.00
+        true        | 9                    | 9202.00     | 487.00          | 618.00                | 13         || 118347.00
+        false       | 7                    | 13171.00    | 403.00          | 77.00                 | 13         || 81676.00
+        false       | 5                    | 5669.00     | 3209.00         | 999.00                | 3          || 16736.00
+        false       | 7                    | 10095.00    | 2564.00         | 236.00                | 4          || 33440.00
+        false       | 6                    | 13104.00    | 2056.00         | 977.00                | 5          || 36561.00
+        true        | 7                    | 8187.00     | 3318.00         | 805.00                | 14         || 95729.00
+        true        | 8                    | 10169.00    | 2731.00         | 1204.00               | 8          || 70434.00
 
     }
 

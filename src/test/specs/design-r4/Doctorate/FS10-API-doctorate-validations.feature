@@ -40,7 +40,7 @@ Feature: Validation of the API fields and data
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0000                               |
-            | Status message | Parameter error: Invalid from date |
+            | Status message | Parameter conversion error: Invalid from date |
 
     Scenario: The API is provided with an incorrect to date - not numbers 0-9
 
@@ -54,7 +54,7 @@ Feature: Validation of the API fields and data
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                              |
             | Status code    | 0000                             |
-            | Status message | Parameter error: Invalid to date |
+            | Status message | Parameter conversion error: Invalid to date |
 
 
 ######################### Validation on the Sort Code Field #########################

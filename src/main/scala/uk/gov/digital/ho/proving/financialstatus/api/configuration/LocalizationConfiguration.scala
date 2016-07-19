@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.financialstatus.api
+package uk.gov.digital.ho.proving.financialstatus.api.configuration
 
 import org.springframework.context.annotation.{Bean, Configuration}
 import org.springframework.context.support.ResourceBundleMessageSource

@@ -20,7 +20,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                  |
             | Status code    | 0000                                 |
-            | Status message | Parameter error: Invalid studentType |
+            | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate] |
 
 ######################### Validation on the Inner london borough field #########################
 
@@ -36,7 +36,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                  |
             | Status code    | 0000                                 |
-            | Status message | Parameter error: Invalid innerLondon |
+            | Status message | Parameter conversion error: Invalid innerLondon |
 
 ######################### Validation on the Course length field #########################
 
@@ -52,7 +52,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                   |
             | Status code    | 0000                                  |
-            | Status message | Parameter error: Invalid courseLength |
+            | Status message | Parameter error: Invalid courseLength, must be in the range 1 to 9 months |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-9
         Given A Service is consuming the FSPS Calculator API
@@ -66,7 +66,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                   |
             | Status code    | 0000                                  |
-            | Status message | Parameter error: Invalid courseLength |
+            | Status message | Parameter conversion error: Invalid courseLength |
 
     Scenario: The API is provided with incorrect Course Length - more than 9
         Given A Service is consuming the FSPS Calculator API
@@ -80,7 +80,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                   |
             | Status code    | 0000                                  |
-            | Status message | Parameter error: Invalid courseLength |
+            | Status message | Parameter error: Invalid courseLength, must be in the range 1 to 9 months |
 
 
 ######################### Validation on the Accommodation fees already paid field #########################
@@ -111,7 +111,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0000                                           |
-            | Status message | Parameter error: Invalid accommodationFeesPaid |
+            | Status message | Parameter conversion error: Invalid accommodationFeesPaid |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - less than zero
         Given A Service is consuming the FSPS Calculator API
@@ -141,4 +141,4 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0000                                           |
-            | Status message | Parameter error: Invalid AccommodationFeesPaid |
+            | Status message | Parameter error: Invalid accommodationFeesPaid |

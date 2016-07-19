@@ -17,7 +17,7 @@ import org.springframework.restdocs.restassured.RestDocumentationFilter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner;
-import uk.gov.digital.ho.proving.financialstatus.api.ServiceConfiguration;
+import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
@@ -103,6 +103,7 @@ public class ThresholdCalculator {
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
             .param("studentType", "nondoctorate")
+            .param("dependants", "0")
             .filter(document.snippets(
                 requestHeaders(
                     headerWithName("Accept").description("The requested media type eg application/json. See <<Schema>> for supported media types.")
@@ -127,6 +128,7 @@ public class ThresholdCalculator {
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
             .param("studentType", "nondoctorate")
+            .param("dependants", "1")
              .filter(document.snippets(
                 responseFields(bodyModelFields)
                     .and(statusModelFields),
@@ -148,7 +150,10 @@ public class ThresholdCalculator {
                         .attributes(key("optional").value(false)),
                     parameterWithName("studentType")
                         .description("type of student, current possible values are 'doctorate' and 'nondoctorate'")
-                        .attributes(key("optional").value(false))
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("dependants")
+                        .description("the number of dependants to take in to account when calculating the minimum balance")
+                        .attributes(key("optional").value(true))
                 )
 
             ))

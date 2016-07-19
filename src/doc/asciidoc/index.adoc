@@ -99,8 +99,6 @@ include::{snippets}/threshold-calculation/curl-request.adoc[]
 
 ==== Request Parameters
 
-include::{snippets}/threshold-calculation/path-parameters.adoc[]
-
 include::{snippets}/threshold-calculation/request-parameters.adoc[]
 
 
