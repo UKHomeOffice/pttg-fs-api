@@ -23,14 +23,14 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate |
-            | Inner London Borough            | Yes       |
+            | Student type                    | doctorate |
+            | Inner London borough            | Yes       |
             | Course Length                   | 1         |
             | Accommodation fees already paid | 0         |
             | Number of dependents            | 1         |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
-            | Maintenance Threshold amount | 2110.00 |
+            | HTTP status                  | 200     |
+            | Maintenance threshold amount | 2110.00 |
 
     Scenario: Shelly's maintenance threshold amount calculated
     He is on a 2 month course
@@ -40,12 +40,12 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate |
-            | Inner London Borough            | Yes       |
-            | Course Length                   | 2         |
+            | Student type                    | doctorate |
+            | Inner London borough            | Yes       |
+            | Course length                   | 2         |
             | Accommodation fees already paid | 250.50    |
             | Number of dependents            | 3         |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
-            | Maintenance Threshold amount | 7349.50 |
+            | HTTP status                  | 200     |
+            | Maintenance threshold amount | 7349.50 |
 

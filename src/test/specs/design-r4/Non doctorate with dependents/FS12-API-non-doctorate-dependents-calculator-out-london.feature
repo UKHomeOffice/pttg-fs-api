@@ -3,7 +3,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
     Requirement to meet Tier 4 pass
 
     Required Maintenance threshold regulation to pass this feature file
-    Required Maintenance threshold non doctorate inner London borough = £1015 (the amount for when the student is studying in London)
+    Required Maintenance threshold non doctorate out of London borough = £1015 (the amount for when the student is studying in London)
     £680 per month per dependent and the same course length as a Tier 4 student – in London
     Course length - this can be within the period of 1-9 months
     Total tuition fees - total amount of the tuition fees for the course
@@ -16,9 +16,9 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
     ((£1015 x 6) + (£680 x 6 x 1) + (£10,000 - £0 - £0))
 
-    Tier 4 (General) Student - non doctorate - London, with dependents In Country - (£1015 x 6) + (£680 x 6 x 1) + (£10,000 - £0 - £0) = £20,170
-    Tier 4 (General) Student - non doctorate - London, with dependents In Country - (£1015 x 9) + (£680 x 9 x 2) + (£7,000 - £300 - £500) = £33,775
-    Tier 4 (General) Student - non doctorate - London, with dependents  In Country - (£1015 x 2) + (£680 x 2 x 3) + (£2,000 - £0 - £300.50) = £7,809.5
+    Tier 4 (General) Student - non doctorate - out of London, with dependents In Country - (£1015 x 6) + (£680 x 6 x 1) + (£10,000 - £0 - £0) = £20,170
+    Tier 4 (General) Student - non doctorate - out of London, with dependents In Country - (£1015 x 9) + (£680 x 9 x 2) + (£7,000 - £300 - £500) = £33,775
+    Tier 4 (General) Student - non doctorate - out of London, with dependents  In Country - (£1015 x 2) + (£680 x 2 x 3) + (£2,000 - £0 - £300.50) = £7,809.5
 
     Scenario: Tony's maintenance threshold amount calculated
     He is on a 5 month course
