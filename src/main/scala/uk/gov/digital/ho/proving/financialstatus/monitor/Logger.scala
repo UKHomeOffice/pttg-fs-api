@@ -4,7 +4,7 @@ import org.slf4j.Logger
 
 trait Loggable {
 
-  val LOGGER: Logger
+  def LOGGER: Logger
 
 }
 
