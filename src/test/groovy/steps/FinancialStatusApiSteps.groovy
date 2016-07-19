@@ -105,7 +105,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
         for (String s : tableKey) {
 
-            if (s.equalsIgnoreCase("Number of dependents")) {
+            if (s.equalsIgnoreCase("Number of dependants")) {
                 dependants = entries.get(s)
             }
             if (s.equalsIgnoreCase("Student Type")) {

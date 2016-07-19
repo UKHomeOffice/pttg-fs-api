@@ -5,7 +5,7 @@ Feature: Validation of the API fields and data
     Accommodation fees already paid - Format should not contain commas or currency symbols
     To Date - Format should be yyyy-mm-dd
     From Date - Format should be yyyy-mm-dd
-    Dependant - Format should not contain commas or currency symbols, if no dependants 0 should be entered
+    Dependant - Format should not contain commas, if no dependants 0 should be entered
 
 
 ######################### Validation on the Student type field #########################
@@ -155,9 +155,9 @@ Feature: Validation of the API fields and data
             | Accommodation fees already paid | 0          |
             | Number of dependants            |            |
         Then the service displays the following result
-            | HTTP Status    | 400                                         |
-            | Status code    | 0000                                        |
-            | Status message | Parameter error: Invalid numberOfDependents |
+            | HTTP Status    | 400                                 |
+            | Status code    | 0000                                |
+            | Status message | Parameter error: Invalid dependants |
 
     Scenario: The API is provided with incorrect Number of Dependants - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
@@ -169,6 +169,6 @@ Feature: Validation of the API fields and data
             | Accommodation fees already paid | 0          |
             | Number of dependants            | @          |
         Then the service displays the following result
-            | HTTP Status    | 400                                         |
-            | Status code    | 0000                                        |
-            | Status message | Parameter error: Invalid numberOfDependents |
+            | HTTP Status    | 400                                            |
+            | Status code    | 0000                                           |
+            | Status message | Parameter conversion error: Invalid dependants |
