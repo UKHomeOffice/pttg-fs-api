@@ -2,11 +2,11 @@ Feature: Validation of the API fields and data
 
     Mandatory fields:
     Inner London borough - Yes or No options (mandatory)
-    Course length - 1-9 months, Format should not contain commas or currency symbols
+    Course length - 1-9 months, Format should not contain commas
     Accommodation fees already paid - Format should not contain commas or currency symbols
     To Date - Format should be yyyy-mm-dd
     From Date - Format should be yyyy-mm-dd
-    Dependant - Format should not contain commas or currency symbols, if no dependants 0 should be entered
+    Dependant - Format should not contain commas, if no dependants 0 should be entered
 
 ######################### Validation on the Student type field #########################
 
@@ -157,7 +157,7 @@ Feature: Validation of the API fields and data
 
         ######################### Validation on the Dependant field #########################
 
-    Scenario: The API is not provided with the Number of dependents
+    Scenario: The API is not provided with the Number of dependants
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
@@ -171,7 +171,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                         |
             | Status code    | 0000                                        |
-            | Status message | Parameter error: Invalid numberOfDependents |
+            | Status message | Parameter error: Invalid dependants |
 
     Scenario: The API is provided with incorrect Number of dependants - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
@@ -183,8 +183,8 @@ Feature: Validation of the API fields and data
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
-            | Number of dependants            | &            |
+            | Number of dependants            | ^            |
         Then the service displays the following result
             | HTTP Status    | 400                                         |
             | Status code    | 0000                                        |
-            | Status message | Parameter error: Invalid numberOfDependents |
+            | Status message | Parameter conversion error: Invalid dependants |

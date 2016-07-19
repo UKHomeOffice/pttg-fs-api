@@ -10,7 +10,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
     Required Maintenance threshold calculation to pass this feature file
     Maintenance threshold amount =  (Required Maintenance funds doctorate inner London
-    borough (£1265) * remaining course length) + (required maintenance funds * course length  * number of dependents) -  Accommodation fees already paid
+    borough (£1265) * remaining course length) + (required maintenance funds * course length  * number of dependants) -  Accommodation fees already paid
 
     Tier 4 (General) Student - doctorate - London, In Country - (£1265 x 2) + (£845 x 2 x 1) - £0 = £4220
     Tier 4 (General) Student - doctorate - London, In Country - (£1265 x 1) + (£845 x 1 x 1) - £1000 = £1,110
@@ -27,7 +27,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Inner London borough            | Yes       |
             | Course Length                   | 1         |
             | Accommodation fees already paid | 0         |
-            | Number of dependents            | 1         |
+            | Number of dependants            | 1         |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance threshold amount | 2110.00 |
@@ -44,7 +44,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Inner London borough            | Yes       |
             | Course length                   | 2         |
             | Accommodation fees already paid | 250.50    |
-            | Number of dependents            | 3         |
+            | Number of dependants            | 3         |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance threshold amount | 7349.50 |
