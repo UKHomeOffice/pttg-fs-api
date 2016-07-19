@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service
 class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommodation.value}") val innerLondon: Int,
                                                   @Value("${non.inner.london.accommodation.value}") val nonInnerLondon: Int,
                                                   @Value("${maximum.accommodation.value}") val maxAccommodation: Int,
-//                                                  @Value("${minimum.doctorate.months.value}") val minDoctorateMonths: Int,
                                                   @Value("${inner.london.dependant.value}") val innerLondonDependants: Int,
                                                   @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int,
                                                   @Value("${non.doctorate.minimum.course.length}") val nonDoctorateMinCourseLength: Int,
@@ -19,7 +18,6 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon)
   val NON_INNER_LONDON_ACCOMMODATION = BigDecimal(nonInnerLondon)
   val MAXIMUM_ACCOMMODATION = BigDecimal(maxAccommodation)
-//  val MINIMUM_MONTHS_DOCTORATE = minDoctorateMonths
 
   val INNER_LONDON_DEPENDANTS = BigDecimal(innerLondonDependants)
   val NON_INNER_LONDON_DEPENDANTS = BigDecimal(nonInnerLondonDependants)
