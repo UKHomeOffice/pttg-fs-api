@@ -153,11 +153,11 @@ Feature: Validation of the API fields and data
             | Inner London Borough            | Yes        |
             | Course Length                   | 2          |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            |            |
+            | Number of dependants            | -7         |
         Then the service displays the following result
-            | HTTP Status    | 400                                 |
-            | Status code    | 0000                                |
-            | Status message | Parameter error: Invalid dependants |
+            | HTTP Status    | 400                                                          |
+            | Status code    | 0000                                                         |
+            | Status message | Parameter error: Invalid dependants, must be zero or greater |
 
     Scenario: The API is provided with incorrect Number of Dependants - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API

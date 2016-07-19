@@ -167,11 +167,11 @@ Feature: Validation of the API fields and data
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
-            | Number of dependants            |              |
+            | Number of dependants            | -4           |
         Then the service displays the following result
-            | HTTP Status    | 400                                         |
-            | Status code    | 0000                                        |
-            | Status message | Parameter error: Invalid dependants |
+            | HTTP Status    | 400                                 |
+            | Status code    | 0000                                |
+            | Status message | Parameter error: Invalid dependants, must be zero or greater |
 
     Scenario: The API is provided with incorrect Number of dependants - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
@@ -185,6 +185,6 @@ Feature: Validation of the API fields and data
             | Accommodation fees already paid | 0            |
             | Number of dependants            | ^            |
         Then the service displays the following result
-            | HTTP Status    | 400                                         |
-            | Status code    | 0000                                        |
+            | HTTP Status    | 400                                            |
+            | Status code    | 0000                                           |
             | Status message | Parameter conversion error: Invalid dependants |
