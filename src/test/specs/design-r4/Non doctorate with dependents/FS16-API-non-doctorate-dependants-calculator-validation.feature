@@ -6,7 +6,7 @@ Feature: Validation of the API fields and data
     Accommodation fees already paid - Format should not contain commas or currency symbols
     To Date - Format should be yyyy-mm-dd
     From Date - Format should be yyyy-mm-dd
-    Dependant - Format should not contain commas, if no dependants 0 should be entered
+    Dependant - Format should not contain commas
 
 ######################### Validation on the Student type field #########################
 
