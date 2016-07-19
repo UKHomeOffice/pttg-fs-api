@@ -33,11 +33,11 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
 
     Scenario: Brian is doctorate out of London student and does not have sufficient financial funds
 
-    Application Raised Date 4th of July
+    Application Raised Date 1st of July
     He has < than the Total Funds Required of £2030 for the previous 28 days
 
         Given a Service is consuming Financial Status API
-        Given the test data for account 01078912
+        Given the test data for account 01078913
         When the Financial Status API is invoked with the following:
             | To date        | 2016-07-01 |
             | From date      | 2016-06-04 |
@@ -52,8 +52,8 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Minimum            | 2030.00    |
             | From date          | 2016-06-04 |
             | To date            | 2016-07-01 |
-            | Date funds not met |            |
-            | Amount             |            |
+            | Date funds not met | 2016-06-27 |
+            | Amount             | 2029.99    |
             | Sort code          | 149303     |
             | Account number     | 01078911   |
 
@@ -65,10 +65,10 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
 
 
         Given a Service is consuming Financial Status API
-        Given the test data for account 17926767
+        Given the test data for account 17926768
         When the Financial Status API is invoked with the following:
-            | To date        | 2016-07-01 |
-            | From date      | 2016-06-04 |
+            | To date        | 2016-07-04 |
+            | From date      | 2016-06-07 |
             | Minimum        | 2537.48    |
             | Sort code      | 139302     |
             | Account number | 17926768   |
@@ -78,9 +78,9 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | HTTP status        | 200        |
             | Pass               | false      |
             | Minimum            | 2537.48    |
-            | From date          | 2016-06-04 |
-            | To date            | 2016-07-01 |
-            | Date funds not met |            |
-            | Amount             |            |
+            | From date          | 2016-06-07 |
+            | To date            | 2016-07-04 |
+            | Date funds not met | 2016-06-07 |
+            | Amount             | 2537       |
             | Sort code          | 139302     |
             | Account number     | 17926768   |
