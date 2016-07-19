@@ -1,4 +1,4 @@
-Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student (single current account and no dependants)
+Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student doctorate, non doctorate in London and out of London (single current account)
 
     Applicant does not have required closing balance every day for a consecutive 28 day period from the date of the Maintenance End Date
     If not passed, API will show minimum balance and the date it was. If there is more than one days when the applicants balance was below the threshold, on the output page will see first date
@@ -15,20 +15,20 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | To date        | 2016-06-01 |
             | From date      | 2016-05-05 |
             | Minimum        | 2530.00    |
-            | Sort code      | 135609     |
+            | Sort code      | 135610     |
             | Account number | 23568499   |
 
 
         Then The Financial Status API provides the following results:
-            | HTTP status        | 200        |
-            | Pass               | false      |
-            | Minimum            | 2530.00    |
-            | From date          | 2016-05-05 |
-            | To date            | 2016-06-01 |
-            | Date funds not met |            |
-            | Amount             |            |
-            | Sort code          | 135609     |
-            | Account number     | 23568498   |
+            | HTTP status              | 200        |
+            | Pass                     | false      |
+            | Minimum                  | 2530.00    |
+            | From date                | 2016-05-05 |
+            | To date                  | 2016-06-01 |
+            | Date total funds not met |            |
+            | Amount                   |            |
+            | Sort code                | 135610     |
+            | Account number           | 23568498   |
 
 
     Scenario: Brian is doctorate out of London student and does not have sufficient financial funds
@@ -42,7 +42,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | To date        | 2016-07-01 |
             | From date      | 2016-06-04 |
             | Minimum        | 2030.00    |
-            | Sort code      | 149302     |
+            | Sort code      | 149303     |
             | Account number | 01078912   |
 
 
@@ -54,7 +54,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | To date            | 2016-07-01 |
             | Date funds not met |            |
             | Amount             |            |
-            | Sort code          | 149302     |
+            | Sort code          | 149303     |
             | Account number     | 01078911   |
 
 
