@@ -20,15 +20,15 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
 
 
         Then The Financial Status API provides the following results:
-            | HTTP status        | 200        |
+            | HTTP Status        | 200        |
             | Pass               | false      |
             | Minimum            | 2530.00    |
             | From date          | 2016-05-05 |
             | To date            | 2016-06-01 |
-            | Date funds not met |            |
-            | Amount             |            |
+            | Date funds not met | 2016-05-31 |
+            | Amount             | 2500       |
             | Sort code          | 135609     |
-            | Account number     | 23568498   |
+            | Account number     | 23568499   |
 
 
     Scenario: Brian is doctorate out of London student and does not have sufficient financial funds
@@ -47,7 +47,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
 
 
         Then The Financial Status API provides the following results:
-            | HTTP dtatus        | 200        |
+            | HTTP Status        | 200        |
             | Pass               | false      |
             | Minimum            | 2030.00    |
             | From date          | 2016-06-04 |
@@ -75,7 +75,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
 
 
         Then The Financial Status API provides the following results:
-            | HTTP status        | 200        |
+            | HTTP Status        | 200        |
             | Pass               | false      |
             | Minimum            | 2537.48    |
             | From date          | 2016-06-04 |
