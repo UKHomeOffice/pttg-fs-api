@@ -24,7 +24,6 @@ import scala.collection.JavaConverters._
 @ComponentScan(Array("uk.gov.digital.ho.proving.financialstatus"))
 @ControllerAdvice
 class ServiceConfiguration extends WebMvcConfigurationSupport {
-
   @Bean
   @Primary
   def objectMapper: ObjectMapper = {
@@ -69,5 +68,6 @@ class ServiceConfiguration extends WebMvcConfigurationSupport {
   def customRestTemplate: RestTemplate = {
     new RestTemplate(customHttpRequestFactory)
   }
+
 
 }

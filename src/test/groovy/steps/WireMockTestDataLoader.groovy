@@ -1,6 +1,7 @@
 package steps
 
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.http.Fault
 import com.google.common.net.HostAndPort
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -68,6 +69,59 @@ class WireMockTestDataLoader {
 
     def clearTestData() {
         wireMockServer.stop()
+    }
+
+    def withDelayedResponse(String url, int delay) {
+
+        println ''
+        LOGGER.debug("Stubbing delayed response for $url of $delay seconds")
+
+        stubFor(get(urlPathMatching(url))
+            .willReturn(aResponse()
+            .withFixedDelay(delay * 1000)
+            .withStatus(200)));
+
+        println ''
+        LOGGER.debug("Completed stubbing delayed response")
+    }
+
+    def withGarbageResponse(String url) {
+
+        println ''
+        LOGGER.debug("Stubbing garbage response for $url")
+
+        stubFor(get(urlPathMatching(url))
+            .willReturn(aResponse()
+            .withFault(Fault.MALFORMED_RESPONSE_CHUNK)));
+
+        println ''
+        LOGGER.debug("Completed stubbing garbage response")
+    }
+
+    def withEmptyResponse(String url) {
+
+        println ''
+        LOGGER.debug("Stubbing empty response for $url")
+
+        stubFor(get(urlPathMatching(url))
+            .willReturn(aResponse()
+            .withFault(Fault.EMPTY_RESPONSE)));
+
+        println ''
+        LOGGER.debug("Completed stubbing empty response")
+    }
+
+    def withResponseStatus(String url, int status) {
+
+        println ''
+        LOGGER.debug("Stubbing response for $url with status $status")
+
+        stubFor(get(urlPathMatching(url))
+            .willReturn(aResponse()
+            .withStatus(status)));
+
+        println ''
+        LOGGER.debug("Completed stubbing response with status")
     }
 
 }

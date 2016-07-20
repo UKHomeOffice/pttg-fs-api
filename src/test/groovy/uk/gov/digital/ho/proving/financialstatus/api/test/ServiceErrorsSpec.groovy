@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
+import steps.WireMockTestDataLoader
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
@@ -19,10 +20,10 @@ import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
 import java.time.LocalDate
 
+import static TestUtils.getMessageSource
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-import static TestUtils.getMessageSource
 
 /**
  * @Author Home Office Digital
@@ -33,7 +34,7 @@ class ServiceErrorsSpec extends Specification {
 
     def mockHttpUtils = Mock(HttpUtils)
 
-    def serviceName = "mongoservice"
+    def serviceName = "localhost:8082"
 
     @Autowired
     RestTemplate restTemplate
@@ -52,7 +53,9 @@ class ServiceErrorsSpec extends Specification {
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(26)
 
-        1 * mockHttpUtils.performRequest(_) >> { throw new ResourceAccessException("Read timed out", new SocketTimeoutException()) }
+        1 * mockHttpUtils.performRequest(_) >> {
+            throw new ResourceAccessException("Read timed out", new SocketTimeoutException())
+        }
 
         when:
         def response = mockMvc.perform(
@@ -77,7 +80,9 @@ class ServiceErrorsSpec extends Specification {
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(26)
 
-        1 * mockHttpUtils.performRequest(_) >> { throw new ResourceAccessException("Connection refused", new HttpHostConnectException(null, null, null)) }
+        1 * mockHttpUtils.performRequest(_) >> {
+            throw new ResourceAccessException("Connection refused", new HttpHostConnectException(null, null, null))
+        }
 
         when:
         def response = mockMvc.perform(
@@ -91,8 +96,25 @@ class ServiceErrorsSpec extends Specification {
         response.andDo(MockMvcResultHandlers.print())
         response.andExpect(status().isInternalServerError())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.message=="Connection refused"
+        jsonContent.status.message == "Connection refused"
 
+    }
+
+    def "test for retries"() {
+
+        given:
+        def testDataLoader = new WireMockTestDataLoader("localhost:8082")
+        testDataLoader.withDelayedResponse("/financialstatus/v1/123456/12345678/balances?fromDate=2016-05-13&toDate=2016-06-09", 2)
+
+        when:
+        def response = mockMvc.perform(
+            get("/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus")
+                .param("fromDate", "2016-05-13")
+                .param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+        )
+        then:
+            response.andDo(MockMvcResultHandlers.print())
     }
 
 }
