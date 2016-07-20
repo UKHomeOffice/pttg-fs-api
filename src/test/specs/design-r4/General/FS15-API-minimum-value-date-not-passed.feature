@@ -17,9 +17,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Minimum        | 2530.00    |
             | Sort code      | 135610     |
             | Account number | 23568499   |
-
-
-        Then the service displays the following result
+        Then The Financial Status API provides the following results:
             | HTTP Status        | 200        |
             | Pass               | false      |
             | Minimum            | 2530.00    |
@@ -43,10 +41,10 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | From date      | 2016-06-04 |
             | Minimum        | 2030.00    |
             | Sort code      | 149303     |
+            | Account number | 01078912   |
             | Account number | 01078913   |
 
-
-        Then the service displays the following result
+        Then The Financial Status API provides the following results:
             | HTTP Status        | 200        |
             | Pass               | false      |
             | Minimum            | 2030.00    |
@@ -72,10 +70,8 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Minimum        | 2537.48    |
             | Sort code      | 139302     |
             | Account number | 17926768   |
-
-
-        Then the service displays the following result
-            | HTTP status        | 200        |
+        Then The Financial Status API provides the following results:
+            | HTTP Status        | 200        |
             | Pass               | false      |
             | Minimum            | 2537.48    |
             | From date          | 2016-06-07 |
