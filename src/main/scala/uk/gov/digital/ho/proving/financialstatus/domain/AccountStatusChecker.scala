@@ -19,17 +19,32 @@ class AccountStatusChecker @Autowired()(bankService: BankService, @Value("${dail
     consecutive.forall(_ == true)
   }
 
-  def checkDailyBalancesAreAboveMinimum(account: Account, fromDate: LocalDate, toDate: LocalDate, threshold: BigDecimal) : Try[AccountDailyBalanceCheck] = {
+  def checkDailyBalancesAreAboveMinimum(account: Account, fromDate: LocalDate, toDate: LocalDate, threshold: BigDecimal): Try[AccountDailyBalanceCheck] = {
 
     Try {
       val accountDailyBalances = bankService.fetchAccountDailyBalances(account, fromDate, toDate)
 
-      val thresholdPassed = accountDailyBalances.balances.length == numberConsecutiveDays &&
-        areDatesConsecutive(accountDailyBalances) &&
-        !accountDailyBalances.balances.exists(balance => balance.balance < threshold)
+      val thresholdDaysPassed = accountDailyBalances.balances.length == numberConsecutiveDays &&
+        areDatesConsecutive(accountDailyBalances)
 
-      AccountDailyBalanceCheck(fromDate, toDate, threshold, thresholdPassed)
+      val firstFailureBalance = getFirstBalanceToFail(accountDailyBalances, threshold)
+      AccountDailyBalanceCheck(fromDate, toDate, threshold, (thresholdDaysPassed && firstFailureBalance.isEmpty), showDate(firstFailureBalance), showBalance(firstFailureBalance))
     }
+  }
+
+
+  def showDate(x: Option[AccountDailyBalance]) = x match {
+    case Some(s) => s.date
+    case None => null
+  }
+
+  def showBalance(x: Option[AccountDailyBalance]) = x match {
+    case Some(s) => s.balance
+    case None => null
+  }
+
+  def getFirstBalanceToFail(accountDailyBalances: AccountDailyBalances, threshold: BigDecimal) = {
+    accountDailyBalances.balances.sortWith((x, y) => x.date.isBefore(y.date)).find(adb => adb.balance < threshold)
   }
 
   def parameters: String = {
@@ -39,3 +54,5 @@ class AccountStatusChecker @Autowired()(bankService: BankService, @Value("${dail
      """.stripMargin
   }
 }
+
+
