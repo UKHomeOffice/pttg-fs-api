@@ -30,25 +30,28 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 class RestErrorsSpec extends Specification {
 
     def serviceName = "localhost:8082"
-
-    @Shared
-    def customHttpRequestFactory = new HttpComponentsClientHttpRequestFactory()
-    def customRestTemplate = new RestTemplate(customHttpRequestFactory)
-
-    HttpUtils httpUtils = new HttpUtils(customRestTemplate, 3, 5)
-    MockBankService mockBankService = new MockBankService(new ObjectMapper(), httpUtils, serviceName)
-
-    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), getMessageSource())
-    MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
-
     def stubHost = "localhost:8082"
     def stubUrl = "/financialstatus/v1/123456/12345678/balances*"
     def apiUrl = "/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus"
     def verifyUrl = "/financialstatus/v1/123456/12345678/balances.*"
 
+    def maxAttempts = 3
+    def backoffPeriod = 5
+
     @Shared
     def restConnectionTimeout = 5000
     def testDataLoader
+
+    @Shared
+    def customHttpRequestFactory = new HttpComponentsClientHttpRequestFactory()
+    def customRestTemplate = new RestTemplate(customHttpRequestFactory)
+
+    HttpUtils httpUtils = new HttpUtils(customRestTemplate, maxAttempts, backoffPeriod)
+    MockBankService mockBankService = new MockBankService(new ObjectMapper(), httpUtils, serviceName)
+
+    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), getMessageSource())
+    MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
+
 
     def setupSpec() {
         customHttpRequestFactory.setConnectionRequestTimeout(restConnectionTimeout)
