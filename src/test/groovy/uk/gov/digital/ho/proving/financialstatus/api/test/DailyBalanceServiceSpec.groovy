@@ -13,10 +13,10 @@ import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
 import java.time.LocalDate
 
+import static TestUtils.getMessageSource
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-import static TestUtils.getMessageSource
 
 /**
  * @Author Home Office Digital
@@ -64,13 +64,13 @@ class DailyBalanceServiceSpec extends Specification {
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.22, 3500, true, false)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateDailyBalancesForFail(fromDate, toDate, 2560.23)
 
         when:
         def response = mockMvc.perform(
             get(url)
                 .param("toDate", "2016-06-09")
-                .param("minimum", "2560.23")
+                .param("minimum", "2559.23")
                 .param("fromDate", "2016-05-13")
         )
 
@@ -79,6 +79,8 @@ class DailyBalanceServiceSpec extends Specification {
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.pass == false
+        jsonContent.amount == "2543.23"
+        jsonContent.dateFundsNotMet == "2016-05-13"
 
     }
 
@@ -104,8 +106,9 @@ class DailyBalanceServiceSpec extends Specification {
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.pass == false
+        jsonContent.amount == null
+        jsonContent.dateFundsNotMet == null
 
     }
-
 
 }

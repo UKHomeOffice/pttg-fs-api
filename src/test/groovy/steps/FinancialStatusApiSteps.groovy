@@ -202,7 +202,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
             if (Keys != "account") {
 
-                assert entries.containsValue(jsonValue)
+                assert entries.containsValue(jsonValue) //: "data table is missing or has incorrect value for json key [$Keys] and value [$jsonValue]"
             }
 
             println "===========>" + jsonValue
