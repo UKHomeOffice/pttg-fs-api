@@ -101,7 +101,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
           )
           case _ => new ResponseEntity(
             AccountDailyBalanceStatusResponse(
-              StatusResponse(exception.getStatusCode.toString, exception.getStatusText)), HttpStatus.INTERNAL_SERVER_ERROR)
+              StatusResponse(exception.getStatusCode.toString, exception.getStatusText)), exception.getStatusCode)
         }
 
       case Failure(exception: ResourceAccessException) =>
@@ -115,7 +115,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
           StatusResponse(TEMP_ERROR_CODE, message)), HttpStatus.INTERNAL_SERVER_ERROR)
 
       case Failure(exception: Throwable) =>
-        LOGGER.error("Unknown bank service error: " + exception.getMessage)
+        LOGGER.error("Unknown bank service response: " + exception.getMessage)
         new ResponseEntity(AccountDailyBalanceStatusResponse(
           StatusResponse(TEMP_ERROR_CODE, exception.getMessage)), HttpStatus.INTERNAL_SERVER_ERROR)
     }

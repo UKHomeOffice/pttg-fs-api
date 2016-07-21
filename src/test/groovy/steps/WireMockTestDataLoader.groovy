@@ -43,7 +43,7 @@ class WireMockTestDataLoader {
         def fileLocation = "/$dataDirName/$fileName" + ".json"
         LOGGER.debug("Loading test data for {}", fileLocation.toString())
 
-        def file =  this.getClass().getResource( fileLocation)
+        def file = this.getClass().getResource(fileLocation)
 
         if (file == null) {
             return null
@@ -80,6 +80,20 @@ class WireMockTestDataLoader {
             .willReturn(aResponse()
             .withFixedDelay(delay * 1000)
             .withStatus(200)));
+
+        println ''
+        LOGGER.debug("Completed stubbing delayed response")
+    }
+
+    def withDelayedAndStatusResponse(String url, int delay, int status) {
+
+        println ''
+        LOGGER.debug("Stubbing delayed response for $url of $delay seconds with status $status")
+
+        stubFor(get(urlPathMatching(url))
+            .willReturn(aResponse()
+            .withFixedDelay(delay * 1000)
+            .withStatus(status)));
 
         println ''
         LOGGER.debug("Completed stubbing delayed response")
