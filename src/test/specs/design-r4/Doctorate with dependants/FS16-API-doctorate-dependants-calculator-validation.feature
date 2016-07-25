@@ -22,7 +22,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                                           |
             | Status code    | 0000                                                                          |
-            | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate] |
+            | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd] |
 
 ######################### Validation on the Inner london borough field #########################
 

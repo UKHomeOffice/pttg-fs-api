@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
+import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.getStudentTypeChecker
 
 /**
  * @Author Home Office Digital
@@ -30,7 +31,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
             TestUtils.maxMaintenanceAllowance, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
             TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
             TestUtils.doctorateMinCourseLength, TestUtils.doctorateMaxCourseLength
-        ), getMessageSource()
+        ), getMessageSource(), getStudentTypeChecker()
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)

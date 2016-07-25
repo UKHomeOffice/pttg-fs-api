@@ -1,6 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import org.springframework.context.support.ResourceBundleMessageSource
+import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 
 class TestUtils {
 
@@ -24,5 +25,6 @@ class TestUtils {
     public static def doctorateMinCourseLength = 1
     public static def doctorateMaxCourseLength = 2
 
+    public static def getStudentTypeChecker() { new StudentTypeChecker("doctorate", "nondoctorate", "pgdd") }
 
 }

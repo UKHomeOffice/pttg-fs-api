@@ -15,7 +15,8 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 @RequestMapping(value = Array("/pttg/financialstatusservice/v1/maintenance"))
 @ControllerAdvice
 class ThresholdService @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
-                                    val messageSource: ResourceBundleMessageSource
+                                    val messageSource: ResourceBundleMessageSource,
+                                    val studentTypeChecker: StudentTypeChecker
                                    ) extends FinancialStatusBaseController {
 
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
@@ -86,7 +87,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   }
 
   def validateStudentType(studentType: String): StudentType = {
-    StudentType.getStudentType(studentType)
+    studentTypeChecker.getStudentType(studentType)
   }
 
   def setScale(value: JBigDecimal): JBigDecimal = if (value != null) value.setScale(BIG_DECIMAL_SCALE, JBigDecimal.ROUND_HALF_UP) else value
@@ -121,7 +122,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
           new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
         }
 
-      case Doctorate =>
+      case Doctorate | DoctorDentist =>
         val courseMinLength = maintenanceThresholdCalculator.doctorateMinCourseLength
         val courseMaxLength = maintenanceThresholdCalculator.doctorateMaxCourseLength
         if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
@@ -138,7 +139,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
           new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
         }
       case Unknown(unknownType) =>
-        buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE(StudentType.values.mkString(",")), HttpStatus.BAD_REQUEST)
+        buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE(studentTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
     }
   }
 

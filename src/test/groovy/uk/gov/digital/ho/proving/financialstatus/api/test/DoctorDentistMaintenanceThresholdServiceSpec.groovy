@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
  */
 @WebAppConfiguration
 @ContextConfiguration(classes = ServiceConfiguration.class)
-class DoctorateMaintenanceThresholdServiceSpec extends Specification {
+class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
 
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
@@ -55,10 +55,10 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         response
     }
 
-    def "Tier 4 Doctorate - Check 'Non Inner London Borough'"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check 'Non Inner London Borough'"() {
 
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold.toString()
@@ -70,10 +70,10 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     }
 
-    def "Tier 4 Doctorate - Check 'Inner London Borough'"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check 'Inner London Borough'"() {
 
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold.toString()
@@ -85,9 +85,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     }
 
-    def "Tier 4 Doctorate - Check 'Accommodation Fees paid'"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check 'Accommodation Fees paid'"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold.toString()
@@ -106,9 +106,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     }
 
-    def "Tier 4 Doctorate - Check 'All variants'"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check 'All variants'"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold.toString()
@@ -135,9 +135,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         true        | 2                    | 1078.00               | 14         || 25112.00
     }
 
-    def "Tier 4 Doctorate - Check invalid course length parameters"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check invalid course length parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid courseLength")))
@@ -149,9 +149,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         false       | 0                    | 14         | 1044.00
     }
 
-    def "Tier 4 Doctorate - Check invalid characters course length parameters"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check invalid characters course length parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid courseLength")))
@@ -162,9 +162,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         false       | "bb"                 | 11         | 1044.00
     }
 
-    def "Tier 4 Doctorate - Check invalid accommodation fees parameters"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check invalid accommodation fees parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid accommodationFeesPaid")))
@@ -175,9 +175,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         true        | 2                    | 11         | -7
     }
 
-    def "Tier 4 Doctorate - Check invalid characters accommodation fees parameters"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check invalid characters accommodation fees parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid accommodationFeesPaid")))
@@ -188,9 +188,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         true        | 2                    | 11         | "ddd"
     }
 
-    def "Tier 4 Doctorate - Check rounding accommodation fees parameters"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check rounding accommodation fees parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
 
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
@@ -206,9 +206,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         false       | 2                    | 0          | -0.004                || 2030.00
     }
 
-    def "Tier 4 Doctorate - Check invalid dependants parameters"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check invalid dependants parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid dependants")))
@@ -219,9 +219,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         true        | 2                    | -986       | 0
     }
 
-    def "Tier 4 Doctorate - Check invalid characters dependants parameters"() {
+    def "Tier 4 Post Grad Doctor or Dentist - Check invalid characters dependants parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid dependants")))
