@@ -1,5 +1,5 @@
 @wiremock
-Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate out of London (single current account and no dependants)
+Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad Doctor or Dentist out of London (single current account and no dependants)
 
     Acceptance criteria
 
@@ -22,10 +22,10 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
-            | Inner London borough            | No         |
-            | Remaining course length         | 1          |
-            | Accommodation fees already paid | 0          |
+            | Student Type                    | pgdd |
+            | Inner London borough            | No   |
+            | Remaining course length         | 1    |
+            | Accommodation fees already paid | 0    |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance Threshold amount | 1015.00 |
@@ -38,10 +38,10 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
-            | Inner London borough            | No         |
-            | Remaining course length         | 2          |
-            | Accommodation fees already paid | 250        |
+            | Student Type                    | pgdd |
+            | Inner London borough            | No   |
+            | Remaining course length         | 2    |
+            | Accommodation fees already paid | 250  |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance Threshold amount | 1780.00 |

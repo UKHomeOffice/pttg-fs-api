@@ -1,4 +1,4 @@
-Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate out of London with dependents(single current account)
+Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad Doctor or Dentist out of London with dependents(single current account)
 
     Requirement to meet Tier 4 pass
 
@@ -23,11 +23,11 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student type                    | doctorate |
-            | Inner London borough            | No       |
-            | Course length                   | 1         |
-            | Accommodation fees already paid | 0         |
-            | Number of dependants            | 3         |
+            | Student type                    | pgdd |
+            | Inner London borough            | No   |
+            | Course length                   | 1    |
+            | Accommodation fees already paid | 0    |
+            | Number of dependants            | 3    |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance threshold amount | 3055.00 |
@@ -40,11 +40,11 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student type                    | doctorate |
-            | Inner London borough            | No       |
-            | Course length                   | 1         |
-            | Accommodation fees already paid | 100.00    |
-            | Number of dependants            | 1         |
+            | Student type                    | pgdd   |
+            | Inner London borough            | No     |
+            | Course length                   | 1      |
+            | Accommodation fees already paid | 100.00 |
+            | Number of dependants            | 1      |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance threshold amount | 1595.00 |
