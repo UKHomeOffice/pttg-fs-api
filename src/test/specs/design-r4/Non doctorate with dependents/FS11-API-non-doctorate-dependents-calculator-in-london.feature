@@ -12,7 +12,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
     Required Maintenance threshold calculation to pass this feature file
 
-    Maintenance threshold amount- (Required Maintenance funds non doctorate inner London borough * course length) + (required maintenance funds * course length (845 x 6 x 1) * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
+    Maintenance threshold amount- (Required Maintenance funds non doctorate inner London borough * course length) + (required dependant maintenance funds * course length (845 x 6 x 1) * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
 
     ((£1265 x 6) + (845 x 6 x 1) + (£10,000 - 0 - 0))
 

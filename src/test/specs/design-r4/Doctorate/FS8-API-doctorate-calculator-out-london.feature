@@ -8,7 +8,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
     Not Inner London - The applicant must show evidence of funds to cover £1,015 for each month remaining of the course up to a maximum of 2 months
 
     Required Maintenance threshold calculation to pass this feature file
-    Maintenance threshold amount =  (Required Maintenance funds doctorate inner London
+    Maintenance threshold amount =  (Required Maintenance funds doctorate outer London
     borough (£1015) * remaining course length) -  Accommodation fees already paid
 
     Tier 4 (General) Student - doctorate - out of London, In Country - (£1015 x 2) - £0 = £2030

@@ -10,7 +10,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
     Required Maintenance threshold calculation to pass this feature file
     Maintenance threshold amount =  (Required Maintenance funds doctorate not inner London
-    borough (£1015 * remaining course length) + (required maintenance funds * course length  * number of dependants) -  Accommodation fees already paid
+    borough (£1015 * remaining course length) + (required dependant maintenance funds * course length  * number of dependants) -  Accommodation fees already paid
 
     Tier 4 (General) Student - doctorate - out of London, In Country - (£1015 x 2) + (£680 x 2 x 1) - £0 = £3390
     Tier 4 (General) Student - doctorate - out of London, In Country - (£1015 x 1) + (£680 x 1 x 1) - £1000 = £695

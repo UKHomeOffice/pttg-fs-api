@@ -20,7 +20,7 @@ Feature: Validation of the API fields and data
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
             | From Date      |            |
-            ## | Minimum        | 2350.00    |
+             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
         Then FSPS Tier four general Case Worker tool API provides the following result
