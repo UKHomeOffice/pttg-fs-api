@@ -32,7 +32,7 @@ class RestErrorsSpec extends Specification {
     def serviceName = "localhost:8082"
     def stubHost = "localhost:8082"
     def stubUrl = "/financialstatus/v1/123456/12345678/balances*"
-    def apiUrl = "/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus"
+    def apiUrl = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
     def verifyUrl = "/financialstatus/v1/123456/12345678/balances.*"
 
     def maxAttempts = 3
