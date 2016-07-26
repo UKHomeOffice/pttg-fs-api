@@ -68,7 +68,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String sortCode = ""
     String minimum = ""
     String days = ""
-    String innerLondon = ""
+    String inLondon = ""
     String courseLength = ""
     String tuitionFees = ""
     String tuitionFeesPaid = ""
@@ -135,11 +135,11 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             if (s.equalsIgnoreCase("Total tuition fees")) {
                 tuitionFees = entries.get(s)
             }
-            if (s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("Yes")) {
-                innerLondon = "true"
+            if (s.equalsIgnoreCase("In London") && entries.get(s).equalsIgnoreCase("Yes")) {
+                inLondon = "true"
             }
-            if (s.equalsIgnoreCase("Inner London Borough") && entries.get(s).equalsIgnoreCase("No")) {
-                innerLondon = "false"
+            if (s.equalsIgnoreCase("In London") && entries.get(s).equalsIgnoreCase("No")) {
+                inLondon = "false"
             }
 
             if (s.equalsIgnoreCase("Tuition fees already paid")) {
@@ -278,7 +278,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&innerLondon={innerLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}", studentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}", studentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
         jsonAsString = resp.asString()
 
         println("FSPS API Calculator: " + jsonAsString)

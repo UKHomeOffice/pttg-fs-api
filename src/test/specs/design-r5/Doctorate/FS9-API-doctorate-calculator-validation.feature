@@ -1,6 +1,6 @@
 Feature: Validation of the API fields and data
 
-    Inner London borough - Yes or No options (mandatory)
+    In London - Yes or No options (mandatory)
     Course Length - 1-2 months
     Accommodation fees already paid - Format should not contain commas or currency symbols
     To Date - Format should be yyyy-mm-dd
@@ -12,27 +12,27 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |     |
-            | Inner London Borough            | Yes |
+            | In London                       | Yes |
             | Course Length                   | 1   |
             | Accommodation fees already paid | 0   |
         Then the service displays the following result
-            | HTTP Status    | 400                                  |
-            | Status code    | 0000                                 |
+            | HTTP Status    | 400                                                                                |
+            | Status code    | 0000                                                                               |
             | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd] |
 
-######################### Validation on the Inner london borough field #########################
+######################### Validation on the In London field #########################
 
-    Scenario: The API is not provided with Inner London borough Yes or No field
+    Scenario: The API is not provided with In London Yes or No field
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
-            | Inner London Borough            |           |
+            | In London                       |           |
             | Course Length                   | 2         |
             | Accommodation fees already paid | 0         |
         Then the service displays the following result
-            | HTTP Status    | 400                                  |
-            | Status code    | 0000                                 |
-            | Status message | Parameter conversion error: Invalid innerLondon |
+            | HTTP Status    | 400                                             |
+            | Status code    | 0000                                            |
+            | Status message | Parameter conversion error: Invalid inLondon |
 
 ######################### Validation on the Course length field #########################
 
@@ -40,36 +40,36 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
-            | Inner London Borough            | Yes       |
+            | In London                       | Yes       |
             | Course Length                   |           |
             | Accommodation fees already paid | 0         |
         Then the service displays the following result
-            | HTTP Status    | 400                                   |
-            | Status code    | 0000                                  |
+            | HTTP Status    | 400                                                                       |
+            | Status code    | 0000                                                                      |
             | Status message | Parameter error: Invalid courseLength, must be in the range 1 to 2 months |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-2
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
-            | Inner London Borough            | Yes       |
+            | In London                       | Yes       |
             | Course Length                   | x         |
             | Accommodation fees already paid | 0         |
         Then the service displays the following result
-            | HTTP Status    | 400                                   |
-            | Status code    | 0000                                  |
+            | HTTP Status    | 400                                              |
+            | Status code    | 0000                                             |
             | Status message | Parameter conversion error: Invalid courseLength |
 
     Scenario: The API is provided with incorrect Course Length - more than 2
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
-            | Inner London Borough            | Yes       |
+            | In London                       | Yes       |
             | Course Length                   | 3         |
             | Accommodation fees already paid | 0         |
         Then the service displays the following result
-            | HTTP Status    | 400                                   |
-            | Status code    | 0000                                  |
+            | HTTP Status    | 400                                                                       |
+            | Status code    | 0000                                                                      |
             | Status message | Parameter error: Invalid courseLength, must be in the range 1 to 2 months |
 
 
@@ -79,7 +79,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
-            | Inner London Borough            | Yes       |
+            | In London                       | Yes       |
             | Course Length                   | 1         |
             | Accommodation fees already paid |           |
         Then the service displays the following result
@@ -91,19 +91,19 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
-            | Inner London Borough            | Yes       |
+            | In London                       | Yes       |
             | Course Length                   | 1         |
             | Accommodation fees already paid | %%        |
         Then the service displays the following result
-            | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
+            | HTTP Status    | 400                                                       |
+            | Status code    | 0000                                                      |
             | Status message | Parameter conversion error: Invalid accommodationFeesPaid |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - less than zero
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
-            | Inner London Borough            | Yes       |
+            | In London                       | Yes       |
             | Course Length                   | 1         |
             | Accommodation fees already paid | -100      |
         Then the service displays the following result
@@ -116,7 +116,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
             | The end of 28-day period        | 20/06/2016 |
-            | Inner London borough            | Yes        |
+            | In London                       | Yes        |
             | Course length                   | 1          |
             | Accommodation fees already paid | 3214       |
 

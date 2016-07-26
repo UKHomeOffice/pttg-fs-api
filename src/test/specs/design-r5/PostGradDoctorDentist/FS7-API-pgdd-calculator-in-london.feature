@@ -22,7 +22,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | pgdd |
-            | Inner London borough            | Yes  |
+            | In London                       | Yes  |
             | Remaining course length         | 1    |
             | Accommodation fees already paid | 0    |
         Then The Financial Status API provides the following results:
@@ -38,7 +38,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | pgdd |
-            | Inner London borough            | Yes  |
+            | In London                       | Yes  |
             | Remaining course length         | 2    |
             | Accommodation fees already paid | 0    |
         Then The Financial Status API provides the following results:

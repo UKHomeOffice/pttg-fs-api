@@ -34,8 +34,8 @@ Feature: Validation of the API fields and data
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                |
-            | Status code    | 0000                               |
+            | HTTP Status    | 400                                           |
+            | Status code    | 0000                                          |
             | Status message | Parameter conversion error: Invalid from date |
 
     Scenario: The API is provided with an incorrect to date - not numbers 0-9
@@ -48,8 +48,8 @@ Feature: Validation of the API fields and data
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                              |
-            | Status code    | 0000                             |
+            | HTTP Status    | 400                                         |
+            | Status code    | 0000                                        |
             | Status message | Parameter conversion error: Invalid to date |
 
 ######################### Validation on the Total Funds Required field #########################
@@ -92,8 +92,8 @@ Feature: Validation of the API fields and data
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                        |
-            | Status code    | 0000                                       |
+            | HTTP Status    | 400                                                   |
+            | Status code    | 0000                                                  |
             | Status message | Parameter conversion error: Invalid value for minimum |
 
     Scenario: The API provides incorrect Total Funds Required - not numbers 0-9 (negative)

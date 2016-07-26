@@ -24,7 +24,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | From date          | 2016-05-05 |
             | To date            | 2016-06-01 |
             | Date funds not met | 2016-05-30 |
-            | Amount             | 2529.99       |
+            | Amount             | 2529.99    |
             | Sort code          | 135610     |
             | Account number     | 23568499   |
 
@@ -77,6 +77,6 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | From date          | 2016-06-07 |
             | To date            | 2016-07-04 |
             | Date funds not met | 2016-06-07 |
-            | Amount             | 2537.00       |
+            | Amount             | 2537.00    |
             | Sort code          | 139302     |
             | Account number     | 17926768   |

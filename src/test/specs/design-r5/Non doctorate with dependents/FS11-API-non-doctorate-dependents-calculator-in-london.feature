@@ -3,7 +3,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
     Requirement to meet Tier 4 pass
 
     Required Maintenance threshold regulation to pass this feature file
-    Required Maintenance threshold non doctorate inner London borough = £1265 (the amount for when the student is studying in London)
+    Required Maintenance threshold non doctorate In London = £1265 (the amount for when the student is studying in London)
     £845 per month per dependent and the same course length as a Tier 4 student – in London
     Course length - this can be within the period of 1-9 months
     Total tuition fees - total amount of the tuition fees for the course
@@ -12,7 +12,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
     Required Maintenance threshold calculation to pass this feature file
 
-    Maintenance threshold amount- (Required Maintenance funds non doctorate inner London borough * course length) + (required dependant maintenance funds * course length (845 x 6 x 1) * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
+    Maintenance threshold amount- (Required Maintenance funds non doctorate In London * course length) + (required dependant maintenance funds * course length (845 x 6 x 1) * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
 
     ((£1265 x 6) + (845 x 6 x 1) + (£10,000 - 0 - 0))
 
@@ -29,7 +29,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
-            | Inner London Borough            | Yes          |
+            | In London                       | Yes          |
             | Course Length                   | 6            |
             | Total tuition fees              | 6530.75      |
             | Tuition fees already paid       | 0            |
@@ -48,7 +48,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
-            | Inner London Borough            | Yes          |
+            | In London                       | Yes          |
             | Course Length                   | 9            |
             | Total tuition fees              | 12500.00     |
             | Tuition fees already paid       | 250.50       |

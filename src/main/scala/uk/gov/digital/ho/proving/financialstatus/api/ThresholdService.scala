@@ -42,7 +42,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
   def calculateThreshold(@RequestParam(value = "studentType") studentType: String,
-                         @RequestParam(value = "innerLondon") innerLondon: Boolean,
+                         @RequestParam(value = "inLondon") inLondon: Boolean,
                          @RequestParam(value = "courseLength", defaultValue = "0") courseLength: Int,
                          @RequestParam(value = "tuitionFees", required = false) tuitionFees: JBigDecimal,
                          @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: JBigDecimal,
@@ -53,11 +53,11 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     val validatedStudentType = validateStudentType(studentType)
 
     timer("calculateThresholdForStudentType") {
-      val auditMessage = s"calculateThreshold: validatedStudentType = $validatedStudentType, innerLondon = $innerLondon, " +
+      val auditMessage = s"calculateThreshold: validatedStudentType = $validatedStudentType, inLondon = $inLondon, " +
         s"courseLength = $courseLength, tuitionFees = $tuitionFees, tuitionFeesPaid = $tuitionFeesPaid, " +
         s"accommodationFeesPaid = $accommodationFeesPaid, dependants = $dependants"
       audit(auditMessage) {
-        calculateThresholdForStudentType(validatedStudentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        calculateThresholdForStudentType(validatedStudentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
       }
     }
   }
@@ -92,7 +92,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
   def setScale(value: JBigDecimal): JBigDecimal = if (value != null) value.setScale(BIG_DECIMAL_SCALE, JBigDecimal.ROUND_HALF_UP) else value
 
-  def calculateThresholdForStudentType(studentType: StudentType, innerLondon: Boolean, courseLength: Int,
+  def calculateThresholdForStudentType(studentType: StudentType, inLondon: Boolean, courseLength: Int,
                                        tuitionFees: JBigDecimal, tuitionFeesPaid: JBigDecimal,
                                        accommodationFeesPaid: JBigDecimal, dependants: Int
                                       ): ResponseEntity[ThresholdResponse] = {
@@ -114,7 +114,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
         } else {
           val thresholdResponse: ThresholdResponse = new ThresholdResponse(
-            maintenanceThresholdCalculator.calculateNonDoctorate(innerLondon, courseLength,
+            maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLength,
               setScale(tuitionFees),
               setScale(tuitionFeesPaid),
               setScale(accommodationFeesPaid), dependants),
@@ -133,7 +133,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
         } else {
           val thresholdResponse: ThresholdResponse = new ThresholdResponse(
-            maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLength,
+            maintenanceThresholdCalculator.calculateDoctorate(inLondon, courseLength,
               setScale(accommodationFeesPaid), dependants),
             StatusResponse(HttpStatus.OK.toString, OK))
           new ResponseEntity[ThresholdResponse](thresholdResponse, HttpStatus.OK)
