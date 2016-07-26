@@ -46,7 +46,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         def response = mockMvc.perform(
             get(url)
                 .param("studentType", studentType)
-                .param("innerLondon", innerLondon.toString())
+                .param("inLondon", innerLondon.toString())
                 .param("courseLength", courseLengthInMonths.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())

@@ -1,18 +1,14 @@
+@wiremock
 Feature: Validation of the API fields and data
 
-    Acceptance criteria
+    Fields mandatory to fill in:
+    To Date - Format should be yyyy-mm-dd
+    From Date - Format should be yyyy-mm-dd
+    Minimum Funds Required - Format should not contain commas or currency symbols
+    Sort code - Format should be three pairs of digits 13-56-09 (always numbers 0-9, no letters and cannot be all 0's)
+    Account Number - Format should be 12345678 (always 8 numbers, 0-9, no letters, cannot be all 0's)
 
-    The same validations for in and out of London
-
-    Inner London borough - Yes or No options (mandatory)
-    Course length - 1-2 months (mandatory)
-    Accommodation fees already paid - numbers only. Highest amount £1,265. Format should not contain commas or currency symbols
-    To date - format should be yyyy-mm-dd (mandatory)
-    From date - format should be yyyy-mm-dd (mandatory)
-    Sort code - format should be three pairs of digits 13-56-09 (always numbers 0-9, no letters and cannot be all 0's) (mandatory)
-    Account number - format should be 12345678 (always 8 numbers, 0-9, no letters, cannot be all 0's) (mandatory)
-
-######################### Validation on the End of 28-day period #########################
+######################### Validation on the Maintenance Period End Date Field #########################
 
     Scenario: The API is not provided with End date of 28-day period
 
@@ -20,7 +16,7 @@ Feature: Validation of the API fields and data
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
             | From Date      |            |
-             | Minimum        | 2350.00    |
+            | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
         Then FSPS Tier four general Case Worker tool API provides the following result
@@ -38,8 +34,8 @@ Feature: Validation of the API fields and data
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                |
-            | Status code    | 0000                               |
+            | HTTP Status    | 400                                           |
+            | Status code    | 0000                                          |
             | Status message | Parameter conversion error: Invalid from date |
 
     Scenario: The API is provided with an incorrect to date - not numbers 0-9
@@ -52,10 +48,67 @@ Feature: Validation of the API fields and data
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                              |
-            | Status code    | 0000                             |
+            | HTTP Status    | 400                                         |
+            | Status code    | 0000                                        |
             | Status message | Parameter conversion error: Invalid to date |
 
+######################### Validation on the Total Funds Required field #########################
+
+    Scenario: The API is not provided with Total Funds Required
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+            | To Date        | 2016-06-01 |
+            | From Date      | 2016-05-05 |
+            | Minimum        |            |
+            | Sort Code      | 13-56-09   |
+            | Account Number | 23568498   |
+        Then FSPS Tier four general Case Worker tool API provides the following result
+            | HTTP Status    | 400                                        |
+            | Status code    | 0000                                       |
+            | Status message | Parameter error: Invalid value for minimum |
+
+    Scenario: The API provides incorrect Total Funds Required - just 0
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+            | To Date        | 2016-06-01 |
+            | From Date      | 2016-05-05 |
+            | Minimum        | 0          |
+            | Sort Code      | 13-56-09   |
+            | Account Number | 23568498   |
+        Then FSPS Tier four general Case Worker tool API provides the following result
+            | HTTP Status    | 400                                        |
+            | Status code    | 0000                                       |
+            | Status message | Parameter error: Invalid value for minimum |
+
+    Scenario: The API provides incorrect Total Funds Required - not numbers 0-9 (letters)
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+            | To Date        | 2016-06-01 |
+            | From Date      | 2016-05-05 |
+            | Minimum        | A          |
+            | Sort Code      | 13-56-09   |
+            | Account Number | 23568498   |
+        Then FSPS Tier four general Case Worker tool API provides the following result
+            | HTTP Status    | 400                                                   |
+            | Status code    | 0000                                                  |
+            | Status message | Parameter conversion error: Invalid value for minimum |
+
+    Scenario: The API provides incorrect Total Funds Required - not numbers 0-9 (negative)
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+            | To Date        | 2016-06-01 |
+            | From Date      | 2016-05-05 |
+            | Minimum        | -2345.00   |
+            | Sort Code      | 13-56-09   |
+            | Account Number | 23568498   |
+        Then FSPS Tier four general Case Worker tool API provides the following result
+            | HTTP Status    | 400                                        |
+            | Status code    | 0000                                       |
+            | Status message | Parameter error: Invalid value for minimum |
 
 ######################### Validation on the Sort Code Field #########################
 
@@ -205,5 +258,3 @@ Feature: Validation of the API fields and data
             | HTTP Status    | 404                                                         |
             | Status code    | 0000                                                        |
             | Status message | No records for sort code 100908 and account number 21568198 |
-
-

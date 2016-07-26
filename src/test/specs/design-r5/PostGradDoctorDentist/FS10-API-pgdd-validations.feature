@@ -4,7 +4,7 @@ Feature: Validation of the API fields and data
 
     The same validations for in and out of London
 
-    Inner London borough - Yes or No options (mandatory)
+    In London - Yes or No options (mandatory)
     Course length - 1-2 months (mandatory)
     Accommodation fees already paid - numbers only. Highest amount £1,265. Format should not contain commas or currency symbols
     To date - format should be yyyy-mm-dd (mandatory)
@@ -20,7 +20,7 @@ Feature: Validation of the API fields and data
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
             | From Date      |            |
-             | Minimum        | 2350.00    |
+            ## | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
         Then FSPS Tier four general Case Worker tool API provides the following result
@@ -38,8 +38,8 @@ Feature: Validation of the API fields and data
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                |
-            | Status code    | 0000                               |
+            | HTTP Status    | 400                                           |
+            | Status code    | 0000                                          |
             | Status message | Parameter conversion error: Invalid from date |
 
     Scenario: The API is provided with an incorrect to date - not numbers 0-9
@@ -52,8 +52,8 @@ Feature: Validation of the API fields and data
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                              |
-            | Status code    | 0000                             |
+            | HTTP Status    | 400                                         |
+            | Status code    | 0000                                        |
             | Status message | Parameter conversion error: Invalid to date |
 
 

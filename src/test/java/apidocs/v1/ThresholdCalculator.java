@@ -97,7 +97,7 @@ public class ThresholdCalculator {
 
         given(documentationSpec)
             .spec(requestSpec)
-            .param("innerLondon", "true")
+            .param("inLondon", "true")
             .param("courseLength", "4")
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
@@ -122,7 +122,7 @@ public class ThresholdCalculator {
 
         given(documentationSpec)
             .spec(requestSpec)
-            .param("innerLondon", "true")
+            .param("inLondon", "true")
             .param("courseLength", "4")
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
@@ -133,8 +133,8 @@ public class ThresholdCalculator {
                 responseFields(bodyModelFields)
                     .and(statusModelFields),
                 requestParameters(
-                    parameterWithName("innerLondon")
-                        .description("whether the location is an inner London Borough")
+                    parameterWithName("inLondon")
+                        .description("whether the location is an in London")
                         .attributes(key("optional").value(false)),
                     parameterWithName("courseLength")
                         .description("the length of the course in months")

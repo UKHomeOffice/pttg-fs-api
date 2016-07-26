@@ -12,7 +12,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
 
     Required Maintenance threshold calculation to pass this feature file
 
-    Maintenance threshold amount- (Required Maintenance funds non doctorate not inner London borough * course length) + (required dependant maintenance funds * course length  * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
+    Maintenance threshold amount- (Required Maintenance funds non doctorate not In London * course length) + (required dependant maintenance funds * course length  * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
 
     ((£1015 x 6) + (£680 x 6 x 1) + (£10,000 - £0 - £0))
 
@@ -29,7 +29,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
-            | Inner London Borough            | No          |
+            | In London                       | No           |
             | Course Length                   | 5            |
             | Total tuition fees              | 4550.50      |
             | Tuition fees already paid       | 0            |
@@ -48,14 +48,14 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
-            | Inner London Borough            | No          |
+            | In London                       | No           |
             | Course Length                   | 3            |
-            | Total tuition fees              | 3750.00     |
+            | Total tuition fees              | 3750.00      |
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 300          |
             | Number of dependants            | 4            |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
+            | HTTP Status                  | 200      |
             | Maintenance Threshold amount | 14404.50 |
 
 
