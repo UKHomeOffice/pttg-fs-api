@@ -1,6 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.math.{BigDecimal => JBigDecimal}
+import java.lang.{Boolean => JBoolean}
 import java.util.Optional
 
 import org.slf4j.LoggerFactory
@@ -24,7 +25,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
   implicit def toOptionInt(optional: Optional[Integer]): Option[Int] = if (optional.isPresent) Some(optional.get) else None
 
-  implicit def toOptionBoolean(optional: Optional[java.lang.Boolean]): Option[Boolean] = if (optional.isPresent) Some(optional.get) else None
+  implicit def toOptionBoolean(optional: Optional[JBoolean]): Option[Boolean] = if (optional.isPresent) Some(optional.get) else None
 
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
 
@@ -51,7 +52,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
   def calculateThreshold(@RequestParam(value = "studentType") studentType: Optional[String],
-                         @RequestParam(value = "innerLondon") innerLondon: Optional[java.lang.Boolean],
+                         @RequestParam(value = "innerLondon") innerLondon: Optional[JBoolean],
                          @RequestParam(value = "courseLength", defaultValue = "0") courseLength: Optional[Integer],
                          @RequestParam(value = "tuitionFees", required = false) tuitionFees: Optional[JBigDecimal],
                          @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: Optional[JBigDecimal],
