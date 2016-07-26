@@ -77,7 +77,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                          @RequestParam(value = "toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) toDate: Optional[LocalDate],
                          @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: Optional[LocalDate]
                         ): ResponseEntity[AccountDailyBalanceStatusResponse] = {
-    val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-","")) else None
+    val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
     val validDates = validateDates(fromDate, toDate)
 
     val response = if (validDates.isLeft) validDates.left.get
@@ -99,10 +99,10 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                                  fromDateOption: Option[LocalDate], toDateOption: Option[LocalDate]): ResponseEntity[AccountDailyBalanceStatusResponse] = {
 
     val response = for {sortCode <- sortCodeOption
-         accountNumber <- accountNumberOption
-         minimum <- minimumOption
-         fromDate <- fromDateOption
-         toDate <- toDateOption
+                        accountNumber <- accountNumberOption
+                        minimum <- minimumOption
+                        fromDate <- fromDateOption
+                        toDate <- toDateOption
     } yield {
       val bankAccount = Account(sortCode, accountNumber)
 
@@ -156,13 +156,14 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
     if (fromDate.isEmpty) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_FROM_DATE, HttpStatus.BAD_REQUEST))
     else if (toDate.isEmpty) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
     else {
-      val validDates = for {from <- fromDate
-                            to <- toDate
-      } yield {
-        if (!from.isBefore(to) || (!from.plusDays(accountStatusChecker.numberConsecutiveDays - 1).equals(to)))
-          Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DATES(accountStatusChecker.numberConsecutiveDays - 1), HttpStatus.BAD_REQUEST))
-        else Right(true)
-      }
+      val validDates =
+        for {from <- fromDate
+             to <- toDate
+        } yield {
+          if (!from.isBefore(to) || (!from.plusDays(accountStatusChecker.numberConsecutiveDays - 1).equals(to)))
+            Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DATES(accountStatusChecker.numberConsecutiveDays - 1), HttpStatus.BAD_REQUEST))
+          else Right(true)
+        }
       validDates.get
     }
   }
