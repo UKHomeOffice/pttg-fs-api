@@ -37,6 +37,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   val INVALID_TUITION_FEES_PAID = getMessage("invalid.tuition.fees.paid")
   val INVALID_ACCOMMODATION_FEES_PAID = getMessage("invalid.accommodation.fees.paid")
   val INVALID_DEPENDANTS = getMessage("invalid.dependants.value")
+  val INVALID_IN_LONDON = getMessage("invalid.in.london.value")
 
   def INVALID_COURSE_LENGTH(params: Int*) = getMessage("invalid.course.length", params)
 
@@ -99,6 +100,10 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     studentTypeChecker.getStudentType(studentType.getOrElse(""))
   }
 
+  def validateInnerLondon(inLondon: Option[Boolean]): Boolean = {
+    inLondon.isDefined
+  }
+
   def setScale(value: Option[JBigDecimal]): Option[JBigDecimal] = value.map(v => v.setScale(BIG_DECIMAL_SCALE, JBigDecimal.ROUND_HALF_UP))
 
   def calculateThresholdForStudentType(studentType: StudentType,
@@ -124,6 +129,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
         } else if (!validateDependants(dependants)) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
+        } else if (!validateInnerLondon(innerLondon)) {
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_IN_LONDON, HttpStatus.BAD_REQUEST)
         } else {
           val thresholdResponse = calculateNonDoctorate(innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
           new ResponseEntity[ThresholdResponse](thresholdResponse.get, HttpStatus.OK)
@@ -138,6 +145,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
         } else if (!validateDependants(dependants)) {
           buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
+        } else if (!validateInnerLondon(innerLondon)) {
+          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_IN_LONDON, HttpStatus.BAD_REQUEST)
         } else {
           val thresholdResponse = calculateDoctorate(innerLondon, courseLength, accommodationFeesPaid, dependants)
           new ResponseEntity[ThresholdResponse](thresholdResponse.get, HttpStatus.OK)
@@ -163,7 +172,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
   def calculateNonDoctorate(innerLondon: Option[Boolean], courseLength: Option[Int],
                             tuitionFees: Option[JBigDecimal], tuitionFeesPaid: Option[JBigDecimal],
-                            accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int] ): Option[ThresholdResponse] = {
+                            accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int]): Option[ThresholdResponse] = {
 
     for {inner <- innerLondon
          length <- courseLength
