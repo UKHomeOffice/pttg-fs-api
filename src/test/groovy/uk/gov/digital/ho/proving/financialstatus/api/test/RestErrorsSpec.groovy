@@ -16,12 +16,10 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfig
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
-import static TestUtils.getMessageSource
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-
 /**
  * @Author Home Office Digital
  */
@@ -70,7 +68,7 @@ class RestErrorsSpec extends Specification {
         testDataLoader?.clearTestData()
     }
 
-    def "check for 1 retry on 3 second delay returning 404 status code"() {
+    def "check for 0 retry on 3 second delay returning 404 status code"() {
         // Try once only when we get a 404 error before failing
         given:
         testDataLoader.withDelayedAndStatusResponse(stubUrl, 3, 404)
