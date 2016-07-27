@@ -28,22 +28,12 @@ class AccountStatusChecker @Autowired()(bankService: BankService, @Value("${dail
         areDatesConsecutive(accountDailyBalances)
 
       val firstFailureBalance = getFirstBalanceToFail(accountDailyBalances, threshold)
-      AccountDailyBalanceCheck(fromDate, toDate, threshold, (thresholdDaysPassed && firstFailureBalance.isEmpty), showDate(firstFailureBalance), showBalance(firstFailureBalance))
+      AccountDailyBalanceCheck(fromDate, toDate, threshold, (thresholdDaysPassed && firstFailureBalance.isEmpty),
+        firstFailureBalance.map(_.date), firstFailureBalance.map(_.balance))
     }
   }
 
-
-  def showDate(x: Option[AccountDailyBalance]) = x match {
-    case Some(s) => s.date
-    case None => null
-  }
-
-  def showBalance(x: Option[AccountDailyBalance]) = x match {
-    case Some(s) => s.balance
-    case None => null
-  }
-
-  def getFirstBalanceToFail(accountDailyBalances: AccountDailyBalances, threshold: BigDecimal) = {
+  private def getFirstBalanceToFail(accountDailyBalances: AccountDailyBalances, threshold: BigDecimal) = {
     accountDailyBalances.balances.sortWith((x, y) => x.date.isBefore(y.date)).find(adb => adb.balance < threshold)
   }
 

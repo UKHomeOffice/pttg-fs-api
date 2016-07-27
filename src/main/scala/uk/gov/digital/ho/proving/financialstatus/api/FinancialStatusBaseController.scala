@@ -1,8 +1,8 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
-import java.util.{Locale, Optional}
 import java.lang.{Boolean => JBoolean}
 import java.math.{BigDecimal => JBigDecimal}
+import java.util.{Locale, Optional}
 
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.context.support.ResourceBundleMessageSource
@@ -20,7 +20,7 @@ trait FinancialStatusBaseController extends Auditor with Timer {
 
   val messageSource: ResourceBundleMessageSource
 
-  def getMessage(message: String): String = messageSource.getMessage(message, null, LocaleContextHolder.getLocale)
+  def getMessage(message: String): String = messageSource.getMessage(message, Nil.toArray[Object], LocaleContextHolder.getLocale)
 
   def getMessage(message: String, params: Array[Object]): String = messageSource.getMessage(message, params, LocaleContextHolder.getLocale)
 

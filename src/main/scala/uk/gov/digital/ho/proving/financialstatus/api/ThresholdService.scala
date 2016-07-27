@@ -33,6 +33,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   val INVALID_ACCOMMODATION_FEES_PAID = getMessage("invalid.accommodation.fees.paid")
   val INVALID_DEPENDANTS = getMessage("invalid.dependants.value")
   val INVALID_IN_LONDON = getMessage("invalid.in.london.value")
+  val UNEXPECTED_ERROR = getMessage("unexpected.error")
 
   def INVALID_COURSE_LENGTH(params: Int*) = getMessage("invalid.course.length", params)
 
@@ -114,45 +115,19 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
       case NonDoctorate =>
         val courseMinLength = maintenanceThresholdCalculator.nonDoctorateMinCourseLength
         val courseMaxLength = maintenanceThresholdCalculator.nonDoctorateMaxCourseLength
-        if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH(courseMinLength, courseMaxLength), HttpStatus.BAD_REQUEST)
-        } else if (!validateTuitionFees(setScale(tuitionFees))) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST)
-        } else if (!validateTuitionFeesPaid(setScale(tuitionFeesPaid))) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TUITION_FEES_PAID, HttpStatus.BAD_REQUEST)
-        } else if (!validateAccommodationFeesPaid(setScale(accommodationFeesPaid))) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
-        } else if (!validateDependants(dependants)) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
-        } else if (!validateInnerLondon(innerLondon)) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_IN_LONDON, HttpStatus.BAD_REQUEST)
-        } else {
-          val thresholdResponse = calculateNonDoctorate(innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
-          new ResponseEntity[ThresholdResponse](thresholdResponse.get, HttpStatus.OK)
-        }
+        validateAndCalculateNonDoctorate(innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseMinLength, courseMaxLength)
 
       case Doctorate | DoctorDentist =>
         val courseMinLength = maintenanceThresholdCalculator.doctorateMinCourseLength
         val courseMaxLength = maintenanceThresholdCalculator.doctorateMaxCourseLength
-        if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH(courseMinLength, courseMaxLength), HttpStatus.BAD_REQUEST)
-        } else if (!validateAccommodationFeesPaid(setScale(accommodationFeesPaid))) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
-        } else if (!validateDependants(dependants)) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
-        } else if (!validateInnerLondon(innerLondon)) {
-          buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_IN_LONDON, HttpStatus.BAD_REQUEST)
-        } else {
-          val thresholdResponse = calculateDoctorate(innerLondon, courseLength, accommodationFeesPaid, dependants)
-          new ResponseEntity[ThresholdResponse](thresholdResponse.get, HttpStatus.OK)
-        }
+        validateAndCalculateDoctorDentist(innerLondon, courseLength, accommodationFeesPaid, dependants, courseMinLength, courseMaxLength)
       case Unknown(unknownType) =>
         buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE(studentTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
     }
   }
 
-  def calculateDoctorate(innerLondon: Option[Boolean], courseLength: Option[Int],
-                         accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int]): Option[ThresholdResponse] = {
+  def calculateDoctorDentist(innerLondon: Option[Boolean], courseLength: Option[Int],
+                             accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int]): Option[ThresholdResponse] = {
 
     for {inner <- innerLondon
          length <- courseLength
@@ -160,7 +135,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          deps <- dependants
     } yield {
       new ThresholdResponse(
-        maintenanceThresholdCalculator.calculateDoctorate(inner, length, aFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP), deps),
+        Some(maintenanceThresholdCalculator.calculateDoctorate(inner, length, aFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP), deps)),
         StatusResponse(HttpStatus.OK.toString, OK))
     }
   }
@@ -177,11 +152,51 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          deps <- dependants
     } yield {
       new ThresholdResponse(
-        maintenanceThresholdCalculator.calculateNonDoctorate(inner, length,
+        Some(maintenanceThresholdCalculator.calculateNonDoctorate(inner, length,
           tFees,
           tFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP),
-          aFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP), deps),
+          aFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP), deps)),
         StatusResponse(HttpStatus.OK.toString, OK))
+    }
+  }
+
+  def validateAndCalculateDoctorDentist(innerLondon: Option[Boolean], courseLength: Option[Int], accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int], courseMinLength: Int, courseMaxLength: Int): ResponseEntity[ThresholdResponse] = {
+    if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH(courseMinLength, courseMaxLength), HttpStatus.BAD_REQUEST)
+    } else if (!validateAccommodationFeesPaid(setScale(accommodationFeesPaid))) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
+    } else if (!validateDependants(dependants)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
+    } else if (!validateInnerLondon(innerLondon)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_IN_LONDON, HttpStatus.BAD_REQUEST)
+    } else {
+      val thresholdResponse = calculateDoctorDentist(innerLondon, courseLength, accommodationFeesPaid, dependants)
+      thresholdResponse match {
+        case Some(response) => new ResponseEntity[ThresholdResponse](response, HttpStatus.OK)
+        case None => buildErrorResponse(headers, TEMP_ERROR_CODE, UNEXPECTED_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
+    }
+  }
+
+  def validateAndCalculateNonDoctorate(innerLondon: Option[Boolean], courseLength: Option[Int], tuitionFees: Option[JBigDecimal], tuitionFeesPaid: Option[JBigDecimal], accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int], courseMinLength: Int, courseMaxLength: Int): ResponseEntity[ThresholdResponse] = {
+    if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH(courseMinLength, courseMaxLength), HttpStatus.BAD_REQUEST)
+    } else if (!validateTuitionFees(setScale(tuitionFees))) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST)
+    } else if (!validateTuitionFeesPaid(setScale(tuitionFeesPaid))) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TUITION_FEES_PAID, HttpStatus.BAD_REQUEST)
+    } else if (!validateAccommodationFeesPaid(setScale(accommodationFeesPaid))) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
+    } else if (!validateDependants(dependants)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
+    } else if (!validateInnerLondon(innerLondon)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_IN_LONDON, HttpStatus.BAD_REQUEST)
+    } else {
+      val thresholdResponse = calculateNonDoctorate(innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+      thresholdResponse match {
+        case Some(response) => new ResponseEntity[ThresholdResponse](response, HttpStatus.OK)
+        case None => buildErrorResponse(headers, TEMP_ERROR_CODE, UNEXPECTED_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+      }
     }
   }
 

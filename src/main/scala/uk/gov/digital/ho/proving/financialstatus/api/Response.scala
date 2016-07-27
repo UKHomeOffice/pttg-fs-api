@@ -13,20 +13,20 @@ case class StatusResponse(code: String, message: String)
   and use the @JsonInclude(Include.NON_NULL) annotation to ignore them.
  */
 case object AccountDailyBalanceStatusResponse {
-  def apply(dailyBalanceCheck: AccountDailyBalanceCheck, status: StatusResponse): AccountDailyBalanceStatusResponse = {
-    AccountDailyBalanceStatusResponse(null, dailyBalanceCheck, status)
+  def apply(dailyBalanceCheck: Option[AccountDailyBalanceCheck], status: StatusResponse): AccountDailyBalanceStatusResponse = {
+    AccountDailyBalanceStatusResponse(None, dailyBalanceCheck, status)
   }
 
   def apply(status: StatusResponse): AccountDailyBalanceStatusResponse = {
-    AccountDailyBalanceStatusResponse(null, null, status)
+    AccountDailyBalanceStatusResponse(None, None, status)
   }
 }
-case class AccountDailyBalanceStatusResponse(@JsonInclude(Include.NON_NULL) account: Account,
-                                             @JsonInclude(Include.NON_NULL) @JsonUnwrapped dailyBalanceCheck: AccountDailyBalanceCheck,
-                                             @JsonInclude(Include.NON_NULL) status: StatusResponse)
+case class AccountDailyBalanceStatusResponse(@JsonInclude(Include.NON_EMPTY) account: Option[Account],
+                                             @JsonInclude(Include.NON_EMPTY) @JsonUnwrapped dailyBalanceCheck: Option[AccountDailyBalanceCheck],
+                                             @JsonInclude(Include.NON_EMPTY) status: StatusResponse)
 
 case object ThresholdResponse {
-  def apply(status: StatusResponse): ThresholdResponse = ThresholdResponse(null, status)
+  def apply(status: StatusResponse): ThresholdResponse = ThresholdResponse(None, status)
 }
-case class ThresholdResponse(threshold: BigDecimal, @JsonInclude(Include.NON_NULL) status: StatusResponse)
+case class ThresholdResponse(@JsonInclude(Include.NON_EMPTY)threshold: Option[BigDecimal], @JsonInclude(Include.NON_NULL) status: StatusResponse)
 

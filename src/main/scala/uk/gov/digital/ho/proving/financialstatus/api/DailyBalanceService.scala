@@ -1,6 +1,5 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
-import java.lang.{Boolean => JBoolean}
 import java.math.{BigDecimal => JBigDecimal}
 import java.net.SocketTimeoutException
 import java.time.LocalDate
@@ -47,6 +46,8 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
   val INVALID_FROM_DATE = getMessage("invalid.from.date")
   val INVALID_TO_DATE = getMessage("invalid.to.date")
 
+  val UNEXPECTED_ERROR = getMessage("unexpected.error")
+
   def NO_RECORDS_FOR_ACCOUNT(params: String*) = getMessage("no.records.for.account", params)
 
   def INVALID_DATES(params: Int*) = getMessage("invalid.dates", params)
@@ -68,14 +69,11 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                          @RequestParam(value = "toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) toDate: Optional[LocalDate],
                          @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: Optional[LocalDate]
                         ): ResponseEntity[AccountDailyBalanceStatusResponse] = {
+
     val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
     val validDates = validateDates(fromDate, toDate)
 
-    val response = if (validDates.isLeft) validDates.left.get
-    else if (!validateAccountNumber(accountNumber)) buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOUNT_NUMBER, HttpStatus.BAD_REQUEST)
-    else if (!validateSortCode(cleanSortCode)) buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_SORT_CODE, HttpStatus.BAD_REQUEST)
-    else if (!validateMinimum(minimum)) buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_MINIMUM_VALUE, HttpStatus.BAD_REQUEST)
-    else validateDailyBalanceStatus(cleanSortCode, accountNumber, minimum, fromDate, toDate)
+    val response = validateInputAndCheckBalance(accountNumber, minimum, toDate, fromDate, cleanSortCode, validDates)
 
     timer("dailyBalances") {
       val auditMessage = s"validateDailyBalance: accountNumber = $accountNumber, " +
@@ -83,6 +81,27 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
       audit(auditMessage) {
         response
       }
+    }
+  }
+
+  def validateInputAndCheckBalance(accountNumber: Optional[String], minimum: Optional[JBigDecimal], toDate: Optional[LocalDate],
+                                   fromDate: Optional[LocalDate], cleanSortCode: Option[String],
+                                   validDates: Either[ResponseEntity[AccountDailyBalanceStatusResponse], Boolean]): ResponseEntity[AccountDailyBalanceStatusResponse] = {
+
+    if (validDates.isLeft) {
+      validDates.left.get
+    }
+    else if (!validateAccountNumber(accountNumber)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOUNT_NUMBER, HttpStatus.BAD_REQUEST)
+    }
+    else if (!validateSortCode(cleanSortCode)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_SORT_CODE, HttpStatus.BAD_REQUEST)
+    }
+    else if (!validateMinimum(minimum)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_MINIMUM_VALUE, HttpStatus.BAD_REQUEST)
+    }
+    else {
+      validateDailyBalanceStatus(cleanSortCode, accountNumber, minimum, fromDate, toDate)
     }
   }
 
@@ -100,7 +119,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
       val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum)
 
       dailyAccountBalanceCheck match {
-        case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(bankAccount, balanceCheck, StatusResponse("200", OK)), HttpStatus.OK)
+        case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck), StatusResponse("200", OK)), HttpStatus.OK)
 
         case Failure(exception: HttpClientErrorException) =>
           exception.getStatusCode match {
@@ -128,7 +147,8 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
             StatusResponse(TEMP_ERROR_CODE, exception.getMessage)), HttpStatus.INTERNAL_SERVER_ERROR)
       }
     }
-    response.get
+    response.getOrElse(new ResponseEntity(AccountDailyBalanceStatusResponse(
+      StatusResponse(TEMP_ERROR_CODE, UNEXPECTED_ERROR)), HttpStatus.INTERNAL_SERVER_ERROR))
   }
 
   def buildErrorResponse(headers: HttpHeaders, statusCode: String,
@@ -144,18 +164,25 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
   def validateDates(fromDate: Option[LocalDate], toDate: Option[LocalDate]): Either[ResponseEntity[AccountDailyBalanceStatusResponse], Boolean] = {
 
-    if (fromDate.isEmpty) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_FROM_DATE, HttpStatus.BAD_REQUEST))
-    else if (toDate.isEmpty) Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
+    if (fromDate.isEmpty) {
+      Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_FROM_DATE, HttpStatus.BAD_REQUEST))
+    }
+    else if (toDate.isEmpty) {
+      Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
+    }
     else {
       val validDates =
         for {from <- fromDate
              to <- toDate
         } yield {
-          if (!from.isBefore(to) || (!from.plusDays(accountStatusChecker.numberConsecutiveDays - 1).equals(to)))
+          if (!from.isBefore(to) || (!from.plusDays(accountStatusChecker.numberConsecutiveDays - 1).equals(to))) {
             Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DATES(accountStatusChecker.numberConsecutiveDays - 1), HttpStatus.BAD_REQUEST))
-          else Right(true)
+          }
+          else {
+            Right(true)
+          }
         }
-      validDates.get
+      validDates.getOrElse(Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DATES(accountStatusChecker.numberConsecutiveDays - 1), HttpStatus.INTERNAL_SERVER_ERROR)))
     }
   }
 
