@@ -26,7 +26,6 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfig
 
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
-
 /**
  * For wiremock-backed tests use the "test" profile in the @ActiveProfiles annotation:
  *           - This will launch the wiremock server using the application-test.properties
@@ -247,6 +246,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         }
     }
 
+
     @Given("^the test data for account (.+)\$")
     public void the_test_data_for_account_number(String accountNumber) {
         if (wiremock) {
@@ -293,6 +293,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")
     public void fsps_Tier_four_general_Case_Worker_tool_API_provides_the_following_result(DataTable arg1) {
         validateResult(arg1)
+
     }
 
     @Then("^the service displays the following result\$")
