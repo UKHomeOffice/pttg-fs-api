@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 
 
 @RunWith(CucumberWithSerenity.class)
-@CucumberOptions(features={"src/test/specs/design-r4"} , glue={"steps"})
+@CucumberOptions(features={"src/test/specs/design-r5"} , glue={"steps"})
 
 public class AcceptanceTests {
 }

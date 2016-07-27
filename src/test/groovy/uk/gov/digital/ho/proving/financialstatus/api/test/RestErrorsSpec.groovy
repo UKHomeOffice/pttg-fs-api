@@ -70,7 +70,7 @@ class RestErrorsSpec extends Specification {
         testDataLoader?.clearTestData()
     }
 
-    def "check for 1 retry on 3 second delay returning 404 status code"() {
+    def "check for 0 retry on 3 second delay returning 404 status code"() {
         // Try once only when we get a 404 error before failing
         given:
         testDataLoader.withDelayedAndStatusResponse(stubUrl, 3, 404)
