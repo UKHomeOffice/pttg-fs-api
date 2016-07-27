@@ -21,12 +21,6 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                                     val studentTypeChecker: StudentTypeChecker
                                    ) extends FinancialStatusBaseController {
 
-  implicit def toOption[T](optional: Optional[T]): Option[T] = if (optional.isPresent) Some(optional.get) else None
-
-  implicit def toOptionInt(optional: Optional[Integer]): Option[Int] = if (optional.isPresent) Some(optional.get) else None
-
-  implicit def toOptionBoolean(optional: Optional[JBoolean]): Option[Boolean] = if (optional.isPresent) Some(optional.get) else None
-
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
 
   val BIG_DECIMAL_SCALE = 2
@@ -52,7 +46,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
   def calculateThreshold(@RequestParam(value = "studentType") studentType: Optional[String],
-                         @RequestParam(value = "innerLondon") innerLondon: Optional[JBoolean],
+                         @RequestParam(value = "inLondon") inLondon: Optional[JBoolean],
                          @RequestParam(value = "courseLength", defaultValue = "0") courseLength: Optional[Integer],
                          @RequestParam(value = "tuitionFees", required = false) tuitionFees: Optional[JBigDecimal],
                          @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: Optional[JBigDecimal],
@@ -63,11 +57,11 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     val validatedStudentType = validateStudentType(studentType)
 
     timer("calculateThresholdForStudentType") {
-      val auditMessage = s"calculateThreshold: validatedStudentType = $validatedStudentType, innerLondon = $innerLondon, " +
+      val auditMessage = s"calculateThreshold: validatedStudentType = $validatedStudentType, innerLondon = $inLondon, " +
         s"courseLength = $courseLength, tuitionFees = $tuitionFees, tuitionFeesPaid = $tuitionFeesPaid, " +
         s"accommodationFeesPaid = $accommodationFeesPaid, dependants = $dependants"
       audit(auditMessage) {
-        calculateThresholdForStudentType(validatedStudentType, innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        calculateThresholdForStudentType(validatedStudentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
       }
     }
   }

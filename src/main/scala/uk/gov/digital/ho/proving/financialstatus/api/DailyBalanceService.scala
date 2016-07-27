@@ -1,7 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
-import java.math.{BigDecimal => JBigDecimal}
 import java.lang.{Boolean => JBoolean}
+import java.math.{BigDecimal => JBigDecimal}
 import java.net.SocketTimeoutException
 import java.time.LocalDate
 import java.util.Optional
@@ -25,15 +25,6 @@ import scala.util._
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
                                        val messageSource: ResourceBundleMessageSource) extends FinancialStatusBaseController {
-
-  implicit def toOption[T](optional: Optional[T]): Option[T] = if (optional.isPresent) Some(optional.get) else None
-
-  implicit def toOptionInt(optional: Optional[Integer]): Option[Int] = if (optional.isPresent) Some(optional.get) else None
-
-  implicit def toOptionBoolean(optional: Optional[JBoolean]): Option[Boolean] = if (optional.isPresent) Some(optional.get) else None
-
-  implicit def toOptionBigDecimal(optional: Optional[JBigDecimal]): Option[BigDecimal] = if (optional.isPresent) Some(optional.get) else None
-
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
