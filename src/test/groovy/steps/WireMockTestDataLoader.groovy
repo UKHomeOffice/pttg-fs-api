@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.http.Fault
 import com.google.common.net.HostAndPort
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
@@ -65,10 +66,6 @@ class WireMockTestDataLoader {
 
         println ''
         LOGGER.debug("Completed Stubbing Response data with $fileName")
-    }
-
-    def clearTestData() {
-        wireMockServer.stop()
     }
 
     def withDelayedResponse(String url, int delay) {
@@ -135,7 +132,18 @@ class WireMockTestDataLoader {
             .withStatus(status)));
 
         println ''
-        LOGGER.debug("Completed stubbing response with status")
+        LOGGER.debug("Completed stubbing response with status $status")
     }
 
+    def withServiceDown() {
+        stop()
+    }
+
+    def stop() {
+        wireMockServer.stop()
+    }
+
+    def verifyGetCount(int count, String url){
+        verify(count, getRequestedFor(urlPathMatching(url)))
+    }
 }

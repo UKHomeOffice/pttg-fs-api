@@ -67,7 +67,7 @@ class RestErrorsSpec extends Specification {
     }
 
     def cleanup() {
-        testDataLoader?.clearTestData()
+        testDataLoader?.stop()
     }
 
     def "check for 0 retry on 3 second delay returning 404 status code"() {
