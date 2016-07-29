@@ -1,14 +1,14 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
-import java.math.{BigDecimal => JBigDecimal}
 import java.lang.{Boolean => JBoolean}
+import java.math.{BigDecimal => JBigDecimal}
 import java.util.Optional
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.PropertySource
 import org.springframework.context.support.ResourceBundleMessageSource
-import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
+import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation._
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
@@ -23,7 +23,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
 
-  val courseLengthPattern = """^[0-9]$""".r
+  val courseLengthPattern = """^[1-9]$""".r
 
   logStartupInformation()
 
@@ -49,58 +49,27 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] = {
-    new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
-  }
-
-  def validateDependants(dependants: Option[Int]): Boolean = {
-    dependants.exists(_ >= 0)
-  }
-
-  def validateCourseLength(courseLength: Option[Int], min: Int): Boolean = {
-    courseLength.exists(length => min <= length )
-  }
-
-  def validateTuitionFees(tuitionFees: Option[JBigDecimal]): Boolean = {
-    tuitionFees.exists(fees => fees.compareTo(JBigDecimal.ZERO) > -1)
-  }
-
-  def validateTuitionFeesPaid(tuitionFeesPaid: Option[JBigDecimal]): Boolean = {
-    tuitionFeesPaid.exists(feesPaid => feesPaid.compareTo(JBigDecimal.ZERO) > -1)
-  }
-
-  def validateAccommodationFeesPaid(accommodationFeesPaid: Option[JBigDecimal]): Boolean = {
-    accommodationFeesPaid.exists(feesPaid => feesPaid.compareTo(JBigDecimal.ZERO) > -1)
-  }
-
-  def validateStudentType(studentType: Option[String]): StudentType = {
-    studentTypeChecker.getStudentType(studentType.getOrElse(""))
-  }
-
-  def validateInnerLondon(inLondon: Option[Boolean]): Boolean = {
-    inLondon.isDefined
-  }
-
-  def setScale(value: Option[JBigDecimal]): Option[JBigDecimal] = value.map(v => v.setScale(BIG_DECIMAL_SCALE, JBigDecimal.ROUND_HALF_UP))
-
-  def calculateThresholdForStudentType(studentType: StudentType,
-                                       innerLondon: Option[Boolean],
-                                       courseLength: Option[Int],
-                                       tuitionFees: Option[JBigDecimal],
-                                       tuitionFeesPaid: Option[JBigDecimal],
-                                       accommodationFeesPaid: Option[JBigDecimal],
-                                       dependants: Option[Int]): ResponseEntity[ThresholdResponse] = {
+  private def calculateThresholdForStudentType(studentType: StudentType,
+                                               innerLondon: Option[Boolean],
+                                               courseLength: Option[Int],
+                                               tuitionFees: Option[JBigDecimal],
+                                               tuitionFeesPaid: Option[JBigDecimal],
+                                               accommodationFeesPaid: Option[JBigDecimal],
+                                               dependants: Option[Int]): ResponseEntity[ThresholdResponse] = {
 
     studentType match {
 
       case NonDoctorate =>
         val courseMinLength = maintenanceThresholdCalculator.nonDoctorateMinCourseLength
         val courseMaxLength = maintenanceThresholdCalculator.nonDoctorateMaxCourseLength
-        validateAndCalculateNonDoctorate(innerLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseMinLength, courseMaxLength)
+
+        validateAndCalculateNonDoctorate(innerLondon, courseLength, tuitionFees, tuitionFeesPaid,
+          accommodationFeesPaid, dependants, courseMinLength, courseMaxLength)
 
       case Doctorate | DoctorDentist =>
         val courseMinLength = maintenanceThresholdCalculator.doctorateMinCourseLength
         val courseMaxLength = maintenanceThresholdCalculator.doctorateMaxCourseLength
+
         validateAndCalculateDoctorDentist(innerLondon, courseLength, accommodationFeesPaid, dependants, courseMinLength, courseMaxLength)
 
       case Unknown(unknownType) =>
@@ -108,8 +77,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  def calculateDesDoctorDentist(innerLondon: Option[Boolean], courseLength: Option[Int],
-                                accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int]): Option[ThresholdResponse] = {
+  private def calculateDesDoctorDentist(innerLondon: Option[Boolean], courseLength: Option[Int],
+                                        accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int]): Option[ThresholdResponse] = {
 
     for {inner <- innerLondon
          length <- courseLength
@@ -122,9 +91,9 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  def calculateNonDoctorate(innerLondon: Option[Boolean], courseLength: Option[Int],
-                            tuitionFees: Option[JBigDecimal], tuitionFeesPaid: Option[JBigDecimal],
-                            accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int]): Option[ThresholdResponse] = {
+  private def calculateNonDoctorate(innerLondon: Option[Boolean], courseLength: Option[Int],
+                                    tuitionFees: Option[JBigDecimal], tuitionFeesPaid: Option[JBigDecimal],
+                                    accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int]): Option[ThresholdResponse] = {
 
     for {inner <- innerLondon
          length <- courseLength
@@ -142,7 +111,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  def validateAndCalculateDoctorDentist(innerLondon: Option[Boolean], courseLength: Option[Int], accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int], courseMinLength: Int, courseMaxLength: Int): ResponseEntity[ThresholdResponse] = {
+  private def validateAndCalculateDoctorDentist(innerLondon: Option[Boolean], courseLength: Option[Int], accommodationFeesPaid: Option[JBigDecimal],
+                                                dependants: Option[Int], courseMinLength: Int, courseMaxLength: Int): ResponseEntity[ThresholdResponse] = {
     if (!validateCourseLength(courseLength, courseMinLength)) {
       buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
     } else if (!validateAccommodationFeesPaid(setScale(accommodationFeesPaid))) {
@@ -160,7 +130,9 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  def validateAndCalculateNonDoctorate(innerLondon: Option[Boolean], courseLength: Option[Int], tuitionFees: Option[JBigDecimal], tuitionFeesPaid: Option[JBigDecimal], accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int], courseMinLength: Int, courseMaxLength: Int): ResponseEntity[ThresholdResponse] = {
+  private def validateAndCalculateNonDoctorate(innerLondon: Option[Boolean], courseLength: Option[Int], tuitionFees: Option[JBigDecimal],
+                                               tuitionFeesPaid: Option[JBigDecimal], accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int],
+                                               courseMinLength: Int, courseMaxLength: Int): ResponseEntity[ThresholdResponse] = {
     if (!validateCourseLength(courseLength, courseMinLength)) {
       buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
     } else if (!validateTuitionFees(setScale(tuitionFees))) {
@@ -182,8 +154,27 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  override def logStartupInformation(): Unit = {
-    LOGGER.info(maintenanceThresholdCalculator.parameters)
-  }
+  private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] =
+    new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
+
+
+  private def validateDependants(dependants: Option[Int]): Boolean = dependants.exists(_ >= 0)
+
+  private def validateCourseLength(courseLength: Option[Int], min: Int): Boolean = courseLength.exists(length => min <= length)
+
+  private def validateTuitionFees(tuitionFees: Option[JBigDecimal]): Boolean = tuitionFees.exists(fees => fees.compareTo(JBigDecimal.ZERO) > -1)
+
+  private def validateTuitionFeesPaid(tuitionFeesPaid: Option[JBigDecimal]): Boolean = tuitionFeesPaid.exists(feesPaid => feesPaid.compareTo(JBigDecimal.ZERO) > -1)
+
+  private def validateAccommodationFeesPaid(accommFeesPaid: Option[JBigDecimal]): Boolean = accommFeesPaid.exists(feesPaid => feesPaid.compareTo(JBigDecimal.ZERO) > -1)
+
+  private def validateStudentType(studentType: Option[String]): StudentType = studentTypeChecker.getStudentType(studentType.getOrElse(""))
+
+  private def validateInnerLondon(inLondon: Option[Boolean]): Boolean = inLondon.isDefined
+
+  private def setScale(value: Option[JBigDecimal]): Option[JBigDecimal] = value.map(v => v.setScale(BIG_DECIMAL_SCALE, JBigDecimal.ROUND_HALF_UP))
+
+  override def logStartupInformation(): Unit = LOGGER.info(maintenanceThresholdCalculator.parameters)
+
 
 }
