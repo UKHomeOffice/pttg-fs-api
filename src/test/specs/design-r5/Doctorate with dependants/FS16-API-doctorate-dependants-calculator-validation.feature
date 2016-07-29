@@ -115,19 +115,6 @@ Feature: Validation of the API fields and data
             | Status code    | 0000                                           |
             | Status message | Parameter error: Invalid accommodationFeesPaid |
 
-    Scenario: The API is provided with incorrect  Accommodation fees already paid - >£1,265
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
-            | In London                       | Yes        |
-            | Course length                   | 1          |
-            | Accommodation fees already paid | 3214       |
-            | Number of dependants            | 1          |
-        Then the service displays the following result
-            | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
-            | Status message | Parameter error: Invalid accommodationFeesPaid |
 
         ######################### Validation on the Dependant field #########################
 

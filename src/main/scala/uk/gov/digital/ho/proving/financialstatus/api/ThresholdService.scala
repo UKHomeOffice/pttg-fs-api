@@ -70,8 +70,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   }
 
   def validateAccommodationFeesPaid(accommodationFeesPaid: Option[JBigDecimal]): Boolean = {
-    accommodationFeesPaid.exists(feesPaid => feesPaid.compareTo(JBigDecimal.ZERO) > -1 &&
-      feesPaid.compareTo(new JBigDecimal(maintenanceThresholdCalculator.maxAccommodation)) < 1)
+    accommodationFeesPaid.exists(feesPaid => feesPaid.compareTo(JBigDecimal.ZERO) > -1)
   }
 
   def validateStudentType(studentType: Option[String]): StudentType = {

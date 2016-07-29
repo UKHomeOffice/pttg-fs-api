@@ -23,13 +23,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
         innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
         false       | 1                    | 0.00                  | 5          || 4415.00
         false       | 2                    | 0.00                  | 7          || 11550.00
-//        false       | 3                    | 0.00                  | 0          || 2030.00
-//        false       | 4                    | 0.00                  | 6          || 18350.00
-//        false       | 5                    | 0.00                  | 5          || 19030.00
-//        false       | 6                    | 0.00                  | 1          || 6110.00
-//        false       | 7                    | 0.00                  | 14         || 68670.00
-//        false       | 8                    | 0.00                  | 0          || 2030.00
-//        false       | 9                    | 0.00                  | 11         || 69350.00
+
 
     }
 
@@ -42,13 +36,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
         innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
         true        | 1                    | 0.00                  | 4          || 4645.00
         true        | 2                    | 0.00                  | 15         || 27880.00
-//        true        | 3                    | 0.00                  | 4          || 12670.00
-//        true        | 4                    | 0.00                  | 7          || 26190.00
-//        true        | 5                    | 0.00                  | 0          || 2530.00
-//        true        | 6                    | 0.00                  | 11         || 58300.00
-//        true        | 7                    | 0.00                  | 9          || 55765.00
-//        true        | 8                    | 0.00                  | 15         || 103930.00
-//        true        | 9                    | 0.00                  | 15         || 116605.00
+
 
     }
 
@@ -68,6 +56,8 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
         false       | 1                    | 206.00                | 9          || 6929.00
         false       | 2                    | 106.00                | 11         || 16884.00
         false       | 1                    | 1245.00               | 0          || 0.00
+        false       | 2                    | 2106.00               | 11         || 15725.00
+        false       | 1                    | 1845.00               | 0          || 0.00
 
     }
 
@@ -78,7 +68,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
-        false       | 2                    | 627.00                | 15         || 21803.00
+        false       | 2                    | 1627.00               | 15         || 21165.00
         false       | 1                    | 270.00                | 10         || 7545.00
         true        | 2                    | 22.00                 | 1          || 4198.00
         true        | 2                    | 636.00                | 9          || 17104.00
@@ -93,7 +83,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
         false       | 1                    | 738.00                | 12         || 8437.00
         true        | 2                    | 73.00                 | 9          || 17667.00
         false       | 1                    | 970.00                | 6          || 4125.00
-        true        | 2                    | 934.00                | 5          || 10046.00
+        true        | 2                    | 1934.00               | 5          || 9715.00
         true        | 1                    | 223.00                | 4          || 4422.00
         true        | 2                    | 1078.00               | 14         || 25112.00
 
