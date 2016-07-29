@@ -26,6 +26,8 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfig
 
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
+import static com.jayway.restassured.RestAssured.given
+
 /**
  * For wiremock-backed tests use the "test" profile in the @ActiveProfiles annotation:
  *           - This will launch the wiremock server using the application-test.properties
@@ -89,7 +91,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @After
     def tearDown() {
-        testDataLoader?.clearTestData()
+        testDataLoader?.stop()
     }
 
     def String toCamelCase(String s) {
@@ -201,7 +203,8 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
             if (Keys != "account") {
 
-                assert entries.containsValue(jsonValue) //: "data table is missing or has incorrect value for json key [$Keys] and value [$jsonValue]"
+                assert entries.containsValue(jsonValue)
+                //: "data table is missing or has incorrect value for json key [$Keys] and value [$jsonValue]"
             }
 
             println "===========>" + jsonValue
@@ -246,6 +249,14 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         }
     }
 
+    def responseStatusFor(String url) {
+        Response response = given()
+            .get(url)
+            .then().extract().response();
+
+        return response.getStatusCode();
+    }
+
 
     @Given("^the test data for account (.+)\$")
     public void the_test_data_for_account_number(String accountNumber) {
@@ -264,6 +275,16 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @Given("^A Service is consuming the FSPS Calculator API\$")
     public void a_Service_is_consuming_the_FSPS_Calculator_API() {
 
+    }
+
+    @Given("^the barclays response has status (\\d+)\$")
+    public void the_barclays_response_has_status(int status) throws Throwable {
+        testDataLoader.withResponseStatus(balancesUrlRegex, status)
+    }
+
+    @Given("^the barclays api is unreachable\$")
+    public void the_barclays_api_is_unreachable() throws Throwable {
+        testDataLoader.withServiceDown()
     }
 
     @When("^the Financial Status API is invoked with the following:\$")
@@ -293,7 +314,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")
     public void fsps_Tier_four_general_Case_Worker_tool_API_provides_the_following_result(DataTable arg1) {
         validateResult(arg1)
-
     }
 
     @Then("^the service displays the following result\$")
@@ -301,5 +321,24 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         validateResult(arg1)
     }
 
+    @Then("^the health check response status should be (\\d+)\$")
+    def the_response_status_should_be(int expected) {
+
+        def result = getHealthCheckStatus()
+
+        // Sometimes needs a retry, not sure why
+        2.times {
+            if (result != expected) {
+                sleep(500)
+                result = getHealthCheckStatus()
+            }
+        }
+
+        assert result == expected
+    }
+
+    private int getHealthCheckStatus() {
+        responseStatusFor("http://localhost:" + serverPort + "/health")
+    }
 
 }
