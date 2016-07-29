@@ -52,7 +52,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                                       |
             | Status code    | 0000                                                                      |
-            | Status message | Parameter error: Invalid courseLength, must be in the range 1 to 9 months |
+            | Status message | Parameter error: Invalid courseLength, must be greater than zero |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-9
         Given A Service is consuming the FSPS Calculator API
@@ -67,21 +67,6 @@ Feature: Validation of the API fields and data
             | HTTP Status    | 400                                              |
             | Status code    | 0000                                             |
             | Status message | Parameter conversion error: Invalid courseLength |
-
-    Scenario: The API is provided with incorrect Course Length - more than 9
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Student Type                    | nondoctorate |
-            | In London                       | Yes          |
-            | Course Length                   | 13           |
-            | Total tuition fees              | 3500.50      |
-            | Tuition fees already paid       | 0            |
-            | Accommodation fees already paid | 0            |
-        Then the service displays the following result
-            | HTTP Status    | 400                                                                       |
-            | Status code    | 0000                                                                      |
-            | Status message | Parameter error: Invalid courseLength, must be in the range 1 to 9 months |
-
 
 ######################### Validation on the Accommodation fees already paid field #########################
 

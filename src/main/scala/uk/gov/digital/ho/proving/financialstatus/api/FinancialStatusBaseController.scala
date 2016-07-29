@@ -33,14 +33,13 @@ trait FinancialStatusBaseController extends Auditor with Timer {
 
   val INVALID_SORT_CODE_VALUE = "000000"
   val INVALID_ACCOUNT_NUMBER_VALUE = "00000000"
+  val INVALID_COURSE_LENGTH = getMessage("invalid.course.length")
 
   def INVALID_DATES(params: Int*) = getMessage("invalid.dates", params)
-  def INVALID_COURSE_LENGTH(params: Int*) = getMessage("invalid.course.length", params)
   def INVALID_STUDENT_TYPE(params: String*) = getMessage("invalid.student.type", params)
+  def NO_RECORDS_FOR_ACCOUNT(params: String*) = getMessage("no.records.for.account", params)
 
   val UNEXPECTED_ERROR = getMessage("unexpected.error")
-
-  def NO_RECORDS_FOR_ACCOUNT(params: String*) = getMessage("no.records.for.account", params)
 
   val OK = "OK"
 

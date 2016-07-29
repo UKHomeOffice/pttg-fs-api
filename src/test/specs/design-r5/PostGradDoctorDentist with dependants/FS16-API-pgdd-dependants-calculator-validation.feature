@@ -54,7 +54,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                                       |
             | Status code    | 0000                                                                      |
-            | Status message | Parameter error: Invalid courseLength, must be in the range 1 to 2 months |
+            | Status message | Parameter error: Invalid courseLength, must be greater than zero |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-2
         Given A Service is consuming the FSPS Calculator API
@@ -69,20 +69,6 @@ Feature: Validation of the API fields and data
             | HTTP Status    | 400                                              |
             | Status code    | 0000                                             |
             | Status message | Parameter conversion error: Invalid courseLength |
-
-    Scenario: The API is provided with incorrect Course Length - more than 2
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd       |
-            | The end of 28-day period        | 20/06/2016 |
-            | In London                       | Yes        |
-            | Course Length                   | 3          |
-            | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
-        Then the service displays the following result
-            | HTTP Status    | 400                                                                       |
-            | Status code    | 0000                                                                      |
-            | Status message | Parameter error: Invalid courseLength, must be in the range 1 to 2 months |
 
 
 ######################### Validation on the Accommodation fees already paid field #########################

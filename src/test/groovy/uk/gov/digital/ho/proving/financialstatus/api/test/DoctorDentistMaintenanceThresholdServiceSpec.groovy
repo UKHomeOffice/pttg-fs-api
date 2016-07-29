@@ -144,7 +144,6 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
-        false       | 3                    | 14         | 454.00
         true        | -1                   | 11         | 336.00
         false       | 0                    | 14         | 1044.00
     }

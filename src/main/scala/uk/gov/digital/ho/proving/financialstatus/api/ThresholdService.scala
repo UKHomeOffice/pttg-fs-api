@@ -57,8 +57,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     dependants.exists(_ >= 0)
   }
 
-  def validateCourseLength(courseLength: Option[Int], min: Int, max: Int): Boolean = {
-    courseLength.exists(length => min <= length && length <= max)
+  def validateCourseLength(courseLength: Option[Int], min: Int): Boolean = {
+    courseLength.exists(length => min <= length )
   }
 
   def validateTuitionFees(tuitionFees: Option[JBigDecimal]): Boolean = {
@@ -103,6 +103,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         val courseMinLength = maintenanceThresholdCalculator.doctorateMinCourseLength
         val courseMaxLength = maintenanceThresholdCalculator.doctorateMaxCourseLength
         validateAndCalculateDoctorDentist(innerLondon, courseLength, accommodationFeesPaid, dependants, courseMinLength, courseMaxLength)
+
       case Unknown(unknownType) =>
         buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE(studentTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
     }
@@ -143,8 +144,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   }
 
   def validateAndCalculateDoctorDentist(innerLondon: Option[Boolean], courseLength: Option[Int], accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int], courseMinLength: Int, courseMaxLength: Int): ResponseEntity[ThresholdResponse] = {
-    if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
-      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH(courseMinLength, courseMaxLength), HttpStatus.BAD_REQUEST)
+    if (!validateCourseLength(courseLength, courseMinLength)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
     } else if (!validateAccommodationFeesPaid(setScale(accommodationFeesPaid))) {
       buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST)
     } else if (!validateDependants(dependants)) {
@@ -161,8 +162,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   }
 
   def validateAndCalculateNonDoctorate(innerLondon: Option[Boolean], courseLength: Option[Int], tuitionFees: Option[JBigDecimal], tuitionFeesPaid: Option[JBigDecimal], accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int], courseMinLength: Int, courseMaxLength: Int): ResponseEntity[ThresholdResponse] = {
-    if (!validateCourseLength(courseLength, courseMinLength, courseMaxLength)) {
-      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH(courseMinLength, courseMaxLength), HttpStatus.BAD_REQUEST)
+    if (!validateCourseLength(courseLength, courseMinLength)) {
+      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST)
     } else if (!validateTuitionFees(setScale(tuitionFees))) {
       buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST)
     } else if (!validateTuitionFeesPaid(setScale(tuitionFeesPaid))) {

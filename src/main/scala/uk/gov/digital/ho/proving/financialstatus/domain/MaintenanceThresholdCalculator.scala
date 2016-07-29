@@ -33,9 +33,9 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                             dependants: Int
                            ): BigDecimal = {
 
-    val amount = ((accommodationValue(innerLondon) * courseLengthInMonths)
+    val amount = ((accommodationValue(innerLondon) * courseLengthInMonths.min(nonDoctorateMaxCourseLength))
       + (tuitionFees - tuitionFeesPaid).max(0)
-      + (dependantsValue(innerLondon) * courseLengthInMonths * dependants)
+      + (dependantsValue(innerLondon) * courseLengthInMonths.min(nonDoctorateMaxCourseLength) * dependants)
       - MAXIMUM_ACCOMMODATION.min(accommodationFeesPaid)).max(0)
 
     amount
@@ -44,7 +44,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   def calculateDoctorate(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal, dependants: Int): BigDecimal = {
 
     val amount = ((accommodationValue(innerLondon) * courseLengthInMonths.min(doctorateMaxCourseLength))
-      + (dependantsValue(innerLondon) * courseLengthInMonths * dependants)
+      + (dependantsValue(innerLondon) * courseLengthInMonths.min(doctorateMaxCourseLength) * dependants)
       - MAXIMUM_ACCOMMODATION.min(accommodationFeesPaid)).max(0)
     amount
   }

@@ -160,7 +160,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         true        | 2                    | 6624.00     | 3054.00         | 3.00                  | 8          || 19617.00
         false       | 4                    | 8476.00     | 1758.00         | 652.00                | 11         || 40046.00
         false       | 4                    | 11555.00    | 4773.00         | 602.00                | 1          || 12960.00
-        false       | 9                    | 14248.00    | 2354.00         | 1260.00               | 1          || 25889.00
+        false       | 19                   | 14248.00    | 2354.00         | 1260.00               | 1          || 25889.00
         true        | 6                    | 12883.00    | 1081.00         | 547.00                | 6          || 49265.00
         false       | 7                    | 9428.00     | 1688.00         | 126.00                | 10         || 62319.00
         false       | 6                    | 12320.00    | 4379.00         | 1011.00               | 12         || 61980.00
@@ -183,9 +183,8 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
-        false       | 10                   | 9244.00     | 1855.00         | 0          | 454.00
         true        | -1                   | 9411.00     | 4612.00         | 0          | 336.00
-        false       | 20                   | 7191.00     | 2720.00         | 0          | 1044.00
+        false       |  0                   | 7191.00     | 2720.00         | 0          | 1044.00
     }
 
     def "Tier 4 Non Doctorate - Check invalid characters course length parameters"() {
