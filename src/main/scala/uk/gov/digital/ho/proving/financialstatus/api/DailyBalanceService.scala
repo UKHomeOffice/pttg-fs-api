@@ -27,36 +27,8 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
-  // TODO Temporary error code until these are finalised or removed
-  val TEMP_ERROR_CODE = "0000"
-
-  val BIG_DECIMAL_SCALE = 2
   val sortCodePattern = """^[0-9]{6}$""".r
   val accountNumberPattern = """^[0-9]{8}$""".r
-
-  val headers = new HttpHeaders()
-
-  val INVALID_ACCOUNT_NUMBER = getMessage("invalid.account.number")
-  val INVALID_SORT_CODE = getMessage("invalid.sort.code")
-  val INVALID_MINIMUM_VALUE = getMessage("invalid.minimum.value")
-
-  val CONNECTION_TIMEOUT = getMessage("connection.timeout")
-  val CONNECTION_REFUSED = getMessage("connection.refused")
-  val UNKNOWN_CONNECTION_EXCEPTION = getMessage("unknown.connection.exception")
-  val INVALID_FROM_DATE = getMessage("invalid.from.date")
-  val INVALID_TO_DATE = getMessage("invalid.to.date")
-
-  val UNEXPECTED_ERROR = getMessage("unexpected.error")
-
-  def NO_RECORDS_FOR_ACCOUNT(params: String*) = getMessage("no.records.for.account", params)
-
-  def INVALID_DATES(params: Int*) = getMessage("invalid.dates", params)
-
-  val INVALID_SORT_CODE_VALUE = "000000"
-  val INVALID_ACCOUNT_NUMBER_VALUE = "00000000"
-  val OK = "OK"
-
-  headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 
   logStartupInformation()
 
