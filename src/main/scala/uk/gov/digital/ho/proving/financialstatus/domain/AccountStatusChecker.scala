@@ -24,12 +24,16 @@ class AccountStatusChecker @Autowired()(bankService: BankService, @Value("${dail
     Try {
       val accountDailyBalances = bankService.fetchAccountDailyBalances(account, fromDate, toDate)
 
-      val thresholdDaysPassed = accountDailyBalances.balances.length == numberConsecutiveDays &&
-        areDatesConsecutive(accountDailyBalances)
+      val minimumBalance = accountDailyBalances.balances.minBy(_.balance)
 
-      val firstFailureBalance = getFirstBalanceToFail(accountDailyBalances, threshold)
-      AccountDailyBalanceCheck(fromDate, toDate, threshold, (thresholdDaysPassed && firstFailureBalance.isEmpty),
-        firstFailureBalance.map(_.date), firstFailureBalance.map(_.balance))
+      val thresholdPassed = accountDailyBalances.balances.length == numberConsecutiveDays &&
+        areDatesConsecutive(accountDailyBalances) && minimumBalance.balance >= threshold
+
+      if (minimumBalance.balance < threshold) {
+        AccountDailyBalanceCheck(fromDate, toDate, threshold, thresholdPassed, Option(minimumBalance.date), Option(minimumBalance.balance))
+      } else {
+        AccountDailyBalanceCheck(fromDate, toDate, threshold, thresholdPassed)
+      }
     }
   }
 
