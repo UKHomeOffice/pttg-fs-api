@@ -118,21 +118,21 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
         false       | 2                    | 627.00                | 15         || 21803.00
         false       | 1                    | 270.00                | 10         || 7545.00
         true        | 2                    | 22.00                 | 1          || 4198.00
-        true        | 2                    | 636.00                | 9          || 17104.00
+        true        | 3                    | 636.00                | 9          || 17104.00
         false       | 1                    | 1018.00               | 3          || 2037.00
         true        | 2                    | 446.00                | 6          || 12224.00
         false       | 1                    | 372.00                | 6          || 4723.00
         true        | 2                    | 657.00                | 13         || 23843.00
         true        | 2                    | 953.00                | 6          || 11717.00
         true        | 2                    | 229.00                | 12         || 22581.00
-        true        | 2                    | 23.00                 | 12         || 22787.00
+        true        | 6                    | 23.00                 | 12         || 22787.00
         false       | 2                    | 182.00                | 14         || 20888.00
         false       | 1                    | 738.00                | 12         || 8437.00
         true        | 2                    | 73.00                 | 9          || 17667.00
         false       | 1                    | 970.00                | 6          || 4125.00
         true        | 2                    | 934.00                | 5          || 10046.00
         true        | 1                    | 223.00                | 4          || 4422.00
-        true        | 2                    | 1078.00               | 14         || 25112.00
+        true        | 22                   | 1078.00               | 14         || 25112.00
     }
 
     def "Tier 4 Post Grad Doctor or Dentist - Check invalid course length parameters"() {
