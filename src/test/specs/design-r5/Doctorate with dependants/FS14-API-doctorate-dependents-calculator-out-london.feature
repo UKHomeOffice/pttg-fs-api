@@ -50,3 +50,19 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
             | Maintenance threshold amount | 1595.00 |
 
 
+    Scenario: Mark's maintenance threshold amount calculated
+    He is on a 3 month course
+    He has 4 dependents
+    He has pad £759 for his accommodation fees
+    He is studying in Nottingham
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Student type                    | doctorate |
+            | In London                       | No        |
+            | Course length                   | 3         |
+            | Accommodation fees already paid | 759.41    |
+            | Number of dependants            | 4         |
+        Then The Financial Status API provides the following results:
+            | HTTP Status                  | 200     |
+            | Maintenance threshold amount |  6710.59 |

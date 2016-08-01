@@ -71,3 +71,21 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200      |
             | Maintenance Threshold amount | 23059.25 |
+
+
+    Scenario: Peter's maintenance threshold amount calculated
+    He is on a 120 month course
+    His total tuition fees are £12,500.00
+    He is studying in London at LSE University
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Student Type                    | nondoctorate |
+            | In London                       | Yes          |
+            | Course Length                   | 120            |
+            | Total tuition fees              | 12500.00     |
+            | Tuition fees already paid       | 250.50       |
+            | Accommodation fees already paid | 575.25       |
+        Then The Financial Status API provides the following results:
+            | HTTP Status                  | 200      |
+            | Maintenance Threshold amount | 23059.25 |
