@@ -2,6 +2,7 @@ package uk.gov.digital.ho.proving.financialstatus.domain
 
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.stereotype.Service
+import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
 
 @Service
 class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommodation.value}") val innerLondon: Int,
@@ -15,12 +16,12 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                                   @Value("${doctorate.maximum.course.length}") val doctorateMaxCourseLength: Int
                                                  ) {
 
-  val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon)
-  val NON_INNER_LONDON_ACCOMMODATION = BigDecimal(nonInnerLondon)
-  val MAXIMUM_ACCOMMODATION = BigDecimal(maxAccommodation)
+  val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  val NON_INNER_LONDON_ACCOMMODATION = BigDecimal(nonInnerLondon).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  val MAXIMUM_ACCOMMODATION = BigDecimal(maxAccommodation).setScale(2, BigDecimal.RoundingMode.HALF_UP)
 
-  val INNER_LONDON_DEPENDANTS = BigDecimal(innerLondonDependants)
-  val NON_INNER_LONDON_DEPENDANTS = BigDecimal(nonInnerLondonDependants)
+  val INNER_LONDON_DEPENDANTS = BigDecimal(innerLondonDependants).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  val NON_INNER_LONDON_DEPENDANTS = BigDecimal(nonInnerLondonDependants).setScale(2, BigDecimal.RoundingMode.HALF_UP)
 
   def accommodationValue(innerLondon: Boolean): BigDecimal = if (innerLondon) INNER_LONDON_ACCOMMODATION else NON_INNER_LONDON_ACCOMMODATION
 
@@ -31,22 +32,35 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                             tuitionFees: BigDecimal, tuitionFeesPaid: BigDecimal,
                             accommodationFeesPaid: BigDecimal,
                             dependants: Int
-                           ): BigDecimal = {
+                           ): (BigDecimal, Option[CappedValues]) = {
 
-    val amount = ((accommodationValue(innerLondon) * courseLengthInMonths.min(nonDoctorateMaxCourseLength))
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > nonDoctorateMaxCourseLength) (nonDoctorateMaxCourseLength, Some(nonDoctorateMaxCourseLength)) else (courseLengthInMonths, None)
+    val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION)) else (accommodationFeesPaid, None)
+
+    val amount = ((accommodationValue(innerLondon) * courseLength)
       + (tuitionFees - tuitionFeesPaid).max(0)
-      + (dependantsValue(innerLondon) * courseLengthInMonths.min(nonDoctorateMaxCourseLength) * dependants)
-      - MAXIMUM_ACCOMMODATION.min(accommodationFeesPaid)).max(0)
+      + (dependantsValue(innerLondon) * courseLength * dependants)
+      - accommodationFees).max(0)
 
-    amount
+    if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined)
+      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)))
+    else (amount, None)
   }
 
-  def calculateDoctorate(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal, dependants: Int): BigDecimal = {
+  def calculateDoctorate(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
+                         dependants: Int): (BigDecimal, Option[CappedValues]) = {
 
-    val amount = ((accommodationValue(innerLondon) * courseLengthInMonths.min(doctorateMaxCourseLength))
-      + (dependantsValue(innerLondon) * courseLengthInMonths.min(doctorateMaxCourseLength) * dependants)
-      - MAXIMUM_ACCOMMODATION.min(accommodationFeesPaid)).max(0)
-    amount
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > doctorateMaxCourseLength) (doctorateMaxCourseLength, Some(doctorateMaxCourseLength)) else (courseLengthInMonths, None)
+    val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION)) else (accommodationFeesPaid, None)
+
+    val amount = ((accommodationValue(innerLondon) * courseLength)
+      + (dependantsValue(innerLondon) * courseLength * dependants)
+      - accommodationFees).max(0)
+
+    if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined)
+      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)))
+    else (amount, None)
+
   }
 
   def parameters: String = {

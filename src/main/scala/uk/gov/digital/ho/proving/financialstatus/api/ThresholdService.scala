@@ -85,9 +85,10 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          aFeesPaid <- accommodationFeesPaid
          deps <- dependants
     } yield {
-      new ThresholdResponse(
-        Some(maintenanceThresholdCalculator.calculateDoctorate(inner, length, aFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP), deps)),
-        StatusResponse(HttpStatus.OK.toString, OK))
+
+      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDoctorate(inner, length, aFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP), deps)
+
+      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, OK))
     }
   }
 
@@ -102,12 +103,11 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          aFeesPaid <- accommodationFeesPaid
          deps <- dependants
     } yield {
-      new ThresholdResponse(
-        Some(maintenanceThresholdCalculator.calculateNonDoctorate(inner, length,
-          tFees,
-          tFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP),
-          aFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP), deps)),
-        StatusResponse(HttpStatus.OK.toString, OK))
+      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateNonDoctorate(inner, length, tFees,
+        tFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP),
+        aFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP), deps)
+
+      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, OK))
     }
   }
 

@@ -1,6 +1,10 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
+import scala.None
+import scala.Option
+import scala.Some
 import spock.lang.Specification
+import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
 class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
@@ -17,7 +21,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants) == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
@@ -30,7 +34,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants) == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
@@ -43,7 +47,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Accommodation Fees paid'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants) == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
@@ -61,31 +65,41 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
     }
 
+
     def "Tier 4 Doctorate - Check 'All variants'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants) == bd(threshold)
+        def response = maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)
+        def thresholdValue = response._1
+        def cappedValues = DataUtils.getCappedValues(response._2)
+        def cappedAccommodation = cappedValues.accommodationFeesPaid()
+        def cappedCourseLength = cappedValues.courseLength()
+
+        assert thresholdValue == bd(threshold)
+        assert DataUtils.compareAccommodationFees(bd(feesCapped), cappedAccommodation)
+        assert DataUtils.compareCourseLength(courseLengthCapped, cappedCourseLength)
 
         where:
-        innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
-        false       | 2                    | 1627.00               | 15         || 21165.00
-        false       | 1                    | 270.00                | 10         || 7545.00
-        true        | 2                    | 22.00                 | 1          || 4198.00
-        true        | 2                    | 636.00                | 9          || 17104.00
-        false       | 1                    | 1018.00               | 3          || 2037.00
-        true        | 2                    | 446.00                | 6          || 12224.00
-        false       | 1                    | 372.00                | 6          || 4723.00
-        true        | 2                    | 657.00                | 13         || 23843.00
-        true        | 2                    | 953.00                | 6          || 11717.00
-        true        | 2                    | 229.00                | 12         || 22581.00
-        true        | 2                    | 23.00                 | 12         || 22787.00
-        false       | 2                    | 182.00                | 14         || 20888.00
-        false       | 1                    | 738.00                | 12         || 8437.00
-        true        | 2                    | 73.00                 | 9          || 17667.00
-        false       | 1                    | 970.00                | 6          || 4125.00
-        true        | 2                    | 1934.00               | 5          || 9715.00
-        true        | 1                    | 223.00                | 4          || 4422.00
-        true        | 2                    | 1078.00               | 14         || 25112.00
+        // Dues to groovy not liking Scala's 'None' object we represent this as the value zero
+        innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
+        false       | 2                    | 1627.00               | 15         || 21165.00  || 1265.00    || 0
+        false       | 1                    | 270.00                | 10         || 7545.00   || 0          || 0
+        true        | 2                    | 22.00                 | 1          || 4198.00   || 0          || 0
+        true        | 2                    | 636.00                | 9          || 17104.00  || 0          || 0
+        false       | 1                    | 1018.00               | 3          || 2037.00   || 0          || 0
+        true        | 2                    | 446.00                | 6          || 12224.00  || 0          || 0
+        false       | 1                    | 372.00                | 6          || 4723.00   || 0          || 0
+        true        | 2                    | 657.00                | 13         || 23843.00  || 0          || 0
+        true        | 3                    | 953.00                | 6          || 11717.00  || 0          || 2
+        true        | 2                    | 229.00                | 12         || 22581.00  || 0          || 0
+        true        | 2                    | 23.00                 | 12         || 22787.00  || 0          || 0
+        false       | 5                    | 182.00                | 14         || 20888.00  || 0          || 2
+        false       | 1                    | 738.00                | 12         || 8437.00   || 0          || 0
+        true        | 2                    | 73.00                 | 9          || 17667.00  || 0          || 0
+        false       | 1                    | 970.00                | 6          || 4125.00   || 0          || 0
+        true        | 8                    | 1934.00               | 5          || 9715.00   || 1265.00    || 2
+        true        | 1                    | 223.00                | 4          || 4422.00   || 0          || 0
+        true        | 2                    | 1078.00               | 14         || 25112.00  || 0          || 0
 
     }
 

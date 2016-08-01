@@ -149,28 +149,46 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold.toString()
+
+        assert jsonContent.threshold == threshold.toString()
+        if (feesCapped > 0) {
+            assert jsonContent.cappedValues && jsonContent.cappedValues.accommodationFeesPaid != null
+            assert jsonContent.cappedValues.accommodationFeesPaid == feesCapped.toString()
+        } else {
+            assert jsonContent.cappedValues == null || jsonContent.cappedValues.accommodationFeesPaid == null
+        }
+
+        if (courseLengthCapped > 0) {
+            assert jsonContent.cappedValues && jsonContent.cappedValues.courseLength != null
+            assert jsonContent.cappedValues.courseLength == courseLengthCapped
+        } else {
+            assert jsonContent.cappedValues == null || jsonContent.cappedValues.courseLength == null
+        }
+
+        if (feesCapped == 0 && courseLengthCapped == 0) {
+            assert jsonContent.cappedvalues == null
+        }
 
         where:
-        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
-        true        | 3                    | 6751.00     | 1508.00         | 325.00                | 13         || 41668.00
-        true        | 4                    | 8087.00     | 506.00          | 598.00                | 2          || 18803.00
-        false       | 4                    | 6546.00     | 3997.00         | 948.00                | 0          || 5661.00
-        false       | 8                    | 10265.00    | 4912.00         | 95.00                 | 14         || 89538.00
-        true        | 2                    | 6624.00     | 3054.00         | 3.00                  | 8          || 19617.00
-        false       | 4                    | 8476.00     | 1758.00         | 652.00                | 11         || 40046.00
-        false       | 4                    | 11555.00    | 4773.00         | 602.00                | 1          || 12960.00
-        false       | 19                   | 14248.00    | 2354.00         | 1260.00               | 1          || 25889.00
-        true        | 6                    | 12883.00    | 1081.00         | 547.00                | 6          || 49265.00
-        false       | 7                    | 9428.00     | 1688.00         | 126.00                | 10         || 62319.00
-        false       | 6                    | 12320.00    | 4379.00         | 1011.00               | 12         || 61980.00
-        true        | 9                    | 9202.00     | 487.00          | 618.00                | 13         || 118347.00
-        false       | 7                    | 13171.00    | 403.00          | 77.00                 | 13         || 81676.00
-        false       | 5                    | 5669.00     | 3209.00         | 999.00                | 3          || 16736.00
-        false       | 7                    | 10095.00    | 2564.00         | 236.00                | 4          || 33440.00
-        false       | 6                    | 13104.00    | 2056.00         | 977.00                | 5          || 36561.00
-        true        | 7                    | 8187.00     | 3318.00         | 805.00                | 14         || 95729.00
-        true        | 8                    | 10169.00    | 2731.00         | 1204.00               | 8          || 70434.00
+        innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
+        true        | 3                    | 6751.00     | 1508.00         | 325.00                | 13         || 41668.00  || 0          || 0
+        true        | 4                    | 8087.00     | 506.00          | 598.00                | 2          || 18803.00  || 0          || 0
+        false       | 4                    | 6546.00     | 3997.00         | 948.00                | 0          || 5661.00   || 0          || 0
+        false       | 8                    | 10265.00    | 4912.00         | 95.00                 | 14         || 89538.00  || 0          || 0
+        true        | 2                    | 6624.00     | 3054.00         | 3.00                  | 8          || 19617.00  || 0          || 0
+        false       | 4                    | 8476.00     | 1758.00         | 652.00                | 11         || 40046.00  || 0          || 0
+        false       | 4                    | 11555.00    | 4773.00         | 602.00                | 1          || 12960.00  || 0          || 0
+        false       | 19                   | 14248.00    | 2354.00         | 1269.00               | 1          || 25884.00  || 1265.00    || 9
+        true        | 6                    | 12883.00    | 1081.00         | 547.00                | 6          || 49265.00  || 0          || 0
+        false       | 7                    | 9428.00     | 1688.00         | 126.00                | 10         || 62319.00  || 0          || 0
+        false       | 6                    | 12320.00    | 4379.00         | 1011.00               | 12         || 61980.00  || 0          || 0
+        true        | 12                   | 9202.00     | 487.00          | 618.00                | 13         || 118347.00 || 0          || 9
+        false       | 7                    | 13171.00    | 403.00          | 77.00                 | 13         || 81676.00  || 0          || 0
+        false       | 5                    | 5669.00     | 3209.00         | 999.00                | 3          || 16736.00  || 0          || 0
+        false       | 7                    | 10095.00    | 2564.00         | 236.00                | 4          || 33440.00  || 0          || 0
+        false       | 6                    | 13104.00    | 2056.00         | 1977.00               | 5          || 36273.00  || 1265.00    || 0
+        true        | 7                    | 8187.00     | 3318.00         | 805.00                | 14         || 95729.00  || 0          || 0
+        true        | 8                    | 10169.00    | 2731.00         | 1204.00               | 8          || 70434.00  || 0          || 0
 
     }
 
@@ -184,7 +202,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
         true        | -1                   | 9411.00     | 4612.00         | 0          | 336.00
-        false       |  0                   | 7191.00     | 2720.00         | 0          | 1044.00
+        false       | 0                    | 7191.00     | 2720.00         | 0          | 1044.00
     }
 
     def "Tier 4 Non Doctorate - Check invalid characters course length parameters"() {

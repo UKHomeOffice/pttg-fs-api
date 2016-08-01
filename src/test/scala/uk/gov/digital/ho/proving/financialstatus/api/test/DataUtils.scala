@@ -6,6 +6,9 @@ import java.time.temporal.ChronoUnit.DAYS
 import uk.gov.digital.ho.proving.financialstatus.domain.{AccountDailyBalance, AccountDailyBalances}
 
 import scala.util.Random.{nextBoolean, nextFloat, nextInt}
+import java.math.{BigDecimal => JBigDecimal}
+
+import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
 
 object DataUtils {
 
@@ -55,5 +58,20 @@ object DataUtils {
     dailyBalances.map(dailyBalance => AccountDailyBalance(dailyBalance.date.plusDays(variance), dailyBalance.balance))
     AccountDailyBalances(dailyBalances)
   }
+
+
+  // Groovy has issues comparing Scala's Option class
+  // so these are just a helper methods
+
+  def compareAccommodationFees(first: BigDecimal, second: Option[BigDecimal]): Boolean = {
+      first.setScale(2, BigDecimal.RoundingMode.HALF_UP) == second.getOrElse(new BigDecimal(JBigDecimal.ZERO)).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  }
+
+  def compareCourseLength(first: Int, second: Option[Int]): Boolean = {
+    first == second.getOrElse(0)
+  }
+
+  def getCappedValues(cappedValues: Option[CappedValues]): CappedValues  = cappedValues.getOrElse(CappedValues(Some(new BigDecimal(JBigDecimal.ZERO)),Some(0)))
+
 
 }
