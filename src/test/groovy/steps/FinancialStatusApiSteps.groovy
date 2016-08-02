@@ -202,14 +202,16 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             String jsonValue = json.get(Keys)
 
             if (Keys != "account") {
-
-                assert entries.containsValue(jsonValue)
+              //  JSONObject innerJson = new JSONObject(jsonValue);
+               // Iterator<String> innerJasonKey = innerJson.keys()
+               // println "cccccccc" + innerJsonkey.next()
+               // assert entries.containsValue(jsonValue)
                 //: "data table is missing or has incorrect value for json key [$Keys] and value [$jsonValue]"
             }
 
             println "===========>" + jsonValue
 
-            if (Keys == "account") {
+            if ((Keys == "account")||(Keys == "cappedValues")) {
                 JSONObject innerJson = new JSONObject(jsonValue);
                 Iterator<String> innerJasonKey = innerJson.keys()
 
