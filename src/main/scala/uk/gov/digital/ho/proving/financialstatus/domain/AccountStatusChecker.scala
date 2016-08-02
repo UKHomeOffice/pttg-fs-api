@@ -23,22 +23,22 @@ class AccountStatusChecker @Autowired()(bankService: BankService, @Value("${dail
 
     Try {
       val accountDailyBalances = bankService.fetchAccountDailyBalances(account, fromDate, toDate)
-
       val minimumBalance = accountDailyBalances.balances.minBy(_.balance)
 
-      val thresholdPassed = accountDailyBalances.balances.length == numberConsecutiveDays &&
-        areDatesConsecutive(accountDailyBalances) && minimumBalance.balance >= threshold
-
-      if (minimumBalance.balance < threshold) {
-        AccountDailyBalanceCheck(fromDate, toDate, threshold, thresholdPassed, Option(minimumBalance.date), Option(minimumBalance.balance))
+      if (accountDailyBalances.balances.length < numberConsecutiveDays) {
+        AccountDailyBalanceCheck(fromDate, toDate, threshold, false, Some(BalanceCheckFailure(recordCount = Some(accountDailyBalances.balances.length))))
       } else {
-        AccountDailyBalanceCheck(fromDate, toDate, threshold, thresholdPassed)
+        val thresholdPassed = accountDailyBalances.balances.length == numberConsecutiveDays &&
+          areDatesConsecutive(accountDailyBalances) && minimumBalance.balance >= threshold
+
+        if (minimumBalance.balance < threshold) {
+          AccountDailyBalanceCheck(fromDate, toDate, threshold, thresholdPassed,
+            Some(BalanceCheckFailure(Option(minimumBalance.date), Option(minimumBalance.balance))))
+        } else {
+          AccountDailyBalanceCheck(fromDate, toDate, threshold, thresholdPassed)
+        }
       }
     }
-  }
-
-  private def getFirstBalanceToFail(accountDailyBalances: AccountDailyBalances, threshold: BigDecimal) = {
-    accountDailyBalances.balances.sortWith((x, y) => x.date.isBefore(y.date)).find(adb => adb.balance < threshold)
   }
 
   def parameters: String = {
