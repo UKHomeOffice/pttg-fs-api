@@ -55,11 +55,12 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
             | In London                       | No        |
-            | Remaining course length         | 12         |
+            | Remaining course length         | 12        |
             | Accommodation fees already paid | 0         |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance Threshold amount | 2030.00 |
+            | Course Lenght                | 2       |
 
     Scenario: Mary's maintenance threshold amount calculated
     She is on a 8 months doctorate extension
@@ -70,8 +71,9 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
             | In London                       | No        |
-            | Remaining course length         | 21         |
+            | Remaining course length         | 21        |
             | Accommodation fees already paid | 450       |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance Threshold amount | 1580.00 |
+            | Course Lenght                | 2       |

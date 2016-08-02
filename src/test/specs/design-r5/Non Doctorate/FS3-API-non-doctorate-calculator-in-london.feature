@@ -64,13 +64,14 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 9            |
+            | Course Length                   | 12           |
             | Total tuition fees              | 12500.00     |
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 575.25       |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200      |
             | Maintenance Threshold amount | 23059.25 |
+            | Course Length                | 9        |
 
 
     Scenario: Peter's maintenance threshold amount calculated
@@ -82,10 +83,11 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 120            |
+            | Course Length                   | 120          |
             | Total tuition fees              | 12500.00     |
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 575.25       |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200      |
             | Maintenance Threshold amount | 23059.25 |
+            | Course Length                | 9        |

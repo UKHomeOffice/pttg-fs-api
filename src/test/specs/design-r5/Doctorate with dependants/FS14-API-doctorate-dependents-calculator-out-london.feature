@@ -65,4 +65,5 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
             | Number of dependants            | 4         |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Maintenance threshold amount |  6710.59 |
+            | Maintenance threshold amount | 6710.59 |
+            | Course Length                | 2       |
