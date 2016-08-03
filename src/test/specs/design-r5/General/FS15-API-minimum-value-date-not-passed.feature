@@ -18,15 +18,15 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Sort code      | 135610     |
             | Account number | 23568499   |
         Then The Financial Status API provides the following results:
-            | HTTP Status        | 200        |
-            | Pass               | false      |
-            | Minimum            | 2530.00    |
-            | From date          | 2016-05-05 |
-            | To date            | 2016-06-01 |
-            | Date funds not met | 2016-05-30 |
-            | Amount             | 2429.99    |
-            | Sort code          | 135610     |
-            | Account number     | 23568499   |
+            | HTTP Status          | 200        |
+            | Pass                 | false      |
+            | Minimum              | 2530.00    |
+            | From date            | 2016-05-05 |
+            | To date              | 2016-06-01 |
+            | Lowest Balance Date  | 2016-05-30 |
+            | Lowest Balance Value | 2429.99    |
+            | sort code            | 135610     |
+            | Account number       | 23568499   |
 
 
     Scenario: Brian is doctorate out of London student and does not have sufficient financial funds
@@ -45,15 +45,15 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Account number | 01078913   |
 
         Then The Financial Status API provides the following results:
-            | HTTP Status        | 200        |
-            | Pass               | false      |
-            | Minimum            | 2030.00    |
-            | From date          | 2016-06-04 |
-            | To date            | 2016-07-01 |
-            | Date funds not met | 2016-06-27 |
-            | Amount             | 2029.99    |
-            | Sort code          | 149303     |
-            | Account number     | 01078913   |
+            | HTTP Status          | 200        |
+            | Pass                 | false      |
+            | Minimum              | 2030.00    |
+            | From date            | 2016-06-04 |
+            | To date              | 2016-07-01 |
+            | Lowest Balance Date  | 2016-06-27 |
+            | Lowest Balance Value | 2029.99    |
+            | Sort code            | 149303     |
+            | Account number       | 01078913   |
 
 
     Scenario: David is general student and does not have sufficient financial funds
@@ -71,12 +71,12 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Sort code      | 139302     |
             | Account number | 17926768   |
         Then The Financial Status API provides the following results:
-            | HTTP Status        | 200        |
-            | Pass               | false      |
-            | Minimum            | 2537.48    |
-            | From date          | 2016-06-07 |
-            | To date            | 2016-07-04 |
-            | Date funds not met | 2016-06-07 |
-            | Amount             | 2537.00    |
-            | Sort code          | 139302     |
-            | Account number     | 17926768   |
+            | HTTP Status          | 200        |
+            | Pass                 | false      |
+            | Minimum              | 2537.48    |
+            | From date            | 2016-06-07 |
+            | To date              | 2016-07-04 |
+            | Lowest Balance Date  | 2016-06-07 |
+            | Lowest Balance Value | 2537.00    |
+            | Sort code            | 139302     |
+            | Account number       | 17926768   |

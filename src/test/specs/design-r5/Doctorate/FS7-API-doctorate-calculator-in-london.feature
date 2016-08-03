@@ -25,4 +25,4 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate I
             | Accommodation fees already paid | 0         |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Maintenance Threshold amount | 2530.00 |
+            | Threshold  | 2530.00 |

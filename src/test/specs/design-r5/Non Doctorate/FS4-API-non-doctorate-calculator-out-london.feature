@@ -34,7 +34,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Accommodation fees already paid | 0            |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Maintenance Threshold amount | 5530.50 |
+            | Threshold  | 5530.50 |
 
     Scenario: Nick's maintenance threshold amount calculated
     He is on a 9 month course
@@ -51,4 +51,4 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Accommodation fees already paid | 600.50       |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200      |
-            | Maintenance Threshold amount | 17389.50 |
+            | Threshold  | 17389.50 |

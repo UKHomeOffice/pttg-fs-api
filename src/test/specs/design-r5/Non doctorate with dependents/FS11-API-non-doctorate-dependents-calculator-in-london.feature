@@ -37,7 +37,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Number of dependants            | 1            |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200      |
-            | Maintenance Threshold amount | 19190.75 |
+            | Threshold | 19190.75 |
 
     Scenario: Shelly's maintenance threshold amount calculated
     He is on a 9 month course
@@ -56,6 +56,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Number of dependants            | 3            |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200      |
-            | Maintenance Threshold amount | 46149.50 |
+            | Threshold | 46149.50 |
 
 

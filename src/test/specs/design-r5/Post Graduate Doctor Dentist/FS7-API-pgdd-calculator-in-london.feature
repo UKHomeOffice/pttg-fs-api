@@ -27,7 +27,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
             | Accommodation fees already paid | 0    |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Maintenance Threshold amount | 1265.00 |
+            | Threshold | 1265.00 |
 
 
     Scenario: Shelly's maintenance threshold amount calculated
@@ -43,4 +43,4 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
             | Accommodation fees already paid | 0    |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Maintenance Threshold amount | 2530.00 |
+            | Threshold | 2530.00 |

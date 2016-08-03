@@ -25,8 +25,8 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Pass               | false      |
             | Minimum            | 2530.00    |
             | From Date          | 2016-05-05 |
-            | Date funds not met | 2016-05-30 |
-            | Amount             | 2529.99    |
+            | Lowest Balance Date | 2016-05-30 |
+            | Lowest Balance Value             | 2529.99    |
             | To Date            | 2016-06-01 |
             | Sort code          | 135609     |
             | Account number     | 23568498   |
@@ -53,8 +53,8 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Pass               | false      |
             | Minimum            | 2030.00    |
             | From Date          | 2016-06-04 |
-            | Date funds not met | 2016-06-05 |
-            | Amount             | -2049.99   |
+            | Lowest Balance Date | 2016-06-05 |
+            | Lowest Balance Value             | -2049.99   |
             | To Date            | 2016-07-01 |
             | Sort code          | 149302     |
             | Account number     | 01078911   |
@@ -82,8 +82,8 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Pass               | false      |
             | Minimum            | 2537.48    |
             | From Date          | 2016-06-04 |
-            | Date funds not met | 2016-06-20 |
-            | Amount             | 2537.47    |
+            |Lowest Balance Date | 2016-06-20 |
+            |Lowest Balance Value              | 2537.47    |
             | To Date            | 2016-07-01 |
             | Sort code          | 139302     |
             | Account number     | 17926767   |
