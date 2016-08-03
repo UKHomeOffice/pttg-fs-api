@@ -212,7 +212,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
             println "===========>" + jsonValue
 
-            if ((Keys == "account")||(Keys == "cappedValues")||(Keys == "failureReason")) {
+            if ((Keys == "account") || (Keys == "cappedValues") || (Keys == "failureReason")) {
                 try {
                     JSONObject innerJson = new JSONObject(jsonValue);
                     Iterator<String> innerJasonKey = innerJson.keys()
