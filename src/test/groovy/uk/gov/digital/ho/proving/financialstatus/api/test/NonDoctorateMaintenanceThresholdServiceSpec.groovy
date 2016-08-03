@@ -63,7 +63,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold.toString()
+        jsonContent.threshold == threshold
 
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
@@ -85,7 +85,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold.toString()
+        jsonContent.threshold == threshold
 
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
@@ -106,7 +106,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold.toString()
+        jsonContent.threshold == threshold
 
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
@@ -128,7 +128,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         def response = callApi("nondoctorate", innerLondon, courseLengthInMonths, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold.toString()
+        jsonContent.threshold == threshold
 
         where:
         innerLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
@@ -150,10 +150,10 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
 
-        assert jsonContent.threshold == threshold.toString()
+        assert jsonContent.threshold == threshold
         if (feesCapped > 0) {
             assert jsonContent.cappedValues && jsonContent.cappedValues.accommodationFeesPaid != null
-            assert jsonContent.cappedValues.accommodationFeesPaid == feesCapped.toString()
+            assert jsonContent.cappedValues.accommodationFeesPaid == feesCapped
         } else {
             assert jsonContent.cappedValues == null || jsonContent.cappedValues.accommodationFeesPaid == null
         }

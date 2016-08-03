@@ -1,10 +1,6 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
-import scala.None
-import scala.Option
-import scala.Some
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
 class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
@@ -21,7 +17,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDesPgddSso(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
@@ -34,7 +30,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDesPgddSso(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
@@ -47,7 +43,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Accommodation Fees paid'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDesPgddSso(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
         innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
@@ -69,7 +65,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'All variants'"() {
 
         expect:
-        def response = maintenanceThresholdCalculator.calculateDoctorate(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)
+        def response = maintenanceThresholdCalculator.calculateDesPgddSso(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)
         def thresholdValue = response._1
         def cappedValues = DataUtils.getCappedValues(response._2)
         def cappedAccommodation = cappedValues.accommodationFeesPaid()

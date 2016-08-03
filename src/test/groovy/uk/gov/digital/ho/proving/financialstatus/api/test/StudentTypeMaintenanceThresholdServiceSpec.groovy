@@ -71,8 +71,9 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
         "doctorate"    || 200        || "OK"
         "nondoctorate" || 200        || "OK"
         "pgdd"         || 200        || "OK"
-        "rubbish"      || 400        || "Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd]"
-        ""             || 400        || "Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd]"
+        "sso"          || 200        || "OK"
+        "rubbish"      || 400        || "Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso]"
+        ""             || 400        || "Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso]"
 
     }
 
