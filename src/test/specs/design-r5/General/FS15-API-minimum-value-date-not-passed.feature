@@ -23,8 +23,8 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Minimum            | 2530.00    |
             | From date          | 2016-05-05 |
             | To date            | 2016-06-01 |
-            | Date funds not met | 2016-05-31 |
-            | Amount             | 2500.00    |
+            | Date funds not met | 2016-05-30 |
+            | Amount             | 2429.99    |
             | Sort code          | 135610     |
             | Account number     | 23568499   |
 

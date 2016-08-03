@@ -1,5 +1,6 @@
 package steps
 
+import com.jayway.jsonpath.JsonPath
 import com.jayway.restassured.response.Response
 import cucumber.api.DataTable
 import cucumber.api.Scenario
@@ -8,6 +9,9 @@ import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
+import jdk.nashorn.api.scripting.JSObject
+import net.sf.json.JSON
+import net.sf.json.JSONString
 import net.thucydides.core.annotations.Managed
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
@@ -187,6 +191,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     public void validateJsonResult(DataTable arg) {
         Map<String, String> entries = arg.asMap(String.class, String.class);
         String[] tableKey = entries.keySet();
+
         JSONObject json = new JSONObject(jsonAsString);
 
         Iterator<String> jasonKey = json.keys()
@@ -201,33 +206,32 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
             String jsonValue = json.get(Keys)
 
-            if (Keys != "account") {
-              //  JSONObject innerJson = new JSONObject(jsonValue);
-               // Iterator<String> innerJasonKey = innerJson.keys()
-               // println "cccccccc" + innerJsonkey.next()
-               // assert entries.containsValue(jsonValue)
-                //: "data table is missing or has incorrect value for json key [$Keys] and value [$jsonValue]"
+            if ((Keys != "account")&&(Keys != "courseLength")&&(Keys != "failureReason")&&(Keys != "cappedValues")) {
+              assert entries.containsValue(jsonValue)
             }
 
             println "===========>" + jsonValue
 
-            if ((Keys == "account")||(Keys == "cappedValues")) {
-                JSONObject innerJson = new JSONObject(jsonValue);
-                Iterator<String> innerJasonKey = innerJson.keys()
+            if ((Keys == "account")||(Keys == "cappedValues")||(Keys == "failureReason")) {
+                try {
+                    JSONObject innerJson = new JSONObject(jsonValue);
+                    Iterator<String> innerJasonKey = innerJson.keys()
 
-                while (innerJasonKey.hasNext()) {
-                    String keys2 = innerJasonKey.next()
-                    println "***********" + keys2
-                    //json.getJSONObject()
-                    String innerjsonValue = innerJson.get(keys2).toString()
-                    println ">>>>>>>>>>>>>>>" + innerjsonValue
-                    for (String s : tableKey) {
-                        println "" + entries.get(s)
-                        assert entries.containsValue(innerjsonValue)
+                    while (innerJasonKey.hasNext()) {
+                        String keys2 = innerJasonKey.next()
+                        println "***********" + keys2
+                        //json.getJSONObject()
+                        String innerjsonValue = innerJson.get(keys2).toString()
+                        println ">>>>>>>>>>>>>>>" + innerjsonValue
+                        for (String s : tableKey) {
+                            println "" + entries.get(s)
+                            assert entries.containsValue(innerjsonValue)
+
+                        }
 
                     }
-
                 }
+                catch(Exception e){}
             }
 
         }
