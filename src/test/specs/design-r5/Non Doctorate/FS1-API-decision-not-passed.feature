@@ -87,3 +87,29 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | To Date              | 2016-07-01 |
             | Sort code            | 139302     |
             | Account number       | 17926767   |
+
+    Scenario: Ann is a general student - funds have been in her account for less than 28 days
+
+    Application Raised Date 1st of June
+    She has < than the Total Fund Required of £2350 for the previous 28 days
+
+
+        Given a Service is consuming Financial Status API
+        Given the test data for account 23568491
+        When the Financial Status API is invoked with the following:
+            | To Date        | 2016-06-01 |
+            | From Date      | 2016-05-05 |
+            | Minimum        | 2530.00    |
+            | Sort code      | 135609     |
+            | Account number | 23568491   |
+ #  |
+        Then The Financial Status API provides the following results:
+            | HTTP Status          | 200        |
+            | Pass                 | false      |
+            | Minimum              | 2530.00    |
+            | From Date            | 2016-05-05 |
+            | Record Count         | 27         |
+            | Lowest Balance Value | 2529.99    |
+            | To Date              | 2016-06-01 |
+            | Sort code            | 135609     |
+            | Account number       | 23568491   |
