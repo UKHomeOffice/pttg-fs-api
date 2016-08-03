@@ -29,6 +29,8 @@ import org.springframework.web.servlet.DispatcherServlet
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 
+import java.text.DecimalFormat
+
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
 import static com.jayway.restassured.RestAssured.given
@@ -195,6 +197,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         List<String> tableList1 = new ArrayList()
         List<String> singlejsonFeild = new ArrayList()
 
+        DecimalFormat df = new DecimalFormat("#.00")
 
         JSONObject json = new JSONObject(jsonAsString);
 
@@ -212,9 +215,18 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             if ((Keys != "account") && (Keys != "courseLength") && (Keys != "failureReason") && (Keys != "cappedValues")) {
 
                 singlejsonFeild.add(Keys)
-                assert entries.containsValue(jsonValue)
+                if((Keys != "minimum")&&(Keys != "threshold")) {
+                    assert entries.containsValue(jsonValue)
+                }
+
 
                 for (String s : tableKey) {
+
+                    if((Keys == "minimum")||(Keys == "threshold")) {
+                        double value = json.get(Keys)
+
+                        assert entries.containsValue(df.format(value))
+                    }
                     tableList1.add(tocamelcase(s))
                 }
            assert tableList1.containsAll(singlejsonFeild)
@@ -247,9 +259,16 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                             tableList.add(tocamelcase(s))
                         }
 
-                        println "xxxxxxx" + entries.keySet()
+                        if(keys2 == "lowestBalanceValue") {
+                            double value = json.get(keys2)
 
-                        assert entries.containsValue(innerjsonValue)
+                            assert entries.containsValue(df.format(value))
+                        }
+
+                        if(keys2 != "lowestBalanceValue") {
+                            assert entries.containsValue(innerjsonValue)
+                        }
+
                     }
                 }
                 assert tableList.containsAll(jsonList)

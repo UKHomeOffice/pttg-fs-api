@@ -30,7 +30,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student 
             | Number of dependants            | 3    |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Maintenance threshold amount | 3055.00 |
+            | Threshold | 3055.00 |
 
     Scenario: Adam's maintenance threshold amount calculated
     He is on a 1 month course
@@ -47,6 +47,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student 
             | Number of dependants            | 1      |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Maintenance threshold amount | 1595.00 |
+            | Threshold | 1595.00 |
 
 

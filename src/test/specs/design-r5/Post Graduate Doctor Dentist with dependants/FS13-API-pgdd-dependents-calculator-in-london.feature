@@ -9,13 +9,13 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
     Accommodation fees already paid - The maximum amount paid can be £1265
 
     Required Maintenance threshold calculation to pass this feature file
-    Maintenance threshold amount =  (Required Maintenance funds doctorate inner London
+    Threshold =  (Required Maintenance funds doctorate inner London
     borough (£1265) * remaining course length) + (required dependant maintenance funds * course length  * number of dependants) -  Accommodation fees already paid
 
     Tier 4 (General) Sudent - pgdd - London, In Country - (£1265 x 2) + (£845 x 2 x 1) - £0 = £4220
     Tier 4 (General) Sudent - pgdd - London, In Country - (£1265 x 1) + (£845 x 1 x 1) - £1000 = £1,110
 
-    Scenario: Tony's maintenance threshold amount calculated
+    Scenario: Tony's Threshold calculated
     He is on a 1 month course
     He has 1 dependent
     No accommodation fees has been paid
@@ -30,9 +30,9 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
             | Number of dependants            | 1    |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Maintenance threshold amount | 2110.00 |
+            | Threshold | 2110.00 |
 
-    Scenario: Shelly's maintenance threshold amount calculated
+    Scenario: Shelly's Threshold calculated
     He is on a 2 month course
     He has 3 dependents
     He has pad £250.50 for his accommodation fees
@@ -47,5 +47,5 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
             | Number of dependants            | 3      |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Maintenance threshold amount | 7349.50 |
+            | Threshold | 7349.50 |
 
