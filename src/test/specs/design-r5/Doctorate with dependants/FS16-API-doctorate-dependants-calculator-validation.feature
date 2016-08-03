@@ -1,7 +1,6 @@
 Feature: Validation of the API fields and data
 
     In London - Yes or No options (mandatory)
-    Course Length - 1-2 months
     Accommodation fees already paid - Format should not contain commas or currency symbols
     To Date - Format should be yyyy-mm-dd
     From Date - Format should be yyyy-mm-dd
@@ -39,37 +38,6 @@ Feature: Validation of the API fields and data
             | HTTP Status    | 400                                             |
             | Status code    | 0000                                            |
             | Status message | Parameter error: Invalid inLondon, must be true or false |
-
-######################### Validation on the Course length field #########################
-
-    Scenario: The API is not provided with the Course length
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
-            | In London                       | Yes        |
-            | Course Length                   |            |
-            | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
-        Then the service displays the following result
-            | HTTP Status    | 400                                                                       |
-            | Status code    | 0000                                                                      |
-            | Status message | Parameter error: Invalid courseLength, must be greater than zero |
-
-    Scenario: The API is provided with incorrect Course Length - not numbers 1-2
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
-            | In London                       | Yes        |
-            | Course Length                   | x          |
-            | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
-        Then the service displays the following result
-            | HTTP Status    | 400                                              |
-            | Status code    | 0000                                             |
-            | Status message | Parameter conversion error: Invalid courseLength |
-
 
 ######################### Validation on the Accommodation fees already paid field #########################
 
