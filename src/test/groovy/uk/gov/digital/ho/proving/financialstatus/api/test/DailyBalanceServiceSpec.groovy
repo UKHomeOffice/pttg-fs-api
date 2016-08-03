@@ -93,8 +93,8 @@ class DailyBalanceServiceSpec extends Specification {
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.pass == false
-        jsonContent.failureReason.amount == "1800.00"
-        jsonContent.failureReason.dateFundsNotMet == lowestDate.toString()
+        jsonContent.failureReason.lowestBalanceValue == "1800.00"
+        jsonContent.failureReason.lowestBalanceDate == lowestDate.toString()
 
     }
 
@@ -126,8 +126,8 @@ class DailyBalanceServiceSpec extends Specification {
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.pass == false
         jsonContent.failureReason.recordCount == 27
-        jsonContent.failureReason.amount == null
-        jsonContent.failureReason.dateFundsNotMet == null
+        jsonContent.failureReason.lowestBalanceValue == null
+        jsonContent.failureReason.lowestBalanceDate == null
 
     }
 
