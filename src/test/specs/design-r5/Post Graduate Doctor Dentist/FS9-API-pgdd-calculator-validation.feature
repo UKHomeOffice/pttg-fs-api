@@ -16,9 +16,9 @@ Feature: Validation of the API fields and data
             | Course Length                   | 1   |
             | Accommodation fees already paid | 0   |
         Then the service displays the following result
-            | HTTP Status    | 400                                                                                |
-            | Status code    | 0000                                                                               |
-            | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd] |
+            | HTTP Status    | 400                                                                                    |
+            | Status code    | 0000                                                                                   |
+            | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso] |
 
 ######################### Validation on the In London field #########################
 
@@ -30,8 +30,8 @@ Feature: Validation of the API fields and data
             | Course Length                   | 2    |
             | Accommodation fees already paid | 0    |
         Then the service displays the following result
-            | HTTP Status    | 400                                             |
-            | Status code    | 0000                                            |
+            | HTTP Status    | 400                                                      |
+            | Status code    | 0000                                                     |
             | Status message | Parameter error: Invalid inLondon, must be true or false |
 
 ######################### Validation on the Course length field #########################
@@ -44,8 +44,8 @@ Feature: Validation of the API fields and data
             | Course Length                   |      |
             | Accommodation fees already paid | 0    |
         Then the service displays the following result
-            | HTTP Status    | 400                                                                       |
-            | Status code    | 0000                                                                      |
+            | HTTP Status    | 400                                                              |
+            | Status code    | 0000                                                             |
             | Status message | Parameter error: Invalid courseLength, must be greater than zero |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-2

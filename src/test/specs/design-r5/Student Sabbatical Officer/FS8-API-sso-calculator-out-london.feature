@@ -1,5 +1,5 @@
 @wiremock
-Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad Doctor or Dentist out of London (single current account and no dependants)
+Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student Officer out of London (single current account and no dependants)
 
     Acceptance criteria
 
@@ -11,8 +11,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
     Maintenance threshold amount =  (Required Maintenance funds doctorate inner London
     borough (£1015) * remaining course length) -  Accommodation fees already paid
 
-    Tier 4 (General) Student - doctorate - out of London, In Country - (£1015 x 2) - £0 = £2030
-    Tier 4 (General) Student - doctorate - out of London, In Country - (£1015 x 1) - £500 = £515
+    Tier 4 (General) Sudent - sso - out of London, In Country - (£1015 x 2) - £0 = £2030
+    Tier 4 (General) Sudent - sso - out of London, In Country - (£1015 x 1) - £500 = £515
 
     Scenario: John's maintenance threshold amount calculated
     He is on a 1 month doctorate extension
@@ -22,10 +22,10 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd |
-            | In London                       | No   |
-            | Remaining course length         | 1    |
-            | Accommodation fees already paid | 0    |
+            | Student Type                    | sso |
+            | In London                       | No  |
+            | Remaining course length         | 1   |
+            | Accommodation fees already paid | 0   |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance Threshold amount | 1015.00 |
@@ -38,10 +38,10 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd |
-            | In London                       | No   |
-            | Remaining course length         | 2    |
-            | Accommodation fees already paid | 250  |
+            | Student Type                    | sso |
+            | In London                       | No  |
+            | Remaining course length         | 2   |
+            | Accommodation fees already paid | 250 |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
             | Maintenance Threshold amount | 1780.00 |

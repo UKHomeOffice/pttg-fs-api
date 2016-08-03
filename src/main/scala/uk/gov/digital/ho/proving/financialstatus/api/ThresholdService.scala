@@ -66,7 +66,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         validateAndCalculateNonDoctorate(innerLondon, courseLength, tuitionFees, tuitionFeesPaid,
           accommodationFeesPaid, dependants, courseMinLength, courseMaxLength)
 
-      case Doctorate | DoctorDentist =>
+      case Doctorate | DoctorDentist | StudentSabbaticalOfficer =>
         val courseMinLength = maintenanceThresholdCalculator.doctorateMinCourseLength
         val courseMaxLength = maintenanceThresholdCalculator.doctorateMaxCourseLength
 
@@ -77,7 +77,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  private def calculateDesDoctorDentist(innerLondon: Option[Boolean], courseLength: Option[Int],
+  private def calculateDesDoctorDentistSabbatical(innerLondon: Option[Boolean], courseLength: Option[Int],
                                         accommodationFeesPaid: Option[JBigDecimal], dependants: Option[Int]): Option[ThresholdResponse] = {
 
     for {inner <- innerLondon
@@ -86,7 +86,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          deps <- dependants
     } yield {
 
-      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDoctorate(inner, length, aFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP), deps)
+      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDesPgddSso(inner, length, aFeesPaid.setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP), deps)
 
       new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, OK))
     }
@@ -122,7 +122,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     } else if (!validateInnerLondon(innerLondon)) {
       buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_IN_LONDON, HttpStatus.BAD_REQUEST)
     } else {
-      val thresholdResponse = calculateDesDoctorDentist(innerLondon, courseLength, accommodationFeesPaid, dependants)
+      val thresholdResponse = calculateDesDoctorDentistSabbatical(innerLondon, courseLength, accommodationFeesPaid, dependants)
       thresholdResponse match {
         case Some(response) => new ResponseEntity[ThresholdResponse](response, HttpStatus.OK)
         case None => buildErrorResponse(headers, TEMP_ERROR_CODE, UNEXPECTED_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)

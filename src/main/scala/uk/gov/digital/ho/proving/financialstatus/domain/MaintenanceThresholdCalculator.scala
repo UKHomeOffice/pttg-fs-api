@@ -47,8 +47,8 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     else (amount, None)
   }
 
-  def calculateDoctorate(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
-                         dependants: Int): (BigDecimal, Option[CappedValues]) = {
+  def calculateDesPgddSso(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
+                          dependants: Int): (BigDecimal, Option[CappedValues]) = {
 
     val (courseLength, courseLengthCapped) = if (courseLengthInMonths > doctorateMaxCourseLength) (doctorateMaxCourseLength, Some(doctorateMaxCourseLength)) else (courseLengthInMonths, None)
     val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION)) else (accommodationFeesPaid, None)

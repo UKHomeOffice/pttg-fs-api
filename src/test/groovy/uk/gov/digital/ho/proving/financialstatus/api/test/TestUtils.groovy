@@ -25,6 +25,6 @@ class TestUtils {
     public static def doctorateMinCourseLength = 1
     public static def doctorateMaxCourseLength = 2
 
-    public static def getStudentTypeChecker() { new StudentTypeChecker("doctorate", "nondoctorate", "pgdd") }
+    public static def getStudentTypeChecker() { new StudentTypeChecker("doctorate", "nondoctorate", "pgdd", "sso") }
 
 }

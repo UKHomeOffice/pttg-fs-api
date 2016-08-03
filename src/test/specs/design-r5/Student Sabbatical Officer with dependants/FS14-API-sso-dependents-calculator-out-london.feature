@@ -1,4 +1,4 @@
-Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad Doctor or Dentist out of London with dependents(single current account)
+Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student Officer out of London with dependents(single current account)
 
     Requirement to meet Tier 4 pass
 
@@ -12,8 +12,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
     Maintenance threshold amount =  (Required Maintenance funds doctorate not inner London
     borough (£1015 * remaining course length) + (required dependant maintenance funds * course length  * number of dependants) -  Accommodation fees already paid
 
-    Tier 4 (General) Student - doctorate - out of London, In Country - (£1015 x 2) + (£680 x 2 x 1) - £0 = £3390
-    Tier 4 (General) Student - doctorate - out of London, In Country - (£1015 x 1) + (£680 x 1 x 1) - £1000 = £695
+    Tier 4 (General) Sudent - sso - out of London, In Country - (£1015 x 2) + (£680 x 2 x 1) - £0 = £3390
+    Tier 4 (General) Sudent - sso - out of London, In Country - (£1015 x 1) + (£680 x 1 x 1) - £1000 = £695
 
     Scenario: Tony's maintenance threshold amount calculated
     He is on a 1 month course
@@ -23,7 +23,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student type                    | pgdd |
+            | Student type                    | sso |
             | In London                       | No   |
             | Course length                   | 1    |
             | Accommodation fees already paid | 0    |
@@ -40,7 +40,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student type                    | pgdd   |
+            | Student type                    | sso   |
             | In London                       | No     |
             | Course length                   | 1      |
             | Accommodation fees already paid | 100.00 |
