@@ -11,6 +11,7 @@ import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import jdk.nashorn.api.scripting.JSObject
 import net.sf.json.JSON
+import net.sf.json.JSONException
 import net.sf.json.JSONString
 import net.thucydides.core.annotations.Managed
 import org.apache.commons.lang3.StringUtils
@@ -191,6 +192,9 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     public void validateJsonResult(DataTable arg) {
         Map<String, String> entries = arg.asMap(String.class, String.class);
         String[] tableKey = entries.keySet();
+        List<String> tableList1 = new ArrayList()
+        List<String> singlejsonFeild = new ArrayList()
+
 
         JSONObject json = new JSONObject(jsonAsString);
 
@@ -203,35 +207,55 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                 break;
             }
             println "--------->" + Keys
-
             String jsonValue = json.get(Keys)
 
-            if ((Keys != "account")&&(Keys != "courseLength")&&(Keys != "failureReason")&&(Keys != "cappedValues")) {
-              assert entries.containsValue(jsonValue)
+            if ((Keys != "account") && (Keys != "courseLength") && (Keys != "failureReason") && (Keys != "cappedValues")) {
+
+                singlejsonFeild.add(Keys)
+                assert entries.containsValue(jsonValue)
+
+                for (String s : tableKey) {
+                    tableList1.add(tocamelcase(s))
+                }
+           assert tableList1.containsAll(singlejsonFeild)
             }
 
             println "===========>" + jsonValue
 
-            if ((Keys == "account")||(Keys == "cappedValues")||(Keys == "failureReason")) {
+            if ((Keys == "account") || (Keys == "cappedValues") || (Keys == "failureReason")) {
                 try {
-                    JSONObject innerJson = new JSONObject(jsonValue);
-                    Iterator<String> innerJasonKey = innerJson.keys()
+                List<String> tableList = new ArrayList()
+                List<String> jsonList = new ArrayList()
 
-                    while (innerJasonKey.hasNext()) {
-                        String keys2 = innerJasonKey.next()
-                        println "***********" + keys2
-                        //json.getJSONObject()
-                        String innerjsonValue = innerJson.get(keys2).toString()
-                        println ">>>>>>>>>>>>>>>" + innerjsonValue
-                        for (String s : tableKey) {
-                            println "" + entries.get(s)
-                            assert entries.containsValue(innerjsonValue)
+                String thenTableValue = ""
+                JSONObject innerJson = new JSONObject(jsonValue);
+                Iterator<String> innerJasonKey = innerJson.keys()
 
+                while (innerJasonKey.hasNext()) {
+
+                    String keys2 = innerJasonKey.next()
+
+                    println "--------------" + keys2
+                    jsonList.add(keys2)
+                    //json.getJSONObject()
+                    String innerjsonValue = innerJson.get(keys2).toString()
+                    println ">>>>>>>>>>>>>>>" + innerjsonValue
+                    for (String s : tableKey) {
+                        println "" + entries.get(s)
+
+                        if (!tableList.contains(tocamelcase(s))) {
+                            tableList.add(tocamelcase(s))
                         }
 
+                        println "xxxxxxx" + entries.keySet()
+
+                        assert entries.containsValue(innerjsonValue)
                     }
                 }
-                catch(Exception e){}
+                assert tableList.containsAll(jsonList)
+
+                }
+                 catch(Exception e){}
             }
 
         }
