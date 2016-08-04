@@ -47,13 +47,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
     val response = validateInputAndCheckBalance(accountNumber, minimum, toDate, fromDate, cleanSortCode, validDates)
 
-    timer("dailyBalances") {
-      val auditMessage = s"validateDailyBalance: accountNumber = $accountNumber, " +
-        s"sortCode = $cleanSortCode, minimum = $minimum, fromDate = $fromDate, toDate = $toDate"
-      audit(auditMessage) {
-        response
-      }
-    }
+    response
   }
 
   def validateInputAndCheckBalance(accountNumber: Optional[String], minimum: Optional[JBigDecimal], toDate: Optional[LocalDate],

@@ -38,14 +38,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
     val validatedStudentType = validateStudentType(studentType)
 
-    timer("calculateThresholdForStudentType") {
-      val auditMessage = s"calculateThreshold: validatedStudentType = $validatedStudentType, innerLondon = $inLondon, " +
-        s"courseLength = $courseLength, tuitionFees = $tuitionFees, tuitionFeesPaid = $tuitionFeesPaid, " +
-        s"accommodationFeesPaid = $accommodationFeesPaid, dependants = $dependants"
-      audit(auditMessage) {
-        calculateThresholdForStudentType(validatedStudentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
-      }
-    }
+    calculateThresholdForStudentType(validatedStudentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
   }
 
   private def calculateThresholdForStudentType(studentType: StudentType,

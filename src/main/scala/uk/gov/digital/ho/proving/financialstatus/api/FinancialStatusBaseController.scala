@@ -7,9 +7,8 @@ import java.util.{Locale, Optional}
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.http.{HttpHeaders, MediaType}
-import uk.gov.digital.ho.proving.financialstatus.monitor.{Auditor, Timer}
 
-trait FinancialStatusBaseController extends Auditor with Timer {
+trait FinancialStatusBaseController  {
   // TODO Temporary error code until these are finalised or removed
   val TEMP_ERROR_CODE = "0000"
 
