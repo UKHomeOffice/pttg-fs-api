@@ -71,6 +71,7 @@ compileTestGroovy.dependsOn "compileTestScala"
 tasks.withType(ScalaCompile) {
     scalaCompileOptions.with {
         force = true
+        additionalParameters = ["-Xmax-classfile-name", "127"]
     }
 }
 
