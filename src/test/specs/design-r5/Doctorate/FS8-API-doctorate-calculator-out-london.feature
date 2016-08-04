@@ -23,7 +23,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
             | In London                       | No        |
-            | Remaining course length         | 2         |
             | Accommodation fees already paid | 250       |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |

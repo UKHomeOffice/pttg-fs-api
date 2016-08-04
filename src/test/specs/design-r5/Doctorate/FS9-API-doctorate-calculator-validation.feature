@@ -12,7 +12,6 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |     |
             | In London                       | Yes |
-            | Course Length                   | 1   |
             | Accommodation fees already paid | 0   |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                    |
@@ -26,7 +25,6 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
             | In London                       |           |
-            | Course Length                   | 2         |
             | Accommodation fees already paid | 0         |
         Then the service displays the following result
             | HTTP Status    | 400                                                      |
@@ -41,7 +39,6 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
             | In London                       | Yes       |
-            | Course Length                   | 1         |
             | Accommodation fees already paid |           |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
@@ -53,7 +50,6 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
             | In London                       | Yes       |
-            | Course Length                   | 1         |
             | Accommodation fees already paid | %%        |
         Then the service displays the following result
             | HTTP Status    | 400                                                       |
@@ -65,7 +61,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate |
             | In London                       | Yes       |
-            | Course Length                   | 1         |
+
             | Accommodation fees already paid | -100      |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
