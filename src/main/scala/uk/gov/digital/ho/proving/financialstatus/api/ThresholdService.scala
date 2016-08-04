@@ -73,7 +73,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         calculateThreshold(validatedInputs, calculateDoctorDentistSabbatical)
 
       case Unknown(unknownType) =>
-        buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE(studentTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
+        buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE(unknownType), HttpStatus.BAD_REQUEST)
     }
   }
 
