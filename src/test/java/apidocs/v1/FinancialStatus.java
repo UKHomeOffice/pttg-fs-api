@@ -119,7 +119,7 @@ public class FinancialStatus {
                 )
             ))
 
-            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
+            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "010616", "00030000")
             .then().assertThat().statusCode(is(200));
     }
 

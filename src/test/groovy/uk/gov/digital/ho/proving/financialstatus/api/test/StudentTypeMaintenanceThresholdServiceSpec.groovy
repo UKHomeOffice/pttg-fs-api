@@ -13,9 +13,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalc
 
 import static TestUtils.getMessageSource
 import static TestUtils.getStudentTypeChecker
-import static org.hamcrest.core.StringContains.containsString
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 
@@ -27,10 +25,10 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
 
     def thresholdService = new ThresholdService(
-        new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
-            TestUtils.maxMaintenanceAllowance, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
+        new MaintenanceThresholdCalculator(TestUtils.inLondonMaintenance, TestUtils.notInLondonMaintenance,
+            TestUtils.maxMaintenanceAllowance, TestUtils.inLondonDependant, TestUtils.notInLondonDependant,
             TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
-            TestUtils.doctorateMinCourseLength, TestUtils.doctorateMaxCourseLength
+            TestUtils.pgddSsoMinCourseLength, TestUtils.pgddSsoMaxCourseLength, TestUtils.doctorateFixedCourseLength
         ), getMessageSource(), getStudentTypeChecker()
     )
 
@@ -42,11 +40,11 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
 
     def url = TestUtils.thresholdUrl
 
-    def callApi(studentType, innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid) {
+    def callApi(studentType, inLondon, courseLengthInMonths, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid) {
         def response = mockMvc.perform(
             get(url)
                 .param("studentType", studentType)
-                .param("inLondon", innerLondon.toString())
+                .param("inLondon", inLondon.toString())
                 .param("courseLength", courseLengthInMonths.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())

@@ -12,8 +12,9 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                                   @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int,
                                                   @Value("${non.doctorate.minimum.course.length}") val nonDoctorateMinCourseLength: Int,
                                                   @Value("${non.doctorate.maximum.course.length}") val nonDoctorateMaxCourseLength: Int,
-                                                  @Value("${doctorate.minimum.course.length}") val doctorateMinCourseLength: Int,
-                                                  @Value("${doctorate.maximum.course.length}") val doctorateMaxCourseLength: Int
+                                                  @Value("${pgdd.sso.minimum.course.length}") val pgddSsoMinCourseLength: Int,
+                                                  @Value("${pgdd.sso.maximum.course.length}") val pgddSsoMaxCourseLength: Int,
+                                                  @Value("${doctorate.fixed.course.length}") val doctorateFixedCourseLength: Int
                                                  ) {
 
   val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon).setScale(2, BigDecimal.RoundingMode.HALF_UP)
@@ -50,7 +51,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   def calculateDesPgddSso(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
                           dependants: Int): (BigDecimal, Option[CappedValues]) = {
 
-    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > doctorateMaxCourseLength) (doctorateMaxCourseLength, Some(doctorateMaxCourseLength)) else (courseLengthInMonths, None)
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > pgddSsoMaxCourseLength) (pgddSsoMaxCourseLength, Some(pgddSsoMaxCourseLength)) else (courseLengthInMonths, None)
     val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION)) else (accommodationFeesPaid, None)
 
     val amount = ((accommodationValue(innerLondon) * courseLength)
@@ -60,6 +61,14 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined)
       (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)))
     else (amount, None)
+
+  }
+
+  def calculateDoctorate(innerLondon: Boolean, accommodationFeesPaid: BigDecimal,
+                         dependants: Int): (BigDecimal, Option[CappedValues]) = {
+
+    calculateDesPgddSso(innerLondon: Boolean, doctorateFixedCourseLength, accommodationFeesPaid: BigDecimal,
+      dependants: Int): (BigDecimal, Option[CappedValues])
 
   }
 

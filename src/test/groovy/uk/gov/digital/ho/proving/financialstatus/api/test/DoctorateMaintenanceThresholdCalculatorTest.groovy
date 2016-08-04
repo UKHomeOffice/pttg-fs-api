@@ -6,10 +6,10 @@ import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalc
 class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
     MaintenanceThresholdCalculator maintenanceThresholdCalculator =
-        new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
-            TestUtils.maxMaintenanceAllowance, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
+        new MaintenanceThresholdCalculator(TestUtils.inLondonMaintenance, TestUtils.notInLondonMaintenance,
+            TestUtils.maxMaintenanceAllowance, TestUtils.inLondonDependant, TestUtils.notInLondonDependant,
             TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
-            TestUtils.doctorateMinCourseLength, TestUtils.doctorateMaxCourseLength
+            TestUtils.pgddSsoMinCourseLength, TestUtils.pgddSsoMaxCourseLength, TestUtils.doctorateFixedCourseLength
         )
 
     def bd(a) { new scala.math.BigDecimal(a) }
@@ -17,12 +17,12 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDesPgddSso(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorate(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
-        innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
-        false       | 1                    | 0.00                  | 5          || 4415.00
-        false       | 2                    | 0.00                  | 7          || 11550.00
+        inLondon | accommodationFeesPaid | dependants || threshold
+        false    | 0.00                  | 5          || 8830.00
+        false    | 0.00                  | 7          || 11550.00
 
 
     }
@@ -30,12 +30,12 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDesPgddSso(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorate(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
-        innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
-        true        | 1                    | 0.00                  | 4          || 4645.00
-        true        | 2                    | 0.00                  | 15         || 27880.00
+        inLondon | accommodationFeesPaid | dependants || threshold
+        true     | 0.00                  | 4          || 9290.00
+        true     | 0.00                  | 15         || 27880.00
 
 
     }
@@ -43,21 +43,21 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Accommodation Fees paid'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDesPgddSso(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorate(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
-        innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
-        true        | 1                    | 1039.00               | 14         || 12056.00
-        true        | 2                    | 692.00                | 11         || 20428.00
-        true        | 1                    | 622.00                | 3          || 3178.00
-        true        | 2                    | 154.00                | 9          || 17586.00
-        true        | 1                    | 869.00                | 10         || 8846.00
-        false       | 2                    | 860.00                | 12         || 17490.00
-        false       | 1                    | 206.00                | 9          || 6929.00
-        false       | 2                    | 106.00                | 11         || 16884.00
-        false       | 1                    | 1245.00               | 0          || 0.00
-        false       | 2                    | 2106.00               | 11         || 15725.00
-        false       | 1                    | 1845.00               | 0          || 0.00
+        inLondon | accommodationFeesPaid | dependants || threshold
+        true     | 1039.00               | 14         || 25151.00
+        true     | 692.00                | 11         || 20428.00
+        true     | 622.00                | 3          || 6978.00
+        true     | 154.00                | 9          || 17586.00
+        true     | 869.00                | 10         || 18561.00
+        false    | 860.00                | 12         || 17490.00
+        false    | 206.00                | 9          || 14064.00
+        false    | 106.00                | 11         || 16884.00
+        false    | 1245.00               | 0          || 785.00
+        false    | 2106.00               | 11         || 15725.00
+        false    | 1845.00               | 0          || 765.00
 
     }
 
@@ -65,37 +65,35 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'All variants'"() {
 
         expect:
-        def response = maintenanceThresholdCalculator.calculateDesPgddSso(innerLondon, courseLengthInMonths, bd(accommodationFeesPaid), dependants)
+        def response = maintenanceThresholdCalculator.calculateDoctorate(inLondon, bd(accommodationFeesPaid), dependants)
         def thresholdValue = response._1
         def cappedValues = DataUtils.getCappedValues(response._2)
         def cappedAccommodation = cappedValues.accommodationFeesPaid()
-        def cappedCourseLength = cappedValues.courseLength()
 
         assert thresholdValue == bd(threshold)
         assert DataUtils.compareAccommodationFees(bd(feesCapped), cappedAccommodation)
-        assert DataUtils.compareCourseLength(courseLengthCapped, cappedCourseLength)
 
         where:
         // Dues to groovy not liking Scala's 'None' object we represent this as the value zero
-        innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
-        false       | 2                    | 1627.00               | 15         || 21165.00  || 1265.00    || 0
-        false       | 1                    | 270.00                | 10         || 7545.00   || 0          || 0
-        true        | 2                    | 22.00                 | 1          || 4198.00   || 0          || 0
-        true        | 2                    | 636.00                | 9          || 17104.00  || 0          || 0
-        false       | 1                    | 1018.00               | 3          || 2037.00   || 0          || 0
-        true        | 2                    | 446.00                | 6          || 12224.00  || 0          || 0
-        false       | 1                    | 372.00                | 6          || 4723.00   || 0          || 0
-        true        | 2                    | 657.00                | 13         || 23843.00  || 0          || 0
-        true        | 3                    | 953.00                | 6          || 11717.00  || 0          || 2
-        true        | 2                    | 229.00                | 12         || 22581.00  || 0          || 0
-        true        | 2                    | 23.00                 | 12         || 22787.00  || 0          || 0
-        false       | 5                    | 182.00                | 14         || 20888.00  || 0          || 2
-        false       | 1                    | 738.00                | 12         || 8437.00   || 0          || 0
-        true        | 2                    | 73.00                 | 9          || 17667.00  || 0          || 0
-        false       | 1                    | 970.00                | 6          || 4125.00   || 0          || 0
-        true        | 8                    | 1934.00               | 5          || 9715.00   || 1265.00    || 2
-        true        | 1                    | 223.00                | 4          || 4422.00   || 0          || 0
-        true        | 2                    | 1078.00               | 14         || 25112.00  || 0          || 0
+        inLondon | accommodationFeesPaid | dependants || threshold || feesCapped
+        false    | 1627.00               | 15         || 21165.00  || 1265.00
+        false    | 270.00                | 10         || 15360.00  || 0
+        true     | 22.00                 | 1          || 4198.00   || 0
+        true     | 636.00                | 9          || 17104.00  || 0
+        false    | 1018.00               | 3          || 5092.00   || 0
+        true     | 446.00                | 6          || 12224.00  || 0
+        false    | 372.00                | 6          || 9818.00   || 0
+        true     | 657.00                | 13         || 23843.00  || 0
+        true     | 953.00                | 6          || 11717.00  || 0
+        true     | 229.00                | 12         || 22581.00  || 0
+        true     | 23.00                 | 12         || 22787.00  || 0
+        false    | 182.00                | 14         || 20888.00  || 0
+        false    | 738.00                | 12         || 17612.00  || 0
+        true     | 73.00                 | 9          || 17667.00  || 0
+        false    | 970.00                | 6          || 9220.00   || 0
+        true     | 1934.00               | 5          || 9715.00   || 1265.00
+        true     | 223.00                | 4          || 9067.00   || 0
+        true     | 1078.00               | 14         || 25112.00  || 0
 
     }
 

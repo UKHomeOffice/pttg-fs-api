@@ -3,7 +3,7 @@ package uk.gov.digital.ho.proving.financialstatus.acl
 import java.time.LocalDate
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBalance, AccountDailyBalances}
+import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBalances}
 
 trait BankService {
 

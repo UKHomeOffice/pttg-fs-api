@@ -13,17 +13,17 @@ class TestUtils {
         messageSource
     }
 
-    public static def innerLondonMaintenance = 1265
-    public static def nonInnerLondonMaintenance = 1015
+    public static def inLondonMaintenance = 1265
+    public static def notInLondonMaintenance = 1015
     public static def maxMaintenanceAllowance = 1265
-    public static def maxDoctorateMonths = 2
-    public static def innerLondonDependant = 845
-    public static def nonInnerLondonDependant = 680
+    public static def inLondonDependant = 845
+    public static def notInLondonDependant = 680
 
     public static def nonDoctorateMinCourseLength = 1
     public static def nonDoctorateMaxCourseLength = 9
-    public static def doctorateMinCourseLength = 1
-    public static def doctorateMaxCourseLength = 2
+    public static def pgddSsoMinCourseLength = 1
+    public static def pgddSsoMaxCourseLength = 2
+    public static def doctorateFixedCourseLength = 2
 
     public static def getStudentTypeChecker() { new StudentTypeChecker("doctorate", "nondoctorate", "pgdd", "sso") }
 

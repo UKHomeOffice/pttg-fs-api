@@ -137,19 +137,19 @@ public class ThresholdCalculator {
                         .description("whether the location is an in London")
                         .attributes(key("optional").value(false)),
                     parameterWithName("courseLength")
-                        .description("the length of the course in months")
-                        .attributes(key("optional").value(false)),
+                        .description("the length of the course in months (not required for 'doctorate' student type)")
+                        .attributes(key("optional").value(true)),
                     parameterWithName("tuitionFees")
-                        .description("total tuition fees (non required for 'doctorate' student type)")
+                        .description("total tuition fees (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(true)),
                     parameterWithName("tuitionFeesPaid")
-                        .description("tuition fees already paid (non required for 'doctorate' student type)")
+                        .description("tuition fees already paid (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(true)),
                     parameterWithName("accommodationFeesPaid")
                         .description("accommodation fees already paid")
                         .attributes(key("optional").value(false)),
                     parameterWithName("studentType")
-                        .description("type of student, current possible values are 'doctorate' and 'nondoctorate'")
+                        .description("type of student, current possible values are 'doctorate', 'nondoctorate', 'pgdd' and 'sso'")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
                         .description("the number of dependants to take in to account when calculating the minimum balance")

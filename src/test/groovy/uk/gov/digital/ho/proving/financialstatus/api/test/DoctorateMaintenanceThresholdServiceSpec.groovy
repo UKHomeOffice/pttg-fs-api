@@ -27,10 +27,10 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def thresholdService = new ThresholdService(
-        new MaintenanceThresholdCalculator(TestUtils.innerLondonMaintenance, TestUtils.nonInnerLondonMaintenance,
-            TestUtils.maxMaintenanceAllowance, TestUtils.innerLondonDependant, TestUtils.nonInnerLondonDependant,
+        new MaintenanceThresholdCalculator(TestUtils.inLondonMaintenance, TestUtils.notInLondonMaintenance,
+            TestUtils.maxMaintenanceAllowance, TestUtils.inLondonDependant, TestUtils.notInLondonDependant,
             TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
-            TestUtils.doctorateMinCourseLength, TestUtils.doctorateMaxCourseLength
+            TestUtils.pgddSsoMinCourseLength, TestUtils.pgddSsoMaxCourseLength, TestUtils.doctorateFixedCourseLength
         ), getMessageSource(), getStudentTypeChecker()
     )
 
@@ -42,12 +42,11 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def url = TestUtils.thresholdUrl
 
-    def callApi(studentType, innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants) {
+    def callApi(studentType, inLondon, accommodationFeesPaid, dependants) {
         def response = mockMvc.perform(
             get(url)
                 .param("studentType", studentType)
-                .param("inLondon", innerLondon.toString())
-                .param("courseLength", courseLengthInMonths.toString())
+                .param("inLondon", inLondon.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())
         )
@@ -58,57 +57,56 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
-        false       | 1                    | 0.00                  | 5          || 4415.00
-        false       | 2                    | 0.00                  | 7          || 11550.00
-
+        inLondon | accommodationFeesPaid | dependants || threshold
+        false    | 0.00                  | 5          || 8830.00
+        false    | 0.00                  | 7          || 11550.00
     }
 
     def "Tier 4 Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
-        true        | 1                    | 0.00                  | 4          || 4645.00
-        true        | 2                    | 0.00                  | 15         || 27880.00
+        inLondon | accommodationFeesPaid | dependants || threshold
+        true     | 0.00                  | 4          || 9290.00
+        true     | 0.00                  | 15         || 27880.00
 
     }
 
     def "Tier 4 Doctorate - Check 'Accommodation Fees paid'"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold
-        true        | 1                    | 1039.00               | 14         || 12056.00
-        true        | 2                    | 692.00                | 11         || 20428.00
-        true        | 1                    | 622.00                | 3          || 3178.00
-        true        | 2                    | 154.00                | 9          || 17586.00
-        true        | 1                    | 869.00                | 10         || 8846.00
-        false       | 2                    | 860.00                | 12         || 17490.00
-        false       | 1                    | 206.00                | 9          || 6929.00
-        false       | 2                    | 106.00                | 11         || 16884.00
-        false       | 1                    | 1245.00               | 0          || 0.00
+        inLondon | accommodationFeesPaid | dependants || threshold
+        true     | 1039.00               | 14         || 25151.00
+        true     | 692.00                | 11         || 20428.00
+        true     | 622.00                | 3          || 6978.00
+        true     | 154.00                | 9          || 17586.00
+        true     | 869.00                | 10         || 18561.00
+        false    | 860.00                | 12         || 17490.00
+        false    | 206.00                | 9          || 14064.00
+        false    | 106.00                | 11         || 16884.00
+        false    | 1245.00               | 0          || 785.00
 
     }
 
     def "Tier 4 Doctorate - Check 'All variants'"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
@@ -120,135 +118,98 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
             assert jsonContent.cappedValues == null || jsonContent.cappedValues.accommodationFeesPaid == null
         }
 
-        if (courseLengthCapped > 0) {
-            assert jsonContent.cappedValues && jsonContent.cappedValues.courseLength != null
-            assert jsonContent.cappedValues.courseLength == courseLengthCapped
-        } else {
-            assert jsonContent.cappedValues == null || jsonContent.cappedValues.courseLength == null
-        }
-
-        if (feesCapped == 0 && courseLengthCapped == 0) {
-            assert jsonContent.cappedvalues == null
-        }
-
         where:
-        innerLondon | courseLengthInMonths | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
-        false       | 15                   | 2627.00               | 15         || 21165.00  || 1265.00    || 2
-        false       | 1                    | 270.00                | 10         || 7545.00   || 0          || 0
-        true        | 2                    | 22.00                 | 1          || 4198.00   || 0          || 0
-        true        | 2                    | 636.00                | 9          || 17104.00  || 0          || 0
-        false       | 1                    | 1018.00               | 3          || 2037.00   || 0          || 0
-        true        | 2                    | 446.00                | 6          || 12224.00  || 0          || 0
-        false       | 1                    | 372.00                | 6          || 4723.00   || 0          || 0
-        true        | 9                    | 657.00                | 13         || 23843.00  || 0          || 2
-        true        | 2                    | 953.00                | 6          || 11717.00  || 0          || 0
-        true        | 2                    | 229.00                | 12         || 22581.00  || 0          || 0
-        true        | 2                    | 23.00                 | 12         || 22787.00  || 0          || 0
-        false       | 3                    | 182.00                | 14         || 20888.00  || 0          || 2
-        false       | 1                    | 738.00                | 12         || 8437.00   || 0          || 0
-        true        | 2                    | 73.00                 | 9          || 17667.00  || 0          || 0
-        false       | 1                    | 970.00                | 6          || 4125.00   || 0          || 0
-        true        | 2                    | 4934.00               | 5          || 9715.00   || 1265.00    || 0
-        true        | 1                    | 223.00                | 4          || 4422.00   || 0          || 0
-        true        | 2                    | 1078.00               | 14         || 25112.00  || 0          || 0
+        inLondon | accommodationFeesPaid | dependants || threshold || feesCapped
+        false    | 2627.00               | 15         || 21165.00  || 1265.00
+        false    | 270.00                | 10         || 15360.00  || 0
+        true     | 22.00                 | 1          || 4198.00   || 0
+        true     | 636.00                | 9          || 17104.00  || 0
+        false    | 1018.00               | 3          || 5092.00   || 0
+        true     | 446.00                | 6          || 12224.00  || 0
+        false    | 372.00                | 6          || 9818.00   || 0
+        true     | 657.00                | 13         || 23843.00  || 0
+        true     | 953.00                | 6          || 11717.00  || 0
+        true     | 229.00                | 12         || 22581.00  || 0
+        true     | 23.00                 | 12         || 22787.00  || 0
+        false    | 182.00                | 14         || 20888.00  || 0
+        false    | 738.00                | 12         || 17612.00  || 0
+        true     | 73.00                 | 9          || 17667.00  || 0
+        false    | 970.00                | 6          || 9220.00   || 0
+        true     | 4934.00               | 5          || 9715.00   || 1265.00
+        true     | 223.00                | 4          || 9067.00   || 0
+        true     | 1078.00               | 14         || 25112.00  || 0
 
 
-    }
-
-    def "Tier 4 Doctorate - Check invalid course length parameters"() {
-        expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
-        response.andExpect(status().isBadRequest())
-
-        response.andExpect(content().string(containsString("Parameter error: Invalid courseLength")))
-
-        where:
-        innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
-        true        | -1                   | 11         | 336.00
-        false       | 0                    | 14         | 1044.00
-    }
-
-    def "Tier 4 Doctorate - Check invalid characters course length parameters"() {
-        expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
-        response.andExpect(status().isBadRequest())
-
-        response.andExpect(content().string(containsString("Parameter conversion error: Invalid courseLength")))
-
-        where:
-        innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
-        false       | "(*^"                | 14         | 454.00
-        false       | "bb"                 | 11         | 1044.00
     }
 
     def "Tier 4 Doctorate - Check invalid accommodation fees parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid accommodationFeesPaid")))
 
         where:
-        innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
-        false       | 1                    | 14         | -1
-        true        | 2                    | 11         | -7
+        inLondon | dependants | accommodationFeesPaid
+        false    | 14         | -1
+        true     | 11         | -7
     }
 
     def "Tier 4 Doctorate - Check invalid characters accommodation fees parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid accommodationFeesPaid")))
 
         where:
-        innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
-        false       | 1                    | 14         | "(&"
-        true        | 2                    | 11         | "ddd"
+        inLondon | dependants | accommodationFeesPaid
+        false    | 14         | "(&"
+        true     | 11         | "ddd"
     }
 
     def "Tier 4 Doctorate - Check rounding accommodation fees parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
 
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid || threshold
-        false       | 1                    | 0          | 0.0000                || 1015.00
-        false       | 2                    | 0          | 0.010                 || 2029.99
-        false       | 2                    | 0          | 0.0010                || 2030.00
-        false       | 2                    | 0          | 0.005                 || 2029.99
-        false       | 2                    | 0          | 0.004                 || 2030.00
-        false       | 2                    | 0          | -0.004                || 2030.00
+        inLondon | dependants | accommodationFeesPaid || threshold
+        false    | 0          | 0.0000                || 2030.00
+        false    | 0          | 0.010                 || 2029.99
+        false    | 0          | 0.0010                || 2030.00
+        false    | 0          | 0.005                 || 2029.99
+        false    | 0          | 0.004                 || 2030.00
+        false    | 0          | -0.004                || 2030.00
     }
 
     def "Tier 4 Doctorate - Check invalid dependants parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid dependants")))
 
         where:
-        innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
-        false       | 1                    | -5         | 0
-        true        | 2                    | -986       | 0
+        inLondon | dependants | accommodationFeesPaid
+        false    | -5         | 0
+        true     | -986       | 0
     }
 
     def "Tier 4 Doctorate - Check invalid characters dependants parameters"() {
         expect:
-        def response = callApi("doctorate", innerLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid dependants")))
 
         where:
-        innerLondon | courseLengthInMonths | dependants | accommodationFeesPaid
-        false       | 1                    | "(*&66"    | 0
-        true        | 2                    | "h"        | 0
+        inLondon | dependants | accommodationFeesPaid
+        false    | "(*&66"    | 0
+        true     | "h"        | 0
     }
 
 }
