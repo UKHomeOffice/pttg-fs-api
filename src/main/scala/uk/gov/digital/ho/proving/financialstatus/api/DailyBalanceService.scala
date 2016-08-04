@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
 import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{HttpClientErrorException, ResourceAccessException}
+import uk.gov.digital.ho.proving.financialstatus.api.validation.{DailyBalanceParameterValidator, ThresholdParameterValidator}
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker}
 
 import scala.util._
@@ -23,12 +24,9 @@ import scala.util._
 @RequestMapping(path = Array("/pttg/financialstatusservice/v1/accounts/"))
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
-                                       val messageSource: ResourceBundleMessageSource) extends FinancialStatusBaseController {
+                                       val messageSource: ResourceBundleMessageSource) extends FinancialStatusBaseController with DailyBalanceParameterValidator {
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
-
-  val sortCodePattern = """^[0-9]{6}$""".r
-  val accountNumberPattern = """^[0-9]{8}$""".r
 
   logStartupInformation()
 
@@ -43,42 +41,26 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                         ): ResponseEntity[AccountDailyBalanceStatusResponse] = {
 
     val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
-    val validDates = validateDates(fromDate, toDate)
 
-    val response = validateInputAndCheckBalance(accountNumber, minimum, toDate, fromDate, cleanSortCode, validDates)
+    val validatedInputs = validateInputs(sortCode, accountNumber,minimum, fromDate, toDate, accountStatusChecker.numberConsecutiveDays)
 
-    response
-  }
+    validatedInputs match {
+      case Right(inputs) =>
+        validateDailyBalanceStatus(inputs)
 
-  def validateInputAndCheckBalance(accountNumber: Optional[String], minimum: Optional[JBigDecimal], toDate: Optional[LocalDate],
-                                   fromDate: Optional[LocalDate], cleanSortCode: Option[String],
-                                   validDates: Either[ResponseEntity[AccountDailyBalanceStatusResponse], Boolean]): ResponseEntity[AccountDailyBalanceStatusResponse] = {
-
-    if (validDates.isLeft) {
-      validDates.left.get
-    }
-    else if (!validateAccountNumber(accountNumber)) {
-      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_ACCOUNT_NUMBER, HttpStatus.BAD_REQUEST)
-    }
-    else if (!validateSortCode(cleanSortCode)) {
-      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_SORT_CODE, HttpStatus.BAD_REQUEST)
-    }
-    else if (!validateMinimum(minimum)) {
-      buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_MINIMUM_VALUE, HttpStatus.BAD_REQUEST)
-    }
-    else {
-      validateDailyBalanceStatus(cleanSortCode, accountNumber, minimum, fromDate, toDate)
+      case Left(errorList) =>
+        // We should be returning all the error messages and not just the first
+        buildErrorResponse(headers, errorList.head._1, errorList.head._2, errorList.head._3)
     }
   }
 
-  def validateDailyBalanceStatus(sortCodeOption: Option[String], accountNumberOption: Option[String], minimumOption: Option[BigDecimal],
-                                 fromDateOption: Option[LocalDate], toDateOption: Option[LocalDate]): ResponseEntity[AccountDailyBalanceStatusResponse] = {
+  def validateDailyBalanceStatus(inputs: ValidatedInputs) = {
 
-    val response = for {sortCode <- sortCodeOption
-                        accountNumber <- accountNumberOption
-                        minimum <- minimumOption
-                        fromDate <- fromDateOption
-                        toDate <- toDateOption
+    val response = for {sortCode <- inputs.sortCode
+                        accountNumber <- inputs.accountNumber
+                        minimum <- inputs.minimum
+                        fromDate <- inputs.fromDate
+                        toDate <- inputs.toDate
     } yield {
       val bankAccount = Account(sortCode, accountNumber)
 
@@ -120,36 +102,6 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
   def buildErrorResponse(headers: HttpHeaders, statusCode: String,
                          statusMessage: String, status: HttpStatus): ResponseEntity[AccountDailyBalanceStatusResponse] = {
     new ResponseEntity(AccountDailyBalanceStatusResponse(StatusResponse(statusCode, statusMessage)), headers, status)
-  }
-
-  def validateAccountNumber(accountNumber: Option[String]): Boolean = accountNumber.exists(accNo => accountNumberPattern.findFirstIn(accNo).nonEmpty && accNo != INVALID_ACCOUNT_NUMBER_VALUE)
-
-  def validateSortCode(sortCode: Option[String]): Boolean = sortCode.exists(sCode => sortCodePattern.findFirstIn(sCode).nonEmpty && sCode != INVALID_SORT_CODE_VALUE)
-
-  def validateMinimum(minimum: Option[BigDecimal]): Boolean = minimum.exists(_ > 0)
-
-  def validateDates(fromDate: Option[LocalDate], toDate: Option[LocalDate]): Either[ResponseEntity[AccountDailyBalanceStatusResponse], Boolean] = {
-
-    if (fromDate.isEmpty) {
-      Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_FROM_DATE, HttpStatus.BAD_REQUEST))
-    }
-    else if (toDate.isEmpty) {
-      Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
-    }
-    else {
-      val validDates =
-        for {from <- fromDate
-             to <- toDate
-        } yield {
-          if (!from.isBefore(to) || (!from.plusDays(accountStatusChecker.numberConsecutiveDays - 1).equals(to))) {
-            Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DATES(accountStatusChecker.numberConsecutiveDays - 1), HttpStatus.BAD_REQUEST))
-          }
-          else {
-            Right(true)
-          }
-        }
-      validDates.getOrElse(Left(buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_DATES(accountStatusChecker.numberConsecutiveDays - 1), HttpStatus.INTERNAL_SERVER_ERROR)))
-    }
   }
 
   override def logStartupInformation(): Unit = {

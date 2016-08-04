@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation._
+import uk.gov.digital.ho.proving.financialstatus.api.validation.ThresholdParameterValidator
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
 @RestController
@@ -19,7 +20,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 class ThresholdService @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
                                     val messageSource: ResourceBundleMessageSource,
                                     val studentTypeChecker: StudentTypeChecker
-                                   ) extends FinancialStatusBaseController {
+                                   ) extends FinancialStatusBaseController with ThresholdParameterValidator{
 
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
   val courseLengthPattern = """^[1-9]$""".r
@@ -36,7 +37,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                          @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer]
                         ): ResponseEntity[ThresholdResponse] = {
 
-    val validatedStudentType = validateStudentType(studentType)
+    val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
 
     calculateThresholdForStudentType(validatedStudentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
   }
@@ -52,7 +53,6 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
       case NonDoctorate =>
         val courseMinLength = maintenanceThresholdCalculator.nonDoctorateMinCourseLength
-        // val courseMaxLength = maintenanceThresholdCalculator.nonDoctorateMaxCourseLength
         val validatedInputs = validateInputs(NonDoctorate, inLondon, courseLength, tuitionFees, tuitionFeesPaid,
           accommodationFeesPaid, dependants, courseMinLength)
 
@@ -67,7 +67,6 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
       case DoctorDentist | StudentSabbaticalOfficer =>
         val courseMinLength = maintenanceThresholdCalculator.pgddSsoMinCourseLength
-        // val courseMaxLength = maintenanceThresholdCalculator.pgddSsoMaxCourseLength
         val validatedInputs = validateInputs(DoctorDentist, inLondon, courseLength, None, None,
           accommodationFeesPaid, dependants, courseMinLength)
 
@@ -78,7 +77,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  private def calculateThreshold(validatedInputs: Either[Vector[(String, String, HttpStatus)], ValidatedInputs], calculate: ValidatedInputs => Option[ThresholdResponse]) = {
+  private def calculateThreshold(validatedInputs: Either[Seq[(String, String, HttpStatus)], ValidatedInputs], calculate: ValidatedInputs => Option[ThresholdResponse]) = {
 
     validatedInputs match {
       case Right(inputs) =>
@@ -88,7 +87,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
           case None => buildErrorResponse(headers, TEMP_ERROR_CODE, UNEXPECTED_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
         }
       case Left(errorList) =>
-        buildErrorResponse(headers, errorList(0)._1, errorList(0)._2, errorList(0)._3)
+        // We should be returning all the error messages and not just the first
+        buildErrorResponse(headers, errorList.head._1, errorList.head._2, errorList.head._3)
     }
   }
 
@@ -126,73 +126,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-
-  private def validateInputs(studentType: StudentType,
-                             inLondon: Option[Boolean],
-                             courseLength: Option[Int],
-                             tuitionFees: Option[BigDecimal],
-                             tuitionFeesPaid: Option[BigDecimal],
-                             accommodationFeesPaid: Option[BigDecimal],
-                             dependants: Option[Int],
-                             courseMinLength: Int): Either[Vector[(String, String, HttpStatus)], ValidatedInputs] = {
-
-    var errorList = Vector.empty[(String, String, HttpStatus)]
-    val validDependants = validateDependants(dependants)
-    val validCourseLength = validateCourseLength(courseLength, courseMinLength)
-    val validTuitionFees = validateTuitionFees(tuitionFees)
-    val validTuitionFeesPaid = validateTuitionFeesPaid(tuitionFeesPaid)
-    val validAccommodationFeesPaid = validateAccommodationFeesPaid(accommodationFeesPaid)
-    val validInLondon = validateInnerLondon(inLondon)
-
-    studentType match {
-
-      case NonDoctorate =>
-        if (validTuitionFees.isEmpty) {
-          errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST))
-        } else if (validTuitionFeesPaid.isEmpty) {
-          errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_TUITION_FEES_PAID, HttpStatus.BAD_REQUEST))
-        } else if (validCourseLength.isEmpty) {
-          errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST))
-        }
-      case DoctorDentist | StudentSabbaticalOfficer =>
-        if (validCourseLength.isEmpty) {
-          errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST))
-        }
-      case Doctorate =>
-
-      case Unknown(unknownStudentType) => errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_STUDENT_TYPE(unknownStudentType), HttpStatus.BAD_REQUEST))
-    }
-
-    if (validAccommodationFeesPaid.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST))
-    } else if (validDependants.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
-    } else if (validInLondon.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_IN_LONDON, HttpStatus.BAD_REQUEST))
-    }
-
-    if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validCourseLength, validTuitionFees, validTuitionFeesPaid, validAccommodationFeesPaid, validInLondon))
-    else Left(errorList)
-  }
-
-  private def validateDependants(dependants: Option[Int]) = dependants.filter(_ >= 0)
-
-  private def validateCourseLength(courseLength: Option[Int], min: Int) = courseLength.filter(length => min <= length)
-
-  private def validateTuitionFees(tuitionFees: Option[BigDecimal]) = tuitionFees.filter(_ >= 0)
-
-  private def validateTuitionFeesPaid(tuitionFeesPaid: Option[BigDecimal]) = tuitionFeesPaid.filter(_ >= 0)
-
-  private def validateAccommodationFeesPaid(accommodationFeesPaid: Option[BigDecimal]) = accommodationFeesPaid.filter(_ >= 0)
-
-  private def validateStudentType(studentType: Option[String]): StudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
-
-  private def validateInnerLondon(inLondon: Option[Boolean]) = inLondon
-
   override def logStartupInformation(): Unit = LOGGER.info(maintenanceThresholdCalculator.parameters)
-
-  case class ValidatedInputs(dependants: Option[Int], courseLength: Option[Int], tuitionFees: Option[BigDecimal],
-                             tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal], inLondon: Option[Boolean])
 
   private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] =
     new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
