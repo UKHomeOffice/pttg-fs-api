@@ -36,7 +36,9 @@ trait FinancialStatusBaseController extends Auditor with Timer {
   val INVALID_COURSE_LENGTH = getMessage("invalid.course.length")
 
   def INVALID_DATES(params: Int*) = getMessage("invalid.dates", params)
+
   def INVALID_STUDENT_TYPE(params: String*) = getMessage("invalid.student.type", params)
+
   def NO_RECORDS_FOR_ACCOUNT(params: String*) = getMessage("no.records.for.account", params)
 
   val UNEXPECTED_ERROR = getMessage("unexpected.error")
@@ -52,9 +54,10 @@ trait FinancialStatusBaseController extends Auditor with Timer {
 
   implicit def toOptionBoolean(optional: Optional[JBoolean]): Option[Boolean] = if (optional.isPresent) Some(optional.get) else None
 
-  implicit def toOptionBigDecimal(optional: Optional[JBigDecimal]): Option[BigDecimal] = if (optional.isPresent) Some(optional.get) else None
+  implicit def toOptionBigDecimal(optional: Optional[JBigDecimal]): Option[BigDecimal] =
+    if (optional.isPresent) Some(BigDecimal(optional.get).setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP)) else None
 
-  val messageSource: ResourceBundleMessageSource
+  def messageSource: ResourceBundleMessageSource
 
   def getMessage(message: String): String = messageSource.getMessage(message, Nil.toArray[Object], LocaleContextHolder.getLocale)
 
