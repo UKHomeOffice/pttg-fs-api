@@ -13,6 +13,7 @@ import steps.WireMockTestDataLoader
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
@@ -35,6 +36,8 @@ class RestErrorsSpec extends Specification {
     def apiUrl = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
     def verifyUrl = "/financialstatus/v1/123456/12345678/balances.*"
 
+    ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
+
     def maxAttempts = 3
     def backoffPeriod = 5
 
@@ -47,9 +50,10 @@ class RestErrorsSpec extends Specification {
     def customRestTemplate = new RestTemplate(customHttpRequestFactory)
 
     HttpUtils httpUtils = new HttpUtils(customRestTemplate, maxAttempts, backoffPeriod)
+
     MockBankService mockBankService = new MockBankService(new ObjectMapper(), httpUtils, serviceName)
 
-    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), getMessageSource())
+    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages)
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
 

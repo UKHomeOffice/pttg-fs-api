@@ -1,20 +1,20 @@
 package uk.gov.digital.ho.proving.financialstatus.api.validation
 
 import org.springframework.http.HttpStatus
-import uk.gov.digital.ho.proving.financialstatus.api.FinancialStatusBaseController
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
-trait ThresholdParameterValidator extends ServiceMessages{
-  this: FinancialStatusBaseController =>
+trait ThresholdParameterValidator {
+
+  val serviceMessages: ServiceMessages
 
   protected def validateInputs(studentType: StudentType,
-                             inLondon: Option[Boolean],
-                             courseLength: Option[Int],
-                             tuitionFees: Option[BigDecimal],
-                             tuitionFeesPaid: Option[BigDecimal],
-                             accommodationFeesPaid: Option[BigDecimal],
-                             dependants: Option[Int],
-                             courseMinLength: Int): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
+                               inLondon: Option[Boolean],
+                               courseLength: Option[Int],
+                               tuitionFees: Option[BigDecimal],
+                               tuitionFeesPaid: Option[BigDecimal],
+                               accommodationFeesPaid: Option[BigDecimal],
+                               dependants: Option[Int],
+                               courseMinLength: Int): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
 
     var errorList = Vector.empty[(String, String, HttpStatus)]
     val validDependants = validateDependants(dependants)
@@ -28,26 +28,26 @@ trait ThresholdParameterValidator extends ServiceMessages{
 
       case NonDoctorate =>
         if (validTuitionFees.isEmpty) {
-          errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST))
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST))
         } else if (validTuitionFeesPaid.isEmpty) {
-          errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_TUITION_FEES_PAID, HttpStatus.BAD_REQUEST))
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TUITION_FEES_PAID, HttpStatus.BAD_REQUEST))
         } else if (validCourseLength.isEmpty) {
-          errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST))
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST))
         }
       case DoctorDentist | StudentSabbaticalOfficer =>
         if (validCourseLength.isEmpty) {
-          errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST))
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST))
         }
       case Doctorate =>
-      case Unknown(unknownStudentType) => errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_STUDENT_TYPE(unknownStudentType), HttpStatus.BAD_REQUEST))
+      case Unknown(unknownStudentType) => errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_STUDENT_TYPE(unknownStudentType), HttpStatus.BAD_REQUEST))
     }
 
     if (validAccommodationFeesPaid.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST))
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_ACCOMMODATION_FEES_PAID, HttpStatus.BAD_REQUEST))
     } else if (validDependants.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
     } else if (validInLondon.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_IN_LONDON, HttpStatus.BAD_REQUEST))
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_IN_LONDON, HttpStatus.BAD_REQUEST))
     }
 
     if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validCourseLength, validTuitionFees, validTuitionFeesPaid, validAccommodationFeesPaid, validInLondon))

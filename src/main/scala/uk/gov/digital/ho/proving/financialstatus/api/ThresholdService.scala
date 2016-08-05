@@ -7,10 +7,9 @@ import java.util.Optional
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.PropertySource
-import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation._
-import uk.gov.digital.ho.proving.financialstatus.api.validation.ThresholdParameterValidator
+import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages, ThresholdParameterValidator}
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
 @RestController
@@ -18,9 +17,9 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 @RequestMapping(value = Array("/pttg/financialstatusservice/v1/maintenance"))
 @ControllerAdvice
 class ThresholdService @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
-                                    val messageSource: ResourceBundleMessageSource,
-                                    val studentTypeChecker: StudentTypeChecker
-                                   ) extends FinancialStatusBaseController with ThresholdParameterValidator{
+                                    val studentTypeChecker: StudentTypeChecker,
+                                    val serviceMessages: ServiceMessages
+                                   ) extends FinancialStatusBaseController with ThresholdParameterValidator {
 
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
   val courseLengthPattern = """^[1-9]$""".r
@@ -73,7 +72,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         calculateThreshold(validatedInputs, calculateDoctorDentistSabbatical)
 
       case Unknown(unknownType) =>
-        buildErrorResponse(headers, TEMP_ERROR_CODE, INVALID_STUDENT_TYPE(studentTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
+        buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_STUDENT_TYPE(studentTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -84,7 +83,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         val thresholdResponse = calculate(inputs)
         thresholdResponse match {
           case Some(response) => new ResponseEntity[ThresholdResponse](response, HttpStatus.OK)
-          case None => buildErrorResponse(headers, TEMP_ERROR_CODE, UNEXPECTED_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
+          case None => buildErrorResponse(headers, serviceMessages.REST_INTERNAL_ERROR, serviceMessages.UNEXPECTED_ERROR, HttpStatus.INTERNAL_SERVER_ERROR)
         }
       case Left(errorList) =>
         // We should be returning all the error messages and not just the first
@@ -98,7 +97,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          deps <- inputs.dependants
     } yield {
       val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDoctorate(inner, aFeesPaid, deps)
-      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, OK))
+      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
 
@@ -109,7 +108,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          deps <- inputs.dependants
     } yield {
       val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDesPgddSso(inner, length, aFeesPaid, deps)
-      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, OK))
+      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
 
@@ -122,7 +121,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          deps <- inputs.dependants
     } yield {
       val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateNonDoctorate(inner, length, tFees, tFeesPaid, aFeesPaid, deps)
-      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, OK))
+      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
 

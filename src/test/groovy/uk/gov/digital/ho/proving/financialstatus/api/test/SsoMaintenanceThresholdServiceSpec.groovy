@@ -9,15 +9,15 @@ import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
-import static TestUtils.getMessageSource
-import static TestUtils.getStudentTypeChecker
 import static org.hamcrest.core.StringContains.containsString
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
+import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.*
 
 /**
  * @Author Home Office Digital
@@ -26,19 +26,20 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class SsoMaintenanceThresholdServiceSpec extends Specification {
 
+    ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
+
     def thresholdService = new ThresholdService(
-        new MaintenanceThresholdCalculator(TestUtils.inLondonMaintenance, TestUtils.notInLondonMaintenance,
-            TestUtils.maxMaintenanceAllowance, TestUtils.inLondonDependant, TestUtils.notInLondonDependant,
-            TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
-            TestUtils.pgddSsoMinCourseLength, TestUtils.pgddSsoMaxCourseLength, TestUtils.doctorateFixedCourseLength
-        ), getMessageSource(), getStudentTypeChecker()
+        new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
+            maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
+            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
+            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
+        ), getStudentTypeChecker(), serviceMessages
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
-        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper()))
+        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper(), serviceMessages))
         .build()
-
 
     def url = TestUtils.thresholdUrl
 
@@ -170,8 +171,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Student Sabbatical Office - Check invalid characters course length parameters"() {
         expect:
         def response = callApi("sso", inLondon, courseLengthInMonths, accommodationFeesPaid, dependants)
+        response.andDo(MockMvcResultHandlers.print())
         response.andExpect(status().isBadRequest())
-
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid courseLength")))
 
         where:

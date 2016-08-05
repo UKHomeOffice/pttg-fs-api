@@ -9,6 +9,7 @@ import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
 import java.time.LocalDate
@@ -25,10 +26,11 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class DailyBalanceServiceSpec extends Specification {
 
+    ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
 
     def mockBankService = Mock(MockBankService)
 
-    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), getMessageSource())
+    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages)
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
     def "daily balance threshold check pass"() {

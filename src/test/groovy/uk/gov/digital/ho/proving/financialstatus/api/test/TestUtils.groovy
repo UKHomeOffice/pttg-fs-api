@@ -1,6 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import org.springframework.context.support.ResourceBundleMessageSource
+import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 
 class TestUtils {

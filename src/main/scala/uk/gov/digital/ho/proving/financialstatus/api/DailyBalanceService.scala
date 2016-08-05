@@ -9,12 +9,11 @@ import org.apache.http.conn.HttpHostConnectException
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.PropertySource
-import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
 import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{HttpClientErrorException, ResourceAccessException}
-import uk.gov.digital.ho.proving.financialstatus.api.validation.{DailyBalanceParameterValidator, ThresholdParameterValidator}
+import uk.gov.digital.ho.proving.financialstatus.api.validation.{DailyBalanceParameterValidator, ServiceMessages}
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker}
 
 import scala.util._
@@ -24,7 +23,8 @@ import scala.util._
 @RequestMapping(path = Array("/pttg/financialstatusservice/v1/accounts/"))
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
-                                       val messageSource: ResourceBundleMessageSource) extends FinancialStatusBaseController with DailyBalanceParameterValidator {
+                                       val serviceMessages: ServiceMessages
+                                      ) extends FinancialStatusBaseController with DailyBalanceParameterValidator {
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
@@ -42,7 +42,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
     val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
 
-    val validatedInputs = validateInputs(sortCode, accountNumber,minimum, fromDate, toDate, accountStatusChecker.numberConsecutiveDays)
+    val validatedInputs = validateInputs(sortCode, accountNumber, minimum, fromDate, toDate, accountStatusChecker.numberConsecutiveDays)
 
     validatedInputs match {
       case Right(inputs) =>
@@ -56,23 +56,24 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
   def validateDailyBalanceStatus(inputs: ValidatedInputs) = {
 
-    val response = for {sortCode <- inputs.sortCode
-                        accountNumber <- inputs.accountNumber
-                        minimum <- inputs.minimum
-                        fromDate <- inputs.fromDate
-                        toDate <- inputs.toDate
+    val response = for {
+      sortCode <- inputs.sortCode
+      accountNumber <- inputs.accountNumber
+      minimum <- inputs.minimum
+      fromDate <- inputs.fromDate
+      toDate <- inputs.toDate
     } yield {
       val bankAccount = Account(sortCode, accountNumber)
 
       val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum)
 
       dailyAccountBalanceCheck match {
-        case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck), StatusResponse("200", OK)), HttpStatus.OK)
+        case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck), StatusResponse("200", serviceMessages.OK)), HttpStatus.OK)
 
         case Failure(exception: HttpClientErrorException) =>
           exception.getStatusCode match {
             case HttpStatus.NOT_FOUND => new ResponseEntity(
-              AccountDailyBalanceStatusResponse(StatusResponse(TEMP_ERROR_CODE, NO_RECORDS_FOR_ACCOUNT(sortCode, accountNumber))), HttpStatus.NOT_FOUND
+              AccountDailyBalanceStatusResponse(StatusResponse(serviceMessages.REST_API_CLIENT_ERROR, serviceMessages.NO_RECORDS_FOR_ACCOUNT(sortCode, accountNumber))), HttpStatus.NOT_FOUND
             )
             case _ => new ResponseEntity(
               AccountDailyBalanceStatusResponse(
@@ -82,21 +83,21 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
         case Failure(exception: ResourceAccessException) =>
           LOGGER.error("Connection refused by bank service : " + exception.getMessage)
           val message = exception.getCause match {
-            case e: SocketTimeoutException => CONNECTION_TIMEOUT
-            case e: HttpHostConnectException => CONNECTION_REFUSED
-            case _ => UNKNOWN_CONNECTION_EXCEPTION
+            case e: SocketTimeoutException => serviceMessages.CONNECTION_TIMEOUT
+            case e: HttpHostConnectException => serviceMessages.CONNECTION_REFUSED
+            case _ => serviceMessages.UNKNOWN_CONNECTION_EXCEPTION
           }
           new ResponseEntity(AccountDailyBalanceStatusResponse(
-            StatusResponse(TEMP_ERROR_CODE, message)), HttpStatus.INTERNAL_SERVER_ERROR)
+            StatusResponse(serviceMessages.REST_API_CLIENT_ERROR, message)), HttpStatus.INTERNAL_SERVER_ERROR)
 
         case Failure(exception: Throwable) =>
           LOGGER.error("Unknown bank service response: " + exception.getMessage)
           new ResponseEntity(AccountDailyBalanceStatusResponse(
-            StatusResponse(TEMP_ERROR_CODE, exception.getMessage)), HttpStatus.INTERNAL_SERVER_ERROR)
+            StatusResponse(serviceMessages.REST_API_CLIENT_ERROR, exception.getMessage)), HttpStatus.INTERNAL_SERVER_ERROR)
       }
     }
     response.getOrElse(new ResponseEntity(AccountDailyBalanceStatusResponse(
-      StatusResponse(TEMP_ERROR_CODE, UNEXPECTED_ERROR)), HttpStatus.INTERNAL_SERVER_ERROR))
+      StatusResponse(serviceMessages.REST_INTERNAL_ERROR, serviceMessages.UNEXPECTED_ERROR)), HttpStatus.INTERNAL_SERVER_ERROR))
   }
 
   def buildErrorResponse(headers: HttpHeaders, statusCode: String,

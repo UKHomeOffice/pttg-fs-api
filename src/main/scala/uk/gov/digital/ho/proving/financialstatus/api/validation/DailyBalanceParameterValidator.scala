@@ -7,8 +7,9 @@ import uk.gov.digital.ho.proving.financialstatus.api.FinancialStatusBaseControll
 
 import scala.util.{Either, Left, Right}
 
-trait DailyBalanceParameterValidator extends ServiceMessages {
-  this: FinancialStatusBaseController =>
+trait DailyBalanceParameterValidator {
+
+  val serviceMessages: ServiceMessages
 
   val sortCodePattern = """^[0-9]{6}$""".r
   val accountNumberPattern = """^[0-9]{8}$""".r
@@ -28,23 +29,23 @@ trait DailyBalanceParameterValidator extends ServiceMessages {
     val validToDate = validateDate(toDate)
 
     if (validSortCode.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_SORT_CODE, HttpStatus.BAD_REQUEST))
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_SORT_CODE, HttpStatus.BAD_REQUEST))
     } else if (validAccountNumber.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_ACCOUNT_NUMBER, HttpStatus.BAD_REQUEST))
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_ACCOUNT_NUMBER, HttpStatus.BAD_REQUEST))
     } else if (validMinimum.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_MINIMUM_VALUE, HttpStatus.BAD_REQUEST))
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_MINIMUM_VALUE, HttpStatus.BAD_REQUEST))
     } else if (validFromDate.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_FROM_DATE, HttpStatus.BAD_REQUEST))
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_FROM_DATE, HttpStatus.BAD_REQUEST))
     } else if (validToDate.isEmpty) {
-      errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
     } else {
-        for {from <- fromDate
-             to <- toDate
-        } yield {
-          if (!from.isBefore(to) || (!from.plusDays(numberConsecutiveDays - 1).equals(to))) {
-            errorList = errorList :+ ((TEMP_ERROR_CODE, INVALID_DATES(numberConsecutiveDays - 1), HttpStatus.BAD_REQUEST))
-          }
+      for {from <- fromDate
+           to <- toDate
+      } yield {
+        if (!from.isBefore(to) || (!from.plusDays(numberConsecutiveDays - 1).equals(to))) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DATES(numberConsecutiveDays - 1), HttpStatus.BAD_REQUEST))
         }
+      }
     }
 
     if (errorList.isEmpty)
@@ -54,13 +55,12 @@ trait DailyBalanceParameterValidator extends ServiceMessages {
   }
 
   private def validateAccountNumber(accountNumber: Option[String]) =
-    accountNumber.filter(accNo => accountNumberPattern.findFirstIn(accNo).nonEmpty && accNo != INVALID_ACCOUNT_NUMBER_VALUE)
+    accountNumber.filter(accNo => accountNumberPattern.findFirstIn(accNo).nonEmpty && accNo != serviceMessages.INVALID_ACCOUNT_NUMBER_VALUE)
 
   private def validateSortCode(sortCode: Option[String]) =
-    sortCode.map(_.replace("-","")).filter(sCode => sortCodePattern.findFirstIn(sCode).nonEmpty && sCode != INVALID_SORT_CODE_VALUE)
+    sortCode.map(_.replace("-", "")).filter(sCode => sortCodePattern.findFirstIn(sCode).nonEmpty && sCode != serviceMessages.INVALID_SORT_CODE_VALUE)
 
   private def validateDate(date: Option[LocalDate]) = date
-
   private def validateMinimum(minimum: Option[BigDecimal]) = minimum.filter(_ > 0)
 
   case class ValidatedInputs(sortCode: Option[String], accountNumber: Option[String], minimum: Option[BigDecimal], fromDate: Option[LocalDate], toDate: Option[LocalDate])

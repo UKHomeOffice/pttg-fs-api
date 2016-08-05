@@ -72,7 +72,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidSortCode
     }
 
@@ -88,7 +88,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidSortCode
     }
 
@@ -104,7 +104,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidSortCode
     }
 
@@ -138,7 +138,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidAccountNumber
     }
 
@@ -154,7 +154,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidAccountNumber
     }
 
@@ -170,7 +170,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidAccountNumber
     }
 
@@ -186,7 +186,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidTotalFunds
     }
 
@@ -202,7 +202,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidTotalFunds
     }
 
@@ -220,7 +220,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0002"
         jsonContent.status.message == invalidConversionFromDate
     }
 
@@ -236,7 +236,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0002"
         jsonContent.status.message == invalidConversionFromDate
     }
 
@@ -252,7 +252,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0002"
         jsonContent.status.message == invalidConversionFromDate
     }
 
@@ -270,7 +270,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0002"
         jsonContent.status.message == invalidConversionToDate
     }
 
@@ -286,7 +286,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0002"
         jsonContent.status.message == invalidConversionToDate
     }
 
@@ -302,7 +302,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0002"
         jsonContent.status.message == invalidConversionToDate
     }
 
@@ -320,7 +320,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidDateRange
     }
 
@@ -336,7 +336,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidDateRange
     }
 
@@ -355,7 +355,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andDo(MockMvcResultHandlers.print())
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidFromDate
     }
 
@@ -372,7 +372,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         response.andDo(MockMvcResultHandlers.print())
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidToDate
     }
 
@@ -388,7 +388,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         then:
         response.andExpect(status().isBadRequest())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.code == "0000"
+        jsonContent.status.code == "0004"
         jsonContent.status.message == invalidTotalFunds
     }
 }

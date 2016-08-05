@@ -6,18 +6,18 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import spock.lang.Specification
+import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
-import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
+import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
-import static TestUtils.getMessageSource
 import static org.hamcrest.core.StringContains.containsString
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.getStudentTypeChecker
+import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.*
 
 /**
  * @Author Home Office Digital
@@ -26,17 +26,19 @@ import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.getSt
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
 
+    ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
+
     def thresholdService = new ThresholdService(
-        new MaintenanceThresholdCalculator(TestUtils.inLondonMaintenance, TestUtils.notInLondonMaintenance,
-            TestUtils.maxMaintenanceAllowance, TestUtils.inLondonDependant, TestUtils.notInLondonDependant,
-            TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
-            TestUtils.pgddSsoMinCourseLength, TestUtils.pgddSsoMaxCourseLength, TestUtils.doctorateFixedCourseLength
-        ), getMessageSource(), getStudentTypeChecker()
+        new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
+            maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
+            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
+            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
+        ), getStudentTypeChecker(), serviceMessages
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
-        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper()))
+        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper(), serviceMessages))
         .build()
 
 
