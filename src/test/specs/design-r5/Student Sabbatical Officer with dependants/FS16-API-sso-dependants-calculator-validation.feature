@@ -21,7 +21,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                    |
-            | Status code    | 0000                                                                                   |
+            | Status code    | 0004                                                                                   |
             | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso] |
 
 ######################### Validation on the In London field #########################
@@ -29,7 +29,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is not provided with In London Yes or No field
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso       |
+            | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       |            |
             | Course Length                   | 2          |
@@ -37,7 +37,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                      |
-            | Status code    | 0000                                                     |
+            | Status code    | 0004                                                     |
             | Status message | Parameter error: Invalid inLondon, must be true or false |
 
 ######################### Validation on the Course length field #########################
@@ -45,7 +45,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is not provided with the Course length
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso       |
+            | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Course Length                   |            |
@@ -53,13 +53,13 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                              |
-            | Status code    | 0000                                                             |
+            | Status code    | 0004                                                             |
             | Status message | Parameter error: Invalid courseLength, must be greater than zero |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-2
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso       |
+            | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Course Length                   | x          |
@@ -67,7 +67,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                              |
-            | Status code    | 0000                                             |
+            | Status code    | 0002                                             |
             | Status message | Parameter conversion error: Invalid courseLength |
 
 
@@ -76,7 +76,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is not provided with Accommodation fees already paid
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso       |
+            | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Course Length                   | 1          |
@@ -84,13 +84,13 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
+            | Status code    | 0004                                           |
             | Status message | Parameter error: Invalid accommodationFeesPaid |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - not numbers 1-2
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso       |
+            | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Course Length                   | 1          |
@@ -98,13 +98,13 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                       |
-            | Status code    | 0000                                                      |
+            | Status code    | 0002                                                      |
             | Status message | Parameter conversion error: Invalid accommodationFeesPaid |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - less than zero
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso       |
+            | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Course Length                   | 1          |
@@ -112,7 +112,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
+            | Status code    | 0004                                           |
             | Status message | Parameter error: Invalid accommodationFeesPaid |
 
         ######################### Validation on the Dependant field #########################
@@ -120,7 +120,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is not provided with the Number of dependants
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso       |
+            | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Course Length                   | 2          |
@@ -128,13 +128,13 @@ Feature: Validation of the API fields and data
             | Number of dependants            | -7         |
         Then the service displays the following result
             | HTTP Status    | 400                                                          |
-            | Status code    | 0000                                                         |
+            | Status code    | 0004                                                         |
             | Status message | Parameter error: Invalid dependants, must be zero or greater |
 
     Scenario: The API is provided with incorrect Number of Dependants - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso       |
+            | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Course Length                   | 1          |
@@ -142,5 +142,5 @@ Feature: Validation of the API fields and data
             | Number of dependants            | @          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
+            | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |

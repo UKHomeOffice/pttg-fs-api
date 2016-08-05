@@ -17,7 +17,7 @@ Feature: Validation of the API fields and data
             | Accommodation fees already paid | 0   |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                    |
-            | Status code    | 0000                                                                                   |
+            | Status code    | 0004                                                                                   |
             | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso] |
 
 ######################### Validation on the In London field #########################
@@ -26,12 +26,12 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso |
-            | In London                       |      |
-            | Course Length                   | 2    |
-            | Accommodation fees already paid | 0    |
+            | In London                       |     |
+            | Course Length                   | 2   |
+            | Accommodation fees already paid | 0   |
         Then the service displays the following result
             | HTTP Status    | 400                                                      |
-            | Status code    | 0000                                                     |
+            | Status code    | 0004                                                     |
             | Status message | Parameter error: Invalid inLondon, must be true or false |
 
 ######################### Validation on the Course length field #########################
@@ -40,24 +40,24 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso |
-            | In London                       | Yes  |
-            | Course Length                   |      |
-            | Accommodation fees already paid | 0    |
+            | In London                       | Yes |
+            | Course Length                   |     |
+            | Accommodation fees already paid | 0   |
         Then the service displays the following result
             | HTTP Status    | 400                                                              |
-            | Status code    | 0000                                                             |
+            | Status code    | 0004                                                             |
             | Status message | Parameter error: Invalid courseLength, must be greater than zero |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-2
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso |
-            | In London                       | Yes  |
-            | Course Length                   | x    |
-            | Accommodation fees already paid | 0    |
+            | In London                       | Yes |
+            | Course Length                   | x   |
+            | Accommodation fees already paid | 0   |
         Then the service displays the following result
             | HTTP Status    | 400                                              |
-            | Status code    | 0000                                             |
+            | Status code    | 0002                                             |
             | Status message | Parameter conversion error: Invalid courseLength |
 
 ######################### Validation on the Accommodation fees already paid field #########################
@@ -66,36 +66,36 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso |
-            | In London                       | Yes  |
-            | Course Length                   | 1    |
-            | Accommodation fees already paid |      |
+            | In London                       | Yes |
+            | Course Length                   | 1   |
+            | Accommodation fees already paid |     |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
+            | Status code    | 0004                                           |
             | Status message | Parameter error: Invalid accommodationFeesPaid |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - not numbers 1-2
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso |
-            | In London                       | Yes  |
-            | Course Length                   | 1    |
-            | Accommodation fees already paid | %%   |
+            | In London                       | Yes |
+            | Course Length                   | 1   |
+            | Accommodation fees already paid | %%  |
         Then the service displays the following result
             | HTTP Status    | 400                                                       |
-            | Status code    | 0000                                                      |
+            | Status code    | 0002                                                      |
             | Status message | Parameter conversion error: Invalid accommodationFeesPaid |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - less than zero
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso |
+            | Student Type                    | sso  |
             | In London                       | Yes  |
             | Course Length                   | 1    |
             | Accommodation fees already paid | -100 |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
+            | Status code    | 0004                                           |
             | Status message | Parameter error: Invalid accommodationFeesPaid |
 
 #    Scenario: The API is provided with incorrect  Accommodation fees already paid - >£1,265
@@ -109,5 +109,5 @@ Feature: Validation of the API fields and data
 #
 #        Then the service displays the following result
 #            | HTTP Status    | 400                                            |
-#            | Status code    | 0000                                           |
+#            | Status code    | 0004                                           |
 #            | Status message | Parameter error: Invalid accommodationFeesPaid |

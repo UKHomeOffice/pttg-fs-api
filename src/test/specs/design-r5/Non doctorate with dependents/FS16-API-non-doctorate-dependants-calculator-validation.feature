@@ -22,7 +22,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1       |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                    |
-            | Status code    | 0000                                                                                   |
+            | Status code    | 0004                                                                                   |
             | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso] |
 
 ######################### Validation on the In London field #########################
@@ -39,7 +39,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                                      |
-            | Status code    | 0000                                                     |
+            | Status code    | 0004                                                     |
             | Status message | Parameter error: Invalid inLondon, must be true or false |
 
 ######################### Validation on the Course length field #########################
@@ -56,7 +56,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                                              |
-            | Status code    | 0000                                                             |
+            | Status code    | 0004                                                             |
             | Status message | Parameter error: Invalid courseLength, must be greater than zero |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-9
@@ -71,7 +71,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                              |
-            | Status code    | 0000                                             |
+            | Status code    | 0002                                             |
             | Status message | Parameter conversion error: Invalid courseLength |
 
 
@@ -89,7 +89,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
+            | Status code    | 0004                                           |
             | Status message | Parameter error: Invalid accommodationFeesPaid |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - not numbers 0-9
@@ -104,7 +104,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                                       |
-            | Status code    | 0000                                                      |
+            | Status code    | 0002                                                      |
             | Status message | Parameter conversion error: Invalid accommodationFeesPaid |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - less than zero
@@ -120,7 +120,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
+            | Status code    | 0004                                           |
             | Status message | Parameter error: Invalid accommodationFeesPaid |
 
 
@@ -139,7 +139,7 @@ Feature: Validation of the API fields and data
             | Number of dependants            | -4           |
         Then the service displays the following result
             | HTTP Status    | 400                                                          |
-            | Status code    | 0000                                                         |
+            | Status code    | 0004                                                         |
             | Status message | Parameter error: Invalid dependants, must be zero or greater |
 
     Scenario: The API is provided with incorrect Number of dependants - not numbers 0-9
@@ -155,5 +155,5 @@ Feature: Validation of the API fields and data
             | Number of dependants            | ^            |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
-            | Status code    | 0000                                           |
+            | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |
