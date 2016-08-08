@@ -24,6 +24,7 @@ cause of the error.
 [cols="1,3"]
 |===
 | Code | Meaning
+
 | `0001`
 | Missing parameter
 | `0002`
@@ -42,4 +43,5 @@ cause of the error.
 | Error connecting to an external service
 | `0009`
 | Resource not found
+
 |===
