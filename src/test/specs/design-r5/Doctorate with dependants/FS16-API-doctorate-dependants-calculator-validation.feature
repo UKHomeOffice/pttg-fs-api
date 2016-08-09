@@ -15,7 +15,6 @@ Feature: Validation of the API fields and data
             | Student Type                    |            |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 1          |
             | Accommodation fees already paid | 0          |
             | Number of dependants            | 1          |
         Then the service displays the following result
@@ -31,7 +30,6 @@ Feature: Validation of the API fields and data
             | Student Type                    | doctorate  |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       |            |
-            | Course Length                   | 2          |
             | Accommodation fees already paid | 0          |
             | Number of dependants            | 1          |
         Then the service displays the following result
@@ -47,7 +45,6 @@ Feature: Validation of the API fields and data
             | Student Type                    | doctorate  |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 1          |
             | Accommodation fees already paid |            |
             | Number of dependants            | 1          |
         Then the service displays the following result
@@ -61,7 +58,6 @@ Feature: Validation of the API fields and data
             | Student Type                    | doctorate  |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 1          |
             | Accommodation fees already paid | %%         |
             | Number of dependants            | 1          |
         Then the service displays the following result
@@ -75,7 +71,6 @@ Feature: Validation of the API fields and data
             | Student Type                    | doctorate  |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 1          |
             | Accommodation fees already paid | -100       |
             | Number of dependants            | 1          |
         Then the service displays the following result
@@ -92,7 +87,6 @@ Feature: Validation of the API fields and data
             | Student Type                    | doctorate  |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 2          |
             | Accommodation fees already paid | 0          |
             | Number of dependants            | -7         |
         Then the service displays the following result
@@ -106,7 +100,6 @@ Feature: Validation of the API fields and data
             | Student Type                    | doctorate  |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 1          |
             | Accommodation fees already paid | 0          |
             | Number of dependants            | @          |
         Then the service displays the following result
