@@ -1,7 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.audit
 
 import java.util.UUID
-import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType
+
 import org.springframework.boot.actuate.audit.listener.AuditApplicationEvent
 
 import scala.collection.JavaConverters._

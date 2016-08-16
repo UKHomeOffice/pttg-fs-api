@@ -72,11 +72,12 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     auditor.publishEvent(auditEvent(SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
-  def auditSearchResult(auditEventId: UUID, thresholdResponse: () => ThresholdResponse): Unit = {
+  def auditSearchResult(auditEventId: UUID, thresholdResponse:  ThresholdResponse): Unit = {
     auditor.publishEvent(auditEvent(SEARCH_RESULT, auditEventId,
       Map(
         "method" -> "calculate-threshold",
-        "threshold" -> thresholdResponse())
+        "result" -> thresholdResponse
+      )
     ))
   }
 

@@ -3,17 +3,20 @@ package uk.gov.digital.ho.proving.financialstatus.api
 import java.math.{BigDecimal => JBigDecimal}
 import java.net.SocketTimeoutException
 import java.time.LocalDate
-import java.util.Optional
+import java.util.{Optional, UUID}
 
 import org.apache.http.conn.HttpHostConnectException
 import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.PropertySource
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
 import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{HttpClientErrorException, ResourceAccessException}
 import uk.gov.digital.ho.proving.financialstatus.api.validation.{DailyBalanceParameterValidator, ServiceMessages}
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions._
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker}
 
 import scala.util._
@@ -23,7 +26,8 @@ import scala.util._
 @RequestMapping(path = Array("/pttg/financialstatusservice/v1/accounts/"))
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
-                                       val serviceMessages: ServiceMessages
+                                       val serviceMessages: ServiceMessages,
+                                       val auditor: ApplicationEventPublisher
                                       ) extends FinancialStatusBaseController with DailyBalanceParameterValidator {
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
@@ -40,18 +44,49 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                          @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: Optional[LocalDate]
                         ): ResponseEntity[AccountDailyBalanceStatusResponse] = {
 
+    val auditEventId = nextId
+    auditSearchParams(auditEventId, sortCode, accountNumber, minimum, toDate, fromDate)
+
     val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
 
     val validatedInputs = validateInputs(sortCode, accountNumber, minimum, fromDate, toDate, accountStatusChecker.numberConsecutiveDays)
 
     validatedInputs match {
       case Right(inputs) =>
-        validateDailyBalanceStatus(inputs)
+        val responseEntity: ResponseEntity[AccountDailyBalanceStatusResponse] = validateDailyBalanceStatus(inputs)
+        auditSearchResult(auditEventId, responseEntity.getBody)
+        responseEntity
 
       case Left(errorList) =>
         // We should be returning all the error messages and not just the first
         buildErrorResponse(headers, errorList.head._1, errorList.head._2, errorList.head._3)
     }
+  }
+
+  def auditSearchParams(auditEventId: UUID, sortCode: Option[String], accountNumber: Option[String], minimum: Option[BigDecimal], toDate: Option[LocalDate], fromDate: Option[LocalDate]): Unit = {
+
+    val params = Map(
+      "sortCode" -> sortCode,
+      "accountNumber" -> accountNumber,
+      "minimum" -> minimum,
+      "toDate" -> toDate,
+      "fromDate" -> fromDate
+    )
+
+    val suppliedParams = for((k, Some(v)) <- params) yield k -> v
+
+    val auditData = Map("method" -> "daily-balance-status") ++ suppliedParams
+
+    auditor.publishEvent(auditEvent(SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
+  }
+
+  def auditSearchResult(auditEventId: UUID, response:AccountDailyBalanceStatusResponse): Unit = {
+    auditor.publishEvent(auditEvent(SEARCH_RESULT, auditEventId,
+      Map(
+        "method" -> "daily-balance-status",
+        "result" -> response
+      )
+    ))
   }
 
   def validateDailyBalanceStatus(inputs: ValidatedInputs) = {

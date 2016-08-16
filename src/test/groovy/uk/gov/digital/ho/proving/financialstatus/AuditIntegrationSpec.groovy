@@ -91,5 +91,4 @@ class AuditIntegrationSpec extends Specification {
         MINUTES.between(parse(logEntryJson.timestamp), now()) < 1;
     }
 
-
 }
