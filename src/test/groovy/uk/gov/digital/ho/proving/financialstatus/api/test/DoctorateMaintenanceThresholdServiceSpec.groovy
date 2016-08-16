@@ -1,6 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import groovy.json.JsonSlurper
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -28,12 +29,14 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
 
+    ApplicationEventPublisher auditor = Mock()
+
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
             nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
             pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages
+        ), getStudentTypeChecker(), serviceMessages, auditor
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -43,6 +46,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
 
     def url = TestUtils.thresholdUrl
+
 
     def callApi(studentType, inLondon, accommodationFeesPaid, dependants) {
         def response = mockMvc.perform(
@@ -55,6 +59,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         response.andDo(MockMvcResultHandlers.print())
         response
     }
+
 
     def "Tier 4 Doctorate - Check 'Non Inner London Borough'"() {
 
