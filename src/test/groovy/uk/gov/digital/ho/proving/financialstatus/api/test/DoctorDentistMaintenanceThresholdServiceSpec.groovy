@@ -1,6 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import groovy.json.JsonSlurper
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -28,12 +29,14 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
 
+    ApplicationEventPublisher auditor = Mock()
+
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
             nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
             pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages
+        ), getStudentTypeChecker(), serviceMessages, auditor
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)

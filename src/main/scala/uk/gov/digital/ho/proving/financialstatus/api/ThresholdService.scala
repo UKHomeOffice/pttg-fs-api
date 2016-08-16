@@ -2,15 +2,19 @@ package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.lang.{Boolean => JBoolean}
 import java.math.{BigDecimal => JBigDecimal}
-import java.util.Optional
+import java.util.{Optional, UUID}
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.PropertySource
 import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation._
 import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages, ThresholdParameterValidator}
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 import uk.gov.digital.ho.proving.financialstatus.domain._
+
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
@@ -18,7 +22,8 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 @ControllerAdvice
 class ThresholdService @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
                                     val studentTypeChecker: StudentTypeChecker,
-                                    val serviceMessages: ServiceMessages
+                                    val serviceMessages: ServiceMessages,
+                                    val auditor: ApplicationEventPublisher
                                    ) extends FinancialStatusBaseController with ThresholdParameterValidator {
 
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
@@ -36,9 +41,43 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                          @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer]
                         ): ResponseEntity[ThresholdResponse] = {
 
-    val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
 
-    calculateThresholdForStudentType(validatedStudentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+    val auditEventId = nextId
+    auditSearchParams(auditEventId, studentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+
+    val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
+    def threshold = calculateThresholdForStudentType(validatedStudentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+
+    auditSearchResult(auditEventId, threshold.getBody)
+
+    threshold
+  }
+
+  def auditSearchParams(auditEventId: UUID, studentType: Option[String], inLondon: Option[Boolean], courseLength: Option[Integer], tuitionFees: Option[BigDecimal], tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal], dependants: Option[Integer]): Unit = {
+
+    val params = Map(
+      "studentType" -> studentType,
+      "inLondon" -> inLondon,
+      "courseLength" -> courseLength,
+      "tuitionFees" -> tuitionFees,
+      "tuitionFeesPaid" -> tuitionFeesPaid,
+      "accommodationFeesPaid" -> accommodationFeesPaid,
+      "dependants" -> dependants
+    )
+
+    val suppliedParams = for((k, Some(v)) <- params) yield k -> v
+
+    val auditData = Map("method" -> "calculate-threshold") ++ suppliedParams
+
+    auditor.publishEvent(auditEvent(SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
+  }
+
+  def auditSearchResult(auditEventId: UUID, thresholdResponse: () => ThresholdResponse): Unit = {
+    auditor.publishEvent(auditEvent(SEARCH_RESULT, auditEventId,
+      Map(
+        "method" -> "calculate-threshold",
+        "threshold" -> thresholdResponse())
+    ))
   }
 
   private def calculateThresholdForStudentType(studentType: StudentType,
