@@ -12,7 +12,6 @@ import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation._
 import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages, ThresholdParameterValidator}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
-import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
@@ -54,7 +53,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     threshold
   }
 
-  def auditSearchParams(auditEventId: UUID, studentType: Optional[String], inLondon: Optional[JBoolean], courseLength: Optional[Integer], tuitionFees: Optional[JBigDecimal], tuitionFeesPaid: Optional[JBigDecimal], accommodationFeesPaid: Optional[JBigDecimal], dependants: Optional[Integer]): Unit = {
+  def auditSearchParams(auditEventId: UUID, studentType: Option[String], inLondon: Option[Boolean], courseLength: Option[Integer], tuitionFees: Option[BigDecimal], tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal], dependants: Option[Integer]): Unit = {
 
     val params = Map(
       "studentType" -> studentType,
@@ -66,16 +65,15 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
       "dependants" -> dependants
     )
 
-    val suppliedParams = for ((key, value) <- params
-                              if (value.isPresent)) yield (key, value.get)
+    val suppliedParams = for((k, Some(v)) <- params) yield k -> v
 
     val auditData = Map("method" -> "calculate-threshold") ++ suppliedParams
 
-    auditor.publishEvent(auditEvent(SEARCH.toString, auditEventId, auditData))
+    auditor.publishEvent(auditEvent(SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
   def auditSearchResult(auditEventId: UUID, thresholdResponse: () => ThresholdResponse): Unit = {
-    auditor.publishEvent(auditEvent(SEARCH_RESULT.toString, auditEventId,
+    auditor.publishEvent(auditEvent(SEARCH_RESULT, auditEventId,
       Map(
         "method" -> "calculate-threshold",
         "threshold" -> thresholdResponse())
