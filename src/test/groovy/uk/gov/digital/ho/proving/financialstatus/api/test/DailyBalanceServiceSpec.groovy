@@ -1,6 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import groovy.json.JsonSlurper
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -30,7 +31,9 @@ class DailyBalanceServiceSpec extends Specification {
 
     def mockBankService = Mock(MockBankService)
 
-    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages)
+    ApplicationEventPublisher auditor = Mock()
+
+    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages, auditor)
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
     def "daily balance threshold check pass"() {

@@ -14,7 +14,7 @@ object AuditActions {
 
   def auditEvent(auditEventType: AuditEventType.Value, id: UUID, data: Map[String, AnyRef]): AuditApplicationEvent = {
 
-    def auditData: Map[String, AnyRef] = data match {
+    val auditData: Map[String, AnyRef] = data match {
       case null =>
         Map("eventId" -> id)
       case default =>

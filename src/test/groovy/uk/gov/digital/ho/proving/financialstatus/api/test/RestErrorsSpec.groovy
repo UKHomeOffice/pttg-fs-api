@@ -2,6 +2,7 @@ package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.json.JsonSlurper
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
@@ -53,7 +54,9 @@ class RestErrorsSpec extends Specification {
 
     MockBankService mockBankService = new MockBankService(new ObjectMapper(), httpUtils, serviceName)
 
-    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages)
+    ApplicationEventPublisher auditor = Mock()
+
+    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages, auditor)
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
 
