@@ -19,7 +19,7 @@ Feature:  Not Pass - Account holder consent does not exist
             | Account number         | 23568499   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | false      |
+            | Account Holder Consent | true      |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
@@ -48,7 +48,7 @@ Feature:  Not Pass - Account holder consent does not exist
             | Account number         | 01078913   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12346  |
-            | Account Holder Consent | false      |
+            | Account Holder Consent | true      |
 
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
@@ -78,7 +78,7 @@ Feature:  Not Pass - Account holder consent does not exist
             | Account number         | 17926768   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12347  |
-            | Account Holder Consent | false      |
+            | Account Holder Consent | true      |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |

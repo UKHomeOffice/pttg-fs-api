@@ -12,11 +12,14 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
         Given a Service is consuming Financial Status API
         Given the test data for account 01010312
         When the Financial Status API is invoked with the following:
-            | Account number | 01010312   |
-            | Sort code      | 12-34-56   |
-            | Minimum        | 2530.00    |
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
+            | Account number         | 01010312   |
+            | Sort code              | 12-34-56   |
+            | Minimum                | 2530.00    |
+            | To Date                | 2016-06-01 |
+            | From Date              | 2016-05-05 |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
       #  | Applicant Date of Birth     | Value |  *** Need to confirm with Barclay's ***
 
 
@@ -39,11 +42,14 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
         Given a Service is consuming Financial Status API
         Given the test data for account 01078912
         When the Financial Status API is invoked with the following:
-            | Account number | 01078912   |
-            | Sort code      | 23-53-68   |
-            | Minimum        | 2030.00    |
-            | To Date        | 2016-07-01 |
-            | From Date      | 2016-06-04 |
+            | Account number         | 01078912   |
+            | Sort code              | 23-53-68   |
+            | Minimum                | 2030.00    |
+            | To Date                | 2016-07-01 |
+            | From Date              | 2016-06-04 |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
        # | Applicant Date of Birth    |Value | *** Need to confirm with Barclay's ***
 
         Then The Financial Status API provides the following results:
