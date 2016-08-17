@@ -82,6 +82,9 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String tuitionFeesPaid = ""
     String accommodationFeesPaid = ""
     String studentType = ""
+    String dob = ""
+    String userId = ""
+    String accountHolderConsent = ""
 
 
     def testDataLoader
@@ -156,6 +159,15 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
             if (s.equalsIgnoreCase("Accommodation fees already paid")) {
                 accommodationFeesPaid = entries.get(s)
+            }
+            if (s.equalsIgnoreCase("Date of Birth")) {
+                dob = entries.get(s)
+            }
+            if (s.equalsIgnoreCase("user id")) {
+                userId = entries.get(s)
+            }
+            if (s.equalsIgnoreCase("Account Holder Consent")) {
+                accountHolderConsent = entries.get(s)
             }
 
         }
@@ -339,7 +351,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}", sortCode, accountNumber, fromDate, toDate, minimum)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId,accountHolderConsent )
         jsonAsString = resp.asString()
 
         println("Family Case Worker API: " + jsonAsString)
