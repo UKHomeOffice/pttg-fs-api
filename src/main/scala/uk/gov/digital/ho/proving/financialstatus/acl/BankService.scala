@@ -11,8 +11,8 @@ trait BankService {
   val bankUrl: String
   val objectMapper: ObjectMapper
 
-  def fetchAccountDailyBalances(account: Account, fromDate: LocalDate, toDate: LocalDate): AccountDailyBalances
+  def fetchAccountDailyBalances(account: Account, fromDate: LocalDate, toDate: LocalDate, dob: LocalDate, userId: String, accountHolderConsent: Boolean): AccountDailyBalances
 
-  def buildUrl(account: Account, fromDate: LocalDate, toDate: LocalDate): String
+  def buildUrl(account: Account, fromDate: LocalDate, toDate: LocalDate, dob: LocalDate, userId: String, accountHolderConsent: Boolean): String
 
 }

@@ -1,5 +1,6 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
+import java.lang.{Boolean => JBoolean}
 import java.math.{BigDecimal => JBigDecimal}
 import java.net.SocketTimeoutException
 import java.time.LocalDate
@@ -41,7 +42,10 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                          @PathVariable(value = "accountNumber") accountNumber: Optional[String],
                          @RequestParam(value = "minimum") minimum: Optional[JBigDecimal],
                          @RequestParam(value = "toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) toDate: Optional[LocalDate],
-                         @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: Optional[LocalDate]
+                         @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: Optional[LocalDate],
+                         @RequestParam(value = "dob") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dob: Optional[LocalDate],
+                         @RequestParam(value = "userId") userId: Optional[String],
+                         @RequestParam(value = "accountHolderConsent") accountHolderConsent: Optional[JBoolean]
                         ): ResponseEntity[AccountDailyBalanceStatusResponse] = {
 
     val auditEventId = nextId
@@ -49,7 +53,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
     val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
 
-    val validatedInputs = validateInputs(sortCode, accountNumber, minimum, fromDate, toDate, accountStatusChecker.numberConsecutiveDays)
+    val validatedInputs = validateInputs(sortCode, accountNumber, minimum, fromDate, toDate, accountStatusChecker.numberConsecutiveDays, dob, userId, accountHolderConsent)
 
     validatedInputs match {
       case Right(inputs) =>
@@ -97,10 +101,14 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
       minimum <- inputs.minimum
       fromDate <- inputs.fromDate
       toDate <- inputs.toDate
+      dob <- inputs.dob
+      userId <- inputs.userId
+      accountHolderConsent <- inputs.accountHolderConsent
+
     } yield {
       val bankAccount = Account(sortCode, accountNumber)
 
-      val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum)
+      val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
 
       dailyAccountBalanceCheck match {
         case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck), StatusResponse("200", serviceMessages.OK)), HttpStatus.OK)

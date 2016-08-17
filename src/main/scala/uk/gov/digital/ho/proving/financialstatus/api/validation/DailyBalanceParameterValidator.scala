@@ -3,7 +3,6 @@ package uk.gov.digital.ho.proving.financialstatus.api.validation
 import java.time.LocalDate
 
 import org.springframework.http.HttpStatus
-import uk.gov.digital.ho.proving.financialstatus.api.FinancialStatusBaseController
 
 import scala.util.{Either, Left, Right}
 
@@ -19,7 +18,11 @@ trait DailyBalanceParameterValidator {
                                minimum: Option[BigDecimal],
                                fromDate: Option[LocalDate],
                                toDate: Option[LocalDate],
-                               numberConsecutiveDays: Int): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
+                               numberConsecutiveDays: Int,
+                               dob: Option[LocalDate],
+                               userId: Option[String],
+                               accountHolderConsent: Option[Boolean]
+                              ): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
 
     var errorList = Vector.empty[(String, String, HttpStatus)]
     val validSortCode = validateSortCode(sortCode)
@@ -27,6 +30,9 @@ trait DailyBalanceParameterValidator {
     val validMinimum = validateMinimum(minimum)
     val validFromDate = validateDate(fromDate)
     val validToDate = validateDate(toDate)
+    val validDob = validateDate(dob)
+    val validUserId = validateUserId(userId)
+    val validAccountHolderConsent = validateAccountHolderConsent(accountHolderConsent)
 
     if (validSortCode.isEmpty) {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_SORT_CODE, HttpStatus.BAD_REQUEST))
@@ -38,7 +44,14 @@ trait DailyBalanceParameterValidator {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_FROM_DATE, HttpStatus.BAD_REQUEST))
     } else if (validToDate.isEmpty) {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
-    } else {
+    } else if (validDob.isEmpty) {
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DOB_DATE, HttpStatus.BAD_REQUEST))
+    } else if (validUserId.isEmpty) {
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_USER_ID, HttpStatus.BAD_REQUEST))
+    } else if (validAccountHolderConsent.isEmpty) {
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_ACCOUNT_HOLDER_CONSENT, HttpStatus.BAD_REQUEST))
+    }
+    else {
       for {from <- fromDate
            to <- toDate
       } yield {
@@ -49,7 +62,7 @@ trait DailyBalanceParameterValidator {
     }
 
     if (errorList.isEmpty)
-      Right(ValidatedInputs(validSortCode, validAccountNumber, validMinimum, validFromDate, validToDate))
+      Right(ValidatedInputs(validSortCode, validAccountNumber, validMinimum, validFromDate, validToDate, validDob, validUserId, validAccountHolderConsent))
     else
       Left(errorList)
   }
@@ -60,9 +73,23 @@ trait DailyBalanceParameterValidator {
   private def validateSortCode(sortCode: Option[String]) =
     sortCode.map(_.replace("-", "")).filter(sCode => sortCodePattern.findFirstIn(sCode).nonEmpty && sCode != serviceMessages.INVALID_SORT_CODE_VALUE)
 
+  // At the moment we rely on Spring's date conversion to only pass a valid date
   private def validateDate(date: Option[LocalDate]) = date
+
   private def validateMinimum(minimum: Option[BigDecimal]) = minimum.filter(_ > 0)
 
-  case class ValidatedInputs(sortCode: Option[String], accountNumber: Option[String], minimum: Option[BigDecimal], fromDate: Option[LocalDate], toDate: Option[LocalDate])
+  private def validateUserId(userId: Option[String]) = userId.filter(!_.isEmpty)
+
+  private def validateAccountHolderConsent(accountHolderConsent: Option[Boolean]) = accountHolderConsent.filter(_ == true)
+
+  case class ValidatedInputs(sortCode: Option[String],
+                             accountNumber: Option[String],
+                             minimum: Option[BigDecimal],
+                             fromDate: Option[LocalDate],
+                             toDate: Option[LocalDate],
+                             dob: Option[LocalDate],
+                             userId: Option[String],
+                             accountHolderConsent: Option[Boolean]
+                            )
 
 }

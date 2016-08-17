@@ -88,6 +88,11 @@ class RestErrorsSpec extends Specification {
                 .param("fromDate", "2016-05-13")
                 .param("toDate", "2016-06-09")
                 .param("minimum", "2560.23")
+                .param("dob","2000-01-01")
+                .param("userId", "user123456")
+                .param("accountHolderConsent", "true")
+
+
         )
         then:
         response.andExpect(status().is(404))
@@ -108,6 +113,10 @@ class RestErrorsSpec extends Specification {
                 .param("fromDate", "2016-05-13")
                 .param("toDate", "2016-06-09")
                 .param("minimum", "2560.23")
+                .param("dob","2000-01-01")
+                .param("userId", "user123456")
+                .param("accountHolderConsent", "true")
+
         )
         then:
         response.andExpect(status().isInternalServerError())
@@ -130,6 +139,10 @@ class RestErrorsSpec extends Specification {
                 .param("fromDate", "2016-05-13")
                 .param("toDate", "2016-06-09")
                 .param("minimum", "2560.23")
+                .param("dob","2000-01-01")
+                .param("userId", "user123456")
+                .param("accountHolderConsent", "true")
+
         )
         then:
         response.andExpect(status().isInternalServerError())

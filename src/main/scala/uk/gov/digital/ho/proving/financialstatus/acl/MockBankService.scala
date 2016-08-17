@@ -26,12 +26,13 @@ class MockBankService @Autowired()(val objectMapper: ObjectMapper, httpUtils: Ht
       }
     )
 
-  def buildUrl(account: Account, fromDate: LocalDate, toDate: LocalDate): String =
-    s"""$bankUrl/${account.sortCode}/${account.accountNumber}/balances?fromDate=$fromDate&toDate=$toDate"""
+  override def buildUrl(account: Account, fromDate: LocalDate, toDate: LocalDate,dob: LocalDate, userId: String, accountHolderConsent: Boolean): String =
+    s"""$bankUrl/${account.sortCode}/${account.accountNumber}/balances?fromDate=$fromDate&toDate=$toDate&dob=$dob&userId=$userId&accountHolderConsent=$accountHolderConsent"""
 
-  def fetchAccountDailyBalances(account: Account, fromDate: LocalDate, toDate: LocalDate): AccountDailyBalances = {
+  override def fetchAccountDailyBalances(account: Account, fromDate: LocalDate, toDate: LocalDate,
+                                         dob: LocalDate, userId: String, accountHolderConsent: Boolean): AccountDailyBalances = {
 
-    val url = buildUrl(account, fromDate, toDate)
+    val url = buildUrl(account, fromDate, toDate, dob, userId, accountHolderConsent)
     LOGGER.info(s"call URL: $url")
 
     val httpResponse = httpUtils.performRequest(url)
