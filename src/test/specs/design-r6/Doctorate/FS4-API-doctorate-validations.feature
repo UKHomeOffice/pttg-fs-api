@@ -12,6 +12,7 @@ Feature: Validation of the API fields and data
     Sort code - format should be three pairs of digits 13-56-09 (always numbers 0-9, no letters and cannot be all 0's) (mandatory)
     Account number - format should be 12345678 (always 8 numbers, 0-9, no letters, cannot be all 0's) (mandatory)
     Date of birth - should be dd/mm/yyyy (always 8 numbers, 0-9, no letters, cannot be all 0's)
+
 ######################### Validation on the End of 28-day period #########################
 
     Scenario: The API is not provided with End date of 28-day period
@@ -35,8 +36,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date                | 2016-06-01 |
-            | From Date              | 2016-07-37 |
+            | To Date                | 2017-06-01 |
+            | From Date              | 2017-07-29 |
             | Minimum                | 2350.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -253,7 +254,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
-            | From Date      |            |
+            | From Date      | 2016-07-37 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
@@ -282,7 +283,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 01/0d/2016 |
+            | To Date        | 01/06/2016 |
             | From Date      | 2016-07-27 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |

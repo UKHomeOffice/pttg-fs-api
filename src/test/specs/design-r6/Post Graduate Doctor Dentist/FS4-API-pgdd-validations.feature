@@ -20,7 +20,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              |            |
+            | From Date              | 2016-07-27 |
             | Minimum                | 2350.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -37,7 +37,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-07-37 |
+            | From Date              | 2016-07-27 |
             | Minimum                | 2350.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -253,14 +253,14 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
-            | From Date      |            |
+            | From Date      | 2016-07-27 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
             | dob            |            |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                |
-            | Status code    | 0004                               |
+            | HTTP Status    | 400                                    |
+            | Status code    | 0004                                   |
             | Status message | Parameter error: Invalid date of birth |
 
     Scenario: The API provides incorrect Date of birth - in the future
@@ -268,28 +268,28 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
-            | From Date      | 2016-07-37 |
+            | From Date      | 2016-07-27 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
             | dob            | 2017-01-15 |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                           |
-            | Status code    | 0002                                          |
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
             | Status message | Parameter conversion error: Invalid date of birth |
 
     Scenario: The API is provided with an incorrect Date of birth - not numbers 0-9
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 01/0d/2016 |
+            | To Date        | 2016-06-01 |
             | From Date      | 2016-07-27 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
             | dob            | 1984-01-1@ |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                         |
-            | Status code    | 0002                                        |
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
             | Status message | Parameter conversion error: Invalid date of birth |
 
