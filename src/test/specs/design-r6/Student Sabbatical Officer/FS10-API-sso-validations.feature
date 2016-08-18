@@ -11,6 +11,7 @@ Feature: Validation of the API fields and data
     From date - format should be yyyy-mm-dd (mandatory)
     Sort code - format should be three pairs of digits 13-56-09 (always numbers 0-9, no letters and cannot be all 0's) (mandatory)
     Account number - format should be 12345678 (always 8 numbers, 0-9, no letters, cannot be all 0's) (mandatory)
+    Date of birth - should be dd/mm/yyyy (always 8 numbers, 0-9, no letters, cannot be all 0's)
 
 ######################### Validation on the End of 28-day period #########################
 
@@ -245,4 +246,50 @@ Feature: Validation of the API fields and data
             | Status code    | 0007                                                        |
             | Status message | No records for sort code 100908 and account number 21568198 |
 
+  ######################### Validation on the Date of birth Field #########################
+
+    Scenario: The API is not provided with Date of Birth
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+            | To Date        | 2016-06-01 |
+            | From Date      |            |
+            | Minimum        | 2350.00    |
+            | Sort Code      | 13-56-09   |
+            | Account Number | 23568498   |
+            | dob            |            |
+        Then FSPS Tier four general Case Worker tool API provides the following result
+            | HTTP Status    | 400                                    |
+            | Status code    | 0004                                   |
+            | Status message | Parameter error: Invalid date of birth |
+
+    Scenario: The API provides incorrect Date of birth - in the future
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+            | To Date        | 2016-06-01 |
+            | From Date      | 2016-07-37 |
+            | Minimum        | 2350.00    |
+            | Sort Code      | 13-56-09   |
+            | Account Number | 23568498   |
+            | dob            | 2017-01-15 |
+        Then FSPS Tier four general Case Worker tool API provides the following result
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
+            | Status message | Parameter conversion error: Invalid date of birth |
+
+    Scenario: The API is provided with an incorrect Date of birth - not numbers 0-9
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+            | To Date        | 01/0d/2016 |
+            | From Date      | 2016-07-27 |
+            | Minimum        | 2350.00    |
+            | Sort Code      | 13-56-09   |
+            | Account Number | 23568498   |
+            | dob            | 1984-01-1@ |
+        Then FSPS Tier four general Case Worker tool API provides the following result
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
+            | Status message | Parameter conversion error: Invalid date of birth |
 
