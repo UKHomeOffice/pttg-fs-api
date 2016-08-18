@@ -36,8 +36,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date                | 2016-06-01 |
-            | From Date              | 2016-07-37 |
+            | To Date                | 2017-06-01 |
+            | From Date              | 2017-06-29 |
             | Minimum                | 2350.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -53,8 +53,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date                | 01/0d/2016 |
-            | From Date              | 2016-07-27 |
+            | To Date                | 2016-06-01 |
+            | From Date              | 2016-06-2@ |
             | Minimum                | 2350.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -75,7 +75,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              |            |
             | Account Number         | 23568498   |
@@ -93,7 +93,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-0    |
             | Account Number         | 23568498   |
@@ -110,7 +110,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 00-00-00   |
             | Account Number         | 23568498   |
@@ -127,7 +127,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-0q   |
             | Account Number         | 23568498   |
@@ -147,7 +147,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         |            |
@@ -165,7 +165,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 2356849    |
@@ -182,7 +182,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 235684988  |
@@ -199,7 +199,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 00000000   |
@@ -216,7 +216,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568a98   |
@@ -234,7 +234,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 10-09-08   |
             | Account Number         | 21568198   |
@@ -253,7 +253,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
-            | From Date      | 2016-07-27 |
+            | From Date      | 2016-06-29 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
@@ -268,7 +268,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
-            | From Date      | 2016-07-27 |
+            | From Date      | 2016-06-29 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
@@ -283,7 +283,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
-            | From Date      | 2016-07-27 |
+            | From Date      | 2016-06-29 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |

@@ -15,7 +15,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date                | 2016-06-01 |
+            | To Date                |            |
             | From Date              |            |
             | Minimum                | 2350.00    |
             | Sort Code              | 13-56-09   |
@@ -32,8 +32,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date                | 2016-06-01 |
-            | From Date              | 2016-07-27 |
+            | To Date                | 2017-06-01 |
+            | From Date              | 2017-06-29 |
             | Minimum                | 2350.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -49,8 +49,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date                | 01/0d/2016 |
-            | From Date              | 2016-07-27 |
+            | To Date                | 2016-06-01 |
+            | From Date              | 201@-06-29 |
             | Minimum                | 2350.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -69,7 +69,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                |            |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -86,7 +86,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 0          |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -103,7 +103,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | A          |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -120,7 +120,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | -2345.00   |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568498   |
@@ -140,7 +140,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              |            |
             | Account Number         | 23568498   |
@@ -158,7 +158,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-0    |
             | Account Number         | 23568498   |
@@ -175,7 +175,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 00-00-00   |
             | Account Number         | 23568498   |
@@ -192,7 +192,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-0q   |
             | Account Number         | 23568498   |
@@ -212,7 +212,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         |            |
@@ -230,7 +230,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 2356849    |
@@ -247,7 +247,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 235684988  |
@@ -264,7 +264,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 00000000   |
@@ -281,7 +281,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 13-56-09   |
             | Account Number         | 23568a98   |
@@ -299,7 +299,7 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date                | 2016-06-01 |
-            | From Date              | 2016-05-05 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2345.00    |
             | Sort Code              | 10-09-08   |
             | Account Number         | 21568198   |
@@ -320,8 +320,8 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         Given the test data for account 23568499
         When the Financial Status API is invoked with the following:
-            | To date                | 2016-06-01 |
-            | From date              | 2016-05-05 |
+            | To Date                | 2016-06-01 |
+            | From Date              | 2016-06-29 |
             | Minimum                | 2530.00    |
             | Sort code              | 135610     |
             | Account number         | 23568499   |
@@ -340,14 +340,14 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
-            | From Date      |            |
+            | From Date      | 2016-06-29 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
             | dob            |            |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                |
-            | Status code    | 0004                               |
+            | HTTP Status    | 400                                    |
+            | Status code    | 0004                                   |
             | Status message | Parameter error: Invalid date of birth |
 
     Scenario: The API provides incorrect Date of birth - in the future
@@ -355,27 +355,27 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-01 |
-            | From Date      | 2016-07-37 |
+            | From Date      | 2016-06-29 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
             | dob            | 2017-01-15 |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                           |
-            | Status code    | 0002                                          |
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
             | Status message | Parameter conversion error: Invalid date of birth |
 
     Scenario: The API is provided with an incorrect Date of birth - not numbers 0-9
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 01/0d/2016 |
-            | From Date      | 2016-07-27 |
+            | To Date        | 2016-06-01 |
+            | From Date      | 2016-06-29 |
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
             | dob            | 1984-01-1@ |
         Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                         |
-            | Status code    | 0002                                        |
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
             | Status message | Parameter conversion error: Invalid date of birth |
