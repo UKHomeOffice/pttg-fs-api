@@ -38,7 +38,7 @@ object DataUtils {
     val (lowerIndex, upperIndex) = generateLowerandUpperIndexValues(DAYS.between(fromDate, toDate).toInt)
 
     val dailyBalances = (0 to DAYS.between(fromDate, toDate).toInt) map { index =>
-      val value = if (index == offset) BigDecimal(amount.toDouble) else BigDecimal((nextFloat * (upper - lower)) + lower)
+      val value = if (index == offset) BigDecimal(amount.toDouble) else BigDecimal(((nextFloat * (upper - lower)) + lower).toDouble)
       AccountDailyBalance(toDate.minusDays(index), value.setScale(2, BigDecimal.RoundingMode.HALF_UP))
     }
 
