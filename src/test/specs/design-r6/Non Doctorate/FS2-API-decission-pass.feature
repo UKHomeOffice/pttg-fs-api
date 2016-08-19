@@ -15,7 +15,7 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
             | Account number         | 01010312   |
             | Sort code              | 12-34-56   |
             | Minimum                | 2530.00    |
-            | To Date                | 2016-06-01 |
+            | From Date                | 2016-06-01 |
             | From Date              | 2016-05-05 |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |

@@ -14,7 +14,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
         Given a Service is consuming Financial Status API
         Given the test data for account 23568498
         When the Financial Status API is invoked with the following:
-            | To Date                | 2016-06-01 |
+            | From Date                | 2016-06-01 |
             | From Date              | 2016-05-05 |
             | Minimum                | 2530.00    |
             | Sort code              | 135609     |
@@ -106,7 +106,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
         Given a Service is consuming Financial Status API
         Given the test data for account 23568491
         When the Financial Status API is invoked with the following:
-            | To Date                | 2016-06-01 |
+            | From Date                | 2016-06-01 |
             | From Date              | 2016-05-05 |
             | Minimum                | 2530.00    |
             | Sort code              | 135609     |
