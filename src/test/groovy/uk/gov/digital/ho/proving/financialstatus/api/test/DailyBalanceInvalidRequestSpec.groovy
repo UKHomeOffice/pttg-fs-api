@@ -11,6 +11,8 @@ import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 
+import java.time.LocalDate
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup
@@ -433,6 +435,54 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0004"
         jsonContent.status.message == invalidDateRange
+    }
+
+    def "daily balance reject future toDate date"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def toDate = LocalDate.now().plusDays(1)
+        def fromDate = toDate.minusDays(27)
+
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", fromDate.toString())
+                .param("minimum", "2560.23")
+                .param("toDate", toDate.toString())
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
+        )
+
+        then:
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0004"
+        jsonContent.status.message == invalidToDate
+    }
+
+    def "daily balance reject future fromDate date"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def fromDate = LocalDate.now().plusDays(1)
+        def toDate = fromDate.minusDays(27)
+
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", fromDate.toString())
+                .param("minimum", "2560.23")
+                .param("toDate", toDate.toString())
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
+        )
+
+        then:
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0004"
+        jsonContent.status.message == invalidFromDate
     }
 
     // Missing values

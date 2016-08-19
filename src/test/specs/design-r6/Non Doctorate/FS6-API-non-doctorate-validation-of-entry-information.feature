@@ -42,8 +42,8 @@ Feature: Validation of the API fields and data
             | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                           |
-            | Status code    | 0002                                          |
-            | Status message | Parameter conversion error: Invalid from date |
+            | Status code    | 0004                                          |
+            | Status message | Parameter error: Invalid from date |
 
     Scenario: The API is provided with an incorrect to date - not numbers 0-9
 

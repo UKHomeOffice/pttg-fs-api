@@ -74,7 +74,7 @@ trait DailyBalanceParameterValidator {
     sortCode.map(_.replace("-", "")).filter(sCode => sortCodePattern.findFirstIn(sCode).nonEmpty && sCode != serviceMessages.INVALID_SORT_CODE_VALUE)
 
   // At the moment we rely on Spring's date conversion to only pass a valid date
-  private def validateDate(date: Option[LocalDate]) = date
+  private def validateDate(date: Option[LocalDate]) = date.filter( !_.isAfter(LocalDate.now()))
 
   private def validateMinimum(minimum: Option[BigDecimal]) = minimum.filter(_ > 0)
 
