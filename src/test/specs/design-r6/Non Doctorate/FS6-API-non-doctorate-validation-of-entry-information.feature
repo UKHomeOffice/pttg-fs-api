@@ -344,7 +344,9 @@ Feature: Validation of the API fields and data
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
-            | dob            |            |
+            | Date of Birth            |            |
+            | User Id                | user12345  |
+            | Account Holder Consent | false      |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                    |
             | Status code    | 0004                                   |
@@ -359,7 +361,9 @@ Feature: Validation of the API fields and data
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
-            | dob            | 2017-01-15 |
+            | Date of Birth            | 2017-01-15 |
+            | User Id                | user12345  |
+            | Account Holder Consent | false      |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                               |
             | Status code    | 0004                                              |
@@ -374,8 +378,10 @@ Feature: Validation of the API fields and data
             | Minimum        | 2350.00    |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
-            | dob            | 1984-01-1@ |
+            | Date of Birth            | 1984-01-1@ |
+            | User Id                | user12345  |
+            | Account Holder Consent | false      |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                               |
-            | Status code    | 0004                                              |
-            | Status message | Parameter error: Invalid date of birth |
+            | Status code    | 0002                                              |
+            | Status message | Parameter conversion error: Invalid dob |
