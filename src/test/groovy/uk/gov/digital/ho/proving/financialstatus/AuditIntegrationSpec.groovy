@@ -20,6 +20,7 @@ import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.web.client.RestTemplate
+import spock.lang.Ignore
 import spock.lang.Specification
 import steps.WireMockTestDataLoader
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner
@@ -33,6 +34,7 @@ import static java.time.temporal.ChronoUnit.MINUTES
 @SpringApplicationConfiguration(classes = [ServiceRunner.class, ServiceConfiguration.class])
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
+@Ignore
 class AuditIntegrationSpec extends Specification {
 
     @Value('${local.server.port}')
