@@ -12,14 +12,14 @@ Feature:  Not Pass - Account holder consent does not exist
         Given a Service is consuming Financial Status API
         Given the test data for account 23568499
         When the Financial Status API is invoked with the following:
-            | To date              | 2016-06-01 |
-            | From date            | 2016-05-05 |
-            | Minimum              | 2530.00    |
-            | Sort code            | 135610     |
-            | Account number       | 23568499   |
-            | dob                  | 1984-07-27 |
-            | userId               | user12345  |
-            | accountHolderConsent | false      |
+            | To date                | 2016-06-01 |
+            | From date              | 2016-05-05 |
+            | Minimum                | 2530.00    |
+            | Sort code              | 135610     |
+            | Account number         | 23568499   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true      |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
@@ -40,15 +40,15 @@ Feature:  Not Pass - Account holder consent does not exist
         Given a Service is consuming Financial Status API
         Given the test data for account 01078913
         When the Financial Status API is invoked with the following:
-            | To date              | 2016-07-01 |
-            | From date            | 2016-06-04 |
-            | Minimum              | 2030.00    |
-            | Sort code            | 149303     |
-            | Account number       | 01078912   |
-            | Account number       | 01078913   |
-            | dob                  | 1984-07-27 |
-            | userId               | user12346  |
-            | accountHolderConsent | false      |
+            | To date                | 2016-07-01 |
+            | From date              | 2016-06-04 |
+            | Minimum                | 2030.00    |
+            | Sort code              | 149303     |
+            | Account number         | 01078912   |
+            | Account number         | 01078913   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12346  |
+            | Account Holder Consent | true      |
 
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
@@ -71,14 +71,14 @@ Feature:  Not Pass - Account holder consent does not exist
         Given a Service is consuming Financial Status API
         Given the test data for account 17926768
         When the Financial Status API is invoked with the following:
-            | To date              | 2016-07-04 |
-            | From date            | 2016-06-07 |
-            | Minimum              | 2537.48    |
-            | Sort code            | 139302     |
-            | Account number       | 17926768   |
-            | dob                  | 1984-07-27 |
-            | userId               | user12347  |
-            | accountHolderConsent | false      |
+            | To date                | 2016-07-04 |
+            | From date              | 2016-06-07 |
+            | Minimum                | 2537.48    |
+            | Sort code              | 139302     |
+            | Account number         | 17926768   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12347  |
+            | Account Holder Consent | true      |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |

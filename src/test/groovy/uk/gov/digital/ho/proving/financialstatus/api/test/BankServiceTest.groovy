@@ -19,11 +19,14 @@ class BankServiceTest extends Specification {
         def minimum = new scala.math.BigDecimal(2560.23)
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
+        def dob = LocalDate.of(2000, 1, 1)
+        def userId = "user123456"
+        def accountHolderConsent = true
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
 
         when:
-        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum).get()
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum, dob, userId, accountHolderConsent).get()
 
         then:
         response.pass()
@@ -40,11 +43,14 @@ class BankServiceTest extends Specification {
         def minimum = new scala.math.BigDecimal(2560.23)
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
+        def dob = LocalDate.of(2000, 1, 1)
+        def userId = "user123456"
+        def accountHolderConsent = true
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
-        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum).get()
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum, dob, userId, accountHolderConsent).get()
 
         then:
         !response.pass()
@@ -61,11 +67,14 @@ class BankServiceTest extends Specification {
         def minimum = new scala.math.BigDecimal(2560.23)
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
+        def dob = LocalDate.of(2000, 1, 1)
+        def userId = "user123456"
+        def accountHolderConsent = true
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseNonConsecutiveDates(fromDate, toDate, 2060.23, 3500, true, false)
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseNonConsecutiveDates(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
-        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum).get()
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum, dob, userId, accountHolderConsent).get()
 
         then:
         !response.pass()
@@ -82,11 +91,14 @@ class BankServiceTest extends Specification {
         def minimum = new scala.math.BigDecimal(2560.23)
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
+        def dob = LocalDate.of(2000, 1, 1)
+        def userId = "user123456"
+        def accountHolderConsent = true
 
-        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
-        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum).get()
+        def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum, dob, userId, accountHolderConsent).get()
 
         then:
         !response.pass()

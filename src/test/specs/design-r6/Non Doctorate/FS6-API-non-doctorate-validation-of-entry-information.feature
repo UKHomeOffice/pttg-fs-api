@@ -7,6 +7,7 @@ Feature: Validation of the API fields and data
     Minimum Funds Required - Format should not contain commas or currency symbols
     Sort code - Format should be three pairs of digits 13-56-09 (always numbers 0-9, no letters and cannot be all 0's)
     Account Number - Format should be 12345678 (always 8 numbers, 0-9, no letters, cannot be all 0's)
+    Date of birth - should be dd/mm/yyyy (always 8 numbers, 0-9, no letters, cannot be all 0's)
 
 ######################### Validation on the Maintenance Period End Date Field #########################
 
@@ -14,11 +15,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      |            |
-            | Minimum        | 2350.00    |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 23568498   |
+            | To Date                |            |
+            | From Date              |            |
+            | Minimum                | 2350.00    |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -28,29 +32,35 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-07-37 |
-            | Minimum        | 2350.00    |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 23568498   |
+            | To Date                | 2017-06-28 |
+            | From Date              | 2017-06-01 |
+            | Minimum                | 2350.00    |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                           |
-            | Status code    | 0002                                          |
-            | Status message | Parameter conversion error: Invalid from date |
+            | Status code    | 0004                                          |
+            | Status message | Parameter error: Invalid from date |
 
     Scenario: The API is provided with an incorrect to date - not numbers 0-9
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 01/0d/2016 |
-            | From Date      | 2016-07-27 |
-            | Minimum        | 2350.00    |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 23568498   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 201@-06-01 |
+            | Minimum                | 2350.00    |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                         |
             | Status code    | 0002                                        |
-            | Status message | Parameter conversion error: Invalid to date |
+            | Status message | Parameter conversion error: Invalid from date |
 
 ######################### Validation on the Total Funds Required field #########################
 
@@ -58,11 +68,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        |            |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 23568498   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                |            |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                        |
             | Status code    | 0004                                       |
@@ -72,11 +85,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 0          |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 23568498   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 0          |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                        |
             | Status code    | 0004                                       |
@@ -86,11 +102,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | A          |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 23568498   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | A          |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                                   |
             | Status code    | 0002                                                  |
@@ -100,11 +119,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | -2345.00   |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 23568498   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | -2345.00   |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                        |
             | Status code    | 0004                                       |
@@ -117,11 +139,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 2345.00    |
-            | Sort Code      |            |
-            | Account Number | 23568498   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2345.00    |
+            | Sort Code              |            |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -132,11 +157,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 2345.00    |
-            | Sort Code      | 13-56-0    |
-            | Account Number | 23568498   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2345.00    |
+            | Sort Code              | 13-56-0    |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -146,11 +174,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 2345.00    |
-            | Sort Code      | 00-00-00   |
-            | Account Number | 23568498   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2345.00    |
+            | Sort Code              | 00-00-00   |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -160,11 +191,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 2345.00    |
-            | Sort Code      | 13-56-0q   |
-            | Account Number | 23568498   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2345.00    |
+            | Sort Code              | 13-56-0q   |
+            | Account Number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -177,11 +211,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 2345.00    |
-            | Sort Code      | 13-56-09   |
-            | Account Number |            |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2345.00    |
+            | Sort Code              | 13-56-09   |
+            | Account Number         |            |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -192,11 +229,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 2345.00    |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 2356849    |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2345.00    |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 2356849    |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0004                                    |
@@ -206,11 +246,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 2345.00    |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 235684988  |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2345.00    |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 235684988  |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0004                                    |
@@ -220,11 +263,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 2345.00    |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 00000000   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2345.00    |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 00000000   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0004                                    |
@@ -234,11 +280,14 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 2345.00    |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 23568a98   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2345.00    |
+            | Sort Code              | 13-56-09   |
+            | Account Number         | 23568a98   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -249,12 +298,90 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-05-05 |
-            | Minimum        | 2345.00    |
-            | Sort Code      | 10-09-08   |
-            | Account Number | 21568198   |
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2345.00    |
+            | Sort Code              | 10-09-08   |
+            | Account Number         | 21568198   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                         |
             | Status code    | 0007                                                        |
             | Status message | No records for sort code 100908 and account number 21568198 |
+
+
+    Scenario: The API is provided with an Account Holder Consent flag set to false
+
+    Application Raised Date 1st of June
+    She has < than the Total funds required of £2350 for the previous 28 days
+
+        Given a Service is consuming Financial Status API
+        Given the test data for account 23568499
+        When the Financial Status API is invoked with the following:
+            | To Date                | 2016-06-28 |
+            | From Date              | 2016-06-01 |
+            | Minimum                | 2530.00    |
+            | Sort code              | 135610     |
+            | Account number         | 23568499   |
+            | Date of Birth          | 1984-07-27 |
+            | User Id                | user12345  |
+            | Account Holder Consent | false      |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 400                                           |
+            | Status code    | 0004                                          |
+            | Status message | Parameter error: Invalid accountHolderConsent |
+
+        ######################### Validation on the Date of birth Field #########################
+
+    Scenario: The API is not provided with Date of Birth
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+            | To Date        | 2016-06-28 |
+            | From Date      | 2016-06-01 |
+            | Minimum        | 2350.00    |
+            | Sort Code      | 13-56-09   |
+            | Account Number | 23568498   |
+            | Date of Birth            |            |
+            | User Id                | user12345  |
+            | Account Holder Consent | false      |
+        Then FSPS Tier four general Case Worker tool API provides the following result
+            | HTTP Status    | 400                                    |
+            | Status code    | 0004                                   |
+            | Status message | Parameter error: Invalid date of birth |
+
+    Scenario: The API provides incorrect Date of birth - in the future
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+            | To Date        | 2016-06-28 |
+            | From Date      | 2016-06-01 |
+            | Minimum        | 2350.00    |
+            | Sort Code      | 13-56-09   |
+            | Account Number | 23568498   |
+            | Date of Birth            | 2017-01-15 |
+            | User Id                | user12345  |
+            | Account Holder Consent | false      |
+        Then FSPS Tier four general Case Worker tool API provides the following result
+            | HTTP Status    | 400                                               |
+            | Status code    | 0004                                              |
+            | Status message | Parameter error: Invalid date of birth |
+
+    Scenario: The API is provided with an incorrect Date of birth - not numbers 0-9
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+            | To Date        | 2016-06-28 |
+            | From Date      | 2016-06-01 |
+            | Minimum        | 2350.00    |
+            | Sort Code      | 13-56-09   |
+            | Account Number | 23568498   |
+            | Date of Birth            | 1984-01-1@ |
+            | User Id                | user12345  |
+            | Account Holder Consent | false      |
+        Then FSPS Tier four general Case Worker tool API provides the following result
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
+            | Status message | Parameter conversion error: Invalid dob |

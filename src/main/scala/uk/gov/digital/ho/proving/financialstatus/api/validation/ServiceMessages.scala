@@ -1,7 +1,5 @@
 package uk.gov.digital.ho.proving.financialstatus.api.validation
 
-import java.util.Locale
-
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.context.support.ResourceBundleMessageSource
@@ -19,6 +17,9 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
   val UNKNOWN_CONNECTION_EXCEPTION = getMessage("unknown.connection.exception")
   val INVALID_FROM_DATE = getMessage("invalid.from.date")
   val INVALID_TO_DATE = getMessage("invalid.to.date")
+  val INVALID_DOB_DATE = getMessage("invalid.dob.date")
+  val INVALID_USER_ID = getMessage("invalid.user.id")
+  val INVALID_ACCOUNT_HOLDER_CONSENT = getMessage("invalid.account.holder.consent")
 
   val INVALID_TUITION_FEES = getMessage("invalid.tuition.fees")
   val INVALID_TUITION_FEES_PAID = getMessage("invalid.tuition.fees.paid")
@@ -49,7 +50,7 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
 
   val REST_MISSING_PARAMETER = getMessage("rest.missing.parameter")
   val REST_INVALID_PARAMETER_TYPE = getMessage("rest.invalid.parameter.type")
-  val REST_INVALD_PARAMETER_FORMAT = getMessage("rest.invalid.parameter.format")
+  val REST_INVALID_PARAMETER_FORMAT = getMessage("rest.invalid.parameter.format")
   val REST_INVALID_PARAMETER_VALUE = getMessage("rest.invalid.parameter.value")
   val REST_INTERNAL_ERROR = getMessage("rest.internal.error")
   val REST_API_SERVER_ERROR = getMessage("rest.api.server.error")

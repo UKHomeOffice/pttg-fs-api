@@ -11,6 +11,8 @@ import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 
+import java.time.LocalDate
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup
@@ -33,8 +35,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def invalidFromDate = "Parameter error: Invalid from date"
     def invalidConversionFromDate = "Parameter conversion error: Invalid from date"
     def invalidConversionToDate = "Parameter conversion error: Invalid to date"
+    def invalidConversionAccountHolderConsent = "Parameter conversion error: Invalid accountHolderConsent"
 
     def invalidToDate = "Parameter error: Invalid to date"
+    def invalidDob = "Parameter error: Invalid date of birth"
+    def invalidUserId = "Parameter error: Invalid userId"
+    def invalidAccountHolderConsent = "Parameter error: Invalid accountHolderConsent"
     def invalidDateRange = "Parameter error: Invalid dates, from date must be 27 days before to date"
 
     @Before
@@ -51,7 +57,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2016-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -66,7 +77,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2016-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -82,7 +98,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2016-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -98,7 +119,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2016-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -117,7 +143,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2016-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -132,7 +163,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2016-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -148,7 +184,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2016-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -164,7 +205,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2016-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -180,7 +226,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "-2560.23").param("fromDate", "2016-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "-2560.23")
+                .param("fromDate", "2016-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -196,7 +247,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "0").param("fromDate", "2016-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "0")
+                .param("fromDate", "2016-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -214,7 +270,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2a16-05-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2a16-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -230,7 +291,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-15-13")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2016-15-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -246,7 +312,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("minimum", "2560.23").param("fromDate", "2016-05-43")
+            get(url).param("toDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("fromDate", "2016-05-43")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -264,7 +335,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("fromDate", "2016-06-09").param("minimum", "2560.23").param("toDate", "2a16-05-13")
+            get(url).param("fromDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("toDate", "2a16-05-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -280,7 +356,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("fromDate", "2016-06-09").param("minimum", "2560.23").param("toDate", "2016-15-13")
+            get(url).param("fromDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("toDate", "2016-15-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -296,7 +377,13 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("fromDate", "2016-06-09").param("minimum", "2560.23").param("toDate", "2016-05-43")
+            get(url).param("fromDate", "2016-06-09")
+                .param("minimum", "2560.23")
+                .param("toDate", "2016-05-43")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
+
         )
 
         then:
@@ -314,7 +401,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("fromDate", "2016-08-09").param("minimum", "2560.23").param("toDate", "2016-06-13")
+            get(url).param("fromDate", "2016-08-09")
+                .param("minimum", "2560.23")
+                .param("toDate", "2016-06-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -330,7 +422,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("fromDate", "2016-06-13").param("minimum", "2560.23").param("toDate", "2016-06-13")
+            get(url).param("fromDate", "2016-06-13")
+                .param("minimum", "2560.23")
+                .param("toDate", "2016-06-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -338,6 +435,54 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.code == "0004"
         jsonContent.status.message == invalidDateRange
+    }
+
+    def "daily balance reject future toDate date"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def toDate = LocalDate.now().plusDays(1)
+        def fromDate = toDate.minusDays(27)
+
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", fromDate.toString())
+                .param("minimum", "2560.23")
+                .param("toDate", toDate.toString())
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
+        )
+
+        then:
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0004"
+        jsonContent.status.message == invalidToDate
+    }
+
+    def "daily balance reject future fromDate date"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def fromDate = LocalDate.now().plusDays(1)
+        def toDate = fromDate.minusDays(27)
+
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", fromDate.toString())
+                .param("minimum", "2560.23")
+                .param("toDate", toDate.toString())
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
+        )
+
+        then:
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0004"
+        jsonContent.status.message == invalidFromDate
     }
 
     // Missing values
@@ -348,7 +493,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("fromDate", "").param("minimum", "2560.23").param("toDate", "2016-06-13")
+            get(url).param("fromDate", "")
+                .param("minimum", "2560.23")
+                .param("toDate", "2016-06-13")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -365,7 +515,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("fromDate", "2016-05-13").param("minimum", "2560.23").param("toDate", "")
+            get(url).param("fromDate", "2016-05-13")
+                .param("minimum", "2560.23")
+                .param("toDate", "")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -382,7 +537,12 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         when:
         def response = mockMvc.perform(
-            get(url).param("toDate", "2016-06-09").param("fromDate", "2016-05-13").param("minimum","")
+            get(url).param("toDate", "2016-06-09")
+                .param("fromDate", "2016-05-13")
+                .param("minimum", "")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
         )
 
         then:
@@ -391,4 +551,112 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         jsonContent.status.code == "0004"
         jsonContent.status.message == invalidTotalFunds
     }
+
+    def "daily balance reject missing to dob value"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", "2016-05-13")
+                .param("minimum", "2560.23")
+                .param("toDate", "2016-06-09")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "true")
+        )
+
+        then:
+        response.andDo(MockMvcResultHandlers.print())
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0004"
+        jsonContent.status.message == invalidDob
+    }
+
+    def "daily balance reject missing to userId value"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", "2016-05-13")
+                .param("minimum", "2560.23")
+                .param("toDate", "2016-06-09")
+                .param("dob", "2000-01-01")
+                .param("accountHolderConsent", "true")
+        )
+
+        then:
+        response.andDo(MockMvcResultHandlers.print())
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0004"
+        jsonContent.status.message == invalidUserId
+    }
+
+    def "daily balance reject missing to accountHolderConsent value"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", "2016-05-13")
+                .param("minimum", "2560.23")
+                .param("toDate", "2016-06-09")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+        )
+
+        then:
+        response.andDo(MockMvcResultHandlers.print())
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0004"
+        jsonContent.status.message == invalidAccountHolderConsent
+    }
+
+    def "daily balance reject invalid to accountHolderConsent value"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", "2016-05-13")
+                .param("minimum", "2560.23")
+                .param("toDate", "2016-06-09")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "fksjhdf")
+        )
+
+        then:
+        response.andDo(MockMvcResultHandlers.print())
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0002"
+        jsonContent.status.message == invalidConversionAccountHolderConsent
+    }
+
+    def "daily balance reject non true to accountHolderConsent value"() {
+        given:
+        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+
+        when:
+        def response = mockMvc.perform(
+            get(url).param("fromDate", "2016-05-13")
+                .param("minimum", "2560.23")
+                .param("toDate", "2016-06-09")
+                .param("dob", "2000-01-01")
+                .param("userId", "userid123456")
+                .param("accountHolderConsent", "false")
+        )
+
+        then:
+        response.andDo(MockMvcResultHandlers.print())
+        response.andExpect(status().isBadRequest())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.code == "0004"
+        jsonContent.status.message == invalidAccountHolderConsent
+    }
+
 }

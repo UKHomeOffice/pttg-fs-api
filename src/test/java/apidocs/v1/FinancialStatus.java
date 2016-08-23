@@ -107,9 +107,12 @@ public class FinancialStatus {
 
         given(documentationSpec)
             .spec(requestSpec)
-            .param("fromDate", "2015-05-05")
-            .param("toDate", "2015-06-01")
+            .param("fromDate", "2016-05-05")
+            .param("toDate", "2016-06-01")
             .param("minimum", 1000)
+            .param("dob","2000-01-01")
+            .param("userId","userid123456")
+            .param("accountHolderConsent","true")
             .filter(document.snippets(
                 requestHeaders(
                     headerWithName("Accept").description("The requested media type eg application/json. See <<Schema>> for supported media types.")
@@ -131,6 +134,9 @@ public class FinancialStatus {
             .param("fromDate", "2016-05-05")
             .param("toDate", "2016-06-01")
             .param("minimum", 1000)
+            .param("dob","2000-01-01")
+            .param("userId","userid123456")
+            .param("accountHolderConsent","true")
             .filter(document.snippets(
                 responseFields(bodyModelFields)
                     .and(accountModelFields)
@@ -144,6 +150,15 @@ public class FinancialStatus {
                         .attributes(key("optional").value(false)),
                     parameterWithName("minimum")
                         .description("the minimum value allowed for the daily closing balance")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("dob")
+                        .description("account holder's date of birth")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("userId")
+                        .description("userId of requester")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("accountHolderConsent")
+                        .description("has the account holder given consent for the search")
                         .attributes(key("optional").value(false))
                 ),
                 pathParameters(

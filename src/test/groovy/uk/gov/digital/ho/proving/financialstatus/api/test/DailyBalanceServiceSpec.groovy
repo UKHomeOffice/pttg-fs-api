@@ -42,12 +42,15 @@ class DailyBalanceServiceSpec extends Specification {
         def url = "/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus"
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
+        def dob = LocalDate.of(2000, 1, 1)
+        def userId = "user123456"
+        def accountHolderConsent = true
 
         def minimum = new BigDecimal(2500.23).setScale(2, BigDecimal.ROUND_HALF_UP)
         def lower = new BigDecimal(2560.23).setScale(2, BigDecimal.ROUND_HALF_UP)
         def upper = new BigDecimal(3500.00).setScale(2, BigDecimal.ROUND_HALF_UP)
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, lower, upper, true, false)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, lower, upper, true, false)
 
         when:
         def response = mockMvc.perform(
@@ -55,6 +58,9 @@ class DailyBalanceServiceSpec extends Specification {
                 .param("toDate", toDate.toString())
                 .param("minimum", minimum.toString())
                 .param("fromDate", fromDate.toString())
+                .param("dob", dob.toString())
+                .param("userId", userId)
+                .param("accountHolderConsent", accountHolderConsent.toString())
         )
 
         then:
@@ -74,7 +80,10 @@ class DailyBalanceServiceSpec extends Specification {
         def lowestIndex = 5
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
+        def dob = LocalDate.of(2000, 1, 1)
         def lowestDate = toDate.minusDays(5)
+        def userId = "user123456"
+        def accountHolderConsent = true
 
         def minimum = new BigDecimal(2500.23).setScale(2, BigDecimal.ROUND_HALF_UP)
         def lower = new BigDecimal(2660.23).setScale(2, BigDecimal.ROUND_HALF_UP)
@@ -83,7 +92,7 @@ class DailyBalanceServiceSpec extends Specification {
         def lowest = 1800.00
 
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateDailyBalancesForFail(fromDate, toDate, lower, upper, lowest, lowestIndex)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateDailyBalancesForFail(fromDate, toDate, lower, upper, lowest, lowestIndex)
 
         when:
         def response = mockMvc.perform(
@@ -91,6 +100,9 @@ class DailyBalanceServiceSpec extends Specification {
                 .param("toDate", toDate.toString())
                 .param("minimum", minimum.toString())
                 .param("fromDate", fromDate.toString())
+                .param("dob", dob.toString())
+                .param("userId", userId)
+                .param("accountHolderConsent", accountHolderConsent.toString())
         )
 
         then:
@@ -109,13 +121,16 @@ class DailyBalanceServiceSpec extends Specification {
         def url = "/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus"
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
-        def mockFromDate =toDate.minusDays(26)
+        def dob = LocalDate.of(2000, 1, 1)
+        def mockFromDate = toDate.minusDays(26)
+        def userId = "user123456"
+        def accountHolderConsent = true
 
         def minimum = new BigDecimal(2500.23).setScale(2, BigDecimal.ROUND_HALF_UP)
         def lower = new BigDecimal(2660.23).setScale(2, BigDecimal.ROUND_HALF_UP)
         def upper = new BigDecimal(3500.00).setScale(2, BigDecimal.ROUND_HALF_UP)
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(mockFromDate, toDate, lower, upper, true, false)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(mockFromDate, toDate, lower, upper, true, false)
 
         when:
         def response = mockMvc.perform(
@@ -123,6 +138,9 @@ class DailyBalanceServiceSpec extends Specification {
                 .param("toDate", toDate.toString())
                 .param("minimum", minimum.toString())
                 .param("fromDate", fromDate.toString())
+                .param("dob", dob.toString())
+                .param("userId", userId)
+                .param("accountHolderConsent", accountHolderConsent.toString())
         )
 
         then:

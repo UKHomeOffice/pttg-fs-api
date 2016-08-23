@@ -19,10 +19,12 @@ class AccountStatusChecker @Autowired()(bankService: BankService, @Value("${dail
     consecutive.forall(_ == true)
   }
 
-  def checkDailyBalancesAreAboveMinimum(account: Account, fromDate: LocalDate, toDate: LocalDate, threshold: BigDecimal): Try[AccountDailyBalanceCheck] = {
+  def checkDailyBalancesAreAboveMinimum(account: Account, fromDate: LocalDate, toDate: LocalDate,
+                                        threshold: BigDecimal, dob: LocalDate, userId: String,
+                                        accountHolderConsent: Boolean): Try[AccountDailyBalanceCheck] = {
 
     Try {
-      val accountDailyBalances = bankService.fetchAccountDailyBalances(account, fromDate, toDate)
+      val accountDailyBalances = bankService.fetchAccountDailyBalances(account, fromDate, toDate, dob, userId, accountHolderConsent)
 
       if (accountDailyBalances.balances.length < numberConsecutiveDays) {
         AccountDailyBalanceCheck(fromDate, toDate, threshold, false, Some(BalanceCheckFailure(recordCount = Some(accountDailyBalances.balances.length))))
