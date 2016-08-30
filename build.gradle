@@ -104,7 +104,6 @@ tasks.withType(ScalaCompile) {
 
 test {
     exclude 'acceptance/**'
-    exclude '**/**'
 }
 
 task accept(type: Test) {
