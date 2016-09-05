@@ -45,10 +45,6 @@ configurations.all {
     }
 }
 
-jar {
-    rootSpec.exclude("developer/")
-}
-
 dependencies {
 
     compile libraries.groovy

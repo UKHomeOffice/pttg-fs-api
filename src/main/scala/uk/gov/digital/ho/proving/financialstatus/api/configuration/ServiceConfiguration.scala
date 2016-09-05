@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.context.annotation._
-import org.springframework.core.env.Environment
+import org.springframework.context.annotation.{Bean, ComponentScan, Configuration, Primary}
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -22,19 +20,10 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import scala.collection.JavaConverters._
 
-@PropertySources(value = Array(
-  new PropertySource(value = Array("classpath:dsp-default.properties"), ignoreResourceNotFound = false),
-  new PropertySource(value = Array("classpath:/developer/developer-default.properties"), ignoreResourceNotFound = true),
-  new PropertySource(value = Array("classpath:/developer/${user.name}-default.properties"), ignoreResourceNotFound = true)
-))
 @Configuration
 @ComponentScan(Array("uk.gov.digital.ho.proving.financialstatus"))
 @ControllerAdvice
-class ServiceConfiguration  extends WebMvcConfigurationSupport {
-
-  @Autowired
-  var environment: Environment = _
-
+class ServiceConfiguration extends WebMvcConfigurationSupport {
   @Bean
   @Primary
   def objectMapper: ObjectMapper = {
