@@ -53,7 +53,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     threshold
   }
 
-  def auditSearchParams(auditEventId: UUID, studentType: Option[String], inLondon: Option[Boolean], courseLength: Option[Integer], tuitionFees: Option[BigDecimal], tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal], dependants: Option[Integer]): Unit = {
+  def auditSearchParams(auditEventId: UUID, studentType: Option[String], inLondon: Option[Boolean], courseLength: Option[Int], tuitionFees: Option[BigDecimal], tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal], dependants: Option[Int]): Unit = {
 
     val params = Map(
       "studentType" -> studentType,
