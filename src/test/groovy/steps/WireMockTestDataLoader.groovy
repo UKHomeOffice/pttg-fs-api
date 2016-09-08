@@ -1,11 +1,10 @@
 package steps
 
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.http.Fault
-import com.google.common.net.HostAndPort
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
@@ -18,12 +17,18 @@ class WireMockTestDataLoader {
 
     def WireMockServer wireMockServer
 
-    WireMockTestDataLoader(String service) {
-
-        HostAndPort hostAndPort = HostAndPort.fromString(service)
-        wireMockServer = new WireMockServer(hostAndPort.getPort())
+    WireMockTestDataLoader(int port) {
+        wireMockServer = new WireMockServer(port)
         wireMockServer.start()
-        configureFor(hostAndPort.getHostText(), hostAndPort.getPort())
+        WireMock.configureFor("localhost", port);
+
+        LOGGER.debug("")
+        LOGGER.debug("")
+        LOGGER.debug("")
+        LOGGER.debug("STARTED Wiremock server. Running = {}", wireMockServer.running)
+        LOGGER.debug("")
+        LOGGER.debug("")
+        LOGGER.debug("")
     }
 
     def stubTestData(String fileName, String url) {

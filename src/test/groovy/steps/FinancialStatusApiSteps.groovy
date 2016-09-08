@@ -1,6 +1,5 @@
 package steps
 
-import com.jayway.jsonpath.JsonPath
 import com.jayway.restassured.response.Response
 import cucumber.api.DataTable
 import cucumber.api.Scenario
@@ -9,10 +8,6 @@ import cucumber.api.java.Before
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
-import jdk.nashorn.api.scripting.JSObject
-import net.sf.json.JSON
-import net.sf.json.JSONException
-import net.sf.json.JSONString
 import net.thucydides.core.annotations.Managed
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
@@ -95,7 +90,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @Before
     def setUp(Scenario scenario) {
         if (wiremock) {
-            testDataLoader = new WireMockTestDataLoader(barclaysService)
+            testDataLoader = new WireMockTestDataLoader(new URL(barclaysService).getPort())
         }
     }
 

@@ -14,7 +14,7 @@ class BarclaysConnectionHealth @Autowired()(rest: RestTemplate, @Value("${barcla
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[BarclaysConnectionHealth])
 
   // todo Update for real Barclays API
-  val bankHealthUrl = s"http://$bankService/financialstatus/v1/010616/00001000/balances?fromDate=2016-06-01&toDate=2016-06-01"
+  val bankHealthUrl = s"$bankService/financialstatus/v1/010616/00001000/balances?fromDate=2016-06-01&toDate=2016-06-01"
 
   override def health(): Health = {
 

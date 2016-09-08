@@ -15,7 +15,7 @@ class MockBankService @Autowired()(val objectMapper: ObjectMapper, httpUtils: Ht
   val bankName = "MockBarclays"
 
   //todo hardcoded scheme will need to be externalised
-  val bankUrl = s"http://$bankService/financialstatus/v1"
+  val bankUrl = s"$bankService/financialstatus/v1"
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[MockBankService])
 
