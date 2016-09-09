@@ -34,7 +34,6 @@ import static java.time.temporal.ChronoUnit.MINUTES
 @SpringApplicationConfiguration(classes = [ServiceRunner.class, ServiceConfiguration.class])
 @WebAppConfiguration
 @IntegrationTest("server.port:0")
-@Ignore
 class AuditIntegrationSpec extends Specification {
 
     @Value('${local.server.port}')

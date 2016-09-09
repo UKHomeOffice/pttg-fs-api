@@ -14,7 +14,7 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.restassured.RestDocumentationFilter;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner;
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration;
@@ -25,16 +25,19 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.restassured.operation.preprocess.RestAssuredPreprocessors.modifyUris;
 import static org.springframework.restdocs.snippet.Attributes.key;
 
-@SpringApplicationConfiguration(classes = ServiceRunner.class)
-@WebIntegrationTest("server.port=8080")
-@ContextConfiguration(classes = ServiceConfiguration.class)
+@SpringApplicationConfiguration(classes = {ServiceRunner.class, ServiceConfiguration.class})
+@WebIntegrationTest("server.port=0")
 @RunWith(SpringJUnit4ClassRunner.class)
+@TestPropertySource(properties = {
+    "barclays.stub.service=http://localhost:8089"
+})
 public class ThresholdCalculator {
 
     public static final String BASEPATH = "/pttg/financialstatusservice/v1/";
@@ -42,7 +45,7 @@ public class ThresholdCalculator {
     @Rule
     public JUnitRestDocumentation restDocumentationRule = new JUnitRestDocumentation("build/generated-snippets");
 
-    @Value("${server.port}")
+    @Value("${local.server.port}")
     private int port;
 
     private RequestSpecification documentationSpec;

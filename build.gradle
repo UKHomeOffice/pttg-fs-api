@@ -9,7 +9,7 @@ buildscript {
         classpath 'net.serenity-bdd:serenity-gradle-plugin:1.1.31'
 
         classpath 'pttg-gradle-common:pttgCommonGradle:1.5.RELEASE'
-        classpath 'pttg-gradle-common:pttgApiDocsGradle:1.1.RELEASE'
+        classpath 'pttg-gradle-common:pttgApiDocsGradle:1.2.RELEASE'
         classpath 'pttg-gradle-common:pttgSpringBootGradle:1.1.RELEASE'
 
         // This shouldn't be needed. It should pull transitively from the plugin. Don't know why it isn't working.
@@ -116,3 +116,21 @@ task acceptanceTest(type: Test) {
     outputs.upToDateWhen { false }
 }
 
+tasks.withType(Jar) {
+    manifest {
+        attributes(
+            'Implementation-Title': "${jar.baseName}",
+            'Implementation-Version': version
+        )
+    }
+}
+
+apidocs {
+    jarDocsDir = 'static'
+    jarAppendix = 'docs'
+}
+
+task buildSpringBootWithApiDocs(type: BootRepackage, dependsOn: buildWithApiDocs) {
+    group 'build'
+    description 'Builds the jar as a Spring Boot executable jar containing the api docs'
+}

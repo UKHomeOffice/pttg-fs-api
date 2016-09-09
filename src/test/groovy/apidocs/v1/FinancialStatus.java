@@ -4,6 +4,7 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.specification.RequestSpecification;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,8 +15,9 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.restassured.RestDocumentationFilter;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import steps.WireMockTestDataLoader;
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner;
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration;
 
@@ -25,18 +27,18 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.restassured.operation.preprocess.RestAssuredPreprocessors.modifyUris;
 import static org.springframework.restdocs.snippet.Attributes.key;
 
-@SpringApplicationConfiguration(classes = ServiceRunner.class)
-@WebIntegrationTest("server.port=8080")
-@ContextConfiguration(classes = ServiceConfiguration.class)
+@SpringApplicationConfiguration(classes = {ServiceRunner.class, ServiceConfiguration.class})
+@WebIntegrationTest("server.port=0")
 @RunWith(SpringJUnit4ClassRunner.class)
+@TestPropertySource(properties = {
+    "barclays.stub.service=http://localhost:8089"
+})
 public class FinancialStatus {
 
     public static final String BASEPATH = "/pttg/financialstatusservice/v1/";
@@ -44,8 +46,11 @@ public class FinancialStatus {
     @Rule
     public JUnitRestDocumentation restDocumentationRule = new JUnitRestDocumentation("build/generated-snippets");
 
-    @Value("${server.port}")
-    private int port ;
+    @Value("${local.server.port}")
+    private int port;
+
+    private WireMockTestDataLoader testDataLoader;
+    private int stubPort = 8089;
 
     private RequestSpecification documentationSpec;
 
@@ -100,19 +105,28 @@ public class FinancialStatus {
                 .addFilter(documentationConfiguration(this.restDocumentationRule))
                 .addFilter(document)
                 .build();
+
+        testDataLoader = new WireMockTestDataLoader(stubPort);
+    }
+
+    @After
+    public void tearDown() {
+        testDataLoader.stop();
     }
 
     @Test
     public void commonHeaders() throws Exception {
+
+        testDataLoader.stubTestData("01010312", "/financialstatus/v1.*");
 
         given(documentationSpec)
             .spec(requestSpec)
             .param("fromDate", "2016-05-05")
             .param("toDate", "2016-06-01")
             .param("minimum", 1000)
-            .param("dob","2000-01-01")
-            .param("userId","userid123456")
-            .param("accountHolderConsent","true")
+            .param("dob", "2000-01-01")
+            .param("userId", "userid123456")
+            .param("accountHolderConsent", "true")
             .filter(document.snippets(
                 requestHeaders(
                     headerWithName("Accept").description("The requested media type eg application/json. See <<Schema>> for supported media types.")
@@ -122,21 +136,23 @@ public class FinancialStatus {
                 )
             ))
 
-            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "010616", "00030000")
+            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
             .then().assertThat().statusCode(is(200));
     }
 
     @Test
     public void financialStatus() throws Exception {
 
+        testDataLoader.stubTestData("01010312", "/financialstatus/v1.*");
+
         given(documentationSpec)
             .spec(requestSpec)
             .param("fromDate", "2016-05-05")
             .param("toDate", "2016-06-01")
             .param("minimum", 1000)
-            .param("dob","2000-01-01")
-            .param("userId","userid123456")
-            .param("accountHolderConsent","true")
+            .param("dob", "2000-01-01")
+            .param("userId", "userid123456")
+            .param("accountHolderConsent", "true")
             .filter(document.snippets(
                 responseFields(bodyModelFields)
                     .and(accountModelFields)

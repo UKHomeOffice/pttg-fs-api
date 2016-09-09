@@ -15,7 +15,7 @@ import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport
+import org.springframework.web.servlet.config.annotation.{ResourceHandlerRegistry, ViewControllerRegistry, WebMvcConfigurationSupport}
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
 
 import scala.collection.JavaConverters._
@@ -69,5 +69,12 @@ class ServiceConfiguration extends WebMvcConfigurationSupport {
     new RestTemplate(customHttpRequestFactory)
   }
 
+  override def addResourceHandlers(registry: ResourceHandlerRegistry) {
+    registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/")
+  }
 
+  override def addViewControllers(registry: ViewControllerRegistry) {
+    registry.addViewController("/static/").setViewName("redirect:/static/index.html")
+    registry.addViewController("/").setViewName("redirect:/static/index.html")
+  }
 }
