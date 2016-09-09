@@ -91,17 +91,6 @@ if (System.getenv('GIT_COMMIT')) {
     version = version + '.' + System.getenv('GIT_COMMIT')
 }
 
-tasks.withType(ScalaCompile) {
-    scalaCompileOptions.with {
-        force = true
-        additionalParameters = ["-Xmax-classfile-name", "127"]
-    }
-}
-
-test {
-    exclude 'acceptance/**'
-}
-
 task accept(type: Test) {
     include 'acceptance/**'
     finalizedBy aggregate
@@ -114,6 +103,31 @@ task acceptanceTest(type: Test) {
     group 'verification'
     include 'acceptance/**'
     outputs.upToDateWhen { false }
+}
+
+tasks.withType(JavaCompile) {
+
+    options.fork = true  // Fork your compilation into a child process
+    options.forkOptions.setMemoryMaximumSize("256m")
+}
+
+tasks.withType(GroovyCompile) {
+
+    options.fork = true  // Fork your compilation into a child process
+    options.forkOptions.setMemoryMaximumSize("256m")
+}
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.with {
+        force = true
+        additionalParameters = ["-Xmax-classfile-name", "127"]
+        forkOptions.setMemoryMaximumSize("256m")
+    }
+}
+
+test {
+    exclude 'acceptance/**'
+    maxHeapSize = "256m"
 }
 
 tasks.withType(Jar) {
