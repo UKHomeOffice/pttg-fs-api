@@ -1,13 +1,20 @@
 = Financial Status API Guide
 include::common/config.adoc[]
 
-(uk.gov.digital.ho.proving.financialstatus)
-
 = API Overview
 
 == Introduction
 This document describes the Financial Status API, a REST service that exchanges JSON over HTTP and exposes information
-relating to an individual's financial status and income. This guide has three main sections:
+relating to an individual's financial status. The information is obtained from Barclays Bank and is available for
+current accounts held in the applicant's name.
+
+This API can be used to:
+
+ . Calculate the minimum balance requirement for a Tier 4 application
+ . Check whether an individual meets the <<Financial Status>> requirements for a Tier 4 application by consulting the
+ daily closing balance of their Barclays current account and comparing it against a minimum balance requirement
+
+This guide has three main sections:
 
  . <<API Overview>> - Information, guidance, and conventions that apply across this API, such as access control or the use of HTTP verbs.
  . <<Resources>> - Details of the resources exposed through this API and the operations available against those resources.
@@ -43,21 +50,17 @@ include::common/auth.adoc[]
 
 = Resources
 
-[.lead]
-
-
-
-== Account
-
-The Account resource represents a bank account, typically identified by it's sort code and account number.
-
-There are currently no operations for directly accessing the `Account`.
-
 == Financial Status
 
-`Financial Status` is a child of the `Account` resource. All operations regarding Financial Status are descendants
-of an account.
+The Financial Status resource conveys whether an individual meets the financial status requirements for a
+Tier 4 application.
 
+=== Check the Financial Status of an individual
+
+This version can check the financial status for applicants with a Barclays current account in their name only. The sort
+code, account number, aand date of birth must precisely match the account record at Barclays. The daily closing balances
+for the given account on each day in the date range (inclusive) will be checked against the supplied `minimum`. The
+result will be a `pass` only when the daily closing balance is greater than or equal to the minimum on each of the days.
 
 ==== Example request
 
@@ -73,14 +76,47 @@ include::{snippets}/financial-status/path-parameters.adoc[]
 include::{snippets}/financial-status/request-parameters.adoc[]
 
 
-==== Example of a successful response
+==== `Pass` response
 
 include::{snippets}/financial-status/http-response.adoc[]
 
-
-==== Financial Status response content
+==== `Pass` response content
 
 include::{snippets}/financial-status/response-fields.adoc[]
+
+
+==== `No pass` response
+
+When the account's daily balance does not meet or exceed the required `minimum` on any of the days in the date range,
+the response will include the date of the lowest balance that occurs during the date range, and the balance on
+that date.
+
+include::{snippets}/financial-status-fail/http-response.adoc[]
+
+==== `No pass` response content
+
+include::{snippets}/financial-status-fail/response-fields.adoc[]
+
+
+==== `Not enough data` response
+
+If the account's daily balance records do not cover the requested period, then the response will indicate that the
+check did not pass and supply a `failureReason` entry showing that the cause was the record count, and the number of
+records that were actually available:
+
+include::{snippets}/financial-status-not-enough-data/http-response.adoc[]
+
+==== `Not enough data` response content
+
+include::{snippets}/financial-status-not-enough-data/response-fields.adoc[]
+
+
+==== `No matching account` response
+
+If the supplied account number. sort code, and date of birth does not correspond to any active account the response will
+be a 404 with the following response body:
+
+include::{snippets}/financial-status-no-account/http-response.adoc[]
 
 
 == Maintenance
@@ -88,26 +124,27 @@ include::{snippets}/financial-status/response-fields.adoc[]
 
 == Threshold calculation
 
-Calculates the maintenance threshold value for student based on student type, course length, tuition and accommodation fees and any costs already paid.
+Calculates the maintenance threshold value for student based on student type, course length, tuition and accommodation
+fees and any costs already paid.
 
-==== Example request
+=== Example request
 
 include::{snippets}/threshold-calculation/http-request.adoc[]
 
 include::{snippets}/threshold-calculation/curl-request.adoc[]
 
 
-==== Request Parameters
+=== Request Parameters
 
 include::{snippets}/threshold-calculation/request-parameters.adoc[]
 
 
-==== Example of a successful response
+=== Example of a successful response
 
 include::{snippets}/threshold-calculation/http-response.adoc[]
 
 
-==== Financial Status response content
+=== Threshold response content
 
 include::{snippets}/threshold-calculation/response-fields.adoc[]
 

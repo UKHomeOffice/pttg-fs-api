@@ -69,9 +69,9 @@ public class ThresholdCalculator {
 
 
     private FieldDescriptor[] statusModelFields = new FieldDescriptor[]{
-        fieldWithPath("status").description("to do - i don't know what this means"),
-        fieldWithPath("status.code").description("to do - i don't know what this means"),
-        fieldWithPath("status.message").description("to do - i don't know what this means")
+        fieldWithPath("status").description("The result status"),
+        fieldWithPath("status.code").description("A numeric code identifying the error condition - see <<Errors>>"),
+        fieldWithPath("status.message").description("Details to further explain the error condition")
     };
 
     private FieldDescriptor[] bodyModelFields = new FieldDescriptor[]{
@@ -137,25 +137,25 @@ public class ThresholdCalculator {
                     .and(statusModelFields),
                 requestParameters(
                     parameterWithName("inLondon")
-                        .description("whether the location is an in London")
+                        .description("Whether the location is in London - true or false")
                         .attributes(key("optional").value(false)),
                     parameterWithName("courseLength")
-                        .description("the length of the course in months (not required for 'doctorate' student type)")
+                        .description("The length of the course in months (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(true)),
                     parameterWithName("tuitionFees")
-                        .description("total tuition fees (not required for 'doctorate' student type)")
+                        .description("Total tuition fees (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(true)),
                     parameterWithName("tuitionFeesPaid")
-                        .description("tuition fees already paid (not required for 'doctorate' student type)")
+                        .description("Tuition fees already paid (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(true)),
                     parameterWithName("accommodationFeesPaid")
-                        .description("accommodation fees already paid")
+                        .description("Accommodation fees already paid")
                         .attributes(key("optional").value(false)),
                     parameterWithName("studentType")
-                        .description("type of student, current possible values are 'doctorate', 'nondoctorate', 'pgdd' and 'sso'")
+                        .description("Type of student. Allowed values are 'doctorate', 'nondoctorate', 'pgdd' and 'sso'. See <<Glossary>>")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
-                        .description("the number of dependants to take in to account when calculating the minimum balance")
+                        .description("The number of dependants to take in to account when calculating the minimum balance")
                         .attributes(key("optional").value(true))
                 )
 

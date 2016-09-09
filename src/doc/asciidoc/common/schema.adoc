@@ -2,4 +2,4 @@ All API access is over HTTPS.
 
 All data is sent and received as JSON.
 
-All dates and times are in the TODO format.
+Dates follow http://www.iso.org/iso/iso8601 and are represented in the format YYYY-MM-DD eg "2016-06-30"

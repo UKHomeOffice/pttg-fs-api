@@ -12,7 +12,23 @@ Payment Frequency:: One of the following codes
 |Calendar Monthly
 |W1
 |Weekly
-|?
-| to do
+
+|===
+
+
+Student Type:: Meanings of the student type names accepted by the API
+[caption=]
+.Student Types
+|===
+|Student Type Name|Description
+
+|doctorate
+|Doctorate Extension Scheme
+|nondoctorate
+|Non-doctorate student
+|pgdd
+|Post-graduate Doctor/Dentist
+|sso
+|Student Sabbatical Officer
 
 |===

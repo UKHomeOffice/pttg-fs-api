@@ -73,21 +73,21 @@ public class FinancialStatus {
 
     private FieldDescriptor[] accountModelFields = new FieldDescriptor[]{
         fieldWithPath("account").description("The account corresponding to this request"),
-        fieldWithPath("account.sortCode").description("The accounts's sort code"),
+        fieldWithPath("account.sortCode").description("The account's sort code"),
         fieldWithPath("account.accountNumber").description("The account number"),
     };
 
     private FieldDescriptor[] statusModelFields = new FieldDescriptor[]{
-        fieldWithPath("status").description("to do - i don't know what this means"),
-        fieldWithPath("status.code").description("to do - i don't know what this means"),
-        fieldWithPath("status.message").description("to do - i don't know what this means")
+        fieldWithPath("status").description("The result status"),
+        fieldWithPath("status.code").description("A numeric code identifying the error condition - see <<Errors>>"),
+        fieldWithPath("status.message").description("Details to further explain the error condition")
     };
 
     private FieldDescriptor[] bodyModelFields = new FieldDescriptor[]{
-        fieldWithPath("fromDate").description("start date for the financial check"),
-        fieldWithPath("toDate").description("end date of the financial check"),
-        fieldWithPath("minimum").description("minimum allowed daily balance"),
-        fieldWithPath("pass").description("status of minimum balance check")
+        fieldWithPath("fromDate").description("Start date for the financial check"),
+        fieldWithPath("toDate").description("End date of the financial check"),
+        fieldWithPath("minimum").description("Minimum allowed daily balance"),
+        fieldWithPath("pass").description("Status of minimum balance check")
     };
 
     @Before
@@ -159,22 +159,22 @@ public class FinancialStatus {
                     .and(statusModelFields),
                 requestParameters(
                     parameterWithName("fromDate")
-                        .description("the start date of the financial check `yyyy-mm-dd` eg `2015-09-23`")
+                        .description("The start date of the financial check - `yyyy-mm-dd` eg `2015-09-23`")
                         .attributes(key("optional").value(false)),
                     parameterWithName("toDate")
-                        .description("the end date of the financial check `yyyy-mm-dd` eg `2015-09-23`")
+                        .description("The end date of the financial check - `yyyy-mm-dd` eg `2015-09-23`")
                         .attributes(key("optional").value(false)),
                     parameterWithName("minimum")
-                        .description("the minimum value allowed for the daily closing balance")
+                        .description("The minimum value allowed for the daily closing balance")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dob")
-                        .description("account holder's date of birth")
+                        .description("The account holder's date of birth - `yyyy-mm-dd` eg `2015-09-23`")
                         .attributes(key("optional").value(false)),
                     parameterWithName("userId")
-                        .description("userId of requester")
+                        .description("A user ID for the requester - any string")
                         .attributes(key("optional").value(false)),
                     parameterWithName("accountHolderConsent")
-                        .description("has the account holder given consent for the search")
+                        .description("Has the account holder given consent for the search - true or false")
                         .attributes(key("optional").value(false))
                 ),
                 pathParameters(
@@ -189,6 +189,107 @@ public class FinancialStatus {
             .then().assertThat().statusCode(is(200));
     }
 
+    @Test
+    public void financialStatusFail() throws Exception {
+
+        testDataLoader.stubTestData("01010312", "/financialstatus/v1.*");
+
+        given(documentationSpec)
+            .spec(requestSpec)
+            .param("fromDate", "2016-05-05")
+            .param("toDate", "2016-06-01")
+            .param("minimum", 100000)
+            .param("dob", "2000-01-01")
+            .param("userId", "userid123456")
+            .param("accountHolderConsent", "true")
+            .filter(document.snippets(
+                responseFields(
+                    fieldWithPath("failureReason").description("Contains further details of the failure reason"),
+                    fieldWithPath("failureReason.lowestBalanceDate").description("Indicates that the failure was due to the balance falling below the required minimum. The value shows the date on which the lowest balance occurred."),
+                    fieldWithPath("failureReason.lowestBalanceValue").description("The lowest balance that occurred during the date range."))
+                    .and(bodyModelFields)
+                    .and(accountModelFields)
+                    .and(statusModelFields),
+                requestParameters(
+                    parameterWithName("fromDate")
+                        .description("The start date of the financial check - `yyyy-mm-dd` eg `2015-09-23`")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("toDate")
+                        .description("The end date of the financial check - `yyyy-mm-dd` eg `2015-09-23`")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("minimum")
+                        .description("The minimum value allowed for the daily closing balance")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("dob")
+                        .description("The account holder's date of birth - `yyyy-mm-dd` eg `2015-09-23`")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("userId")
+                        .description("A user ID for the requester - any string. This is for audit trail purposes only.")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("accountHolderConsent")
+                        .description("Whether the account holder given consent for the search - true or false. This is for audit trail purposes only.")
+                        .attributes(key("optional").value(false))
+                ),
+                pathParameters(
+                    parameterWithName("sortCode")
+                        .description("The bank account sort code"),
+                    parameterWithName("accountNumber")
+                        .description("The bank account number")
+                )
+            ))
+
+            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
+            .then().assertThat().statusCode(is(200));
+    }
+
+    @Test
+    public void financialStatusNoAccount() throws Exception {
+
+        // Don't stub the data, thus causing a 404
+        given(documentationSpec)
+            .spec(requestSpec)
+            .param("fromDate", "2016-05-05")
+            .param("toDate", "2016-06-01")
+            .param("minimum", 1000)
+            .param("dob", "2000-01-01")
+            .param("userId", "userid123456")
+            .param("accountHolderConsent", "true")
+            .filter(document.snippets(
+                responseFields(
+                    fieldWithPath("status.code").description("A specific error code to identify further details of this error"),
+                    fieldWithPath("status.message").description("A description of the error, in this case identifying the missing mandatory parameter")
+                )
+            ))
+
+            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
+            .then().assertThat().statusCode(is(404));
+    }
+
+    @Test
+    public void financialStatusNotEnoughData() throws Exception {
+
+        testDataLoader.stubTestData("toofew", "/financialstatus/v1.*");
+
+        given(documentationSpec)
+            .spec(requestSpec)
+            .param("fromDate", "2016-05-05")
+            .param("toDate", "2016-06-01")
+            .param("minimum", 1000)
+            .param("dob", "2000-01-01")
+            .param("userId", "userid123456")
+            .param("accountHolderConsent", "true")
+            .filter(document.snippets(
+                responseFields(
+                    fieldWithPath("failureReason").description("Contains further details of the failure reason"),
+                    fieldWithPath("failureReason.recordCount").description("Indicates that the failure was due to the record count. The value shows the number of records available."))
+                    .and(bodyModelFields)
+                    .and(accountModelFields)
+                    .and(statusModelFields)
+            ))
+
+            .when().get("/accounts/{sortCode}/{accountNumber}/dailybalancestatus", "123456", "01010312")
+            .then().assertThat().statusCode(is(200));
+    }
 
     @Test
     public void missingParameterError() throws Exception {
