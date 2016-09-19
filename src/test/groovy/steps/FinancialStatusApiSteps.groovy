@@ -29,7 +29,6 @@ import java.text.DecimalFormat
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
 import static com.jayway.restassured.RestAssured.given
-
 /**
  * For wiremock-backed tests use the "test" profile in the @ActiveProfiles annotation:
  *           - This will launch the wiremock server using the application-test.properties
@@ -78,7 +77,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String accommodationFeesPaid = ""
     String studentType = ""
     String dob = ""
-    String userId = ""
+    String userId //= ""
     String accountHolderConsent = ""
 
 
@@ -203,6 +202,8 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         String[] tableKey = entries.keySet();
         List<String> tableList1 = new ArrayList()
         List<String> singlejsonFeild = new ArrayList()
+        List<String> allKeys = new ArrayList()
+        List<String> combineTableList = new ArrayList()
 
         DecimalFormat df = new DecimalFormat("#.00")
 
@@ -217,6 +218,10 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                 break;
             }
             println "--------->" + Keys
+
+            if(Keys != "failureReason" ) {
+                allKeys.add(Keys)
+            }
             String jsonValue = json.get(Keys)
 
             if ((Keys != "account") && (Keys != "courseLength") && (Keys != "failureReason") && (Keys != "cappedValues")) {
@@ -226,7 +231,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                     assert entries.containsValue(jsonValue)
                 }
 
-
                 for (String s : tableKey) {
 
                     if((Keys == "minimum")||(Keys == "threshold")) {
@@ -234,9 +238,14 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
                         assert entries.containsValue(df.format(value))
                     }
-                    tableList1.add(tocamelcase(s))
+
+                    if(!tableList1.contains(tocamelcase(s))&& s != "HTTP Status") {
+                        tableList1.add(tocamelcase(s))
+                    }
+                    combineTableList.add(tocamelcase(s))
                 }
            assert tableList1.containsAll(singlejsonFeild)
+
             }
 
             println "===========>" + jsonValue
@@ -257,6 +266,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                     println "--------------" + keys2
                     jsonList.add(keys2)
                     //json.getJSONObject()
+                    allKeys.add(keys2)
                     String innerjsonValue = innerJson.get(keys2).toString()
                     println ">>>>>>>>>>>>>>>" + innerjsonValue
                     for (String s : tableKey) {
@@ -264,6 +274,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
                         if (!tableList.contains(tocamelcase(s))) {
                             tableList.add(tocamelcase(s))
+                            combineTableList.add(tocamelcase(s))
                         }
 
                         if(keys2 == "lowestBalanceValue") {
@@ -279,12 +290,17 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                     }
                 }
                 assert tableList.containsAll(jsonList)
+                    println "xxxxxxxx" + jsonList
+
 
                 }
                  catch(Exception e){}
             }
 
         }
+        assert allKeys.containsAll(tableList1)
+
+        println "zzzzzzz" + tableList1
     }
 
     public void validateResult(DataTable arg) {
