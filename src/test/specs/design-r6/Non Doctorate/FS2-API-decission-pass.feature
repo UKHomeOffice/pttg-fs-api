@@ -4,6 +4,7 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
     Requirement to meet Tier 4 pass
     Applicant has the required closing balance every day for a consecutive 28 day period from the date of the Application Raised Date
 
+#Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Shelly is a general student and has sufficient financial funds
 
     Application Raised Date 1st of June
@@ -20,12 +21,10 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
             | Account Holder Consent | true       |
-      #  | Applicant Date of Birth     | Value |  *** Need to confirm with Barclay's ***
-
-
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Pass           | true       |
+            | Account Holder Name  | Shelly Smith |
             | Minimum        | 2530.00    |
            # | Unique Reference        | value      |
             | To Date        | 2016-06-01 |
@@ -33,6 +32,7 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
             | Account number | 01010312   |
             | Sort code      | 123456     |
 
+#Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Brian is general student and has sufficient financial funds
 
     Application Raised Date 4th of July
@@ -50,11 +50,10 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
             | Account Holder Consent | true       |
-       # | Applicant Date of Birth    |Value | *** Need to confirm with Barclay's ***
-
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Pass           | true       |
+            | Account Holder Name  | Brian Chang |
             | Minimum        | 2030.00    |
            # | Unique Reference        | value      |
             | To Date        | 2016-07-01 |

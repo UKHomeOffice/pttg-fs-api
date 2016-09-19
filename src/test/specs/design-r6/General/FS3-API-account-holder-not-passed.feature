@@ -2,12 +2,11 @@ Feature:  Not Pass - Account holder consent does not exist
 
 
     If false, API will
-
+#Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Shelly is a doctorate in London student and does not have sufficient financial funds
 
     Application Raised Date 1st of June
     She has < than the Total funds required of £2350 for the previous 28 days
-
 
         Given a Service is consuming Financial Status API
         Given the test data for account 23568499
@@ -23,6 +22,7 @@ Feature:  Not Pass - Account holder consent does not exist
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
+            | Account Holder Name  | Shelly Smith      |
             | Minimum              | 2530.00    |
             | From date            | 2016-05-05 |
             | To date              | 2016-06-01 |
@@ -31,7 +31,7 @@ Feature:  Not Pass - Account holder consent does not exist
             | sort code            | 135610     |
             | Account number       | 23568499   |
 
-
+#Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Brian is doctorate out of London student and does not have sufficient financial funds
 
     Application Raised Date 1st of July
@@ -53,6 +53,7 @@ Feature:  Not Pass - Account holder consent does not exist
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
+            | Account Holder Name  | Brian Kosac|
             | Minimum              | 2030.00    |
             | From date            | 2016-06-04 |
             | To date              | 2016-07-01 |
@@ -61,7 +62,7 @@ Feature:  Not Pass - Account holder consent does not exist
             | Sort code            | 149303     |
             | Account number       | 01078913   |
 
-
+#Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: David is general student and does not have sufficient financial funds
 
     Application Raised Date 4th of July
@@ -82,6 +83,7 @@ Feature:  Not Pass - Account holder consent does not exist
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
+            | Account Holder Name  | David Wash |
             | Minimum              | 2537.48    |
             | From date            | 2016-06-07 |
             | To date              | 2016-07-04 |

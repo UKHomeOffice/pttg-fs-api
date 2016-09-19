@@ -4,7 +4,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
     Requirement to meet Tier 4 pass
     Applicant does not have required closing balance every day for a consecutive 28 day period from the date of the Maintenance End Date
 
-
+#Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Shelly is a general student and does not have sufficient financial funds
 
     Application Raised Date 1st of June
@@ -22,10 +22,10 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
             | Account Holder Consent | true       |
-      #  | Applicant Date of Birth     | Value |  *** Need to confirm with Barclay's ***
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
+            | Account Holder Name  | Shelly Smith |
             | Minimum              | 2530.00    |
             | From Date            | 2016-05-05 |
             | Lowest Balance Date  | 2016-05-30 |
@@ -34,7 +34,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Sort code            | 135609     |
             | Account number       | 23568498   |
 
-
+#Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Brian is general student and does not have sufficient financial funds
 
     Application Raised Date 4th of July
@@ -51,12 +51,10 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
             | Account Holder Consent | true       |
-
-       # | Applicant Date of Birth    |Value | *** Need to confirm with Barclay's ***
-
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
+            | Account Holder Name  | Brian Cox  |
             | Minimum              | 2030.00    |
             | From Date            | 2016-06-04 |
             | Lowest Balance Date  | 2016-06-05 |
@@ -65,7 +63,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Sort code            | 149302     |
             | Account number       | 01078911   |
 
-
+#Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: David is general student and does not have sufficient financial funds
 
     Application Raised Date 4th of July
@@ -83,12 +81,10 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
             | Account Holder Consent | true       |
-
-       # | Applicant Date of Birth    |Value | *** Need to confirm with Barclay's ***
-
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
+            | Account Holder Name  | David Wash |
             | Minimum              | 2537.48    |
             | From Date            | 2016-06-04 |
             | Lowest Balance Date  | 2016-06-20 |
@@ -97,6 +93,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Sort code            | 139302     |
             | Account number       | 17926767   |
 
+#Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Ann is a general student - funds have been in her account for less than 28 days
 
     Application Raised Date 1st of June
@@ -114,10 +111,10 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
             | Account Holder Consent | true       |
- #  |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
+            | Account Holder Name  | Ann Po     |
             | Minimum              | 2530.00    |
             | From Date            | 2016-05-05 |
             | Record Count         | 27         |
