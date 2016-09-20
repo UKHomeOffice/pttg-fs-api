@@ -222,7 +222,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             }
             println "--------->" + Keys
 
-            if(Keys != "failureReason" ) {
+            if((Keys != "failureReason" )&&(Keys != "account")) {
                 allKeys.add(Keys)
             }
 
@@ -300,11 +300,11 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
                     for (String s : tableKey) {
 
-                        println " CCCCCCCCC " + entries.get(s)
+                        println " " + entries.get(s)
 
                         if(!tableFieldValue.contains(entries.get(s))&& s != "HTTP Status") {
                             tableFieldValue.add(entries.get(s))
-                            println "CCCCCCCCC" + entries.get(s)
+                            println "" + entries.get(s)
                         }
 
                         if (!tableList.contains(tocamelcase(s))) {
