@@ -242,7 +242,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
                 singlejsonFeild.add(Keys)
                 if((Keys != "minimum")&&(Keys != "threshold")) {
-                   // assert entries.containsValue(jsonValue)
+                    assert entries.containsValue(jsonValue)
                 }
 
                 for (String s : tableKey) {
@@ -251,7 +251,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                       //  float value = json.get(Keys)
                         double value = json.getDouble(Keys)
                        println "double: " + df.format(value)
-                       // assert entries.containsValue(df.format(value))
+                        assert entries.containsValue(df.format(value))
                     }
 
                     if(!tableList1.contains(tocamelcase(s)) && s != "HTTP Status") {
@@ -264,7 +264,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             }
 
             println "===========>" + String.valueOf(json.get(Keys))// jsonValue
-
 
             if ((Keys == "account") || (Keys == "cappedValues") || (Keys == "failureReason")) {
                 try {
