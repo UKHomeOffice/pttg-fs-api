@@ -203,7 +203,9 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         List<String> tableList1 = new ArrayList()
         List<String> singlejsonFeild = new ArrayList()
         List<String> allKeys = new ArrayList()
-        List<String> combineTableList = new ArrayList()
+        List<String> allJsonValue = new ArrayList()
+        List<String> tableFieldValue = new ArrayList()
+        String jsonValue
 
         DecimalFormat df = new DecimalFormat("#.00")
 
@@ -222,33 +224,47 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             if(Keys != "failureReason" ) {
                 allKeys.add(Keys)
             }
-            String jsonValue = json.get(Keys)
+
+             jsonValue = json.get(Keys)
 
             if ((Keys != "account") && (Keys != "courseLength") && (Keys != "failureReason") && (Keys != "cappedValues")) {
 
+                if((Keys == "minimum")||(Keys == "threshold")) {
+
+                    double value = json.getDouble(Keys)
+                    println "double: " + df.format(value)
+
+                   jsonValue = String.valueOf(df.format(value))
+
+                }
+
+                allJsonValue.add(jsonValue)
+
                 singlejsonFeild.add(Keys)
                 if((Keys != "minimum")&&(Keys != "threshold")) {
-                    assert entries.containsValue(jsonValue)
+                   // assert entries.containsValue(jsonValue)
                 }
 
                 for (String s : tableKey) {
 
                     if((Keys == "minimum")||(Keys == "threshold")) {
-                        double value = json.get(Keys)
-
-                        assert entries.containsValue(df.format(value))
+                      //  float value = json.get(Keys)
+                        double value = json.getDouble(Keys)
+                       println "double: " + df.format(value)
+                       // assert entries.containsValue(df.format(value))
                     }
 
-                    if(!tableList1.contains(tocamelcase(s))&& s != "HTTP Status") {
+                    if(!tableList1.contains(tocamelcase(s)) && s != "HTTP Status") {
                         tableList1.add(tocamelcase(s))
                     }
-                    combineTableList.add(tocamelcase(s))
+
                 }
            assert tableList1.containsAll(singlejsonFeild)
 
             }
 
-            println "===========>" + jsonValue
+            println "===========>" + String.valueOf(json.get(Keys))// jsonValue
+
 
             if ((Keys == "account") || (Keys == "cappedValues") || (Keys == "failureReason")) {
                 try {
@@ -269,12 +285,20 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                     allKeys.add(keys2)
                     String innerjsonValue = innerJson.get(keys2).toString()
                     println ">>>>>>>>>>>>>>>" + innerjsonValue
+
+                    allJsonValue.add(innerjsonValue)
+
                     for (String s : tableKey) {
+
                         println "" + entries.get(s)
+
+                        if(!tableFieldValue.contains(entries.get(s))&& s != "HTTP Status") {
+                            tableFieldValue.add(entries.get(s))
+                        }
 
                         if (!tableList.contains(tocamelcase(s))) {
                             tableList.add(tocamelcase(s))
-                            combineTableList.add(tocamelcase(s))
+
                         }
 
                         if(keys2 == "lowestBalanceValue") {
@@ -292,13 +316,13 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                 assert tableList.containsAll(jsonList)
                     println "xxxxxxxx" + jsonList
 
-
                 }
                  catch(Exception e){}
             }
 
         }
         assert allKeys.containsAll(tableList1)
+        assert tableFieldValue.containsAll(allJsonValue)
 
         println "zzzzzzz" + tableList1
     }
