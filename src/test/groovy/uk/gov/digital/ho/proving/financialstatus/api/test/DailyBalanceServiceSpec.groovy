@@ -68,6 +68,9 @@ class DailyBalanceServiceSpec extends Specification {
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.pass == true
+        jsonContent.accountHolderName == "Fred Flintstone"
+        jsonContent.account.sortCode == "123456"
+        jsonContent.account.accountNumber == "12345678"
 
     }
 
@@ -112,6 +115,10 @@ class DailyBalanceServiceSpec extends Specification {
         jsonContent.pass == false
         jsonContent.failureReason.lowestBalanceValue == 1800.00
         jsonContent.failureReason.lowestBalanceDate == lowestDate.toString()
+        jsonContent.accountHolderName == "Fred Flintstone"
+        jsonContent.account.sortCode == "123456"
+        jsonContent.account.accountNumber == "12345678"
+
 
     }
 
@@ -151,6 +158,10 @@ class DailyBalanceServiceSpec extends Specification {
         jsonContent.failureReason.recordCount == 27
         jsonContent.failureReason.lowestBalanceValue == null
         jsonContent.failureReason.lowestBalanceDate == null
+        jsonContent.accountHolderName == "Fred Flintstone"
+        jsonContent.account.sortCode == "123456"
+        jsonContent.account.accountNumber == "12345678"
+
 
     }
 

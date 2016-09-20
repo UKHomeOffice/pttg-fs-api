@@ -15,7 +15,7 @@ class BankServiceTest extends Specification {
     def "Check bankService returns a pass for correct data"() {
 
         given:
-        def account = new Account("12-34-56", "87654321")
+        def account = new Account("12-34-56", "12345678")
         def minimum = new scala.math.BigDecimal(2560.23)
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
@@ -39,7 +39,7 @@ class BankServiceTest extends Specification {
     def "Check bankService returns a failure for incorrect data"() {
 
         given:
-        def account = new Account("12-34-56", "87654321")
+        def account = new Account("12-34-56", "12345678")
         def minimum = new scala.math.BigDecimal(2560.23)
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
@@ -63,7 +63,7 @@ class BankServiceTest extends Specification {
     def "Check bankService returns a failure for nonconsecutive date"() {
 
         given:
-        def account = new Account("12-34-56", "87654321")
+        def account = new Account("12-34-56", "12345678")
         def minimum = new scala.math.BigDecimal(2560.23)
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
@@ -87,7 +87,7 @@ class BankServiceTest extends Specification {
     def "Check bankService returns a failure for not enough data"() {
 
         given:
-        def account = new Account("12-34-56", "87654321")
+        def account = new Account("12-34-56", "12345678")
         def minimum = new scala.math.BigDecimal(2560.23)
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)

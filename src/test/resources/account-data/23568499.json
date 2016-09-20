@@ -1,4 +1,6 @@
 {
+    "accountHolderName": "Fred Flintstone",
+
     "balanceRecords": [
         {
             "date": "2016-06-01",

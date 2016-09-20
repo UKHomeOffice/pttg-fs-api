@@ -5,5 +5,7 @@ import java.time.LocalDate
 import org.springframework.http.HttpStatus
 
 case class BankResponse(httpStatus: HttpStatus, dailyBalances: DailyBalances)
-case class DailyBalances(var balanceRecords: Seq[DailyBalance])
-case class DailyBalance(var date: LocalDate, var balance: BigDecimal)
+
+case class DailyBalances(accountHolderName: String, sortCode: String, accountNumber: String, balanceRecords: Seq[DailyBalance])
+
+case class DailyBalance(date: LocalDate, balance: BigDecimal)

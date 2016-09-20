@@ -20,13 +20,14 @@ class MockBankService @Autowired()(val objectMapper: ObjectMapper, httpUtils: Ht
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[MockBankService])
 
   private def bankResponseMapper(bankResponse: BankResponse): AccountDailyBalances =
-    AccountDailyBalances(
+    AccountDailyBalances(bankResponse.dailyBalances.accountHolderName, bankResponse.dailyBalances.sortCode,
+      bankResponse.dailyBalances.accountNumber,
       bankResponse.dailyBalances.balanceRecords.map {
         balance => AccountDailyBalance(balance.date, balance.balance)
       }
     )
 
-  override def buildUrl(account: Account, fromDate: LocalDate, toDate: LocalDate,dob: LocalDate, userId: String, accountHolderConsent: Boolean): String =
+  override def buildUrl(account: Account, fromDate: LocalDate, toDate: LocalDate, dob: LocalDate, userId: String, accountHolderConsent: Boolean): String =
     s"""$bankUrl/${account.sortCode}/${account.accountNumber}/balances?fromDate=$fromDate&toDate=$toDate&dob=$dob&userId=$userId&accountHolderConsent=$accountHolderConsent"""
 
   override def fetchAccountDailyBalances(account: Account, fromDate: LocalDate, toDate: LocalDate,
