@@ -25,6 +25,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
             | In London                       | No        |
             | Accommodation fees already paid | 250       |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
-            | Threshold | 1780.00 |
+            | HTTP Status | 200     |
+            | Threshold   | 1780.00 |
 

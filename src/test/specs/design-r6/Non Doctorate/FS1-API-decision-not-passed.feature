@@ -118,7 +118,6 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Minimum              | 2530.00    |
             | From Date            | 2016-05-05 |
             | Record Count         | 27         |
-            | Lowest Balance Value | 2529.99    |
             | To Date              | 2016-06-01 |
             | Sort code            | 135609     |
             | Account number       | 23568491   |
