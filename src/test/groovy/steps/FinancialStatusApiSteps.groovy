@@ -197,11 +197,52 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         return finalString
     }
 
+   //////////////////////////////////////////
+
+    public void validateJsonResult2(DataTable arg){
+
+        Map<String, String> entries = arg.asMap(String.class, String.class);
+        List<String> allKeys = new ArrayList()
+        List<String> allJsonValue = new ArrayList()
+        List<String> tableFieldValue = new ArrayList()
+        List<String> tableList = new ArrayList()
+        JSONObject json = new JSONObject(jsonAsString);
+        DecimalFormat df = new DecimalFormat("#.00")
+
+        Iterator<String> jasonKey = json.keys()
+
+        while (jasonKey.hasNext()) {
+            String key = (String) jasonKey.next();
+
+            if (json.get(key) instanceof JSONObject) {
+                println "BBBBBBBBBBBBB" + key
+                println "PPPPPPPPPPPPP" + json.get(key)
+                String innerValue = json.get(key)
+            JSONObject json2 = new JSONObject(innerValue)
+            Iterator<String> feild = json2.keys()
+
+            while (feild.hasNext()) {
+                String key2 =  feild.next()
+                println "XXXXXXXXXXXXX" + key2
+                println "AAAAAAAAAAAAA" + json2.get(key2)
+            }
+        }
+             if (!(json.get(key) instanceof JSONObject)){
+                println "VVVVVVVVVVV" + key
+                 println "RRRRRRRRRRRRRRR" + json.get(key)
+                 allKeys.add(key)
+
+            }
+        }
+
+    }
+
+////////////////////////////////////////////////
+
     public void validateJsonResult(DataTable arg) {
         Map<String, String> entries = arg.asMap(String.class, String.class);
         String[] tableKey = entries.keySet();
         List<String> tableList1 = new ArrayList()
-        List<String> singlejsonFeild = new ArrayList()
         List<String> allKeys = new ArrayList()
         List<String> allJsonValue = new ArrayList()
         List<String> tableFieldValue = new ArrayList()
@@ -238,18 +279,12 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                    jsonValue = String.valueOf(df.format(value)) ///////////////////
 
                 }
-
                 allJsonValue.add(jsonValue)
-
-                singlejsonFeild.add(Keys)
-                if((Keys != "minimum")&&(Keys != "threshold")) {
-                    //assert entries.containsValue(jsonValue)
-                }
 
                 for (String s : tableKey) {
 
                     if((Keys == "minimum")||(Keys == "threshold")) {
-                      //  float value = json.get(Keys)
+
                         double value = json.getDouble(Keys)
                        println "double: " + df.format(value)
                         assert entries.containsValue(df.format(value))
@@ -261,8 +296,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                     }
 
                 }
-//           assert tableList1.containsAll(singlejsonFeild)
-
             }
 
             println "===========>" + String.valueOf(json.get(Keys))// jsonValue
@@ -272,7 +305,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                 List<String> tableList = new ArrayList()
                 List<String> jsonList = new ArrayList()
 
-                String thenTableValue = ""
+                //String thenTableValue = ""
                 JSONObject innerJson = new JSONObject(jsonValue);
                 Iterator<String> innerJasonKey = innerJson.keys()
 
@@ -282,7 +315,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
                     println "--------------" + keys2
                     jsonList.add(keys2)
-                    //json.getJSONObject()
+
                     allKeys.add(keys2)
                      innerjsonValue = innerJson.get(keys2).toString()
 
@@ -291,9 +324,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                         innerjsonValue = String.valueOf(df.format(value2))
 
                     }
-
-                    //innerjsonValue = innerJson.get(keys2).toString()
-
                     println ">>>>>>>>>>>>>>>" + innerjsonValue
 
                     allJsonValue.add(innerjsonValue)
@@ -333,7 +363,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
         }
         assert allKeys.containsAll(tableList1)
-        //assert tableFieldValue.containsAll(allJsonValue)
         assert allJsonValue.containsAll(tableFieldValue)
 
 
@@ -417,12 +446,15 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
-        validateJsonResult(arg1)
+       // validateJsonResult(arg1)
+        validateJsonResult2(arg1)
+
     }
 
     @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")
     public void fsps_Tier_four_general_Case_Worker_tool_API_provides_the_following_result(DataTable arg1) {
         validateResult(arg1)
+
     }
 
     @Then("^the service displays the following result\$")
