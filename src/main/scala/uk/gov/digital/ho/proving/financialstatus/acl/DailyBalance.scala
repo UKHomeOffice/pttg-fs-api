@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus
 
 case class BankResponse(httpStatus: HttpStatus, dailyBalances: DailyBalances)
 
-case class DailyBalances(accountHolderName: String, sortCode: String, accountNumber: String, balanceRecords: Seq[DailyBalance])
+case class DailyBalances(accountHolderName: String, balanceRecords: Seq[DailyBalance])
 
 case class DailyBalance(date: LocalDate, balance: BigDecimal)

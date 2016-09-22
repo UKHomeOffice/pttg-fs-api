@@ -20,8 +20,7 @@ class MockBankService @Autowired()(val objectMapper: ObjectMapper, httpUtils: Ht
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[MockBankService])
 
   private def bankResponseMapper(bankResponse: BankResponse): AccountDailyBalances =
-    AccountDailyBalances(bankResponse.dailyBalances.accountHolderName, bankResponse.dailyBalances.sortCode,
-      bankResponse.dailyBalances.accountNumber,
+    AccountDailyBalances(bankResponse.dailyBalances.accountHolderName,
       bankResponse.dailyBalances.balanceRecords.map {
         balance => AccountDailyBalance(balance.date, balance.balance)
       }

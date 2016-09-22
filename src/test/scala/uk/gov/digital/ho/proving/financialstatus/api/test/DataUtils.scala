@@ -42,13 +42,13 @@ object DataUtils {
       AccountDailyBalance(toDate.minusDays(index), value.setScale(2, BigDecimal.RoundingMode.HALF_UP))
     }
 
-    AccountDailyBalances("Fred Flintstone", "123456", "12345678", dailyBalances)
+    AccountDailyBalances("Fred Flintstone", dailyBalances)
   }
 
   def generateRandomBankResponseOK(fromDate: LocalDate, toDate: LocalDate, lower: Float, upper: Float,
                                    forceLower: Boolean = false, forceUpper: Boolean = false): AccountDailyBalances = {
     val dailyBalances = generateRandomDailyBalances(fromDate, toDate, lower, upper, forceLower, forceUpper)
-    AccountDailyBalances("Fred Flintstone", "123456", "12345678", dailyBalances)
+    AccountDailyBalances("Fred Flintstone", dailyBalances)
   }
 
   def generateRandomBankResponseNonConsecutiveDates(fromDate: LocalDate, toDate: LocalDate, lower: Float,
@@ -56,7 +56,7 @@ object DataUtils {
     val dailyBalances = generateRandomDailyBalances(fromDate, toDate, lower, upper, forceLower, forceUpper)
     val variance = if (nextBoolean()) 1 else 2
     dailyBalances.map(dailyBalance => AccountDailyBalance(dailyBalance.date.plusDays(variance), dailyBalance.balance))
-    AccountDailyBalances("Fred Flintstone", "123456", "12345678", dailyBalances)
+    AccountDailyBalances("Fred Flintstone", dailyBalances)
   }
 
 
