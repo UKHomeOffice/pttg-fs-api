@@ -446,8 +446,8 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
-       // validateJsonResult(arg1)
-        validateJsonResult2(arg1)
+        validateJsonResult(arg1)
+      //  validateJsonResult2(arg1)
 
     }
 
