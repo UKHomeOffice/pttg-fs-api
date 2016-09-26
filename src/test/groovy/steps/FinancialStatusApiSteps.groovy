@@ -197,177 +197,75 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         return finalString
     }
 
-   //////////////////////////////////////////
 
-    public void validateJsonResult2(DataTable arg){
-
+    public void validateJsonResult(DataTable arg){
         Map<String, String> entries = arg.asMap(String.class, String.class);
+        String[] tableKey = entries.keySet()
         List<String> allKeys = new ArrayList()
         List<String> allJsonValue = new ArrayList()
         List<String> tableFieldValue = new ArrayList()
-        List<String> tableList = new ArrayList()
+        List<String> tableFieldCamelCase = new ArrayList()
         JSONObject json = new JSONObject(jsonAsString);
         DecimalFormat df = new DecimalFormat("#.00")
+        double value
+        String innerJsonValue
+        String jsonValue
 
-        Iterator<String> jasonKey = json.keys()
 
-        while (jasonKey.hasNext()) {
-            String key = (String) jasonKey.next();
+    Iterator<String> jasonKey = json.keys()
 
-            if (json.get(key) instanceof JSONObject) {
-                println "BBBBBBBBBBBBB" + key
-                println "PPPPPPPPPPPPP" + json.get(key)
-                String innerValue = json.get(key)
+    while (jasonKey.hasNext()) {
+        String key = (String) jasonKey.next();
+
+        if (json.get(key) instanceof JSONObject) {
+
+            String innerValue = json.get(key)
+
             JSONObject json2 = new JSONObject(innerValue)
             Iterator<String> feild = json2.keys()
 
             while (feild.hasNext()) {
-                String key2 =  feild.next()
-                println "XXXXXXXXXXXXX" + key2
-                println "AAAAAAAAAAAAA" + json2.get(key2)
-            }
-        }
-             if (!(json.get(key) instanceof JSONObject)){
-                println "VVVVVVVVVVV" + key
-                 println "RRRRRRRRRRRRRRR" + json.get(key)
-                 allKeys.add(key)
+                String key2 = (String) feild.next()
+                allKeys.add(key2)
 
-            }
-        }
 
-    }
-
-////////////////////////////////////////////////
-
-    public void validateJsonResult(DataTable arg) {
-        Map<String, String> entries = arg.asMap(String.class, String.class);
-        String[] tableKey = entries.keySet();
-        List<String> tableList1 = new ArrayList()
-        List<String> allKeys = new ArrayList()
-        List<String> allJsonValue = new ArrayList()
-        List<String> tableFieldValue = new ArrayList()
-        String jsonValue
-        String innerjsonValue
-
-        DecimalFormat df = new DecimalFormat("#.00")
-
-        JSONObject json = new JSONObject(jsonAsString);
-
-        Iterator<String> jasonKey = json.keys()
-
-        while (jasonKey.hasNext()) {
-            String Keys = jasonKey.next()
-            if (Keys == "status") {
-                assert entries.get("HTTP Status") == resp.getStatusCode().toString();
-                break;
-            }
-            println "--------->" + Keys
-
-            if((Keys != "failureReason" )&&(Keys != "account")) {
-                allKeys.add(Keys)
-            }
-
-             jsonValue = json.get(Keys)
-
-            if ((Keys != "account") && (Keys != "courseLength") && (Keys != "failureReason") && (Keys != "cappedValues")) {
-
-                if((Keys == "minimum")||(Keys == "threshold")) {
-
-                    double value = json.getDouble(Keys) /////////////////////
-                    println "double: " + df.format(value)
-
-                   jsonValue = String.valueOf(df.format(value)) ///////////////////
-
+                if(!(json2.get(key2) instanceof String)){
+                  double values =  json2.getDouble(key2)
+                    innerJsonValue = String.valueOf(df.format(values))
+                    allJsonValue.add(innerJsonValue)
+                    println "DDDDDDDDDDD" + innerJsonValue
                 }
+                innerJsonValue = json2.get(key2)
+                if ((key2 != "code") && (key2 != "message")) {
+                    allJsonValue.add(innerJsonValue)
+                }
+            }
+        }
+        if (!(json.get(key) instanceof JSONObject)) {
+
+            jsonValue = json.get(key)
+            if ((key == "minimum") || (key == "threshold")) {
+                value = json.getDouble(key)
+                jsonValue = String.valueOf(df.format(value))
                 allJsonValue.add(jsonValue)
 
-                for (String s : tableKey) {
-
-                    if((Keys == "minimum")||(Keys == "threshold")) {
-
-                        double value = json.getDouble(Keys)
-                       println "double: " + df.format(value)
-                        assert entries.containsValue(df.format(value))
-                    }
-
-                    if(!tableList1.contains(tocamelcase(s)) && s != "HTTP Status") {
-                        tableFieldValue.add(entries.get(s))
-                        tableList1.add(tocamelcase(s))
-                    }
-
-                }
             }
-
-            println "===========>" + String.valueOf(json.get(Keys))// jsonValue
-
-            if ((Keys == "account") || (Keys == "cappedValues") || (Keys == "failureReason")) {
-                try {
-                List<String> tableList = new ArrayList()
-                List<String> jsonList = new ArrayList()
-
-                //String thenTableValue = ""
-                JSONObject innerJson = new JSONObject(jsonValue);
-                Iterator<String> innerJasonKey = innerJson.keys()
-
-                while (innerJasonKey.hasNext()) {
-
-                    String keys2 = innerJasonKey.next()
-
-                    println "--------------" + keys2
-                    jsonList.add(keys2)
-
-                    allKeys.add(keys2)
-                     innerjsonValue = innerJson.get(keys2).toString()
-
-                    if(keys2 == "lowestBalanceValue"){
-                        double value2 = innerJson.getDouble(keys2)
-                        innerjsonValue = String.valueOf(df.format(value2))
-
-                    }
-                    println ">>>>>>>>>>>>>>>" + innerjsonValue
-
-                    allJsonValue.add(innerjsonValue)
-
-                    for (String s : tableKey) {
-
-                        println " " + entries.get(s)
-
-                        if(!tableFieldValue.contains(entries.get(s))&& s != "HTTP Status") {
-                            tableFieldValue.add(entries.get(s))
-                            println "" + entries.get(s)
-                        }
-
-                        if (!tableList.contains(tocamelcase(s))) {
-                            tableList.add(tocamelcase(s))
-
-                        }
-
-                        if(keys2 == "lowestBalanceValue") {
-                            double value = json.get(keys2)
-
-                            assert entries.containsValue(df.format(value))
-                        }
-
-                        if(keys2 != "lowestBalanceValue") {
-                            assert entries.containsValue(innerjsonValue)
-                        }
-
-                    }
-                }
-                assert tableList.containsAll(jsonList)
-                    println "xxxxxxxx" + jsonList
-
-                }
-                 catch(Exception e){}
+            allKeys.add(key)
+            if (!(allJsonValue.contains(jsonValue))) {
+                allJsonValue.add(jsonValue)
             }
-
         }
-        assert allKeys.containsAll(tableList1)
-        assert allJsonValue.containsAll(tableFieldValue)
-
-
-        println "zzzzzzz" + tableList1
     }
+    for (String s : tableKey) {
+        if (s != "HTTP Status") {
+            tableFieldCamelCase.add(tocamelcase(s))
+            tableFieldValue.add(entries.get(s))
+        }
+    }
+            assert allKeys.containsAll(tableFieldCamelCase)
+            assert allJsonValue.containsAll(tableFieldValue)
+    }
+
 
     public void validateResult(DataTable arg) {
 
@@ -443,11 +341,10 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         println("FSPS API Calculator: " + jsonAsString)
     }
 
-
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
+        //validateJsonResult(arg1)
         validateJsonResult(arg1)
-      //  validateJsonResult2(arg1)
 
     }
 
