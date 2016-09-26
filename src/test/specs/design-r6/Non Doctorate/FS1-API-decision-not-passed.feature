@@ -23,16 +23,16 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | User Id                | user12345  |
             | Account Holder Consent | true       |
         Then The Financial Status API provides the following results:
-            | HTTP Status          | 200        |
-            | Pass                 | false      |
+            | HTTP Status          | 200          |
+            | Pass                 | false        |
             | Account Holder Name  | Shelly Smith |
-            | Minimum              | 2530.00    |
-            | From Date            | 2016-05-05 |
-            | Lowest Balance Date  | 2016-05-30 |
-            | Lowest Balance Value | 2529.99    |
-            | To Date              | 2016-06-01 |
-            | Sort code            | 135609     |
-            | Account number       | 23568498   |
+            | Minimum              | 2530.00      |
+            | From Date            | 2016-05-05   |
+            | Lowest Balance Date  | 2016-05-30   |
+            | Lowest Balance Value | 2529.99      |
+            | To Date              | 2016-06-01   |
+            | Sort code            | 135609       |
+            | Account number       | 23568498     |
 
 #Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Brian is general student and does not have sufficient financial funds
@@ -112,12 +112,12 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | User Id                | user12345  |
             | Account Holder Consent | true       |
         Then The Financial Status API provides the following results:
-            | HTTP Status          | 200        |
-            | Pass                 | false      |
-            | Account Holder Name  | Ann Po     |
-            | Minimum              | 2530.00    |
-            | From Date            | 2016-05-05 |
-            | Record Count         | 27         |
-            | To Date              | 2016-06-01 |
-            | Sort code            | 135609     |
-            | Account number       | 23568491   |
+            | HTTP Status         | 200        |
+            | Pass                | false      |
+            | Account Holder Name | Ann Po     |
+            | Minimum             | 2530.00    |
+            | From Date           | 2016-05-05 |
+            | Record Count        | 27         |
+            | To Date             | 2016-06-01 |
+            | Sort code           | 135609     |
+            | Account number      | 23568491   |

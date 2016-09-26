@@ -18,18 +18,18 @@ Feature:  Not Pass - Account holder consent does not exist
             | Account number         | 23568499   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true      |
+            | Account Holder Consent | true       |
         Then The Financial Status API provides the following results:
-            | HTTP Status          | 200        |
-            | Pass                 | false      |
-            | Account Holder Name  | Shelly Smith      |
-            | Minimum              | 2530.00    |
-            | From date            | 2016-05-05 |
-            | To date              | 2016-06-01 |
-            | Lowest Balance Date  | 2016-05-30 |
-            | Lowest Balance Value | 2429.99    |
-            | sort code            | 135610     |
-            | Account number       | 23568499   |
+            | HTTP Status          | 200          |
+            | Pass                 | false        |
+            | Account Holder Name  | Shelly Smith |
+            | Minimum              | 2530.00      |
+            | From date            | 2016-05-05   |
+            | To date              | 2016-06-01   |
+            | Lowest Balance Date  | 2016-05-30   |
+            | Lowest Balance Value | 2429.99      |
+            | sort code            | 135610       |
+            | Account number       | 23568499     |
 
 #Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Brian is doctorate out of London student and does not have sufficient financial funds
@@ -48,19 +48,19 @@ Feature:  Not Pass - Account holder consent does not exist
             | Account number         | 01078913   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12346  |
-            | Account Holder Consent | true      |
+            | Account Holder Consent | true       |
 
         Then The Financial Status API provides the following results:
-            | HTTP Status          | 200        |
-            | Pass                 | false      |
-            | Account Holder Name  | Brian Kosac|
-            | Minimum              | 2030.00    |
-            | From date            | 2016-06-04 |
-            | To date              | 2016-07-01 |
-            | Lowest Balance Date  | 2016-06-27 |
-            | Lowest Balance Value | 2029.99    |
-            | Sort code            | 149303     |
-            | Account number       | 01078913   |
+            | HTTP Status          | 200         |
+            | Pass                 | false       |
+            | Account Holder Name  | Brian Kosac |
+            | Minimum              | 2030.00     |
+            | From date            | 2016-06-04  |
+            | To date              | 2016-07-01  |
+            | Lowest Balance Date  | 2016-06-27  |
+            | Lowest Balance Value | 2029.99     |
+            | Sort code            | 149303      |
+            | Account number       | 01078913    |
 
 #Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: David is general student and does not have sufficient financial funds
@@ -79,7 +79,7 @@ Feature:  Not Pass - Account holder consent does not exist
             | Account number         | 17926768   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12347  |
-            | Account Holder Consent | true      |
+            | Account Holder Consent | true       |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
