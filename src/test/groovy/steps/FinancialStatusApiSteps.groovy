@@ -62,6 +62,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @Managed
     public Response resp
+    public Response resp2
     String jsonAsString
     String dependants = ""
     String fromDate = ""
@@ -79,6 +80,15 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String dob = ""
     String userId //= ""
     String accountHolderConsent = ""
+
+    List<String> Todate = new ArrayList()
+    List<String> Fromdate = new ArrayList()
+    List<String> Minimums = new ArrayList()
+    List<String> Accountholderconsent = new ArrayList()
+    List<String> Userid = new ArrayList()
+    List<String> Dateofbirth = new ArrayList()
+    List<String> Sortcode = new ArrayList()
+    List<String> Accountnumber = new ArrayList()
 
 
     def testDataLoader
@@ -184,7 +194,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                 sbl.append(firstString)
 
             }
-
             if (e > 0) {
                 nextString = f[e].toLowerCase()
                 firstChar = nextString.charAt(0)
@@ -211,7 +220,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         String innerJsonValue
         String jsonValue
 
-
     Iterator<String> jasonKey = json.keys()
 
     while (jasonKey.hasNext()) {
@@ -220,15 +228,14 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         if (json.get(key) instanceof JSONObject) {
 
             String innerValue = json.get(key)
-
+            println "AAAAAAAAAAA" + innerValue
             JSONObject json2 = new JSONObject(innerValue)
             Iterator<String> feild = json2.keys()
 
             while (feild.hasNext()) {
                 String key2 = (String) feild.next()
                 allKeys.add(key2)
-
-
+                println "BBBBBBBBB" + key2
                 if(!(json2.get(key2) instanceof String)){
                   double values =  json2.getDouble(key2)
                     innerJsonValue = String.valueOf(df.format(values))
@@ -248,7 +255,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                 value = json.getDouble(key)
                 jsonValue = String.valueOf(df.format(value))
                 allJsonValue.add(jsonValue)
-
             }
             allKeys.add(key)
             if (!(allJsonValue.contains(jsonValue))) {
@@ -265,6 +271,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             assert allKeys.containsAll(tableFieldCamelCase)
             assert allJsonValue.containsAll(tableFieldValue)
     }
+
 
 
     public void validateResult(DataTable arg) {
@@ -314,14 +321,27 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
     @Given("^the barclays response has status (\\d+)\$")
-    public void the_barclays_response_has_status(int status) throws Throwable {
+    public void the_barclays_response_has_status(int status)  {
         testDataLoader.withResponseStatus(balancesUrlRegex, status)
     }
 
     @Given("^the barclays api is unreachable\$")
-    public void the_barclays_api_is_unreachable() throws Throwable {
+    public void the_barclays_api_is_unreachable() {
         testDataLoader.withServiceDown()
     }
+
+
+
+    @When("^the Financial Status API is invoked\$")
+    public void the_Financial_Status_API_is_invoked()  {
+
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId,accountHolderConsent )
+        jsonAsString = resp.asString()
+
+        println("Family Case Worker API: " + jsonAsString)
+
+    }
+
 
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
