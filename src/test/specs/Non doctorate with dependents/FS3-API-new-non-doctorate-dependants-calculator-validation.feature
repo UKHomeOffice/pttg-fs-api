@@ -2,20 +2,18 @@ Feature: Validation of the API fields and data
 
     Mandatory fields:
     In London - Yes or No options (mandatory)
-    Course length - 1-9 months, Format should not contain commas
+    Course length - 7+ months
     Accommodation fees already paid - Format should not contain commas or currency symbols
-    To Date - Format should be yyyy-mm-dd
-    From Date - Format should be yyyy-mm-dd
     Dependant - Format should not contain commas
 
 ######################### Validation on the Student type field #########################
 
-    Scenario: The API is not provided with Stydent type field
+    Scenario: The API is not provided with Student type field
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |         |
             | In London                       | Yes     |
-            | Course Length                   | 1       |
+            | Course Length                   | 7       |
             | Total tuition fees              | 3500.50 |
             | Tuition fees already paid       | 0       |
             | Accommodation fees already paid | 0       |
@@ -32,7 +30,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       |              |
-            | Course Length                   | 2            |
+            | Course Length                   | 8            |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
@@ -49,8 +47,23 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   |              |
+            | Course Length                   | 6            |
             | Total tuition fees              | 3500.50      |
+            | Tuition fees already paid       | 0            |
+            | Accommodation fees already paid | 0            |
+            | Number of dependants            | 1            |
+        Then the service displays the following result
+            | HTTP Status    | 400                                                              |
+            | Status code    | 0004                                                             |
+            | Status message | Parameter error: Invalid courseLength, must be greater than six months when the main applicant has a dependant  |
+
+    Scenario: The API is not provided with the Course length
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Student Type                    | nondoctorate |
+            | In London                       | Yes          |
+            | Course Length                   |              |
+            | Total tuition fees              | 2500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
             | Number of dependants            | 1            |
@@ -82,7 +95,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 1            |
+            | Course Length                   | 9            |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid |              |
@@ -97,7 +110,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 1            |
+            | Course Length                   | 7            |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | %%           |
@@ -113,7 +126,7 @@ Feature: Validation of the API fields and data
             | Student Type                    | nondoctorate |
             | The end of 28-day period        | 20/06/2016   |
             | In London                       | Yes          |
-            | Course Length                   | 1            |
+            | Course Length                   | 9            |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | -100         |
@@ -157,3 +170,5 @@ Feature: Validation of the API fields and data
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |
+
+
