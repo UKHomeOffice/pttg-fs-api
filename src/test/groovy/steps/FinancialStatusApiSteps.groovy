@@ -396,7 +396,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
     private int getHealthCheckStatus() {
-        responseStatusFor("http://localhost:" + serverPort + "/health")
+        responseStatusFor("http://localhost:" + serverPort + "/healthz")
     }
 
 }
