@@ -12,9 +12,11 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                                   @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int,
                                                   @Value("${non.doctorate.minimum.course.length}") val nonDoctorateMinCourseLength: Int,
                                                   @Value("${non.doctorate.maximum.course.length}") val nonDoctorateMaxCourseLength: Int,
+                                                  @Value("${non.doctorate.minimum.course.length.with.dependants}") val minNonDoctorateCourseLengthWithDependants: Int,
                                                   @Value("${pgdd.sso.minimum.course.length}") val pgddSsoMinCourseLength: Int,
                                                   @Value("${pgdd.sso.maximum.course.length}") val pgddSsoMaxCourseLength: Int,
                                                   @Value("${doctorate.fixed.course.length}") val doctorateFixedCourseLength: Int
+
                                                  ) {
 
   val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon).setScale(2, BigDecimal.RoundingMode.HALF_UP)

@@ -2,14 +2,15 @@ package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
+import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.*
 
 class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
     MaintenanceThresholdCalculator maintenanceThresholdCalculator =
-        new MaintenanceThresholdCalculator(TestUtils.inLondonMaintenance, TestUtils.notInLondonMaintenance,
-            TestUtils.maxMaintenanceAllowance, TestUtils.inLondonDependant, TestUtils.notInLondonDependant,
-            TestUtils.nonDoctorateMinCourseLength, TestUtils.nonDoctorateMaxCourseLength,
-            TestUtils.pgddSsoMinCourseLength, TestUtils.pgddSsoMaxCourseLength, TestUtils.doctorateFixedCourseLength
+        new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
+            maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
+            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
+            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
         )
 
     def bd(a) { new scala.math.BigDecimal(a) }
