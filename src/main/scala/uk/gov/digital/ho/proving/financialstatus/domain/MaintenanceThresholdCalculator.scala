@@ -40,7 +40,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
 
     val amount = ((accommodationValue(innerLondon) * courseLength)
       + (tuitionFees - tuitionFeesPaid).max(0)
-      + (dependantsValue(innerLondon) * courseLength * dependants)
+      + (dependantsValue(innerLondon) * (courseLength + 2).min(nonDoctorateMaxCourseLength) * dependants)
       - accommodationFees).max(0)
 
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined)

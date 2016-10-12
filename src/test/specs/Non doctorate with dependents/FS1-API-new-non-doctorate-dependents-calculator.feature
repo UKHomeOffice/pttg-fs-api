@@ -9,7 +9,7 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
 
     Required Maintenance threshold calculation to pass this feature file
 
-    Maintenance threshold amount- (Required Maintenance threshold non doctorate In London * Course length) + ((Dependants Required Maintenance threshold In London * Dependants Required Maintenance period)  * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
+    Maintenance threshold amount = (Required Maintenance threshold non doctorate In London * Course length) + ((Dependants Required Maintenance threshold In London * Dependants Required Maintenance period)  * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
 
 #    Requirement to meet Tier 4 pass (New application only)
 #
@@ -111,7 +111,7 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
             | Number of dependants            | 4            |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200       |
-            | Threshold   | 35,799.50 |
+            | Threshold   | 35799.50 |
 
 
     Scenario: Miriam's maintenance threshold amount calculated
