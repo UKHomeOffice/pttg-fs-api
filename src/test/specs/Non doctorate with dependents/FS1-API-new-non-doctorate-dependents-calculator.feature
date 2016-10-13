@@ -83,7 +83,6 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
 
     Scenario: Greg's maintenance threshold amount calculated
 
-
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
@@ -110,7 +109,7 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
             | Accommodation fees already paid | 300          |
             | Number of dependants            | 4            |
         Then The Financial Status API provides the following results:
-            | HTTP Status | 200       |
+            | HTTP Status | 200      |
             | Threshold   | 35799.50 |
 
 
