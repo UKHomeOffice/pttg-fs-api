@@ -38,9 +38,12 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                          @RequestParam(value = "tuitionFees", required = false) tuitionFees: Optional[JBigDecimal],
                          @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: Optional[JBigDecimal],
                          @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: Optional[JBigDecimal],
-                         @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer]
+                         @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer],
+                         @CookieValue(value = "kc-access", defaultValue = "xxx") accessToken: String
                         ): ResponseEntity[ThresholdResponse] = {
 
+
+    LOGGER.debug(s"accessToken: $accessToken")
 
     val auditEventId = nextId
     auditSearchParams(auditEventId, studentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
@@ -65,14 +68,14 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
       "dependants" -> dependants
     )
 
-    val suppliedParams = for((k, Some(v)) <- params) yield k -> v
+    val suppliedParams = for ((k, Some(v)) <- params) yield k -> v
 
     val auditData = Map("method" -> "calculate-threshold") ++ suppliedParams
 
     auditor.publishEvent(auditEvent(SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
-  def auditSearchResult(auditEventId: UUID, thresholdResponse:  ThresholdResponse): Unit = {
+  def auditSearchResult(auditEventId: UUID, thresholdResponse: ThresholdResponse): Unit = {
     auditor.publishEvent(auditEvent(SEARCH_RESULT, auditEventId,
       Map(
         "method" -> "calculate-threshold",
