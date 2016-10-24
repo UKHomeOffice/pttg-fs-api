@@ -38,7 +38,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
             nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
             pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor,12,2,4
+        ), getStudentTypeChecker(), serviceMessages, auditor, 12, 2, 4
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -155,22 +155,22 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         }
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
-        false    | 14                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2001, 2, 1)  | null                   | 447         | 1348            | 1396                  | 12         || 81310.00  || 1265       || 9
-        true     | 7                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1)  | null                   | 305         | 112             | 1894                  | 1          || 15388.00  || 1265       || 0
-        true     | 9                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 9, 1)  | null                   | 236         | 71              | 987                   | 13         || 109428.00 || 0          || 0
-        true     | 5                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 5, 1)  | null                   | 283         | 340             | 1524                  | 0          || 5060.00   || 1265       || 0
-        false    | 15                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2001, 3, 1)  | null                   | 842         | 709             | 302                   | 5          || 39566.00  || 0          || 9
-        false    | 3                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1)  | null                   | 467         | 613             | 1727                  | 0          || 1780.00   || 1265       || 0
-        false    | 3                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1)  | null                   | 71          | 213             | 229                   | 0          || 2816.00   || 0          || 0
-        true     | 15                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2001, 3, 1)  | null                   | 1446        | 1832            | 99                    | 5          || 49311.00  || 0          || 9
-        false    | 15                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2001, 3, 1)  | null                   | 1441        | 2285            | 686                   | 5          || 39049.00  || 0          || 9
-        true     | 11                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 11, 1) | null                   | 1491        | 301             | 1359                  | 4          || 41730.00  || 1265       || 9
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   | 781         | 418             | 70                    | 0          || 2823.00   || 0          || 0
-        true     | 10                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 10, 1) | null                   | 437         | 605             | 204                   | 11         || 94836.00  || 0          || 9
-        false    | 11                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 11, 1) | null                   | 932         | 734             | 1604                  | 7          || 50908.00  || 1265       || 9
-        true     | 7                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1)  | null                   | 1348        | 916             | 1062                  | 7          || 61460.00  || 0          || 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   | 1207        | 1404            | 610                   | 0          || 1920.00   || 0          || 0
+        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate   | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
+        false    | 14                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2001, 2, 1)  | null                     | 447         | 1348            | 1396                  | 12         || 81310.00  || 1265       || 9
+        true     | 7                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1)  | null                     | 305         | 112             | 1894                  | 1          || 15388.00  || 1265       || 0
+        true     | 9                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 9, 1)  | null                     | 236         | 71              | 987                   | 13         || 109428.00 || 0          || 0
+        true     | 5 + 7                | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 5, 1)  | LocalDate.of(2000, 5, 1) | 283         | 340             | 1524                  | 0          || 5060.00   || 1265       || 0
+        false    | 15                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2001, 3, 1)  | null                     | 842         | 709             | 302                   | 5          || 39566.00  || 0          || 9
+        false    | 3                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1)  | null                     | 467         | 613             | 1727                  | 0          || 1780.00   || 1265       || 0
+        false    | 3                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1)  | null                     | 71          | 213             | 229                   | 0          || 2816.00   || 0          || 0
+        true     | 15                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2001, 3, 1)  | null                     | 1446        | 1832            | 99                    | 5          || 49311.00  || 0          || 9
+        false    | 15                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2001, 3, 1)  | null                     | 1441        | 2285            | 686                   | 5          || 39049.00  || 0          || 9
+        true     | 11                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 11, 1) | null                     | 1491        | 301             | 1359                  | 4          || 41730.00  || 1265       || 9
+        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                     | 781         | 418             | 70                    | 0          || 2823.00   || 0          || 0
+        true     | 10                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 10, 1) | null                     | 437         | 605             | 204                   | 11         || 94836.00  || 0          || 9
+        false    | 11                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 11, 1) | null                     | 932         | 734             | 1604                  | 7          || 50908.00  || 1265       || 9
+        true     | 7                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1)  | null                     | 1348        | 916             | 1062                  | 7          || 61460.00  || 0          || 0
+        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                     | 1207        | 1404            | 610                   | 0          || 1920.00   || 0          || 0
 
     }
 
