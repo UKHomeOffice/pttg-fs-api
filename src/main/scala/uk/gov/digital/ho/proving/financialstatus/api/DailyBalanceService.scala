@@ -53,7 +53,8 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
     val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
 
-    val validatedInputs = validateInputs(sortCode, accountNumber, minimum, fromDate, toDate, accountStatusChecker.numberConsecutiveDays, dob, userId, accountHolderConsent)
+    val validatedInputs = validateInputs(sortCode, accountNumber, minimum, fromDate, toDate,
+      accountStatusChecker.numberConsecutiveDays, dob, userId, accountHolderConsent)
 
     validatedInputs match {
       case Right(inputs) =>
@@ -67,7 +68,8 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
     }
   }
 
-  def auditSearchParams(auditEventId: UUID, sortCode: Option[String], accountNumber: Option[String], minimum: Option[BigDecimal], toDate: Option[LocalDate], fromDate: Option[LocalDate]): Unit = {
+  def auditSearchParams(auditEventId: UUID, sortCode: Option[String], accountNumber: Option[String],
+                        minimum: Option[BigDecimal], toDate: Option[LocalDate], fromDate: Option[LocalDate]): Unit = {
 
     val params = Map(
       "sortCode" -> sortCode,
@@ -77,14 +79,14 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
       "fromDate" -> fromDate
     )
 
-    val suppliedParams = for((k, Some(v)) <- params) yield k -> v
+    val suppliedParams = for ((k, Some(v)) <- params) yield k -> v
 
     val auditData = Map("method" -> "daily-balance-status") ++ suppliedParams
 
     auditor.publishEvent(auditEvent(SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
-  def auditSearchResult(auditEventId: UUID, response:AccountDailyBalanceStatusResponse): Unit = {
+  def auditSearchResult(auditEventId: UUID, response: AccountDailyBalanceStatusResponse): Unit = {
     auditor.publishEvent(auditEvent(SEARCH_RESULT, auditEventId,
       Map(
         "method" -> "daily-balance-status",
@@ -93,7 +95,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
     ))
   }
 
-  def validateDailyBalanceStatus(inputs: ValidatedInputs) = {
+  def validateDailyBalanceStatus(inputs: ValidatedInputs): ResponseEntity[AccountDailyBalanceStatusResponse] = {
 
     val response = for {
       sortCode <- inputs.sortCode
@@ -111,12 +113,14 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
       val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
 
       dailyAccountBalanceCheck match {
-        case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck), StatusResponse("200", serviceMessages.OK)), HttpStatus.OK)
+        case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck),
+          StatusResponse("200", serviceMessages.OK)), HttpStatus.OK)
 
         case Failure(exception: HttpClientErrorException) =>
           exception.getStatusCode match {
             case HttpStatus.NOT_FOUND => new ResponseEntity(
-              AccountDailyBalanceStatusResponse(StatusResponse(serviceMessages.REST_API_CLIENT_ERROR, serviceMessages.NO_RECORDS_FOR_ACCOUNT(sortCode, accountNumber))), HttpStatus.NOT_FOUND
+              AccountDailyBalanceStatusResponse(StatusResponse(serviceMessages.REST_API_CLIENT_ERROR,
+                serviceMessages.NO_RECORDS_FOR_ACCOUNT(sortCode, accountNumber))), HttpStatus.NOT_FOUND
             )
             case _ => new ResponseEntity(
               AccountDailyBalanceStatusResponse(

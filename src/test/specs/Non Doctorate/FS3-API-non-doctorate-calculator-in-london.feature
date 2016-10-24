@@ -34,8 +34,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200      |
-            | Threshold | 14120.12 |
+            | HTTP Status | 200      |
+            | Threshold   | 14120.12 |
 
     Scenario: Shelly's maintenance threshold amount calculated
     He is on a 9 month course
@@ -51,8 +51,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 300          |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200      |
-            | Threshold | 23334.50 |
+            | HTTP Status | 200      |
+            | Threshold   | 23334.50 |
 
 
     Scenario: Paul's maintenance threshold amount calculated
@@ -69,9 +69,9 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 575.25       |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200      |
-            | Threshold | 23059.25 |
-            | Course Length                | 9        |
+            | HTTP Status   | 200      |
+            | Threshold     | 23059.25 |
+            | Course Length | 9        |
 
 
     Scenario: Peter's maintenance threshold amount calculated
@@ -88,6 +88,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 575.25       |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200      |
-            | Threshold | 23059.25 |
-            | Course Length                | 9        |
+            | HTTP Status   | 200      |
+            | Threshold     | 23059.25 |
+            | Course Length | 9        |

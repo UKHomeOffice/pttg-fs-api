@@ -5,7 +5,6 @@ import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.spi.LoggingEvent
 import ch.qos.logback.core.Appender
 import groovy.json.JsonSlurper
-import org.junit.runner.RunWith
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -13,18 +12,10 @@ import org.springframework.boot.actuate.audit.AuditEventRepository
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.boot.test.TestRestTemplate
-import org.springframework.boot.test.WebIntegrationTest
-import org.springframework.http.ResponseEntity
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.TestPropertySource
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.web.client.RestTemplate
-import spock.lang.Ignore
 import spock.lang.Specification
-import steps.WireMockTestDataLoader
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner
-import uk.gov.digital.ho.proving.financialstatus.api.ThresholdResponse
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 
 import static java.time.LocalDateTime.now

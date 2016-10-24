@@ -18,6 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.*
 
+import java.time.LocalDate
+
 /**
  * @Author Home Office Digital
  */
@@ -34,7 +36,7 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
             nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,nonDoctorateMinCourseLengthWithDependants,
             pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor
+        ), getStudentTypeChecker(), serviceMessages, auditor, 12,2,4
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -45,13 +47,16 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
 
     def url = TestUtils.thresholdUrl
 
-    def callApi(studentType, inLondon, courseLengthInMonths, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid) {
+    def callApi(studentType, inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid) {
+
 
         def response = mockMvc.perform(
             get(url)
                 .param("studentType", studentType)
                 .param("inLondon", inLondon.toString())
-                .param("courseLength", courseLengthInMonths.toString())
+                .param("courseStartDate", courseStartDate.toString())
+                .param("courseEndDate",  courseEndDate.toString())
+                .param("courseExtensionEndDate", courseExtensionEndDate.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())
                 .param("tuitionFees", tuitionFees.toString())
@@ -65,7 +70,7 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Student types"() {
 
         expect:
-        def response = callApi(studentType, true, 1, 0, 0, 0, 0)
+        def response = callApi(studentType, true, LocalDate.of(2000,1,1), LocalDate.of(2000,5,31), LocalDate.of(2000,9,3), 0, 0, 0, 0)
         response.andExpect(status().is(httpStatus))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.message == statusMessage

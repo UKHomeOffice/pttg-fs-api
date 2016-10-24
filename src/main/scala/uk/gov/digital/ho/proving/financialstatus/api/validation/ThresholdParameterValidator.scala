@@ -15,7 +15,8 @@ trait ThresholdParameterValidator {
                                accommodationFeesPaid: Option[BigDecimal],
                                dependants: Option[Int],
                                courseMinLength: Int,
-                               courseMinLengthWithDependants: Int
+                               courseMinLengthWithDependants: Int,
+                               leaveToRemain: Option[Int]
                               ): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
 
     var errorList = Vector.empty[(String, String, HttpStatus)]
@@ -26,6 +27,7 @@ trait ThresholdParameterValidator {
     val validAccommodationFeesPaid = validateAccommodationFeesPaid(accommodationFeesPaid)
     val validInLondon = validateInnerLondon(inLondon)
     val validDependantsAndCourseLength = validateDependantsAndCourseLength(validDependants, validCourseLength, courseMinLengthWithDependants)
+    val validLeaveToRemain = validateLeaveToRemain(leaveToRemain)
 
     studentType match {
 
@@ -57,7 +59,7 @@ trait ThresholdParameterValidator {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_IN_LONDON, HttpStatus.BAD_REQUEST))
     }
 
-    if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validCourseLength, validTuitionFees, validTuitionFeesPaid, validAccommodationFeesPaid, validInLondon))
+    if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validCourseLength, validTuitionFees, validTuitionFeesPaid, validAccommodationFeesPaid, validInLondon, leaveToRemain))
     else Left(errorList)
   }
 
@@ -79,7 +81,9 @@ trait ThresholdParameterValidator {
       (numOfDependants == 0) || (numOfDependants > 0 && length >= courseMinLengthWithDependants)
     }
 
+  private def validateLeaveToRemain(leaveToRemain: Option[Int]) = leaveToRemain.filter( _ >= 0)
+
   case class ValidatedInputs(dependants: Option[Int], courseLength: Option[Int], tuitionFees: Option[BigDecimal],
-                             tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal], inLondon: Option[Boolean])
+                             tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal], inLondon: Option[Boolean], leaveToRemain: Option[Int])
 
 }

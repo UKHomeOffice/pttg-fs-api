@@ -16,7 +16,6 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                                   @Value("${pgdd.sso.minimum.course.length}") val pgddSsoMinCourseLength: Int,
                                                   @Value("${pgdd.sso.maximum.course.length}") val pgddSsoMaxCourseLength: Int,
                                                   @Value("${doctorate.fixed.course.length}") val doctorateFixedCourseLength: Int
-
                                                  ) {
 
   val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon).setScale(2, BigDecimal.RoundingMode.HALF_UP)
@@ -34,35 +33,57 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   def calculateNonDoctorate(innerLondon: Boolean, courseLengthInMonths: Int,
                             tuitionFees: BigDecimal, tuitionFeesPaid: BigDecimal,
                             accommodationFeesPaid: BigDecimal,
-                            dependants: Int
+                            dependants: Int, leaveToRemain: Int
                            ): (BigDecimal, Option[CappedValues]) = {
 
-    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > nonDoctorateMaxCourseLength) (nonDoctorateMaxCourseLength, Some(nonDoctorateMaxCourseLength)) else (courseLengthInMonths, None)
-    val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION)) else (accommodationFeesPaid, None)
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > nonDoctorateMaxCourseLength) {
+      (nonDoctorateMaxCourseLength, Some(nonDoctorateMaxCourseLength))
+    } else {
+      (courseLengthInMonths, None)
+    }
+    val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) {
+      (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION))
+    } else {
+      (accommodationFeesPaid, None)
+    }
 
     val amount = ((accommodationValue(innerLondon) * courseLength)
       + (tuitionFees - tuitionFeesPaid).max(0)
-      + (dependantsValue(innerLondon) * (courseLength + 2).min(nonDoctorateMaxCourseLength) * dependants)
+      + (dependantsValue(innerLondon) * (courseLength + leaveToRemain).min(nonDoctorateMaxCourseLength) * dependants)
       - accommodationFees).max(0)
 
-    if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined)
+    if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
       (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)))
-    else (amount, None)
+    } else {
+      (amount, None)
+    }
   }
 
   def calculateDesPgddSso(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
                           dependants: Int): (BigDecimal, Option[CappedValues]) = {
 
-    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > pgddSsoMaxCourseLength) (pgddSsoMaxCourseLength, Some(pgddSsoMaxCourseLength)) else (courseLengthInMonths, None)
-    val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION)) else (accommodationFeesPaid, None)
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > pgddSsoMaxCourseLength) {
+      (pgddSsoMaxCourseLength, Some(pgddSsoMaxCourseLength))
+    } else {
+      (courseLengthInMonths, None)
+    }
+
+
+    val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) {
+      (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION))
+    } else {
+      (accommodationFeesPaid, None)
+    }
 
     val amount = ((accommodationValue(innerLondon) * courseLength)
       + (dependantsValue(innerLondon) * courseLength * dependants)
       - accommodationFees).max(0)
 
-    if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined)
+    if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
       (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)))
-    else (amount, None)
+    } else {
+      (amount, None)
+    }
 
   }
 

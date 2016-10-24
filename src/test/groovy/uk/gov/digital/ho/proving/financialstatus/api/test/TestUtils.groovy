@@ -24,9 +24,14 @@ class TestUtils {
     public static def nonDoctorateMaxCourseLength = 9
     public static def nonDoctorateMinCourseLengthWithDependants = 7
 
+    public static def nonDoctorateLeaveToRemainBoundary = 12
+    public static def nonDoctorateShortLeaveToRemain = 2
+    public static def nonDoctorateLongLeaveToRemain = 4
+
     public static def pgddSsoMinCourseLength = 1
     public static def pgddSsoMaxCourseLength = 2
     public static def doctorateFixedCourseLength = 2
+
 
     public static def getStudentTypeChecker() { new StudentTypeChecker("doctorate", "nondoctorate", "pgdd", "sso") }
 
