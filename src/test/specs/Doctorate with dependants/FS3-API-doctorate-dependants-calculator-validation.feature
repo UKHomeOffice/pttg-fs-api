@@ -16,7 +16,7 @@ Feature: Validation of the API fields and data
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                    |
             | Status code    | 0004                                                                                   |
@@ -31,7 +31,7 @@ Feature: Validation of the API fields and data
             | The end of 28-day period        | 20/06/2016 |
             | In London                       |            |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                      |
             | Status code    | 0004                                                     |
@@ -46,7 +46,7 @@ Feature: Validation of the API fields and data
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Accommodation fees already paid |            |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0004                                           |
@@ -59,7 +59,7 @@ Feature: Validation of the API fields and data
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Accommodation fees already paid | %%         |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                       |
             | Status code    | 0002                                                      |
@@ -72,7 +72,7 @@ Feature: Validation of the API fields and data
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Accommodation fees already paid | -100       |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0004                                           |
@@ -88,7 +88,7 @@ Feature: Validation of the API fields and data
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | -7         |
+            | dependants                      | -7         |
         Then the service displays the following result
             | HTTP Status    | 400                                                          |
             | Status code    | 0004                                                         |
@@ -101,7 +101,7 @@ Feature: Validation of the API fields and data
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | @          |
+            | dependants                      | @          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |

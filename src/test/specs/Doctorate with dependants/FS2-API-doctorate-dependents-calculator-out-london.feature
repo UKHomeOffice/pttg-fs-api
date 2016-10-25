@@ -24,7 +24,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Doctorate o
             | Student type                    | doctorate |
             | In London                       | No        |
             | Accommodation fees already paid | 0         |
-            | Number of dependants            | 3         |
+            | dependants            | 3         |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200  |
             | Threshold | 6110.00 |

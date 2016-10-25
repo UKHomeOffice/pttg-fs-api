@@ -29,7 +29,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 6            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/7/2016     |
             | Total tuition fees              | 6530.12      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
@@ -46,7 +47,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 9            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/10/2016     |
             | Total tuition fees              | 12500.00     |
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 300          |
@@ -64,7 +66,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 12           |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/1/2017     |
             | Total tuition fees              | 12500.00     |
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 575.25       |
@@ -83,7 +86,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 120          |
+            | Course start date               | 3/1/2015     |
+            | Course end date                 | 3/6/2025     |
             | Total tuition fees              | 12500.00     |
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 575.25       |
