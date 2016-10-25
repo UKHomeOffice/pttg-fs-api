@@ -44,10 +44,10 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 01/03/2016 |
-            | Course end date       | 31/04/2016 |
-            | Continuation end date | 15/06/2016 |
-            | Number of dependants  | 1          |
+            | Course start date            | 01/03/2016 |
+            | Course end date              | 31/04/2016 |
+            | Continuation course end date | 15/06/2016 |
+            | Number of dependants         | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
             | Threshold   | 7610.50 |
@@ -56,15 +56,13 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 01/01/2016 |
-            | Course end date       | 15/10/2016 |
-            | Continuation end date | 31/12/2016 |
-            | Number of dependants  | 2          |
+            | Course start date            | 01/01/2016 |
+            | Course end date              | 15/10/2016 |
+            | Continuation course end date | 31/12/2016 |
+            | Number of dependants         | 2          |
         Then The Financial Status API provides the following results:
-            | HTTP Status   | 200               |
-            | Threshold     | 28295.50          |
-            | Course length | 10 (limited to 9) |
-
+            | HTTP Status | 200      |
+            | Threshold   | 13945.50 |
 
     ##################### Entire course length 12+ months In London #######################
 
@@ -72,10 +70,10 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 01/01/2015 |
-            | Course end date       | 01/02/2016 |
-            | Continuation end date | 02/04/2016 |
-            | Number of dependants  | 2          |
+            | Course start date            | 01/01/2015 |
+            | Course end date              | 01/02/2016 |
+            | Continuation course end date | 02/04/2016 |
+            | Number of dependants         | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
             | Threshold   | 17325.50 |
@@ -84,10 +82,10 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 15/01/2015 |
-            | Course end date       | 15/12/2015 |
-            | Continuation end date | 16/04/2016 |
-            | Number of dependants  | 3          |
+            | Course start date            | 15/01/2015 |
+            | Course end date              | 15/12/2015 |
+            | Continuation course end date | 16/04/2016 |
+            | Number of dependants         | 3          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
             | Threshold   | 30840.50 |
@@ -96,12 +94,12 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 01/06/2015 |
-            | Course end date       | 05/12/2015 |
-            | Continuation end date | 10/10/2016 |
-            | Number of dependants  | 2          |
+            | Course start date            | 01/06/2015 |
+            | Course end date              | 05/12/2015 |
+            | Continuation course end date | 10/10/2016 |
+            | Number of dependants         | 1          |
         Then The Financial Status API provides the following results:
-            | HTTP Status   | 200               |
-            | Threshold     | 28295.50          |
-            | Course length | 11 (limited to 9) |
+            | HTTP Status                | 200      |
+            | Threshold                  | 20690.50 |
+            | Continuation course length | 9        |
 
