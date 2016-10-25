@@ -22,7 +22,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Course start date            |            |
             | Course end date              | 01/04/2016 |
-            | Continuation course end date | 01/08/2016 |
+            | Continuation end date | 01/08/2016 |
         Then the service displays the following result
             | HTTP Status    | 400                                                        |
             | Status code    | 0004                                                       |
@@ -33,7 +33,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Course start date            | 01/05/2016 |
             | Course end date              | 01/04/2016 |
-            | Continuation course end date | 01/08/2016 |
+            | Continuation end date | 01/08/2016 |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                  |
             | Status code    | 0004                                                                                 |
@@ -44,7 +44,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Course start date               | x            |
             | Course end date                 | 01/04/2016   |
-            | Continuation course end date    | 01/06/2016   |
+            | Continuation end date    | 01/06/2016   |
         Then the service displays the following result
             | HTTP Status    | 400                                                                   |
             | Status code    | 0002                                                                  |
@@ -57,7 +57,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Course start date            | 01/02/2016 |
             | Course end date              |            |
-            | Continuation course end date | 01/08/2016 |
+            | Continuation end date | 01/08/2016 |
         Then the service displays the following result
             | HTTP Status    | 400                                                      |
             | Status code    | 0004                                                     |
@@ -68,7 +68,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Course start date            | 01/05/2016 |
             | Course end date              | 01/10/2016 |
-            | Continuation course end date | 01/08/2016 |
+            | Continuation end date | 01/08/2016 |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                             |
             | Status code    | 0004                                                                                            |
@@ -79,7 +79,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Course start date               | 01/02/2016   |
             | Course end date                 | x            |
-            | Continuation course end date    | 01/06/2016   |
+            | Continuation end date    | 01/06/2016   |
         Then the service displays the following result
             | HTTP Status    | 400                                                                 |
             | Status code    | 0002                                                                |
@@ -92,7 +92,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Course start date            | 01/05/2016 |
             | Course end date              | 01/10/2016 |
-            | Continuation course end date | 01/02/2016 |
+            | Continuation end date | 01/02/2016 |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                             |
             | Status code    | 0004                                                                                            |
@@ -103,7 +103,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Course start date               | 01/02/2016   |
             | Course end date                 | 01/04/2016   |
-            | Continuation course end date    | x            |
+            | Continuation end date    | x            |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                 |
             | Status code    | 0002                                                                                |
