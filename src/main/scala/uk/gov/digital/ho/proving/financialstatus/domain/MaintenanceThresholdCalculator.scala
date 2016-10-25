@@ -33,7 +33,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   def calculateNonDoctorate(innerLondon: Boolean, courseLengthInMonths: Int,
                             tuitionFees: BigDecimal, tuitionFeesPaid: BigDecimal,
                             accommodationFeesPaid: BigDecimal,
-                            dependants: Int, leaveToRemain: Int
+                            dependants: Int, leaveToRemain: Int, isExtension: Boolean
                            ): (BigDecimal, Option[CappedValues]) = {
 
     val (courseLength, courseLengthCapped) = if (courseLengthInMonths > nonDoctorateMaxCourseLength) {
@@ -53,7 +53,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
       - accommodationFees).max(0)
 
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
-      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)))
+      (amount, if (isExtension) Some(CappedValues(accommodationFeesCapped, None, courseLengthCapped)) else Some(CappedValues(accommodationFeesCapped, courseLengthCapped, None)))
     } else {
       (amount, None)
     }
