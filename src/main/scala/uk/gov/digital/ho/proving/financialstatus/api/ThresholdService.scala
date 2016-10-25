@@ -26,9 +26,9 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                                     val studentTypeChecker: StudentTypeChecker,
                                     val serviceMessages: ServiceMessages,
                                     val auditor: ApplicationEventPublisher,
-                                    @Value("${non.doctorate.leave.to.remain.boundary}") val nonDoctorateLeaveToRemainBoundary: Int,
-                                    @Value("${non.doctorate.short.leave.to.remain}") val nonDoctorateShortLeaveToRemain: Int,
-                                    @Value("${non.doctorate.long.leave.to.remain}") val nonDoctorateLongLeaveToRemain: Int
+                                    @Value("${non.doctorate.continuation.boundary}") val nonDoctorateContinuationBoundary: Int,
+                                    @Value("${non.doctorate.short.continuation}") val nonDoctorateShortContinuation: Int,
+                                    @Value("${non.doctorate.long.continuation}") val nonDoctorateLongContinuation: Int
                                    ) extends FinancialStatusBaseController with ThresholdParameterValidator {
 
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
@@ -41,7 +41,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                          @RequestParam(value = "inLondon") inLondon: Optional[JBoolean],
                          @RequestParam(value = "courseStartDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) courseStartDate: Optional[LocalDate],
                          @RequestParam(value = "courseEndDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) courseEndDate: Optional[LocalDate],
-                         @RequestParam(value = "courseExtensionEndDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) courseExtentionEndDate: Optional[LocalDate],
+                         @RequestParam(value = "continuationEndDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) courseExtentionEndDate: Optional[LocalDate],
                          @RequestParam(value = "tuitionFees", required = false) tuitionFees: Optional[JBigDecimal],
                          @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: Optional[JBigDecimal],
                          @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: Optional[JBigDecimal],
@@ -99,7 +99,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                                                inLondon: Option[Boolean],
                                                courseStartDate: Option[LocalDate],
                                                courseEndDate: Option[LocalDate],
-                                               courseExtensionEndDate: Optional[LocalDate],
+                                               continuationEndDate: Optional[LocalDate],
                                                tuitionFees: Option[BigDecimal],
                                                tuitionFeesPaid: Option[BigDecimal],
                                                accommodationFeesPaid: Option[BigDecimal],
@@ -107,14 +107,14 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
     val minCourseLengthWithDependants = maintenanceThresholdCalculator.minNonDoctorateCourseLengthWithDependants
 
-    val courseLength = CourseLengthCalculator.calculateCourseLength(courseStartDate, courseEndDate, courseExtensionEndDate)
+    val courseLength = CourseLengthCalculator.calculateCourseLength(courseStartDate, courseEndDate, continuationEndDate)
 
     studentType match {
 
       case NonDoctorate =>
 
-        val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(courseStartDate, courseEndDate, courseExtensionEndDate,
-          nonDoctorateLeaveToRemainBoundary, nonDoctorateShortLeaveToRemain, nonDoctorateLongLeaveToRemain)
+        val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(courseStartDate, courseEndDate, continuationEndDate,
+          nonDoctorateContinuationBoundary, nonDoctorateShortContinuation, nonDoctorateLongContinuation)
 
         val courseMinLength = maintenanceThresholdCalculator.nonDoctorateMinCourseLength
 
