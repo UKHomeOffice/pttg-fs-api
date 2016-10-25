@@ -13,19 +13,21 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfig
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
+import java.time.LocalDate
+
+import static org.hamcrest.core.StringContains.containsString
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.*
-
-import java.time.LocalDate
 
 /**
  * @Author Home Office Digital
  */
 @WebAppConfiguration
 @ContextConfiguration(classes = ServiceConfiguration.class)
-class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
+class ServiceDateValidationSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
 
@@ -34,9 +36,9 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
-            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,nonDoctorateMinCourseLengthWithDependants,
+            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
             pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor, 12,2,4
+        ), getStudentTypeChecker(), serviceMessages, auditor, 12, 2, 4
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -55,8 +57,8 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
                 .param("studentType", studentType)
                 .param("inLondon", inLondon.toString())
                 .param("courseStartDate", courseStartDate.toString())
-                .param("courseEndDate",  courseEndDate.toString())
-                .param("continuationEndDate", continuationEndDate.toString())
+                .param("courseEndDate", courseEndDate.toString())
+                .param("continuationEndDate", continuationEndDate == null ? "" : continuationEndDate.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())
                 .param("tuitionFees", tuitionFees.toString())
@@ -67,22 +69,28 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
         response
     }
 
-    def "Tier 4 Student types"() {
+    def "Validate date fields"() {
 
         expect:
-        def response = callApi(studentType, true, LocalDate.of(2000,1,1), LocalDate.of(2000,5,31), LocalDate.of(2000,9,3), 0, 0, 0, 0)
+        def response = callApi("nondoctorate", true, courseStartDate, courseEndDate, continuationEndDate, 0, 0, 0, 0)
         response.andExpect(status().is(httpStatus))
-        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.status.message == statusMessage
+        response.andExpect(content().string(containsString(statusMessage)))
 
         where:
-        studentType    || httpStatus || statusMessage
-        "doctorate"    || 200        || "OK"
-        "nondoctorate" || 200        || "OK"
-        "pgdd"         || 200        || "OK"
-        "sso"          || 200        || "OK"
-        "rubbish"      || 400        || "Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso]"
-        ""             || 400        || "Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso]"
+        courseStartDate | courseEndDate | continuationEndDate || httpStatus || statusMessage
+        "2000-01-01"    | "2000-01-02"  | "2000-01-03"        || 200        || "OK"
+        "2000-0A-01"    | "2000-01-01"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseStartDate"
+        "2000-01-01"    | "2A00-01-01"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseEndDate"
+        "2000-01-01"    | "2000-01-01"  | "2000-01-0A"        || 400        || "Parameter conversion error: Invalid continuationEndDate"
+        "2000-13-01"    | "2000-01-01"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseStartDate"
+        "2000-01-01"    | "2000-01-32"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseEndDate"
+        "2001-01-01"    | "2000-01-01"  | "2000-01-01"        || 400        || "Course end date must be after course start date"
+        "2000-01-01"    | "2001-01-01"  | "2000-01-01"        || 400        || "Continuation end date must be after course end date"
+        "2000-01-01"    | "2000-01-02"  | null                || 200        || "OK"
+        "2000-0A-01"    | "2000-01-01"  | null                || 400        || "Parameter conversion error: Invalid courseStartDate"
+        "2000-01-01"    | "2A00-01-01"  | null                || 400        || "Parameter conversion error: Invalid courseEndDate"
+        "2000-13-01"    | "2000-01-01"  | null                || 400        || "Parameter conversion error: Invalid courseStartDate"
+        "2000-01-01"    | "2000-01-32"  | null                || 400        || "Parameter conversion error: Invalid courseEndDate"
 
     }
 

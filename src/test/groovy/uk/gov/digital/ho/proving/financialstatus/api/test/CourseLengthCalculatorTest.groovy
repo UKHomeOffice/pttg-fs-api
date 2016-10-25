@@ -13,10 +13,10 @@ class CourseLengthCalculatorTest extends Specification {
     def "Calculate course length from given dates"() {
 
         expect:
-        CourseLengthCalculator.calculateCourseLength(courseStartDate, courseEndDate, DataUtils.buildScalaOption(courseExtensionEndDate), capValue) == courseLength
+        CourseLengthCalculator.calculateCourseLength(courseStartDate, courseEndDate, DataUtils.buildScalaOption(continuationEndDate), capValue) == courseLength
 
         where:
-        courseStartDate          | courseEndDate              | courseExtensionEndDate     | capValue || courseLength
+        courseStartDate           | courseEndDate            | continuationEndDate      | capValue || courseLength
         LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 2)   | LocalDate.of(2000, 4, 2)   | 9        || 3
         LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31)  | LocalDate.of(2000, 5, 31)  | 9        || 4
         LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)   | LocalDate.of(2000, 6, 1)   | 9        || 4
@@ -25,6 +25,7 @@ class CourseLengthCalculatorTest extends Specification {
         LocalDate.of(2000, 2, 2) | LocalDate.of(2000, 2, 11)  | LocalDate.of(2000, 12, 12) | 0        || 11
         LocalDate.of(2000, 2, 2) | LocalDate.of(2000, 12, 11) | null                       | 9        || 9
         LocalDate.of(2000, 2, 2) | LocalDate.of(2001, 5, 11)  | null                       | 9        || 9
+        LocalDate.of(2000, 1, 11) | LocalDate.of(2001, 4, 5) | LocalDate.of(2001, 9, 2) | 0        || 5
 
     }
 

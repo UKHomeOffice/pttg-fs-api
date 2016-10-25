@@ -48,14 +48,14 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def url = TestUtils.thresholdUrl
 
-    def callApi(studentType, inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants) {
+    def callApi(studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants) {
         def response = mockMvc.perform(
             get(url)
                 .param("studentType", studentType)
                 .param("inLondon", inLondon.toString())
                 .param("courseStartDate", courseStartDate.toString())
                 .param("courseEndDate", courseEndDate.toString())
-                .param("courseExtensionEndDate", (courseExtensionEndDate == null) ? "" : courseExtensionEndDate.toString())
+                .param("continuationEndDate", (continuationEndDate == null) ? "" : continuationEndDate.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())
         )
@@ -66,13 +66,13 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Student Sabbatical Office - Check 'Non Inner London Borough'"() {
 
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate || accommodationFeesPaid | dependants || threshold
+        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | continuationEndDate || accommodationFeesPaid | dependants || threshold
         false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                   || 0.00 | 5                           || 4415.00
         false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   || 0.00 | 7                           || 11550.00
 
@@ -81,13 +81,13 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Student Sabbatical Office - Check 'Inner London Borough'"() {
 
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate || accommodationFeesPaid | dependants || threshold
+        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | continuationEndDate || accommodationFeesPaid | dependants || threshold
         true     | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                   || 0.00 | 4                           || 4645.00
         true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   || 0.00 | 15                          || 27880.00
 
@@ -95,13 +95,13 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check 'Accommodation Fees paid'"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate | accommodationFeesPaid | dependants || threshold
+        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | continuationEndDate | accommodationFeesPaid | dependants || threshold
         true     | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | null                   | 1039.00               | 14         || 12056.00
         true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | null                   | 692.00                | 11         || 20428.00
         true     | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | null                   | 622.00                | 3          || 3178.00
@@ -118,7 +118,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check 'All variants'"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
@@ -141,7 +141,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         }
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
+        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | continuationEndDate | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
         false    | 5                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 5, 1)  | null                   | 1627.00               | 15         || 21165.00  || 1265.00    || 2
         false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                   | 270.00                | 10         || 7545.00   || 0          || 0
         true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   | 22.00                 | 1          || 4198.00   || 0          || 0
@@ -164,20 +164,20 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
 //    def "Tier 4 Student Sabbatical Office - Check invalid course length parameters"() {
 //        expect:
-//        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+//        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
 //        response.andExpect(status().isBadRequest())
 //
 //        response.andExpect(content().string(containsString("Parameter error: Invalid courseLength")))
 //
 //        where:
-//        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate || dependants | accommodationFeesPaid
+//        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | continuationEndDate || dependants | accommodationFeesPaid
 //        true     | -1                   | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                   || 11 | 336.00
 //        false    | 0                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   || 14 | 1044.00
 //    }
 //
 //    def "Tier 4 Student Sabbatical Office - Check invalid characters course length parameters"() {
 //        expect:
-//        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+//        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
 //        response.andDo(MockMvcResultHandlers.print())
 //        response.andExpect(status().isBadRequest())
 //        response.andExpect(content().string(containsString("Parameter conversion error: Invalid courseLength")))
@@ -190,40 +190,40 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check invalid accommodation fees parameters"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid accommodationFeesPaid")))
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate || dependants | accommodationFeesPaid
+        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | continuationEndDate || dependants | accommodationFeesPaid
         false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                   || 14 | -1
         true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   || 11 | -7
     }
 
     def "Tier 4 Student Sabbatical Office - Check invalid characters accommodation fees parameters"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid accommodationFeesPaid")))
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate || dependants | accommodationFeesPaid
+        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | continuationEndDate || dependants | accommodationFeesPaid
         false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                   || 14 | "(&"
         true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   || 11 | "ddd"
     }
 
     def "Tier 4 Student Sabbatical Office - Check rounding accommodation fees parameters"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
 
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate || dependants | accommodationFeesPaid || threshold
+        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | continuationEndDate || dependants | accommodationFeesPaid || threshold
         false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                   || 0 | 0.0000                         || 1015.00
         false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   || 0 | 0.010                          || 2029.99
         false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   || 0 | 0.0010                         || 2030.00
@@ -234,26 +234,26 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check invalid dependants parameters"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid dependants")))
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate || dependants | accommodationFeesPaid
+        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | continuationEndDate || dependants | accommodationFeesPaid
         false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                   || -5 | 0
         true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   || -986 | 0
     }
 
     def "Tier 4 Student Sabbatical Office - Check invalid characters dependants parameters"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, courseExtensionEndDate, accommodationFeesPaid, dependants)
+        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid dependants")))
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | courseExtensionEndDate || dependants | accommodationFeesPaid
+        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | continuationEndDate || dependants | accommodationFeesPaid
         false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                   || "(*&66" | 0
         true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                   || "h" | 0
     }

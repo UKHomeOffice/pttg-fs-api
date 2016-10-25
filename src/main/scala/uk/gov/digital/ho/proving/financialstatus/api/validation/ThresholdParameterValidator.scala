@@ -1,5 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.api.validation
 
+import java.time.LocalDate
+
 import org.springframework.http.HttpStatus
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
@@ -16,10 +18,14 @@ trait ThresholdParameterValidator {
                                dependants: Option[Int],
                                courseMinLength: Int,
                                courseMinLengthWithDependants: Int,
-                               leaveToRemain: Option[Int]
+                               leaveToRemain: Option[Int],
+                               courseStartDate: Option[LocalDate],
+                               courseEndDate: Option[LocalDate],
+                               continuationEndDate: Option[LocalDate]
                               ): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
 
     var errorList = Vector.empty[(String, String, HttpStatus)]
+    val (validCourseStartDate, validCourseEndDate, validContinuationEndDate) = validateDates(courseStartDate, courseEndDate, continuationEndDate)
     val validDependants = validateDependants(dependants)
     val validCourseLength = validateCourseLength(courseLength, courseMinLength)
     val validTuitionFees = validateTuitionFees(tuitionFees)
@@ -27,12 +33,15 @@ trait ThresholdParameterValidator {
     val validAccommodationFeesPaid = validateAccommodationFeesPaid(accommodationFeesPaid)
     val validInLondon = validateInnerLondon(inLondon)
     val validDependantsAndCourseLength = validateDependantsAndCourseLength(validDependants, validCourseLength, courseMinLengthWithDependants)
-    val validLeaveToRemain = validateLeaveToRemain(leaveToRemain)
 
     studentType match {
 
       case NonDoctorate =>
-        if (validTuitionFees.isEmpty) {
+        if (!validCourseEndDate) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE, HttpStatus.BAD_REQUEST))
+        } else if (!validContinuationEndDate) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_CONTINUATION_END_DATE, HttpStatus.BAD_REQUEST))
+        } else if (validTuitionFees.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST))
         } else if (validTuitionFeesPaid.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TUITION_FEES_PAID, HttpStatus.BAD_REQUEST))
@@ -81,9 +90,28 @@ trait ThresholdParameterValidator {
       (numOfDependants == 0) || (numOfDependants > 0 && length >= courseMinLengthWithDependants)
     }
 
-  private def validateLeaveToRemain(leaveToRemain: Option[Int]) = leaveToRemain.filter( _ >= 0)
+
+  private def validateDates(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], continuationEndDate: Option[LocalDate]): (Boolean, Boolean, Boolean) = {
+
+    val validation = for {
+      startDate <- courseStartDate
+      endDate <- courseEndDate
+    } yield {
+      val (startOK, endOK) = startDate.isBefore(endDate) match {
+        case true => (true, true)
+        case false => (false, false)
+      }
+      val continuationOk = continuationEndDate match {
+        case None => true
+        case Some(date) => date.isAfter(endDate)
+      }
+      (startOK, endOK, continuationOk)
+    }
+    validation.getOrElse((false, false, false))
+  }
 
   case class ValidatedInputs(dependants: Option[Int], courseLength: Option[Int], tuitionFees: Option[BigDecimal],
-                             tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal], inLondon: Option[Boolean], leaveToRemain: Option[Int])
+                             tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal],
+                             inLondon: Option[Boolean], leaveToRemain: Option[Int])
 
 }

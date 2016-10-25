@@ -119,21 +119,21 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         val courseMinLength = maintenanceThresholdCalculator.nonDoctorateMinCourseLength
 
         val validatedInputs = validateInputs(NonDoctorate, inLondon, courseLength, tuitionFees, tuitionFeesPaid,
-          accommodationFeesPaid, dependants, courseMinLength, minCourseLengthWithDependants, leaveToRemain)
+          accommodationFeesPaid, dependants, courseMinLength, minCourseLengthWithDependants, leaveToRemain, courseStartDate, courseEndDate, continuationEndDate)
 
         calculateThreshold(validatedInputs, calculateNonDoctorate)
 
       case Doctorate =>
         val fixedCourseLength = maintenanceThresholdCalculator.doctorateFixedCourseLength
         val validatedInputs = validateInputs(Doctorate, inLondon, None, None, None,
-          accommodationFeesPaid, dependants, fixedCourseLength, minCourseLengthWithDependants, None)
+          accommodationFeesPaid, dependants, fixedCourseLength, minCourseLengthWithDependants, None, courseStartDate, courseEndDate, continuationEndDate)
 
         calculateThreshold(validatedInputs, calculateDoctorate)
 
       case DoctorDentist | StudentSabbaticalOfficer =>
         val courseMinLength = maintenanceThresholdCalculator.pgddSsoMinCourseLength
         val validatedInputs = validateInputs(DoctorDentist, inLondon, courseLength, None, None,
-          accommodationFeesPaid, dependants, courseMinLength, minCourseLengthWithDependants, None)
+          accommodationFeesPaid, dependants, courseMinLength, minCourseLengthWithDependants, None, courseStartDate, courseEndDate, continuationEndDate)
 
         calculateThreshold(validatedInputs, calculateDoctorDentistSabbatical)
 
