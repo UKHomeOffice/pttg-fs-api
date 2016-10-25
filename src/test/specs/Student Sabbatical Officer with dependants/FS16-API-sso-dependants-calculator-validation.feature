@@ -16,9 +16,10 @@ Feature: Validation of the API fields and data
             | Student Type                    |            |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 1          |
+            | Course start date               | 3/1/2016   |
+            | Course end date                 | 3/2/2016   |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                    |
             | Status code    | 0004                                                                                   |
@@ -32,9 +33,10 @@ Feature: Validation of the API fields and data
             | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       |            |
-            | Course Length                   | 2          |
+            | Course start date               | 3/1/2016   |
+            | Course end date                 | 3/3/2016   |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                      |
             | Status code    | 0004                                                     |
@@ -48,9 +50,10 @@ Feature: Validation of the API fields and data
             | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   |            |
+            | Course start date               | 3/1/2016   |
+            | Course end date                 |            |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                              |
             | Status code    | 0004                                                             |
@@ -62,9 +65,10 @@ Feature: Validation of the API fields and data
             | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | x          |
+            | Course start date               | x          |
+            | Course end date                 | 3/6/2016   |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                              |
             | Status code    | 0002                                             |
@@ -79,9 +83,10 @@ Feature: Validation of the API fields and data
             | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 1          |
+            | Course start date               | 3/1/2016   |
+            | Course end date                 | 3/2/2016   |
             | Accommodation fees already paid |            |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0004                                           |
@@ -93,9 +98,10 @@ Feature: Validation of the API fields and data
             | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 1          |
+            | Course start date               | 3/1/2016   |
+            | Course end date                 | 3/2/2016   |
             | Accommodation fees already paid | %%         |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                       |
             | Status code    | 0002                                                      |
@@ -107,9 +113,10 @@ Feature: Validation of the API fields and data
             | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 1          |
+            | Course start date               | 3/1/2016   |
+            | Course end date                 | 3/2/2016   |
             | Accommodation fees already paid | -100       |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0004                                           |
@@ -123,9 +130,10 @@ Feature: Validation of the API fields and data
             | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 2          |
+            | Course start date               | 3/1/2016   |
+            | Course end date                 | 3/3/2016   |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | -7         |
+            | dependants                      | -7         |
         Then the service displays the following result
             | HTTP Status    | 400                                                          |
             | Status code    | 0004                                                         |
@@ -137,9 +145,10 @@ Feature: Validation of the API fields and data
             | Student Type                    | sso        |
             | The end of 28-day period        | 20/06/2016 |
             | In London                       | Yes        |
-            | Course Length                   | 1          |
+            | Course start date               | 3/1/2016   |
+            | Course end date                 | 3/2/2016   |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | @          |
+            | dependants                      | @          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |

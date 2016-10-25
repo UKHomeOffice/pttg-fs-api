@@ -11,12 +11,13 @@ Feature: Validation of the API fields and data
     Scenario: The API is not provided with Stydent type field
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    |         |
-            | In London                       | Yes     |
-            | Course Length                   | 1       |
-            | Total tuition fees              | 3500.50 |
-            | Tuition fees already paid       | 0       |
-            | Accommodation fees already paid | 0       |
+            | Student Type                    |          |
+            | In London                       | Yes      |
+            | Course start date               | 3/1/2016 |
+            | Course end date                 | 3/2/2016 |
+            | Total tuition fees              | 3500.50  |
+            | Tuition fees already paid       | 0        |
+            | Accommodation fees already paid | 0        |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                    |
             | Status code    | 0004                                                                                   |
@@ -29,7 +30,8 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       |              |
-            | Course Length                   | 2            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/3/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
@@ -45,7 +47,9 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   |              |
+
+            | Course start date               |              |
+            | Course end date                 | 3/6/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
@@ -59,7 +63,8 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | x            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | x            |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
@@ -75,7 +80,8 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 1            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/2/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid |              |
@@ -89,7 +95,8 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 1            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/2/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | %%           |
@@ -103,7 +110,8 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 1            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/2/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | -100         |

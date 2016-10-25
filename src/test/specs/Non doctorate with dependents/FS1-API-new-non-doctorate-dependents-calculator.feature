@@ -29,11 +29,12 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 7            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/8/2016     |
             | Total tuition fees              | 6530.75      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
-            | Number of dependants            | 1            |
+            | dependants            | 1            |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
             | Threshold   | 22990.75 |
@@ -44,11 +45,12 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 8            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/9/2016     |
             | Total tuition fees              | 12500.00     |
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 300          |
-            | Number of dependants            | 3            |
+            | dependants            | 3            |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
             | Threshold   | 44884.50 |
@@ -59,11 +61,12 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 9            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/10/2016    |
             | Total tuition fees              | 2500.00      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 300          |
-            | Number of dependants            | 2            |
+            | dependants            | 2            |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
             | Threshold   | 28795.00 |
@@ -87,11 +90,12 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | No           |
-            | Course Length                   | 7            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/8/2016     |
             | Total tuition fees              | 4550.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
-            | Number of dependants            | 2            |
+            | dependants            | 2            |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
             | Threshold   | 23895.50 |
@@ -103,11 +107,12 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | No           |
-            | Course Length                   | 8            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/9/2016     |
             | Total tuition fees              | 3750.00      |
             | Tuition fees already paid       | 250.50       |
             | Accommodation fees already paid | 300          |
-            | Number of dependants            | 4            |
+            | dependants            | 4            |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
             | Threshold   | 35799.50 |
@@ -120,11 +125,12 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | No           |
-            | Course Length                   | 9            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/10/2016    |
             | Total tuition fees              | 750.00       |
             | Tuition fees already paid       | 150.00       |
             | Accommodation fees already paid | 1265.00      |
-            | Number of dependants            | 1            |
+            | dependants            | 1            |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
             | Threshold   | 14590.00 |

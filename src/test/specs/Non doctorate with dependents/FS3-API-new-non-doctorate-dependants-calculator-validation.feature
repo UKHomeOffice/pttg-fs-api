@@ -13,11 +13,12 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |         |
             | In London                       | Yes     |
-            | Course Length                   | 7       |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/8/2016     |
             | Total tuition fees              | 3500.50 |
             | Tuition fees already paid       | 0       |
             | Accommodation fees already paid | 0       |
-            | Number of dependants            | 1       |
+            | dependants            | 1       |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                    |
             | Status code    | 0004                                                                                   |
@@ -30,11 +31,12 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       |              |
-            | Course Length                   | 8            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/9/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
-            | Number of dependants            | 1            |
+            | dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                                      |
             | Status code    | 0004                                                     |
@@ -47,11 +49,12 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 6            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/7/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
-            | Number of dependants            | 1            |
+            | dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                                              |
             | Status code    | 0004                                                             |
@@ -62,11 +65,12 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   |              |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 |      |
             | Total tuition fees              | 2500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
-            | Number of dependants            | 1            |
+            | dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                                              |
             | Status code    | 0004                                                             |
@@ -77,11 +81,12 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | x            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/x/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
-            | Number of dependants            | 1            |
+            | dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                              |
             | Status code    | 0002                                             |
@@ -95,11 +100,12 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 9            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/10/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid |              |
-            | Number of dependants            | 1            |
+            | dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0004                                           |
@@ -110,11 +116,12 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course Length                   | 7            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/8/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | %%           |
-            | Number of dependants            | 1            |
+            | dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                                       |
             | Status code    | 0002                                                      |
@@ -126,11 +133,12 @@ Feature: Validation of the API fields and data
             | Student Type                    | nondoctorate |
             | The end of 28-day period        | 20/06/2016   |
             | In London                       | Yes          |
-            | Course Length                   | 9            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/10/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | -100         |
-            | Number of dependants            | 1            |
+            | dependants            | 1            |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0004                                           |
@@ -145,11 +153,12 @@ Feature: Validation of the API fields and data
             | Student Type                    | nondoctorate |
             | The end of 28-day period        | 20/06/2016   |
             | In London                       | Yes          |
-            | Course Length                   | 9            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/10/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
-            | Number of dependants            | -4           |
+            | dependants            | -4           |
         Then the service displays the following result
             | HTTP Status    | 400                                                          |
             | Status code    | 0004                                                         |
@@ -161,11 +170,12 @@ Feature: Validation of the API fields and data
             | Student Type                    | nondoctorate |
             | The end of 28-day period        | 20/06/2016   |
             | In London                       | Yes          |
-            | Course Length                   | 8            |
+            | Course start date               | 3/1/2016     |
+            | Course end date                 | 3/9/2016     |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
-            | Number of dependants            | ^            |
+            | dependants            | ^            |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |

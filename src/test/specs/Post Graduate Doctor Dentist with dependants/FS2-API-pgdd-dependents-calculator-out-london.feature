@@ -23,14 +23,15 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student type                    | pgdd |
-            | In London                       | No   |
-            | Course length                   | 1    |
-            | Accommodation fees already paid | 0    |
-            | Number of dependants            | 3    |
+            | Student type                    | pgdd     |
+            | In London                       | No       |
+            | Course start date               | 3/1/2016 |
+            | Course end date                 | 3/2/2016 |
+            | Accommodation fees already paid | 0        |
+            | dependants            | 3        |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
-            | Threshold | 3055.00 |
+            | HTTP Status | 200     |
+            | Threshold   | 3055.00 |
 
     Scenario: Adam's Threshold calculated
     He is on a 1 month course
@@ -40,13 +41,14 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student type                    | pgdd   |
-            | In London                       | No     |
-            | Course length                   | 1      |
-            | Accommodation fees already paid | 100.00 |
-            | Number of dependants            | 1      |
+            | Student type                    | pgdd     |
+            | In London                       | No       |
+            | Course start date               | 3/1/2016 |
+            | Course end date                 | 3/2/2016 |
+            | Accommodation fees already paid | 100.00   |
+            | dependants            | 1        |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
-            | Threshold | 1595.00 |
+            | HTTP Status | 200     |
+            | Threshold   | 1595.00 |
 
 
