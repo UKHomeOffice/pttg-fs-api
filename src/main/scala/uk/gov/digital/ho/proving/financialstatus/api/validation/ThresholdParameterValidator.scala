@@ -26,15 +26,16 @@ trait ThresholdParameterValidator {
 
     var errorList = Vector.empty[(String, String, HttpStatus)]
     val (validCourseStartDate, validCourseEndDate, validContinuationEndDate) = validateDates(courseStartDate, courseEndDate, continuationEndDate)
+    val isContinuation = validContinuationEndDate && continuationEndDate.isDefined
     val validDependants = validateDependants(dependants)
     val validCourseLength = validateCourseLength(courseLength, courseMinLength)
     val validTuitionFees = validateTuitionFees(tuitionFees)
     val validTuitionFeesPaid = validateTuitionFeesPaid(tuitionFeesPaid)
     val validAccommodationFeesPaid = validateAccommodationFeesPaid(accommodationFeesPaid)
     val validInLondon = validateInnerLondon(inLondon)
-    val validDependantsAndCourseLength = validateDependantsAndCourseLength(validDependants, validCourseLength, courseMinLengthWithDependants)
+    val validDependantsAndCourseLength = validateDependantsAndCourseLength(validDependants, validCourseLength, courseMinLengthWithDependants,isContinuation)
 
-    val isExtension = validContinuationEndDate && continuationEndDate.isDefined
+
 
     studentType match {
 
@@ -70,7 +71,7 @@ trait ThresholdParameterValidator {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_IN_LONDON, HttpStatus.BAD_REQUEST))
     }
 
-    if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validCourseLength, validTuitionFees, validTuitionFeesPaid, validAccommodationFeesPaid, validInLondon, leaveToRemain, isExtension))
+    if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validCourseLength, validTuitionFees, validTuitionFeesPaid, validAccommodationFeesPaid, validInLondon, leaveToRemain, isContinuation))
     else Left(errorList)
   }
 
@@ -86,10 +87,10 @@ trait ThresholdParameterValidator {
 
   private def validateInnerLondon(inLondon: Option[Boolean]) = inLondon
 
-  private def validateDependantsAndCourseLength(dependants: Option[Int], courseLength: Option[Int], courseMinLengthWithDependants: Int) =
+  private def validateDependantsAndCourseLength(dependants: Option[Int], courseLength: Option[Int], courseMinLengthWithDependants: Int, isContinuation: Boolean) =
     for {numOfDependants <- dependants
          length <- courseLength} yield {
-      (numOfDependants == 0) || (numOfDependants > 0 && length >= courseMinLengthWithDependants)
+      (numOfDependants == 0) || (isContinuation && numOfDependants>=0) || (!isContinuation && numOfDependants > 0 && length >= courseMinLengthWithDependants )
     }
 
   private def validateDates(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], continuationEndDate: Option[LocalDate]): (Boolean, Boolean, Boolean) = {
@@ -113,6 +114,6 @@ trait ThresholdParameterValidator {
 
   case class ValidatedInputs(dependants: Option[Int], courseLength: Option[Int], tuitionFees: Option[BigDecimal],
                              tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal],
-                             inLondon: Option[Boolean], leaveToRemain: Option[Int], isExtension: Boolean)
+                             inLondon: Option[Boolean], leaveToRemain: Option[Int], isContinuation: Boolean)
 
 }

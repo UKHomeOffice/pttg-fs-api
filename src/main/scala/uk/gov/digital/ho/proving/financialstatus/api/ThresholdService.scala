@@ -187,7 +187,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          deps <- inputs.dependants
          leaveToRemain <- inputs.leaveToRemain
     } yield {
-      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateNonDoctorate(inner, length, tFees, tFeesPaid, aFeesPaid, deps, leaveToRemain, inputs.isExtension)
+      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateNonDoctorate(inner, length, tFees, tFeesPaid, aFeesPaid, deps, leaveToRemain, inputs.isContinuation)
       new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
