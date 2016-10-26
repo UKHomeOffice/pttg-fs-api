@@ -11,12 +11,16 @@ import org.springframework.web.client.RestTemplate
 import spock.lang.Shared
 import spock.lang.Specification
 import steps.WireMockTestDataLoader
-import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
+import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
+import uk.gov.digital.ho.proving.financialstatus.domain.Account
+import uk.gov.digital.ho.proving.financialstatus.domain.AccountDailyBalances
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
+
+import java.time.LocalDate
 
 import static TestUtils.getMessageSource
 import static com.github.tomakehurst.wiremock.client.WireMock.*
@@ -52,7 +56,7 @@ class RestErrorsSpec extends Specification {
 
     HttpUtils httpUtils = new HttpUtils(customRestTemplate, maxAttempts, backoffPeriod)
 
-    MockBankService mockBankService = new MockBankService(new ObjectMapper(), httpUtils, serviceName)
+    BankService mockBankService = new TestBankService(new ObjectMapper(), httpUtils, serviceName)
 
     ApplicationEventPublisher auditor = Mock()
 
@@ -152,4 +156,43 @@ class RestErrorsSpec extends Specification {
         jsonContent.status.message == "Connection timeout"
     }
 
+
+    class TestBankService implements BankService{
+
+        def bankUrl = ""
+        ObjectMapper objectMapper
+        HttpUtils httpUtils
+
+        TestBankService(ObjectMapper objectMapper, HttpUtils httpUtils, String serviceName){
+            bankUrl = "$serviceName/financialstatus/v1"
+            this.objectMapper = objectMapper
+            this.httpUtils = httpUtils
+        }
+
+        @Override
+        String bankName() {
+            return null
+        }
+
+        @Override
+        String bankUrl() {
+            return null
+        }
+
+        @Override
+        ObjectMapper objectMapper() {
+            return null
+        }
+
+        @Override
+        AccountDailyBalances fetchAccountDailyBalances(Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent) {
+            def url = buildUrl(account, fromDate, toDate, dob, userId, accountHolderConsent)
+            def httpResponse = httpUtils.performRequest(url)
+        }
+
+        @Override
+        String buildUrl(Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent) {
+            return "$bankUrl/${account.sortCode}/${account.accountNumber}/balances?fromDate=$fromDate&toDate=$toDate&dob=$dob&userId=$userId&accountHolderConsent=$accountHolderConsent"
+        }
+    }
 }
