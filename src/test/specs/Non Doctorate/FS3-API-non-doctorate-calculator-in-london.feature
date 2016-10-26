@@ -36,7 +36,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Accommodation fees already paid | 0            |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
-            | Threshold   | 14120.12 |
+            | Threshold   | 15385.12 |
 
     Scenario: Shelly's maintenance threshold amount calculated
     He is on a 9 month course

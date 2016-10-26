@@ -47,7 +47,6 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-
             | Course start date               |              |
             | Course end date                 | 2016-06-03    |
             | Total tuition fees              | 3500.50      |
@@ -56,7 +55,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                              |
             | Status code    | 0004                                                             |
-            | Status message | Parameter error: Invalid courseLength, must be greater than zero |
+            | Status message | Parameter error: Invalid courseStartDate |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-9
         Given A Service is consuming the FSPS Calculator API
@@ -71,7 +70,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                              |
             | Status code    | 0002                                             |
-            | Status message | Parameter conversion error: Invalid courseLength |
+            | Status message | Parameter conversion error: Invalid courseEndDate |
 
 ######################### Validation on the Accommodation fees already paid field #########################
 

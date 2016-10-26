@@ -53,13 +53,12 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date    | 2016-02-06|
-            | Course end date      | 2016-10-06|
+            | Course start date    | 2016-02-06 |
+            | Course end date      | 2016-10-06 |
             | Number of dependants | 3          |
         Then The Financial Status API provides the following results:
-            | HTTP Status   | 200                     |
-            | Threshold     | 35900.50                |
-            | Course length | 10 months (capped at 9) |
+            | HTTP Status   | 200      |
+            | Threshold     | 35900.50 |
 
     ###### course length 12+ months In London ########
 
@@ -67,22 +66,22 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date    | 2015-01-05|
-            | Course end date      | 2016-02-05|
+            | Course start date    | 2015-01-05 |
+            | Course end date      | 2016-02-05 |
             | Number of dependants | 2          |
         Then The Financial Status API provides the following results:
-            | HTTP Status   | 200                            |
-            | Threshold     | 25765.50                       |
-            | Course length | 14 months (capped at 9 months) |
+            | HTTP Status   | 200      |
+            | Threshold     | 25765.50 |
+
 
     Scenario: Johns's maintenance threshold amount calculated
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date    | 2016-02-06|
-            | Course end date      | 2016-10-06|
+            | Course start date    | 2016-02-06 |
+            | Course end date      | 2016-10-06 |
             | Number of dependants | 3          |
         Then The Financial Status API provides the following results:
-            | HTTP Status   | 200                            |
-            | Threshold     | 35900.50                       |
-            | Course length | 10 months (capped at 9 months) |
+            | HTTP Status   | 200      |
+            | Threshold     | 35900.50 |
+

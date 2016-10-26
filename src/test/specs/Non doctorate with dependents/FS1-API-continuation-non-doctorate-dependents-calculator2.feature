@@ -42,66 +42,61 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
     Scenario: John's maintenance threshold amount calculated
 
-        #Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 2016-03-01|
-            | Course end date       | 2016-04-01|
-            | Continuation end date | 2016-06-05|
-            | dependants  | 1          |
+            | Course start date     | 2016-03-01 |
+            | Course end date       | 2016-04-01 |
+            | Continuation end date | 2016-06-05 |
+            | dependants            | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
             | Threshold   | 7610.50 |
 
     Scenario: Lizzie's maintenance threshold amount calculated
 
-        #Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 2016-01-01|
-            | Course end date       | 2016-10-05|
-            | Continuation end date | 2016-12-01|
-            | dependants  | 2          |
+            | Course start date     | 2016-01-01 |
+            | Course end date       | 2016-10-05 |
+            | Continuation end date | 2016-12-01 |
+            | dependants            | 2          |
         Then The Financial Status API provides the following results:
-            | HTTP Status   | 200               |
-            | Threshold     | 28295.50          |
-            | Course length | 9 |
+            | HTTP Status   | 200      |
+            | Threshold     | 14370.50 |
+           # | Course length | 9        |
 
 
     ##################### Entire course length 12+ months In London #######################
 
     Scenario: Rob's maintenance threshold amount calculated
 
-        #Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 2015-01-01|
-            | Course end date       | 2016-02-01|
-            | Continuation end date | 2016-04-02|
-            | dependants  | 2          |
+            | Course start date     | 2015-01-01 |
+            | Course end date       | 2016-02-01 |
+            | Continuation end date | 2016-04-02 |
+            | dependants            | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
             | Threshold   | 17325.50 |
 
     Scenario: Raul's maintenance threshold amount calculated
 
-        #Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 2015-01-05|
-            | Course end date       | 2015-12-05|
-            | Continuation end date | 2016-04-06|
-            | dependants  | 3          |
+            | Course start date     | 2015-01-05 |
+            | Course end date       | 2015-12-05 |
+            | Continuation end date | 2016-04-06 |
+            | dependants            | 3          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
             | Threshold   | 30840.50 |
 
     Scenario: Karen's maintenance threshold amount calculated
 
-        #Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 2015-06-01|
-            | Course end date       | 2015-12-05|
-            | Continuation end date | 2016-10-00|
-            | dependants  | 2          |
+            | Course start date     | 2015-06-01 |
+            | Course end date       | 2015-12-05 |
+            | Continuation end date | 2016-10-01 |
+            | dependants            | 2          |
         Then The Financial Status API provides the following results:
-            | HTTP Status                | 200      |
-            | Threshold                  | 20690.50 |
-            | Continuation course length | 9        |
+            | HTTP Status         | 200      |
+            | Threshold           | 28295.50 |
+            | Continuation length | 9        |
 

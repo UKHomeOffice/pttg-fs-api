@@ -4,7 +4,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
     Requirement to meet Tier 4 pass
 
     Required Maintenance threshold regulation to pass this feature file
-    Required Maintenance threshold non doctorate not In London = £1015 (the amount for when the student is studying in London)
+    Required Maintenance threshold non doctorate not In London = £1015 (the amount for when the student is not studying in London)
     Course length - this can be within the period of 1-9 months
     Total tuition fees - total amount of the tuition fees for the course
     Tuition fees already paid -
@@ -35,7 +35,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Accommodation fees already paid | 0            |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
-            | Threshold   | 5530.50 |
+            | Threshold   | 6545.50 |
 
     Scenario: Nick's maintenance threshold amount calculated
     He is on a 9 month course
