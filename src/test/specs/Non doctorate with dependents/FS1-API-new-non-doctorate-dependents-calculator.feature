@@ -53,8 +53,8 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date    | 2016-02-6 |
-            | Course end date      | 2016-10-6 |
+            | Course start date    | 2016-02-06|
+            | Course end date      | 2016-10-06|
             | Number of dependants | 3          |
         Then The Financial Status API provides the following results:
             | HTTP Status   | 200                     |
@@ -67,8 +67,8 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date    | 2015-01-5 |
-            | Course end date      | 2016-02-5 |
+            | Course start date    | 2015-01-05|
+            | Course end date      | 2016-02-05|
             | Number of dependants | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status   | 200                            |
@@ -79,8 +79,8 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date    | 2016-02-6 |
-            | Course end date      | 2016-10-6 |
+            | Course start date    | 2016-02-06|
+            | Course end date      | 2016-10-06|
             | Number of dependants | 3          |
         Then The Financial Status API provides the following results:
             | HTTP Status   | 200                            |

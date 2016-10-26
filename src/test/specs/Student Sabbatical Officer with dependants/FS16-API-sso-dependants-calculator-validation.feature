@@ -14,7 +14,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |            |
-            | The end of 28-day period        | 2016-06-0 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Course start date               | 2016-1-3   |
             | Course end date                 | 2016-2-3   |
@@ -31,7 +31,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 2016-06-0 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       |            |
             | Course start date               | 2016-1-3   |
             | Course end date                 | 2016-3-3   |
@@ -48,7 +48,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 2016-06-0 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Course start date               | 2016-1-3   |
             | Course end date                 |            |
@@ -63,7 +63,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 2016-06-0 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Course start date               | x          |
             | Course end date                 | 2016-6-3   |
@@ -81,7 +81,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 2016-06-0 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Course start date               | 2016-1-3   |
             | Course end date                 | 2016-2-3   |
@@ -96,7 +96,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 2016-06-0 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Course start date               | 2016-1-3   |
             | Course end date                 | 2016-2-3   |
@@ -111,7 +111,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 2016-06-0 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Course start date               | 2016-1-3   |
             | Course end date                 | 2016-2-3   |
@@ -128,7 +128,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 2016-06-0 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Course start date               | 2016-1-3   |
             | Course end date                 | 2016-3-3   |
@@ -143,7 +143,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 2016-06-0 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Course start date               | 2016-1-3   |
             | Course end date                 | 2016-2-3   |

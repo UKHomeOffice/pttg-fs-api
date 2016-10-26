@@ -47,7 +47,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Non Doctora
             | Student Type                    | nondoctorate |
             | In London                       | No           |
             | Course start date               | 2016-1-3     |
-            | Course end date                 | 2016-10-3    |
+            | Course end date                 | 2016-10-03   |
             | Total tuition fees              | 9355.00      |
             | Tuition fees already paid       | 500          |
             | Accommodation fees already paid | 600.50       |
