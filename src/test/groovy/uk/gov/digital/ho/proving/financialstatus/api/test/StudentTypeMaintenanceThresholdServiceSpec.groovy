@@ -56,7 +56,6 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
                 .param("inLondon", inLondon.toString())
                 .param("courseStartDate", courseStartDate.toString())
                 .param("courseEndDate",  courseEndDate.toString())
-                .param("continuationEndDate", continuationEndDate.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())
                 .param("tuitionFees", tuitionFees.toString())
