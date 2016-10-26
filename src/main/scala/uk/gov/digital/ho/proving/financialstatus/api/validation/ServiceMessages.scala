@@ -35,8 +35,13 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
   val RESOURCE_NOT_FOUND= getMessage("resource.not.found")
   val PATH_ERROR_MISSING_VALUE=getMessage("path.error.missing.value")
 
+  val INVALID_COURSE_START_DATE = getMessage("invalid.course.start.date")
   val INVALID_COURSE_END_DATE = getMessage("invalid.course.end.date")
   val INVALID_CONTINUATION_END_DATE = getMessage("invalid.continuation.end.date")
+
+  val INVALID_COURSE_START_DATE_VALUE = getMessage("invalid.course.start.date.value")
+  val INVALID_COURSE_END_DATE_VALUE = getMessage("invalid.course.end.date.value")
+  val INVALID_CONTINUATION_END_DATE_VALUE = getMessage("invalid.continuation.end.date.value")
 
   def INVALID_DATES(params: Int*) = getMessage("invalid.dates", params)
 

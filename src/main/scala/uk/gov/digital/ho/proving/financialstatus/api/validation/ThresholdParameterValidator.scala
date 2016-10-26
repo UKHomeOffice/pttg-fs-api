@@ -33,17 +33,21 @@ trait ThresholdParameterValidator {
     val validTuitionFeesPaid = validateTuitionFeesPaid(tuitionFeesPaid)
     val validAccommodationFeesPaid = validateAccommodationFeesPaid(accommodationFeesPaid)
     val validInLondon = validateInnerLondon(inLondon)
-    val validDependantsAndCourseLength = validateDependantsAndCourseLength(validDependants, validCourseLength, courseMinLengthWithDependants,isContinuation)
+    val validDependantsAndCourseLength = validateDependantsAndCourseLength(validDependants, validCourseLength, courseMinLengthWithDependants, isContinuation)
 
 
+    if (!courseStartDate.isDefined)  errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
+    if (!courseEndDate.isDefined)  errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE, HttpStatus.BAD_REQUEST))
 
     studentType match {
 
       case NonDoctorate =>
-        if (!validCourseEndDate) {
-          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE, HttpStatus.BAD_REQUEST))
+        if (!validCourseStartDate) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE_VALUE, HttpStatus.BAD_REQUEST))
+        } else if (!validCourseEndDate) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE_VALUE, HttpStatus.BAD_REQUEST))
         } else if (!validContinuationEndDate) {
-          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_CONTINUATION_END_DATE, HttpStatus.BAD_REQUEST))
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_CONTINUATION_END_DATE_VALUE, HttpStatus.BAD_REQUEST))
         } else if (validTuitionFees.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST))
         } else if (validTuitionFeesPaid.isEmpty) {
@@ -90,7 +94,7 @@ trait ThresholdParameterValidator {
   private def validateDependantsAndCourseLength(dependants: Option[Int], courseLength: Option[Int], courseMinLengthWithDependants: Int, isContinuation: Boolean) =
     for {numOfDependants <- dependants
          length <- courseLength} yield {
-      (numOfDependants == 0) || (isContinuation && numOfDependants>=0) || (!isContinuation && numOfDependants > 0 && length >= courseMinLengthWithDependants )
+      (numOfDependants == 0) || (isContinuation && numOfDependants >= 0) || (!isContinuation && numOfDependants > 0 && length >= courseMinLengthWithDependants)
     }
 
   private def validateDates(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], continuationEndDate: Option[LocalDate]): (Boolean, Boolean, Boolean) = {

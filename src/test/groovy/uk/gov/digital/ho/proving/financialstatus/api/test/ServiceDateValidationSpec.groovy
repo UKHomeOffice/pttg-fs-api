@@ -78,19 +78,22 @@ class ServiceDateValidationSpec extends Specification {
 
         where:
         courseStartDate | courseEndDate | continuationEndDate || httpStatus || statusMessage
-        "2000-01-01"    | "2000-01-02"  | "2000-01-03"        || 200        || "OK"
-        "2000-0A-01"    | "2000-01-01"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseStartDate"
-        "2000-01-01"    | "2A00-01-01"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseEndDate"
-        "2000-01-01"    | "2000-01-01"  | "2000-01-0A"        || 400        || "Parameter conversion error: Invalid continuationEndDate"
-        "2000-13-01"    | "2000-01-01"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseStartDate"
-        "2000-01-01"    | "2000-01-32"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseEndDate"
-        "2001-01-01"    | "2000-01-01"  | "2000-01-01"        || 400        || "Course end date must be after course start date"
-        "2000-01-01"    | "2001-01-01"  | "2000-01-01"        || 400        || "Continuation end date must be after course end date"
-        "2000-01-01"    | "2000-01-02"  | null                || 200        || "OK"
-        "2000-0A-01"    | "2000-01-01"  | null                || 400        || "Parameter conversion error: Invalid courseStartDate"
-        "2000-01-01"    | "2A00-01-01"  | null                || 400        || "Parameter conversion error: Invalid courseEndDate"
-        "2000-13-01"    | "2000-01-01"  | null                || 400        || "Parameter conversion error: Invalid courseStartDate"
-        "2000-01-01"    | "2000-01-32"  | null                || 400        || "Parameter conversion error: Invalid courseEndDate"
+//        "2000-01-01"    | "2000-01-02"  | "2000-01-03"        || 200        || "OK"
+//        "2000-0A-01"    | "2000-01-01"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseStartDate"
+//        "2000-01-01"    | "2A00-01-01"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseEndDate"
+//        "2000-01-01"    | "2000-01-01"  | "2000-01-0A"        || 400        || "Parameter conversion error: Invalid continuationEndDate"
+//        "2000-13-01"    | "2000-01-01"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseStartDate"
+//        "2000-01-01"    | "2000-01-32"  | "2000-01-01"        || 400        || "Parameter conversion error: Invalid courseEndDate"
+//        "2001-01-01"    | "2000-01-01"  | "2000-01-01"        || 400        || "Course end date must be after course start date"
+//        "2000-01-01"    | "2001-01-01"  | "2000-01-01"        || 400        || "Continuation end date must be after course end date"
+//        "2000-01-01"    | "2000-01-02"  | null                || 200        || "OK"
+//        "2000-0A-01"    | "2000-01-01"  | null                || 400        || "Parameter conversion error: Invalid courseStartDate"
+//        "2000-01-01"    | "2A00-01-01"  | null                || 400        || "Parameter conversion error: Invalid courseEndDate"
+//        "2000-13-01"    | "2000-01-01"  | null                || 400        || "Parameter conversion error: Invalid courseStartDate"
+//        "2000-01-01"    | "2000-01-32"  | null                || 400        || "Parameter conversion error: Invalid courseEndDate"
+        "2000-01-01"    | ""            | null                || 400        || "Parameter conversion error: Invalid courseEndDate"
+        ""              | "2000-01-31"  | null                || 400        || "Parameter conversion error: Invalid courseStartDate"
+        "2000-01-01"    | "2000-01-31"  | "2000-04-0A"        || 400        || "Parameter conversion error: Invalid continuationEndDate"
 
     }
 
