@@ -17,7 +17,7 @@ Obtain an artifactory username and password:
 <settings>
   <servers>
     <server>
-      <id>releases</id>
+      <id>snapshots</id>
       <username>most-likely-your-HOD-email-address</username>
       <password>some-password</password>
     </server>
@@ -27,8 +27,8 @@ Obtain an artifactory username and password:
     <profile>
       <repositories>
         <repository>
-          <id>releases</id>
-	      <url>https://artifactory.digital.homeoffice.gov.uk/artifactory/libs-release-local</url>
+          <id>snapshots</id>
+	      <url>https://artifactory.digital.homeoffice.gov.uk/artifactory/libs-snapshot-local</url>
         </repository>
       </repositories>
     </profile>
