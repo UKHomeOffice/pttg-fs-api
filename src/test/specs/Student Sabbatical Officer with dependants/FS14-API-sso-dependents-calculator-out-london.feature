@@ -25,8 +25,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student 
         When the FSPS Calculator API is invoked with the following
             | Student type                    | sso |
             | In London                       | No   |
-            | Course start date               | 2016-1-3     |
-            | Course end date                 | 2016-2-3     |
+            | Course start date               | 2016-01-03    |
+            | Course end date                 | 2016-02-03    |
             | Accommodation fees already paid | 0    |
             | dependants            | 3    |
         Then The Financial Status API provides the following results:
@@ -43,8 +43,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student 
         When the FSPS Calculator API is invoked with the following
             | Student type                    | sso   |
             | In London                       | No     |
-            | Course start date               | 2016-1-3     |
-            | Course end date                 | 2016-2-3     |
+            | Course start date               | 2016-01-03    |
+            | Course end date                 | 2016-02-03    |
             | Accommodation fees already paid | 100.00 |
             | dependants            | 1      |
         Then The Financial Status API provides the following results:

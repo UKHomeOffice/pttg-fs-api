@@ -13,8 +13,8 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |          |
             | In London                       | Yes      |
-            | Course start date               | 2016-1-3 |
-            | Course end date                 | 2016-2-3 |
+            | Course start date               | 2016-01-03|
+            | Course end date                 | 2016-02-03|
             | Total tuition fees              | 3500.50  |
             | Tuition fees already paid       | 0        |
             | Accommodation fees already paid | 0        |
@@ -30,8 +30,8 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       |              |
-            | Course start date               | 2016-1-3     |
-            | Course end date                 | 2016-3-3     |
+            | Course start date               | 2016-01-03    |
+            | Course end date                 | 2016-03-03    |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
@@ -49,7 +49,7 @@ Feature: Validation of the API fields and data
             | In London                       | Yes          |
 
             | Course start date               |              |
-            | Course end date                 | 2016-6-3     |
+            | Course end date                 | 2016-06-03    |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
@@ -63,7 +63,7 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course start date               | 2016-1-3     |
+            | Course start date               | 2016-01-03    |
             | Course end date                 | x            |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
@@ -80,8 +80,8 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course start date               | 2016-1-3     |
-            | Course end date                 | 2016-2-3     |
+            | Course start date               | 2016-01-03    |
+            | Course end date                 | 2016-02-03    |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid |              |
@@ -95,8 +95,8 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course start date               | 2016-1-3     |
-            | Course end date                 | 2016-2-3     |
+            | Course start date               | 2016-01-03    |
+            | Course end date                 | 2016-02-03    |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | %%           |
@@ -110,8 +110,8 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | nondoctorate |
             | In London                       | Yes          |
-            | Course start date               | 2016-1-3     |
-            | Course end date                 | 2016-2-3     |
+            | Course start date               | 2016-01-03    |
+            | Course end date                 | 2016-02-03    |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | -100         |
