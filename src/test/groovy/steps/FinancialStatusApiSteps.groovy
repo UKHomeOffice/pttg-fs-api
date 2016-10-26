@@ -158,15 +158,15 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                 toDate = entries.get(s)
             }
             if (s.equalsIgnoreCase("Course start date")) {
-                courseStartDate = verifyDateFormat(entries.get(s))
+                courseStartDate = entries.get(s)
 
                 println "tttttttttt" + courseStartDate
             }
             if (s.equalsIgnoreCase("Course end date")) {
-                courseEndDate = verifyDateFormat(entries.get(s))
+                courseEndDate = entries.get(s)
             }
             if (s.equalsIgnoreCase("Continuation end date")) {
-                continuationEndDate = verifyDateFormat(entries.get(s))
+                continuationEndDate = entries.get(s)
             }
             if (s.equalsIgnoreCase("Total tuition fees")) {
                 tuitionFees = entries.get(s)
