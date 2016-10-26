@@ -1,17 +1,16 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.domain.Account
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
 import java.time.LocalDate
 
-class AccountStatusCheckerTest extends Specification {
+class BankServiceTest extends Specification {
 
-    def mockBankService = Mock(BankService)
-    def accountStatusChecker = new AccountStatusChecker(mockBankService, 28)
+    def barlcaysBankService = Mock(MockBankService)
+    def accountStatusChecker = new AccountStatusChecker(barlcaysBankService, 28)
 
     def "Check bankService returns a pass for correct data"() {
 
@@ -24,7 +23,7 @@ class AccountStatusCheckerTest extends Specification {
         def userId = "user123456"
         def accountHolderConsent = true
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
 
         when:
         def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum, dob, userId, accountHolderConsent).get()
@@ -48,7 +47,7 @@ class AccountStatusCheckerTest extends Specification {
         def userId = "user123456"
         def accountHolderConsent = true
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
         def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum, dob, userId, accountHolderConsent).get()
@@ -72,7 +71,7 @@ class AccountStatusCheckerTest extends Specification {
         def userId = "user123456"
         def accountHolderConsent = true
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseNonConsecutiveDates(fromDate, toDate, 2060.23, 3500, true, false)
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseNonConsecutiveDates(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
         def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum, dob, userId, accountHolderConsent).get()
@@ -96,7 +95,7 @@ class AccountStatusCheckerTest extends Specification {
         def userId = "user123456"
         def accountHolderConsent = true
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
+        1 * barlcaysBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2060.23, 3500, true, false)
 
         when:
         def response = accountStatusChecker.checkDailyBalancesAreAboveMinimum(account, fromDate, toDate, minimum, dob, userId, accountHolderConsent).get()

@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include
 
 case class Account(sortCode: String, accountNumber: String)
 
+case class AccountDailyBalances(accountHolderName: String, balances: Seq[AccountDailyBalance])
+
+case class AccountDailyBalance(date: LocalDate, balance: BigDecimal)
+
 case class AccountDailyBalanceCheck(accountHolderName: String, fromDate: LocalDate, toDate: LocalDate, minimum: BigDecimal, pass: Boolean,
                                     @JsonInclude(Include.NON_EMPTY) failureReason: Option[BalanceCheckFailure] = None)
 
