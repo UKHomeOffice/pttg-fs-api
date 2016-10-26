@@ -4,17 +4,26 @@ import java.time.LocalDate
 
 object LeaveToRemainCalculator {
 
-  def calculateLeaveToRemain(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], courseExtensionEndDate: Option[LocalDate],
+  private def calcWrapUpPeriod(courseLength: Int, leaveToRemainBoundary: Int, shortLeaveToRemain: Int, longLeaveToRemain: Int): Int = {
+    if (courseLength < leaveToRemainBoundary) shortLeaveToRemain else longLeaveToRemain
+  }
+
+  def calculateLeaveToRemain(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], courseContinuationEndDate: Option[LocalDate],
                              leaveToRemainBoundary: Int, shortLeaveToRemain: Int, longLeaveToRemain: Int): Option[Int] = {
     for {
       start <- courseStartDate
       end <- courseEndDate
     } yield {
-      val courseLength = courseExtensionEndDate match {
-        case Some(extEnd) => CourseLengthCalculator.differenceInMonths(start,extEnd)
-        case None =>CourseLengthCalculator.differenceInMonths(start,end)
+      val leaveToRemain = courseContinuationEndDate match {
+        case Some(extEnd) =>
+          val courseLength = CourseLengthCalculator.differenceInMonths(start, extEnd)
+          val continuationCourseLength = CourseLengthCalculator.differenceInMonths(end.plusDays(1), extEnd)
+          continuationCourseLength + calcWrapUpPeriod(courseLength, leaveToRemainBoundary, shortLeaveToRemain, longLeaveToRemain)
+        case None =>
+          val courseLength = CourseLengthCalculator.differenceInMonths(start, end)
+          courseLength + calcWrapUpPeriod(courseLength, leaveToRemainBoundary, shortLeaveToRemain, longLeaveToRemain)
       }
-      if (courseLength < leaveToRemainBoundary) shortLeaveToRemain + courseLength else longLeaveToRemain + courseLength
+      leaveToRemain
     }
   }
 }

@@ -176,6 +176,8 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         LocalDate.of(2000, 1, 18) | LocalDate.of(2001, 2, 11)  | null                      | true     | 424         | 625             | 671                  || 4          || 41134.00  || 0          || 9                  || 0
         LocalDate.of(2000, 1, 19) | LocalDate.of(2000, 5, 18)  | null                      | false    | 694         | 1685            | 967                  || 0          || 3093.00   || 0          || 0                  || 0
         LocalDate.of(2000, 1, 20) | LocalDate.of(2001, 1, 14)  | null                      | true     | 1008        | 14              | 404                  || 6          || 57605.00  || 0          || 9                  || 0
+        LocalDate.of(2016, 1, 1)  | LocalDate.of(2016, 10, 5)  | LocalDate.of(2016, 12, 1) | true     | 2000.50     | 200             | 100                  || 2          || 14370.5   || 0          || 0                  || 0
+
 
     }
 
