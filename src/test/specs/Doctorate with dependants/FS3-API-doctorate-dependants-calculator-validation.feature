@@ -13,7 +13,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |            |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
             | dependants                      | 1          |
@@ -28,7 +28,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       |            |
             | Accommodation fees already paid | 0          |
             | dependants                      | 1          |
@@ -43,7 +43,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
             | Accommodation fees already paid |            |
             | dependants                      | 1          |
@@ -56,7 +56,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
             | Accommodation fees already paid | %%         |
             | dependants                      | 1          |
@@ -69,7 +69,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
             | Accommodation fees already paid | -100       |
             | dependants                      | 1          |
@@ -85,7 +85,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
             | dependants                      | -7         |
@@ -98,7 +98,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
             | dependants                      | @          |

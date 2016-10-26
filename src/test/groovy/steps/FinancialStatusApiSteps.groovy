@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
 import static com.jayway.restassured.RestAssured.given
+
 /**
  * For wiremock-backed tests use the "test" profile in the @ActiveProfiles annotation:
  *           - This will launch the wiremock server using the application-test.properties
@@ -119,15 +120,15 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         String camelCase = allUpper[0].toLowerCase() + allUpper.substring(1)
         camelCase
     }
-public String verifyDateFormat(String featureDate){
-    String initialDate = featureDate
-    String transformedDate
-    DateFormat df = new SimpleDateFormat("yyyy-mm-dd")
-    Date date = df.parse(initialDate)
-    transformedDate = df.format(date)
-    return transformedDate
-}
 
+    public String verifyDateFormat(String featureDate) {
+        String initialDate = featureDate
+        String transformedDate
+        DateFormat df = new SimpleDateFormat("yyyy-mm-dd")
+        Date date = df.parse(initialDate)
+        transformedDate = df.format(date)
+        return transformedDate
+    }
 
     def String getTableData(DataTable arg) {
         Map<String, String> entries = arg.asMap(String.class, String.class)
@@ -227,7 +228,7 @@ public String verifyDateFormat(String featureDate){
     }
 
 
-    public void validateJsonResult(DataTable arg){
+    public void validateJsonResult(DataTable arg) {
         Map<String, String> entries = arg.asMap(String.class, String.class);
         String[] tableKey = entries.keySet()
         List<String> allKeys = new ArrayList()
@@ -240,58 +241,57 @@ public String verifyDateFormat(String featureDate){
         String innerJsonValue
         String jsonValue
 
-    Iterator<String> jasonKey = json.keys()
+        Iterator<String> jasonKey = json.keys()
 
-    while (jasonKey.hasNext()) {
-        String key = (String) jasonKey.next();
+        while (jasonKey.hasNext()) {
+            String key = (String) jasonKey.next();
 
-        if (json.get(key) instanceof JSONObject) {
+            if (json.get(key) instanceof JSONObject) {
 
-            String innerValue = json.get(key)
-            println "AAAAAAAAAAA" + innerValue
-            JSONObject json2 = new JSONObject(innerValue)
-            Iterator<String> feild = json2.keys()
+                String innerValue = json.get(key)
+                println "AAAAAAAAAAA" + innerValue
+                JSONObject json2 = new JSONObject(innerValue)
+                Iterator<String> feild = json2.keys()
 
-            while (feild.hasNext()) {
-                String key2 = (String) feild.next()
-                allKeys.add(key2)
-                println "BBBBBBBBB" + key2
-                if(!(json2.get(key2) instanceof String)){
-                  double values =  json2.getDouble(key2)
-                    innerJsonValue = String.valueOf(df.format(values))
-                    allJsonValue.add(innerJsonValue)
-                    println "DDDDDDDDDDD" + innerJsonValue
+                while (feild.hasNext()) {
+                    String key2 = (String) feild.next()
+                    allKeys.add(key2)
+                    println "BBBBBBBBB" + key2
+                    if (!(json2.get(key2) instanceof String)) {
+                        double values = json2.getDouble(key2)
+                        innerJsonValue = String.valueOf(df.format(values))
+                        allJsonValue.add(innerJsonValue)
+                        println "DDDDDDDDDDD" + innerJsonValue
+                    }
+                    innerJsonValue = json2.get(key2)
+                    if ((key2 != "code") && (key2 != "message")) {
+                        allJsonValue.add(innerJsonValue)
+                    }
                 }
-                innerJsonValue = json2.get(key2)
-                if ((key2 != "code") && (key2 != "message")) {
-                    allJsonValue.add(innerJsonValue)
+            }
+            if (!(json.get(key) instanceof JSONObject)) {
+
+                jsonValue = json.get(key)
+                if ((key == "minimum") || (key == "threshold")) {
+                    value = json.getDouble(key)
+                    jsonValue = String.valueOf(df.format(value))
+                    allJsonValue.add(jsonValue)
+                }
+                allKeys.add(key)
+                if (!(allJsonValue.contains(jsonValue))) {
+                    allJsonValue.add(jsonValue)
                 }
             }
         }
-        if (!(json.get(key) instanceof JSONObject)) {
-
-            jsonValue = json.get(key)
-            if ((key == "minimum") || (key == "threshold")) {
-                value = json.getDouble(key)
-                jsonValue = String.valueOf(df.format(value))
-                allJsonValue.add(jsonValue)
-            }
-            allKeys.add(key)
-            if (!(allJsonValue.contains(jsonValue))) {
-                allJsonValue.add(jsonValue)
+        for (String s : tableKey) {
+            if (s != "HTTP Status") {
+                tableFieldCamelCase.add(tocamelcase(s))
+                tableFieldValue.add(entries.get(s))
             }
         }
+        assert allKeys.containsAll(tableFieldCamelCase)
+        assert allJsonValue.containsAll(tableFieldValue)
     }
-    for (String s : tableKey) {
-        if (s != "HTTP Status") {
-            tableFieldCamelCase.add(tocamelcase(s))
-            tableFieldValue.add(entries.get(s))
-        }
-    }
-            assert allKeys.containsAll(tableFieldCamelCase)
-            assert allJsonValue.containsAll(tableFieldValue)
-    }
-
 
 
     public void validateResult(DataTable arg) {
@@ -341,7 +341,7 @@ public String verifyDateFormat(String featureDate){
     }
 
     @Given("^the barclays response has status (\\d+)\$")
-    public void the_barclays_response_has_status(int status)  {
+    public void the_barclays_response_has_status(int status) {
         testDataLoader.withResponseStatus(balancesUrlRegex, status)
     }
 
@@ -349,6 +349,7 @@ public String verifyDateFormat(String featureDate){
     public void the_barclays_api_is_unreachable() {
         testDataLoader.withServiceDown()
     }
+
     @Given("^the default details are\$")
     public void the_default_details_are(DataTable arg1) {
         getTableData(arg1)
@@ -357,9 +358,9 @@ public String verifyDateFormat(String featureDate){
 
 
     @When("^the Financial Status API is invoked\$")
-    public void the_Financial_Status_API_is_invoked()  {
+    public void the_Financial_Status_API_is_invoked() {
 
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId,accountHolderConsent )
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
         jsonAsString = resp.asString()
 
         println("Family Case Worker API: " + jsonAsString)
@@ -370,7 +371,7 @@ public String verifyDateFormat(String featureDate){
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId,accountHolderConsent )
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
         jsonAsString = resp.asString()
 
         println("Family Case Worker API: " + jsonAsString)
@@ -379,7 +380,7 @@ public String verifyDateFormat(String featureDate){
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&continuationEndDate={continuationEndDate}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}", studentType, inLondon, courseStartDate,courseEndDate,continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&continuationEndDate={continuationEndDate}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}", studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
         jsonAsString = resp.asString()
 
         println("FSPS API Calculator: " + jsonAsString)

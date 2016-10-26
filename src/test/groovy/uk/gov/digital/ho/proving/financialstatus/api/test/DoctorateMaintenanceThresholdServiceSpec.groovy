@@ -36,7 +36,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
             nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
             pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor,12,2,4
+        ), getStudentTypeChecker(), serviceMessages, auditor, 12, 2, 4
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -145,6 +145,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         true     | 4934.00               | 5          || 9715.00   || 1265.00
         true     | 223.00                | 4          || 9067.00   || 0
         true     | 1078.00               | 14         || 25112.00  || 0
+        true     | 250.50                | 3          || 7349.50   || 0
 
 
     }

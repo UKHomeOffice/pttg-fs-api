@@ -14,10 +14,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |            |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
-            | Course start date               | 3/1/2016   |
-            | Course end date                 | 3/2/2016   |
+            | Course start date               | 2016-1-3   |
+            | Course end date                 | 2016-2-3   |
             | Accommodation fees already paid | 0          |
             | dependants                      | 1          |
         Then the service displays the following result
@@ -31,10 +31,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       |            |
-            | Course start date               | 3/1/2016   |
-            | Course end date                 | 3/3/2016   |
+            | Course start date               | 2016-1-3   |
+            | Course end date                 | 2016-3-3   |
             | Accommodation fees already paid | 0          |
             | dependants                      | 1          |
         Then the service displays the following result
@@ -48,9 +48,9 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
-            | Course start date               | 3/1/2016   |
+            | Course start date               | 2016-1-3   |
             | Course end date                 |            |
             | Accommodation fees already paid | 0          |
             | dependants                      | 1          |
@@ -63,10 +63,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
             | Course start date               | x          |
-            | Course end date                 | 3/6/2016   |
+            | Course end date                 | 2016-6-3   |
             | Accommodation fees already paid | 0          |
             | dependants                      | 1          |
         Then the service displays the following result
@@ -81,10 +81,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
-            | Course start date               | 3/1/2016   |
-            | Course end date                 | 3/2/2016   |
+            | Course start date               | 2016-1-3   |
+            | Course end date                 | 2016-2-3   |
             | Accommodation fees already paid |            |
             | dependants                      | 1          |
         Then the service displays the following result
@@ -96,10 +96,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
-            | Course start date               | 3/1/2016   |
-            | Course end date                 | 3/2/2016   |
+            | Course start date               | 2016-1-3   |
+            | Course end date                 | 2016-2-3   |
             | Accommodation fees already paid | %%         |
             | dependants                      | 1          |
         Then the service displays the following result
@@ -111,10 +111,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
-            | Course start date               | 3/1/2016   |
-            | Course end date                 | 3/2/2016   |
+            | Course start date               | 2016-1-3   |
+            | Course end date                 | 2016-2-3   |
             | Accommodation fees already paid | -100       |
             | dependants                      | 1          |
         Then the service displays the following result
@@ -128,10 +128,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
-            | Course start date               | 3/1/2016   |
-            | Course end date                 | 3/3/2016   |
+            | Course start date               | 2016-1-3   |
+            | Course end date                 | 2016-3-3   |
             | Accommodation fees already paid | 0          |
             | dependants                      | -7         |
         Then the service displays the following result
@@ -143,10 +143,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | sso        |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-0 |
             | In London                       | Yes        |
-            | Course start date               | 3/1/2016   |
-            | Course end date                 | 3/2/2016   |
+            | Course start date               | 2016-1-3   |
+            | Course end date                 | 2016-2-3   |
             | Accommodation fees already paid | 0          |
             | dependants                      | @          |
         Then the service displays the following result

@@ -44,9 +44,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         #Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 01/03/2016 |
-            | Course end date       | 31/04/2016 |
-            | Continuation end date | 15/06/2016 |
+            | Course start date     | 2016-03-1 |
+            | Course end date       | 2016-04-1 |
+            | Continuation end date | 2016-06-5 |
             | dependants  | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
@@ -56,9 +56,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         #Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 01/01/2016 |
-            | Course end date       | 15/10/2016 |
-            | Continuation end date | 31/12/2016 |
+            | Course start date     | 2016-01-1 |
+            | Course end date       | 2016-10-5 |
+            | Continuation end date | 2016-12-1 |
             | dependants  | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status   | 200               |
@@ -72,9 +72,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         #Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 01/01/2015 |
-            | Course end date       | 01/02/2016 |
-            | Continuation end date | 02/04/2016 |
+            | Course start date     | 2015-01-1 |
+            | Course end date       | 2016-02-1 |
+            | Continuation end date | 2016-04-2 |
             | dependants  | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
@@ -84,9 +84,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         #Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 15/01/2015 |
-            | Course end date       | 15/12/2015 |
-            | Continuation end date | 16/04/2016 |
+            | Course start date     | 2015-01-5 |
+            | Course end date       | 2015-12-5 |
+            | Continuation end date | 2016-04-6 |
             | dependants  | 3          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
@@ -96,9 +96,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         #Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date     | 01/06/2015 |
-            | Course end date       | 05/12/2015 |
-            | Continuation end date | 10/10/2016 |
+            | Course start date     | 2015-06-1 |
+            | Course end date       | 2015-12-5 |
+            | Continuation end date | 2016-10-0 |
             | dependants  | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status                | 200      |
