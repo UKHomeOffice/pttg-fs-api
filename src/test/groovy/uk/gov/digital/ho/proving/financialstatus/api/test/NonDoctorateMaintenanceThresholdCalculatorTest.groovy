@@ -70,7 +70,8 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Non Doctorate - Check 'Accommodation Fees paid'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants, courseLengthInMonths >= 12 ? courseLengthInMonths + 4 : courseLengthInMonths + 2, false)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid),
+            dependants, courseLengthInMonths >= 12 ? courseLengthInMonths + 4 : courseLengthInMonths + 2, false)._1 == bd(threshold)
 
         where:
         inLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
@@ -93,39 +94,40 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
     }
 
-//    def "Tier 4 Non Doctorate - Check 'All variants'"() {
-//
-//        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants, courseLengthInMonths >= 12 ? 4 : 2)
-//        def thresholdValue = response._1
-//        def cappedValues = DataUtils.getCappedValues(response._2)
-//        def cappedAccommodation = cappedValues.accommodationFeesPaid()
-//        def cappedCourseLength = cappedValues.courseLength()
-//
-//        assert thresholdValue == bd(threshold)
-//        assert DataUtils.compareAccommodationFees(bd(feesCapped), cappedAccommodation) == true
-//        assert DataUtils.compareCourseLength(courseLengthCapped, cappedCourseLength) == true
-//
-//        where:
-//        // Due to groovy not liking Scala's 'None' object we represent this as the value zero
-//        inLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
-//        false    | 14                   | 447         | 1348            | 1396                  | 12         || 81310.00  || 1265       || 9
-//        true     | 7                    | 305         | 112             | 1894                  | 1          || 15388.00  || 1265       || 0
-//        true     | 9                    | 236         | 71              | 987                   | 13         || 109428.00 || 0          || 0
-//        true     | 5                    | 283         | 340             | 1524                  | 0          || 5060.00   || 1265       || 0
-//        false    | 15                   | 842         | 709             | 302                   | 5          || 39566.00  || 0          || 9
-//        false    | 3                    | 467         | 613             | 1727                  | 0          || 1780.00   || 1265       || 0
-//        true     | 0                    | 65          | 238             | 1463                  | 0          || 0.00      || 1265       || 0
-//        false    | 3                    | 71          | 213             | 229                   | 0          || 2816.00   || 0          || 0
-//        true     | 15                   | 1446        | 1832            | 99                    | 5          || 49311.00  || 0          || 9
-//        false    | 15                   | 1441        | 2285            | 686                   | 5          || 39049.00  || 0          || 9
-//        true     | 11                   | 1491        | 301             | 1359                  | 4          || 41730.00  || 1265       || 9
-//        true     | 2                    | 781         | 418             | 70                    | 0          || 2823.00   || 0          || 0
-//        true     | 10                   | 437         | 605             | 204                   | 11         || 94836.00  || 0          || 9
-//        false    | 11                   | 932         | 734             | 1604                  | 7          || 50908.00  || 1265       || 9
-//        true     | 7                    | 1348        | 916             | 1062                  | 7          || 61460.00  || 0          || 0
-//        true     | 2                    | 1207        | 1404            | 610                   | 0          || 1920.00   || 0          || 0
-//
-//    }
+    def "Tier 4 Non Doctorate - Check 'All variants'"() {
+
+        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid),
+            dependants, courseLengthInMonths >= 12 ? courseLengthInMonths + 4 : courseLengthInMonths + 2, false)
+        def thresholdValue = response._1
+        def cappedValues = DataUtils.getCappedValues(response._2)
+        def cappedAccommodation = cappedValues.accommodationFeesPaid()
+        def cappedCourseLength = cappedValues.courseLength()
+
+        assert thresholdValue == bd(threshold)
+        assert DataUtils.compareAccommodationFees(bd(feesCapped), cappedAccommodation) == true
+        assert DataUtils.compareCourseLength(courseLengthCapped, cappedCourseLength) == true
+
+        where:
+        // Due to groovy not liking Scala's 'None' object we represent this as the value zero
+        inLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
+        false    | 14                   | 447         | 1348            | 1396                  | 12         || 81310.00  || 1265       || 9
+        true     | 7                    | 305         | 112             | 1894                  | 1          || 15388.00  || 1265       || 0
+        true     | 9                    | 236         | 71              | 987                   | 13         || 109428.00 || 0          || 0
+        true     | 5                    | 283         | 340             | 1524                  | 0          || 5060.00   || 1265       || 0
+        false    | 15                   | 842         | 709             | 302                   | 5          || 39566.00  || 0          || 9
+        false    | 3                    | 467         | 613             | 1727                  | 0          || 1780.00   || 1265       || 0
+        true     | 0                    | 65          | 238             | 1463                  | 0          || 0.00      || 1265       || 0
+        false    | 3                    | 71          | 213             | 229                   | 0          || 2816.00   || 0          || 0
+        true     | 15                   | 1446        | 1832            | 99                    | 5          || 49311.00  || 0          || 9
+        false    | 15                   | 1441        | 2285            | 686                   | 5          || 39049.00  || 0          || 9
+        true     | 11                   | 1491        | 301             | 1359                  | 4          || 41730.00  || 1265       || 9
+        true     | 2                    | 781         | 418             | 70                    | 0          || 2823.00   || 0          || 0
+        true     | 10                   | 437         | 605             | 204                   | 11         || 94836.00  || 0          || 9
+        false    | 11                   | 932         | 734             | 1604                  | 7          || 50908.00  || 1265       || 9
+        true     | 7                    | 1348        | 916             | 1062                  | 7          || 61460.00  || 0          || 0
+        true     | 2                    | 1207        | 1404            | 610                   | 0          || 1920.00   || 0          || 0
+
+    }
 
     def "Tier 4 Non Doctorate - Check 'extensions'"() {
 
