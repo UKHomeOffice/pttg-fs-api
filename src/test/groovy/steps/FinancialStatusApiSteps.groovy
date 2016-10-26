@@ -24,7 +24,9 @@ import org.springframework.web.servlet.DispatcherServlet
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 
+import java.text.DateFormat
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 
 import static com.jayway.jsonpath.JsonPath.read
 import static com.jayway.restassured.RestAssured.get
@@ -80,6 +82,10 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String dob = ""
     String userId //= ""
     String accountHolderConsent = ""
+    def courseStartDate = " "
+    String courseEndDate = ""
+    String continuationEndDate = ""
+    String numberOfDependants = ""
 
     List<String> Todate = new ArrayList()
     List<String> Fromdate = new ArrayList()
@@ -113,6 +119,15 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         String camelCase = allUpper[0].toLowerCase() + allUpper.substring(1)
         camelCase
     }
+public String verifyDateFormat(String featureDate){
+    String initialDate = featureDate
+    String transformedDate
+    DateFormat df = new SimpleDateFormat("yyyy-mm-dd")
+    Date date = df.parse(initialDate)
+    transformedDate = df.format(date)
+    return transformedDate
+}
+
 
     def String getTableData(DataTable arg) {
         Map<String, String> entries = arg.asMap(String.class, String.class)
@@ -120,7 +135,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
         for (String s : tableKey) {
 
-            if (s.equalsIgnoreCase("Number of dependants")) {
+            if (s.equalsIgnoreCase("dependants")) {
                 dependants = entries.get(s)
             }
             if (s.equalsIgnoreCase("Student Type")) {
@@ -141,11 +156,16 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             if (s.equalsIgnoreCase("To Date")) {
                 toDate = entries.get(s)
             }
-            if (s.equalsIgnoreCase("Course Length")) {
-                courseLength = entries.get(s)
+            if (s.equalsIgnoreCase("Course start date")) {
+                courseStartDate = verifyDateFormat(entries.get(s))
+
+                println "tttttttttt" + courseStartDate
             }
-            if (s.equalsIgnoreCase("Remaining course length")) {
-                courseLength = entries.get(s)
+            if (s.equalsIgnoreCase("Course end date")) {
+                courseEndDate = verifyDateFormat(entries.get(s))
+            }
+            if (s.equalsIgnoreCase("Continuation end date")) {
+                continuationEndDate = verifyDateFormat(entries.get(s))
             }
             if (s.equalsIgnoreCase("Total tuition fees")) {
                 tuitionFees = entries.get(s)
@@ -329,7 +349,11 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     public void the_barclays_api_is_unreachable() {
         testDataLoader.withServiceDown()
     }
+    @Given("^the default details are\$")
+    public void the_default_details_are(DataTable arg1) {
+        getTableData(arg1)
 
+    }
 
 
     @When("^the Financial Status API is invoked\$")
@@ -355,7 +379,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseLength={courseLength}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}", studentType, inLondon, courseLength, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&continuationEndDate={continuationEndDate}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}", studentType, inLondon, courseStartDate,courseEndDate,continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
         jsonAsString = resp.asString()
 
         println("FSPS API Calculator: " + jsonAsString)
