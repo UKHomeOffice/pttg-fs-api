@@ -16,9 +16,9 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
             | Tuition fees already paid       | 200          |
             | Accommodation fees already paid | 100          |
 
-    Required Maintenance threshold calculation to pass this feature file
+#    Required Maintenance threshold calculation to pass this feature file
 
-    Maintenance threshold amount = (Required Maintenance threshold non doctorate In London * Course length) + ((Dependants Required Maintenance threshold In London * Dependants Required Maintenance period)  * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
+#    Maintenance threshold amount = (Required Maintenance threshold non doctorate In London * Course length) + ((Dependants Required Maintenance threshold In London * Dependants Required Maintenance period)  * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
 
 #   Requirement to meet Tier 4 pass (Continuation applications only)
 #
@@ -26,15 +26,15 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
 #   Dependants Required Maintenance threshold: In London - £845, Out London - £680
 #
 #   Entire course <12 months ((£1265 x 4) + (845 x (4+2) x 1) + (£10,000 - 0 - 0)) ##
-    Entire course 12+ months ((£1265 x 4) + (845 x (4+4) x 1) + (£10,000 - 0 - 0)) ##
+#    Entire course 12+ months ((£1265 x 4) + (845 x (4+4) x 1) + (£10,000 - 0 - 0)) ##
 #
 #   Entire course <12 months
 #   Tier 4 (General) Student - non doctorate - In London, with dependents In Country - (£1265 x 3) + (£845 x (3+2) x 1) + (£10,000 - £0 - £0) = £18,020
 #   Tier 4 (General) Student - non doctorate - In London, with dependents In Country - (£1265 x 8) + (£845 x (8+2) x 2) + (£7,000 - £300 - £500.50) = £31,529.50 (dependant require maintenance period capped at 9 months)
 #
-    Entire course 12+ months
-    Tier 4 (General) Student - non doctorate - In London, with dependents In Country - (£1265 x 3) + (£845 x (3+4) x 1) + (£10,000 - £0 - £0) = £19,710.00
-    Tier 4 (General) Student - non doctorate - In London, with dependents In Country - (£1265 x 8) + (£845 x (8+4) x 2) + (£7,000 - £300 - £500.50) = £31,529.50 (dependant require maintenance period capped at 9 months)
+#    Entire course 12+ months
+#   Tier 4 (General) Student - non doctorate - In London, with dependents In Country - (£1265 x 3) + (£845 x (3+4) x 1) + (£10,000 - £0 - £0) = £19,710.00
+#    Tier 4 (General) Student - non doctorate - In London, with dependents In Country - (£1265 x 8) + (£845 x (8+4) x 2) + (£7,000 - £300 - £500.50) = £31,529.50 (dependant require maintenance period capped at 9 months)
 
     ###### course length <12 months In London ########
 
@@ -42,8 +42,8 @@ Feature: Total Funds Required Calculation - New Tier 4 (General) Student Non Doc
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date    | 05/01/2016 |
-            | Course end date      | 10/07/2016 |
+            | Course start date    | 2016-01-05 |
+            | Course end date      | 2016-07-10 |
             | Number of dependants | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200      |
