@@ -49,7 +49,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | dependants            | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
-            | Threshold   | 7610.50 |
+            | Threshold   | 9720.50 |
 
     Scenario: Lizzie's maintenance threshold amount calculated
 
