@@ -151,7 +151,7 @@ public class ThresholdCalculator {
                         .attributes(key("optional").value(false)),
                     parameterWithName("continuationEndDate")
                         .description("The end date of the course continuation (not required for 'doctorate' student type)")
-                        .attributes(key("optional").value(false)),
+                        .attributes(key("optional").value(true)),
                     parameterWithName("tuitionFees")
                         .description("Total tuition fees (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(true)),
