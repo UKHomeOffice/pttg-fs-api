@@ -1,17 +1,11 @@
-Some config is required in order to retrieve dependencies from Artifactory for the bank integration jars.
-The alternative is to clone the other projects (pttg-fs-integration from GitHub and pttg-fs-barclays from GitLab), build
-them, and publish the jars to your local maven repository (gradle publishToMavenLocal).
+You will need a settings.xml file in ~/.m2 containing the following xml with your own artifactory username and api key.
 
-
-You will need a settings.xml file in ~/.m2 containing the following xml with your own artifactory username and password.
-
-Obtain an artifactory username and password:
-1 - Go to the artifactory login (https://artifactory.digital.homeoffice.gov.uk/artifactory/webapp/#/login)
+1 - Go to artifactory and login (https://artifactory.digital.homeoffice.gov.uk/artifactory/webapp/#/login)
 2 - Click Sign in with HOD SSO
-3 - Ask someone (eg jaykeshur) on DSP slack to reset your password
-4 - Log in to artifactory again and reset your password to one of your choosing
-5 - Now you can use that password in your settings.xml
-(or get an encrypted version of it from your artifactory user profile page)
+3 - Click your user name to access the profile (https://artifactory.digital.homeoffice.gov.uk/artifactory/webapp/#/profile)
+4 - Click the cog to generate an api key
+5 - Copy the api key and create the settings.xml file as below
+
 
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
@@ -19,7 +13,7 @@ Obtain an artifactory username and password:
     <server>
       <id>snapshots</id>
       <username>most-likely-your-HOD-email-address</username>
-      <password>some-password</password>
+      <password>the-api-key-from-artifactory</password>
     </server>
   </servers>
 
