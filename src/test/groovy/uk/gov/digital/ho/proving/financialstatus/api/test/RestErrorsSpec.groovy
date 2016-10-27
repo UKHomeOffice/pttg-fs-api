@@ -41,6 +41,8 @@ class RestErrorsSpec extends Specification {
     def apiUrl = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
     def verifyUrl = "/financialstatus/v1/123456/12345678/balances.*"
 
+    def bankUrl = "$serviceName/financialstatus/v1"
+
     ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
 
     def maxAttempts = 3
@@ -56,13 +58,16 @@ class RestErrorsSpec extends Specification {
 
     HttpUtils httpUtils = new HttpUtils(customRestTemplate, maxAttempts, backoffPeriod)
 
-    BankService mockBankService = new TestBankService(new ObjectMapper(), httpUtils, serviceName)
+    BankService mockBankService = Mock(BankService)
 
     ApplicationEventPublisher auditor = Mock()
 
     def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages, auditor)
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
+    def buildUrl(Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent) {
+        return "$bankUrl/${account.sortCode}/${account.accountNumber}/balances?fromDate=$fromDate&toDate=$toDate&dob=$dob&userId=$userId&accountHolderConsent=$accountHolderConsent"
+    }
 
     def setupSpec() {
         customHttpRequestFactory.setConnectionRequestTimeout(restConnectionTimeout)
@@ -85,6 +90,11 @@ class RestErrorsSpec extends Specification {
         // Try once only when we get a 404 error before failing
         given:
         testDataLoader.withDelayedAndStatusResponse(stubUrl, 3, 404)
+
+        mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String, _ as Boolean) >> {
+            Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent ->
+                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId, accountHolderConsent))
+        }
 
         when:
         def response = mockMvc.perform(
@@ -110,6 +120,11 @@ class RestErrorsSpec extends Specification {
         // Try 3 times when we get a 500 error before failing
         given:
         testDataLoader.withDelayedAndStatusResponse(stubUrl, 4, 500)
+
+        mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String, _ as Boolean) >> {
+            Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent ->
+                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId, accountHolderConsent))
+        }
 
         when:
         def response = mockMvc.perform(
@@ -137,6 +152,11 @@ class RestErrorsSpec extends Specification {
         given:
         testDataLoader.withDelayedAndStatusResponse(stubUrl, 7, 200)
 
+        mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String, _ as Boolean) >> {
+            Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent ->
+                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId, accountHolderConsent))
+        }
+
         when:
         def response = mockMvc.perform(
             get(apiUrl)
@@ -157,42 +177,7 @@ class RestErrorsSpec extends Specification {
     }
 
 
-    class TestBankService implements BankService{
 
-        def bankUrl = ""
-        ObjectMapper objectMapper
-        HttpUtils httpUtils
-
-        TestBankService(ObjectMapper objectMapper, HttpUtils httpUtils, String serviceName){
-            bankUrl = "$serviceName/financialstatus/v1"
-            this.objectMapper = objectMapper
-            this.httpUtils = httpUtils
-        }
-
-        @Override
-        String bankName() {
-            return null
-        }
-
-        @Override
-        String bankUrl() {
-            return null
-        }
-
-        @Override
-        ObjectMapper objectMapper() {
-            return null
-        }
-
-        @Override
-        AccountDailyBalances fetchAccountDailyBalances(Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent) {
-            def url = buildUrl(account, fromDate, toDate, dob, userId, accountHolderConsent)
-            def httpResponse = httpUtils.performRequest(url)
-        }
-
-        @Override
-        String buildUrl(Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent) {
-            return "$bankUrl/${account.sortCode}/${account.accountNumber}/balances?fromDate=$fromDate&toDate=$toDate&dob=$dob&userId=$userId&accountHolderConsent=$accountHolderConsent"
-        }
-    }
 }
+
+
