@@ -49,7 +49,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0004                                           |
-            | Status message | Parameter error: Invalid accommodationFeesPaid |
+            | Status message | Parameter conversion error: Invalid courseStartDate |
 
     Scenario: The API is provided with incorrect  Accommodation fees already paid - not numbers 1-2
         Given A Service is consuming the FSPS Calculator API

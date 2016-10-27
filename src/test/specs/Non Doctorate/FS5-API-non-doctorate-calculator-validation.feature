@@ -55,7 +55,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                              |
             | Status code    | 0004                                                             |
-            | Status message | Parameter error: Invalid courseStartDate |
+            | Status message | Parameter conversion error: Invalid courseStartDate |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-9
         Given A Service is consuming the FSPS Calculator API

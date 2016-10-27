@@ -37,7 +37,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                                                  |
             | Status code    | 0004                                                                                 |
-            | Status message | Parameter conversion error: Invalid courseStartDate|
+            | Status message | Parameter error: Course start date must be before course end date|
 
     Scenario: The API is provided with incorrect Course start date - not a date
         Given A Service is consuming the FSPS Calculator API
@@ -72,7 +72,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                                                             |
             | Status code    | 0004                                                                                            |
-            | Status message | Continuation end date must be after course end date |
+            | Status message | Parameter error: Continuation end date must be after course end date |
 
     Scenario: The API is provided with incorrect Course end date - not a date
         Given A Service is consuming the FSPS Calculator API
@@ -83,7 +83,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                                 |
             | Status code    | 0002                                                                |
-            | Status message | Parameter conversion error: Invalid course End date, must be a date |
+            | Status message | Parameter conversion error: Invalid courseEndDate |
 
  ######################### Validation on the Continuation course end date field #########################
 
@@ -96,7 +96,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                                                             |
             | Status code    | 0004                                                                                            |
-            | Status message | Parameter error: Invalid course Continuation course end date, must be after the Course end date |
+            | Status message | Parameter error: Continuation end date must be after course end date |
 
     Scenario: The API is provided with incorrect Continuation course start date - not a date
         Given A Service is consuming the FSPS Calculator API
@@ -107,7 +107,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                                                 |
             | Status code    | 0002                                                                                |
-            | Status message | Parameter conversion error: Invalid Continuation course start date, must be a date |
+            | Status message | Parameter conversion error: Invalid continuationEndDate |
 
 
 

@@ -29,7 +29,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
             | Accommodation fees already paid | 0        |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
-            | Threshold   | 1015.00 |
+            | Threshold   | 2030.00 |
 
 
     Scenario: Ann's Threshold calculated

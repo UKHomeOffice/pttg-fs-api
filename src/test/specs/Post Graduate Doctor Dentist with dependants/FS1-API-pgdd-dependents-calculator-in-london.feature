@@ -23,15 +23,15 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student type                    | pgdd     |
-            | In London                       | Yes      |
-            | Course start date               | 2016-01-03|
-            | Course end date                 | 2016-02-03|
-            | Accommodation fees already paid | 0        |
-            | dependants                      | 1        |
+            | Student type                    | pgdd       |
+            | In London                       | Yes        |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-02-03 |
+            | Accommodation fees already paid | 0          |
+            | dependants                      | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
-            | Threshold   | 2110.00 |
+            | Threshold   | 4220.00 |
 
     Scenario: Shelly's Threshold calculated
     He is on a 2 month course
@@ -41,12 +41,12 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student type                    | pgdd     |
-            | In London                       | Yes      |
-            | Course start date               | 2016-01-03|
-            | Course end date                 | 2016-03-03|
-            | Accommodation fees already paid | 250.50   |
-            | dependants                      | 3        |
+            | Student type                    | pgdd       |
+            | In London                       | Yes        |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-03-03 |
+            | Accommodation fees already paid | 250.50     |
+            | dependants                      | 3          |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
             | Threshold   | 7349.50 |

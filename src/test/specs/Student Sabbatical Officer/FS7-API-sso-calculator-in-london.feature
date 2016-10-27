@@ -28,7 +28,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student 
             | Accommodation fees already paid | 0        |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
-            | Threshold   | 1265.00 |
+            | Threshold   | 2530.00 |
 
 
     Scenario: Shelly's Threshold calculated

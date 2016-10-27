@@ -31,7 +31,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
             | dependants            | 3        |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
-            | Threshold   | 3055.00 |
+            | Threshold   | 6110.00 |
 
     Scenario: Adam's Threshold calculated
     He is on a 1 month course
@@ -49,6 +49,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
             | dependants            | 1        |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
-            | Threshold   | 1595.00 |
+            | Threshold   | 3290.00 |
 
 
