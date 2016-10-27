@@ -87,7 +87,9 @@ public class FinancialStatus {
         fieldWithPath("fromDate").description("Start date for the financial check"),
         fieldWithPath("toDate").description("End date of the financial check"),
         fieldWithPath("minimum").description("Minimum allowed daily balance"),
-        fieldWithPath("pass").description("Status of minimum balance check")
+        fieldWithPath("pass").description("Status of minimum balance check"),
+        fieldWithPath("accountHolderName").description("The name associated with the account")
+
     };
 
     @Before
