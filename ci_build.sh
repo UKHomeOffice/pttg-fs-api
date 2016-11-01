@@ -19,7 +19,7 @@ build() {
   # Mount in local gradle user directory
   #[ -d "${HOME}/.gradle" ] && MOUNT="${MOUNT} -v ${HOME}/.gradle:/root/.gradle"
 
-  ENV_OPTS="GIT_COMMIT=${GIT_COMMIT} -e VERSION=${VERSION}"
+  ENV_OPTS="GIT_COMMIT=${GIT_COMMIT} -e VERSION=${VERSION} -e ARTIFACTORY_USER=${ARTIFACTORY_USER} -e ARTIFACTORY_PASS=${ARTIFACTORY_PASS}"
   [ -n "${BUILD_NUMBER}" ] && ENV_OPTS="BUILD_NUMBER=${BUILD_NUMBER} -e ${ENV_OPTS}"
 
   docker run -e ${ENV_OPTS} -v ${MOUNT} "${GRADLE_IMAGE}" "${@}"
