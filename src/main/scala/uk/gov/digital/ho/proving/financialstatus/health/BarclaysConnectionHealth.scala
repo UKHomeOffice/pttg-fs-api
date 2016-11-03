@@ -8,6 +8,9 @@ import org.springframework.web.client.RestTemplate
 
 import scala.util.{Failure, Success, Try}
 
+/**
+  * HealthIndicator contributing to the endpoint used for readiness checks.
+  */
 @Component
 class BarclaysConnectionHealth @Autowired()(rest: RestTemplate, @Value("${barclays.stub.service}") val bankService: String) extends HealthIndicator {
 
