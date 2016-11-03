@@ -59,19 +59,20 @@ object DataUtils {
     AccountDailyBalances("Fred Flintstone", dailyBalances)
   }
 
+  def generateDate(startDate: LocalDate, years: Int = 0, months: Int = 1, days: Int = 0): LocalDate = startDate.plusYears(years).plusMonths(months).plusDays(days)
 
   // Groovy has issues comparing Scala's Option class
   // so these are just a helper methods
 
   def compareAccommodationFees(first: BigDecimal, second: Option[BigDecimal]): Boolean = {
-      first.setScale(2, BigDecimal.RoundingMode.HALF_UP) == second.getOrElse(new BigDecimal(JBigDecimal.ZERO)).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+    first.setScale(2, BigDecimal.RoundingMode.HALF_UP) == second.getOrElse(new BigDecimal(JBigDecimal.ZERO)).setScale(2, BigDecimal.RoundingMode.HALF_UP)
   }
 
   def compareCourseLength(first: Int, second: Option[Int]): Boolean = {
     first == second.getOrElse(0)
   }
 
-  def getCappedValues(cappedValues: Option[CappedValues]): CappedValues  = cappedValues.getOrElse(CappedValues(Some(new BigDecimal(JBigDecimal.ZERO)),Some(0)))
+  def getCappedValues(cappedValues: Option[CappedValues]): CappedValues = cappedValues.getOrElse(CappedValues(Some(new BigDecimal(JBigDecimal.ZERO)), Some(0)))
 
-
+  def buildScalaOption[T](value: T): Option[T] = Option(value)
 }

@@ -25,12 +25,13 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student 
         When the FSPS Calculator API is invoked with the following
             | Student type                    | sso |
             | In London                       | No   |
-            | Course length                   | 1    |
+            | Course start date               | 2016-01-03    |
+            | Course end date                 | 2016-02-03    |
             | Accommodation fees already paid | 0    |
-            | Number of dependants            | 3    |
+            | dependants            | 3    |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Threshold | 3055.00 |
+            | Threshold | 6110.00 |
 
     Scenario: Adam's maintenance threshold amount calculated
     He is on a 1 month course
@@ -42,11 +43,12 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student 
         When the FSPS Calculator API is invoked with the following
             | Student type                    | sso   |
             | In London                       | No     |
-            | Course length                   | 1      |
+            | Course start date               | 2016-01-03    |
+            | Course end date                 | 2016-02-03    |
             | Accommodation fees already paid | 100.00 |
-            | Number of dependants            | 1      |
+            | dependants            | 1      |
         Then The Financial Status API provides the following results:
             | HTTP Status                  | 200     |
-            | Threshold | 1595.00 |
+            | Threshold | 3290.00|
 
 

@@ -22,13 +22,14 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student 
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso |
-            | In London                       | No  |
-            | Remaining course length         | 1   |
-            | Accommodation fees already paid | 0   |
+            | Student Type                    | sso      |
+            | In London                       | No       |
+            | Course start date               | 2016-01-03|
+            | Course end date                 | 2016-02-03|
+            | Accommodation fees already paid | 0        |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
-            | Threshold | 1015.00 |
+            | HTTP Status | 200     |
+            | Threshold   | 2030.00 |
 
 
     Scenario: Ann's Threshold calculated
@@ -38,10 +39,11 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Sabbatical Student 
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | sso |
-            | In London                       | No  |
-            | Remaining course length         | 2   |
-            | Accommodation fees already paid | 250 |
+            | Student Type                    | sso      |
+            | In London                       | No       |
+            | Course start date               | 2016-01-03|
+            | Course end date                 | 2016-03-03|
+            | Accommodation fees already paid | 250      |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
-            | Threshold | 1780.00 |
+            | HTTP Status | 200     |
+            | Threshold   | 1780.00 |

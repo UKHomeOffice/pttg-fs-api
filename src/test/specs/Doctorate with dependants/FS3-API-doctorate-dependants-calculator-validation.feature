@@ -13,10 +13,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |            |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                                                    |
             | Status code    | 0004                                                                                   |
@@ -28,10 +28,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       |            |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                      |
             | Status code    | 0004                                                     |
@@ -43,10 +43,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Accommodation fees already paid |            |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0004                                           |
@@ -56,10 +56,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Accommodation fees already paid | %%         |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                       |
             | Status code    | 0002                                                      |
@@ -69,10 +69,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Accommodation fees already paid | -100       |
-            | Number of dependants            | 1          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0004                                           |
@@ -85,10 +85,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | -7         |
+            | dependants                      | -7         |
         Then the service displays the following result
             | HTTP Status    | 400                                                          |
             | Status code    | 0004                                                         |
@@ -98,10 +98,10 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 20/06/2016 |
+            | The end of 28-day period        | 2016-06-01|
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
-            | Number of dependants            | @          |
+            | dependants                      | @          |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |

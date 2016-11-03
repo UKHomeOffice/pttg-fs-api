@@ -101,7 +101,9 @@ public class ThresholdCalculator {
         given(documentationSpec)
             .spec(requestSpec)
             .param("inLondon", "true")
-            .param("courseLength", "4")
+            .param("courseStartDate","2000-01-01")
+            .param("courseEndDate","2000-05-31")
+            .param("continuationEndDate","2000-07-30")
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
@@ -126,7 +128,9 @@ public class ThresholdCalculator {
         given(documentationSpec)
             .spec(requestSpec)
             .param("inLondon", "true")
-            .param("courseLength", "4")
+            .param("courseStartDate","2000-01-01")
+            .param("courseEndDate","2000-05-31")
+            .param("continuationEndDate","2000-07-30")
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
@@ -139,8 +143,14 @@ public class ThresholdCalculator {
                     parameterWithName("inLondon")
                         .description("Whether the location is in London - true or false")
                         .attributes(key("optional").value(false)),
-                    parameterWithName("courseLength")
-                        .description("The length of the course in months (not required for 'doctorate' student type)")
+                    parameterWithName("courseStartDate")
+                        .description("The start date of the course (not required for 'doctorate' student type)")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("courseEndDate")
+                        .description("The end date of the course (not required for 'doctorate' student type)")
+                        .attributes(key("optional").value(false)),
+                    parameterWithName("continuationEndDate")
+                        .description("The end date of the course continuation (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(true)),
                     parameterWithName("tuitionFees")
                         .description("Total tuition fees (not required for 'doctorate' student type)")

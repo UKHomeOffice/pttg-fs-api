@@ -18,7 +18,7 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Non Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants, courseLengthInMonths + 2, false)._1 == bd(threshold)
 
         where:
         inLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
@@ -31,7 +31,7 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Non Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants, courseLengthInMonths + 2, false)._1 == bd(threshold)
 
         where:
         inLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
@@ -44,7 +44,7 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Non Doctorate - Check 'Tuition Fees paid'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants, courseLengthInMonths >= 12 ? courseLengthInMonths + 4 : courseLengthInMonths + 2, false)._1 == bd(threshold)
 
         where:
         inLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
@@ -70,7 +70,8 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Non Doctorate - Check 'Accommodation Fees paid'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid),
+            dependants, courseLengthInMonths >= 12 ? courseLengthInMonths + 4 : courseLengthInMonths + 2, false)._1 == bd(threshold)
 
         where:
         inLondon | courseLengthInMonths | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
@@ -95,7 +96,8 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
     def "Tier 4 Non Doctorate - Check 'All variants'"() {
 
-        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants)
+        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees), bd(tuitionFeesPaid), bd(accommodationFeesPaid),
+            dependants, courseLengthInMonths >= 12 ? courseLengthInMonths + 4 : courseLengthInMonths + 2, false)
         def thresholdValue = response._1
         def cappedValues = DataUtils.getCappedValues(response._2)
         def cappedAccommodation = cappedValues.accommodationFeesPaid()
@@ -126,5 +128,29 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
         true     | 2                    | 1207        | 1404            | 610                   | 0          || 1920.00   || 0          || 0
 
     }
+
+    def "Tier 4 Non Doctorate - Check 'extensions'"() {
+
+        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, courseLengthInMonths, bd(tuitionFees),
+            bd(tuitionFeesPaid), bd(accommodationFeesPaid), dependants, leaveToRemain, false)
+        def thresholdValue = response._1
+        def cappedValues = DataUtils.getCappedValues(response._2)
+        def cappedAccommodation = cappedValues.accommodationFeesPaid()
+        def cappedCourseLength = cappedValues.courseLength()
+
+        assert thresholdValue == bd(threshold)
+        assert DataUtils.compareAccommodationFees(bd(feesCapped), cappedAccommodation) == true
+        assert DataUtils.compareCourseLength(courseLengthCapped, cappedCourseLength) == true
+
+        where:
+        // Due to groovy not liking Scala's 'None' object we represent this as the value zero
+        inLondon | courseLengthInMonths | leaveToRemain | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
+
+        false    | 3                    | 7             | 71          | 213             | 229                   | 2          || 12336.00  || 0          || 0
+        true     | 2                    | 4             | 781         | 418             | 70                    | 1          || 6203.00   || 0          || 0
+        true     | 2                    | 6             | 1207        | 1404            | 610                   | 4          || 22200.00  || 0          || 0
+
+    }
+
 
 }

@@ -21,13 +21,14 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd |
-            | In London                       | Yes  |
-            | Remaining course length         | 1    |
-            | Accommodation fees already paid | 0    |
+            | Student Type                    | pgdd     |
+            | In London                       | Yes      |
+            | Course start date               | 2016-01-03|
+            | Course end date                 | 2016-02-03|
+            | Accommodation fees already paid | 0        |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
-            | Threshold | 1265.00 |
+            | HTTP Status | 200     |
+            | Threshold   | 2530.00 |
 
 
     Scenario: Shelly's maintenance threshold amount calculated
@@ -37,10 +38,11 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad D
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd |
-            | In London                       | Yes  |
-            | Remaining course length         | 2    |
-            | Accommodation fees already paid | 0    |
+            | Student Type                    | pgdd     |
+            | In London                       | Yes      |
+            | Course start date               | 2016-01-03|
+            | Course end date                 | 2016-03-03|
+            | Accommodation fees already paid | 0        |
         Then The Financial Status API provides the following results:
-            | HTTP Status                  | 200     |
-            | Threshold | 2530.00 |
+            | HTTP Status | 200     |
+            | Threshold   | 2530.00 |
