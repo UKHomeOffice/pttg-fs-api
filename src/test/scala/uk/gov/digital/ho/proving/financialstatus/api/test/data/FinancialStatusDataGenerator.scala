@@ -29,7 +29,7 @@ object FinancialStatusDataGenerator {
     val courseStartDate = RandomTestData.date
     val courseEndDate = RandomTestData.dateAfter(courseStartDate)
     val (continuationEndDate, dependants) = if (Random.nextBoolean) (Some(RandomTestData.dateAfter(courseEndDate)), Random.nextInt(15))
-                                            else (None, if (differenceInMonths(courseStartDate, courseEndDate) > 6) Random.nextInt(15) else 0)
+    else (None, if (differenceInMonths(courseStartDate, courseEndDate) > 6) Random.nextInt(15) else 0)
 
     val accommodationFeesPaid = bigDecimal(Random.nextFloat * 2000)
     val tuitionFees = bigDecimal(Random.nextFloat * 10000)
@@ -49,17 +49,28 @@ object FinancialStatusDataGenerator {
     s"""LocalDate.of(${date.getYear},${date.getMonthValue},${date.getDayOfMonth})"""
   }
 
-  private def generateNonDoctorateData(count: Int, inputs: Stream[Input]) = {
+  private def generateNonDoctorateData(count: Int, inputs: Stream[Input], header: String, lineProcessor: (Input, BigDecimal, BigDecimal, Int, Int) => String) = {
 
     val output =
-      s"""inLondon | courseStartDate          | courseEndDate            | continuationEndDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid\n""" +
-        inputs.take(count).map { input =>
+      header + inputs.take(count).map { input =>
+        val (threshold, feesCapped, courseCapped, continuationCapped) = calculateNonDoctorate(input)
+        //          val spockLine = s"""${formatLocalDate(input.courseStartDate)}| ${formatLocalDate(input.courseEndDate)}| ${formatLocalDate(input.continuationEndDate)}| ${input.inLondon}| ${input.tuitionFees}| ${input.tuitionFeesPaid}|  ${input.accommodationFeesPaid}|${input.dependants}|| $threshold|| $feesCapped|| $courseCapped|| $continuationCapped"""
+        //          spockLine
 
-          val (threshold, feesCapped, courseCapped, continuationCapped) = calculateNonDoctorate(input)
-          val line = s"""${formatLocalDate(input.courseStartDate)}| ${formatLocalDate(input.courseEndDate)}| ${formatLocalDate(input.continuationEndDate)}| ${input.inLondon}| ${input.tuitionFees}| ${input.tuitionFeesPaid}|  ${input.accommodationFeesPaid}|${input.dependants}|| $threshold|| $feesCapped|| $courseCapped|| $continuationCapped"""
-          line
-        }.mkString("\n")
+        //          val csvLine =s"""${input.courseStartDate}, ${input.courseEndDate}, ${if (input.continuationEndDate.isDefined) input.continuationEndDate.get.toString else "" }, ${input.inLondon}, ${input.tuitionFees}, ${input.tuitionFeesPaid},  ${input.accommodationFeesPaid},${input.dependants},$threshold, $feesCapped, $courseCapped, $continuationCapped"""
+        //          csvLine
+
+        val line = lineProcessor(input, threshold, feesCapped, courseCapped, continuationCapped)
+        line
+
+      }.mkString("\n")
     output
+  }
+
+  val gatlingHeader = s"""courseStartDate,courseEndDate,continuationEndDate,inLondon,tuitionFees,tuitionFeesPaid,accommodationFeesPaid,dependants,threshold,feesCapped,courseCapped,continuationCapped\n"""
+  val gatlingLineProcessor: (Input, BigDecimal, BigDecimal, Int, Int) => String = {
+    case (input, threshold, feesCapped, courseCapped, continuationCapped) =>
+      s"""${input.courseStartDate},${input.courseEndDate},${if (input.continuationEndDate.isDefined) input.continuationEndDate.get.toString else ""},${input.inLondon},${input.tuitionFees},${input.tuitionFeesPaid},${input.accommodationFeesPaid},${input.dependants},$threshold,$feesCapped,$courseCapped,$continuationCapped"""
   }
 
   private def differenceInMonths(start: LocalDate, end: LocalDate) = {
@@ -109,7 +120,7 @@ object FinancialStatusDataGenerator {
 
   def main(args: Array[String]) {
 
-    println(generateNonDoctorateData(50, randomInputs))
+    println(generateNonDoctorateData(50, randomInputs, gatlingHeader, gatlingLineProcessor))
 
   }
 }
