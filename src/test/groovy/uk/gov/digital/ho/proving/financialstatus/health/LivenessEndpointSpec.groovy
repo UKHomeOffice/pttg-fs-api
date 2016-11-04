@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.financial.health
+package uk.gov.digital.ho.proving.financialstatus.health
 
 import spock.lang.Specification
 
