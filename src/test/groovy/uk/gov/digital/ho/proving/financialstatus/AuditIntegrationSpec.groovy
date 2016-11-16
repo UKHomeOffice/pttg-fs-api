@@ -7,13 +7,10 @@ import ch.qos.logback.core.Appender
 import groovy.json.JsonSlurper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.audit.AuditEventRepository
-import org.springframework.boot.test.IntegrationTest
-import org.springframework.boot.test.SpringApplicationConfiguration
-import org.springframework.boot.test.TestRestTemplate
-import org.springframework.test.context.web.WebAppConfiguration
-import org.springframework.web.client.RestTemplate
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
@@ -21,20 +18,20 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfig
 import static java.time.LocalDateTime.now
 import static java.time.LocalDateTime.parse
 import static java.time.temporal.ChronoUnit.MINUTES
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 
-@SpringApplicationConfiguration(classes = [ServiceRunner.class, ServiceConfiguration.class])
-@WebAppConfiguration
-@IntegrationTest("server.port:0")
+@SpringBootTest(
+    webEnvironment = RANDOM_PORT,
+    classes = [ServiceRunner.class, ServiceConfiguration.class]
+)
 class AuditIntegrationSpec extends Specification {
-
-    @Value('${local.server.port}')
-    def port
 
     def path = "/pttg/financialstatusservice/v1/maintenance/threshold?"
     def params = "inLondon=true&studentType=doctorate&accommodationFeesPaid=123.45"
     def url
 
-    RestTemplate restTemplate
+    @Autowired
+    TestRestTemplate restTemplate
 
     @Autowired
     AuditEventRepository auditEventRepository
@@ -42,8 +39,7 @@ class AuditIntegrationSpec extends Specification {
     Appender logAppender = Mock()
 
     def setup() {
-        restTemplate = new TestRestTemplate()
-        url = "http://localhost:" + port + path + params
+        url = path + params
 
         withMockLogAppender()
     }
