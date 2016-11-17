@@ -28,8 +28,6 @@ class JsonLoggingNonPersistentAuditEventRepository extends AuditEventRepository 
   mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
   mapper.enable(SerializationFeature.INDENT_OUTPUT)
 
-  override def find(principal: String, after: Date): util.List[AuditEvent] = List.empty.asJava
-
   override def add(event: AuditEvent): Unit = {
     val json = jsonOf(event)
     LOGGER.info(s"$AUDIT_EVENT_LOG_MARKER: $json")
@@ -38,4 +36,10 @@ class JsonLoggingNonPersistentAuditEventRepository extends AuditEventRepository 
   def jsonOf(event: AuditEvent): String = {
     mapper.writeValueAsString(event)
   }
+
+  override def find(after: Date): util.List[AuditEvent] = List.empty.asJava
+
+  override def find(principal: String, after: Date): util.List[AuditEvent] = List.empty.asJava
+
+  override def find(principal: String, after: Date, `type`: String): util.List[AuditEvent] = List.empty.asJava
 }
