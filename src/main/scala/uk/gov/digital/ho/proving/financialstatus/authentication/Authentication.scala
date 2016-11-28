@@ -15,13 +15,10 @@ class Authentication @Autowired()(val objectMapper: ObjectMapper,
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[Authentication])
 
-
   def getUserProfileFromToken(accessToken: String): Option[UserProfile] = {
 
     val headers = new HttpHeaders()
     val emptyBody = ""
-
-    LOGGER.debug(s"Bearer $accessToken")
 
     headers.add("Accept", "application/json")
     headers.add("Authorization", s"Bearer $accessToken")
@@ -31,7 +28,9 @@ class Authentication @Autowired()(val objectMapper: ObjectMapper,
       val response = rest.exchange(this.keycloakAccountUrl, HttpMethod.GET, requestEntity, classOf[String])
       Some(objectMapper.readValue(response.getBody, classOf[UserProfile]))
     } catch {
-      case e: Exception => None
+      case e: Exception =>
+        LOGGER.info(s"Failed to retrieve user details (${e.getMessage}) for token: $accessToken ")
+        None
     }
     response
   }
