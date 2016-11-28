@@ -16,7 +16,7 @@ class AuditActionsSpec extends Specification {
 
         when:
         def eventId = AuditActions.nextId()
-        AuditApplicationEvent e = auditEvent(AuditEventType.SEARCH(), eventId, data)
+        AuditApplicationEvent e = auditEvent("anonymous", AuditEventType.SEARCH(), eventId, data)
 
         then:
         e.auditEvent.data.get("eventId") == eventId
@@ -26,7 +26,7 @@ class AuditActionsSpec extends Specification {
 
         when:
         def eventId = AuditActions.nextId();
-        AuditApplicationEvent e = auditEvent(AuditEventType.SEARCH(), eventId, null)
+        AuditApplicationEvent e = auditEvent("anonymous", AuditEventType.SEARCH(), eventId, null)
 
         then:
         e.auditEvent.data != null

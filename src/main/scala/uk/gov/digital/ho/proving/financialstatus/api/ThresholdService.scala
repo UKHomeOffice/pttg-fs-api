@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation._
 import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages, ThresholdParameterValidator}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
+import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
 
@@ -26,6 +27,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                                     val studentTypeChecker: StudentTypeChecker,
                                     val serviceMessages: ServiceMessages,
                                     val auditor: ApplicationEventPublisher,
+                                    val authenticator: Authentication,
                                     @Value("${non.doctorate.continuation.boundary}") val nonDoctorateContinuationBoundary: Int,
                                     @Value("${non.doctorate.short.continuation}") val nonDoctorateShortContinuation: Int,
                                     @Value("${non.doctorate.long.continuation}") val nonDoctorateLongContinuation: Int
@@ -46,18 +48,27 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                          @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: Optional[JBigDecimal],
                          @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: Optional[JBigDecimal],
                          @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer],
-                         @CookieValue(value = "kc-access", defaultValue = "") accessToken: String
+                         @CookieValue(value = "kc-access") kcToken: Optional[String]
                         ): ResponseEntity[ThresholdResponse] = {
+
+    val accessToken: Option[String] = kcToken
+
+    // Get the user's profile
+    val userProfile = accessToken match {
+      case Some(token) => authenticator.getUserProfileFromToken(token)
+      case None => None
+    }
 
     val auditEventId = nextId
     auditSearchParams(auditEventId, studentType, inLondon, courseStartDate, courseEndDate, courseExtentionEndDate,
-      tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+      tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, userProfile)
 
     val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
+
     def threshold = calculateThresholdForStudentType(validatedStudentType, inLondon, courseStartDate, courseEndDate, courseExtentionEndDate,
       tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
 
-    auditSearchResult(auditEventId, threshold.getBody)
+    auditSearchResult(auditEventId, threshold.getBody, userProfile)
 
     threshold
   }
@@ -65,7 +76,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   def auditSearchParams(auditEventId: UUID, studentType: Option[String], inLondon: Option[Boolean],
                         courseStartDate: Optional[LocalDate], courseEndDate: Optional[LocalDate], courseExtentionEndDate: Optional[LocalDate],
                         tuitionFees: Option[BigDecimal], tuitionFeesPaid: Option[BigDecimal],
-                        accommodationFeesPaid: Option[BigDecimal], dependants: Option[Int]): Unit = {
+                        accommodationFeesPaid: Option[BigDecimal], dependants: Option[Int], userProfile: Option[UserProfile]): Unit = {
 
     val params = Map(
       "studentType" -> studentType,
@@ -83,11 +94,18 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
     val auditData = Map("method" -> "calculate-threshold") ++ suppliedParams
 
-    auditor.publishEvent(auditEvent(SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
+    val principal = userProfile match {
+      case Some(user) => user.id
+      case None => "anonymous"
+    }
+    auditor.publishEvent(auditEvent(principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
-  def auditSearchResult(auditEventId: UUID, thresholdResponse: ThresholdResponse): Unit = {
-    auditor.publishEvent(auditEvent(SEARCH_RESULT, auditEventId,
+  def auditSearchResult(auditEventId: UUID, thresholdResponse: ThresholdResponse, userProfile: Option[UserProfile]): Unit = {
+    auditor.publishEvent(auditEvent(userProfile match {
+      case Some(user) => user.id
+      case None => "anonymous"
+    }, SEARCH_RESULT, auditEventId,
       Map(
         "method" -> "calculate-threshold",
         "result" -> thresholdResponse

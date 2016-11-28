@@ -4,21 +4,31 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.spi.LoggingEvent
 import ch.qos.logback.core.Appender
+import com.google.common.collect.ImmutableMultimap
 import groovy.json.JsonSlurper
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.actuate.audit.AuditEventRepository
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.RequestEntity
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.util.MultiValueMap
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils
+import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 
 import static java.time.LocalDateTime.now
 import static java.time.LocalDateTime.parse
 import static java.time.temporal.ChronoUnit.MINUTES
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
+import static uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils.buildScalaOption
+import static uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils.buildUserProfile
 
 @SpringBootTest(
     webEnvironment = RANDOM_PORT,
@@ -37,6 +47,8 @@ class AuditIntegrationSpec extends Specification {
     AuditEventRepository auditEventRepository
 
     Appender logAppender = Mock()
+
+    def authenticator = Mock(Authentication )
 
     def setup() {
         url = path + params
@@ -78,5 +90,7 @@ class AuditIntegrationSpec extends Specification {
 
         MINUTES.between(parse(logEntryJson.timestamp), now()) < 1;
     }
+
+
 
 }
