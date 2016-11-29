@@ -1,4 +1,4 @@
-FROM quay.io/ukhomeofficedigital/openjdk8:v1.0.0
+FROM quay.io/ukhomeofficedigital/openjdk8:v1.1.0
 
 
 ENV USER pttg
