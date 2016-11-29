@@ -15,7 +15,7 @@ RUN groupadd -r ${GROUP} && \
     mkdir -p /app && \
     chown -R ${USER}:${GROUP} /app
 
-COPY ${JAR_PATH}/${NAME}*.jar /app
+COPY ${JAR_PATH}/${NAME}-${VERSION}.jar /app
 COPY run.sh /app
 
 RUN chmod a+x /app/run.sh
