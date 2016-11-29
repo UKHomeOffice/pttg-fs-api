@@ -11,6 +11,7 @@ import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
+import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
 import java.time.LocalDate
@@ -32,13 +33,13 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
     ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
 
     ApplicationEventPublisher auditor = Mock()
-
+    Authentication authenticator = Mock()
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
             nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
             pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor, 12, 2, 4
+        ), getStudentTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -72,8 +73,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || accommodationFeesPaid | dependants || threshold
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0.00 | 5                           || 4415.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0.00 | 7                           || 11550.00
+        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0.00                  | 5          || 4415.00
+        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0.00                  | 7          || 11550.00
 
     }
 
@@ -87,8 +88,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || accommodationFeesPaid | dependants || threshold
-        true     | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0.00 | 4                           || 4645.00
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0.00 | 15                          || 27880.00
+        true     | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0.00                  | 4          || 4645.00
+        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0.00                  | 15         || 27880.00
 
     }
 
@@ -171,8 +172,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 14 | -1
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 11 | -7
+        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 14         | -1
+        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 11         | -7
     }
 
     def "Tier 4 Student Sabbatical Office - Check invalid characters accommodation fees parameters"() {
@@ -184,8 +185,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 14 | "(&"
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 11 | "ddd"
+        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 14         | "(&"
+        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 11         | "ddd"
     }
 
     def "Tier 4 Student Sabbatical Office - Check rounding accommodation fees parameters"() {
@@ -198,12 +199,12 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid || threshold
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0 | 0.0000                         || 1015.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0 | 0.010                          || 2029.99
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0 | 0.0010                         || 2030.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0 | 0.005                          || 2029.99
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0 | 0.004                          || 2030.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0 | -0.004                         || 2030.00
+        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0          | 0.0000                || 1015.00
+        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.010                 || 2029.99
+        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.0010                || 2030.00
+        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.005                 || 2029.99
+        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.004                 || 2030.00
+        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | -0.004                || 2030.00
     }
 
     def "Tier 4 Student Sabbatical Office - Check invalid dependants parameters"() {
@@ -215,8 +216,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || -5 | 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || -986 | 0
+        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || -5         | 0
+        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || -986       | 0
     }
 
     def "Tier 4 Student Sabbatical Office - Check invalid characters dependants parameters"() {
@@ -228,8 +229,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || "(*&66" | 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || "h" | 0
+        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || "(*&66"    | 0
+        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || "h"        | 0
     }
 
 }

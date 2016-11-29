@@ -11,6 +11,7 @@ import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
+import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
 import static org.hamcrest.core.StringContains.containsString
@@ -30,13 +31,13 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
     ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
 
     ApplicationEventPublisher auditor = Mock()
-
+    Authentication authenticator = Mock()
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
             nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
             pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor, 12, 2, 4
+        ), getStudentTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)

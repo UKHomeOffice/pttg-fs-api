@@ -3,7 +3,7 @@ package uk.gov.digital.ho.proving.financialstatus.api.test
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit.DAYS
 
-import uk.gov.digital.ho.proving.financialstatus.domain.{AccountDailyBalance, AccountDailyBalances}
+import uk.gov.digital.ho.proving.financialstatus.domain.{AccountDailyBalance, AccountDailyBalances, UserProfile}
 
 import scala.util.Random.{nextBoolean, nextFloat, nextInt}
 import java.math.{BigDecimal => JBigDecimal}
@@ -75,4 +75,6 @@ object DataUtils {
   def getCappedValues(cappedValues: Option[CappedValues]): CappedValues = cappedValues.getOrElse(CappedValues(Some(new BigDecimal(JBigDecimal.ZERO)), Some(0)))
 
   def buildScalaOption[T](value: T): Option[T] = Option(value)
+
+  def buildUserProfile(id: String) = UserProfile(id, "Fred", "Flintstone", "fred@bedrock.com")
 }

@@ -19,7 +19,6 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
   val INVALID_TO_DATE = getMessage("invalid.to.date")
   val INVALID_DOB_DATE = getMessage("invalid.dob.date")
   val INVALID_USER_ID = getMessage("invalid.user.id")
-  val INVALID_ACCOUNT_HOLDER_CONSENT = getMessage("invalid.account.holder.consent")
 
   val INVALID_TUITION_FEES = getMessage("invalid.tuition.fees")
   val INVALID_TUITION_FEES_PAID = getMessage("invalid.tuition.fees.paid")
@@ -42,6 +41,8 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
   val INVALID_COURSE_START_DATE_VALUE = getMessage("invalid.course.start.date.value")
   val INVALID_COURSE_END_DATE_VALUE = getMessage("invalid.course.end.date.value")
   val INVALID_CONTINUATION_END_DATE_VALUE = getMessage("invalid.continuation.end.date.value")
+
+  val INVALID_USER_PROFILE = getMessage("unable.to.retrieve.user.profile")
 
   def INVALID_DATES(params: Int*) = getMessage("invalid.dates", params)
 

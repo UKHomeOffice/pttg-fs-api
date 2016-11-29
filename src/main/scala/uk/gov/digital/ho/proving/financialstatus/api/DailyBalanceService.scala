@@ -18,7 +18,8 @@ import org.springframework.web.client.{HttpClientErrorException, ResourceAccessE
 import uk.gov.digital.ho.proving.financialstatus.api.validation.{DailyBalanceParameterValidator, ServiceMessages}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions._
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
-import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker}
+import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
+import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker, UserProfile}
 
 import scala.util._
 
@@ -28,7 +29,8 @@ import scala.util._
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
                                        val serviceMessages: ServiceMessages,
-                                       val auditor: ApplicationEventPublisher
+                                       val auditor: ApplicationEventPublisher,
+                                       val authenticator: Authentication
                                       ) extends FinancialStatusBaseController with DailyBalanceParameterValidator {
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
@@ -44,22 +46,29 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                          @RequestParam(value = "toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) toDate: Optional[LocalDate],
                          @RequestParam(value = "fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) fromDate: Optional[LocalDate],
                          @RequestParam(value = "dob") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) dob: Optional[LocalDate],
-                         @RequestParam(value = "userId") userId: Optional[String],
-                         @RequestParam(value = "accountHolderConsent") accountHolderConsent: Optional[JBoolean]
+                         @CookieValue(value = "kc-access") kcToken: Optional[String]
                         ): ResponseEntity[AccountDailyBalanceStatusResponse] = {
 
+
+    val accessToken: Option[String] = kcToken
+
+    // Get the user's profile
+    val userProfile = accessToken match {
+      case Some(token) => authenticator.getUserProfileFromToken(token)
+      case None => None
+    }
     val auditEventId = nextId
-    auditSearchParams(auditEventId, sortCode, accountNumber, minimum, toDate, fromDate)
+    auditSearchParams(auditEventId, sortCode, accountNumber, minimum, toDate, fromDate, userProfile)
 
     val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
 
-    val validatedInputs = validateInputs(sortCode, accountNumber, minimum, fromDate, toDate,
-      accountStatusChecker.numberConsecutiveDays, dob, userId, accountHolderConsent)
+    val validatedInputs = validateInputs(cleanSortCode, accountNumber, minimum, fromDate, toDate,
+      accountStatusChecker.numberConsecutiveDays, dob, userProfile)
 
     validatedInputs match {
       case Right(inputs) =>
         val responseEntity: ResponseEntity[AccountDailyBalanceStatusResponse] = validateDailyBalanceStatus(inputs)
-        auditSearchResult(auditEventId, responseEntity.getBody)
+        auditSearchResult(auditEventId, responseEntity.getBody, userProfile)
         responseEntity
 
       case Left(errorList) =>
@@ -69,25 +78,34 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
   }
 
   def auditSearchParams(auditEventId: UUID, sortCode: Option[String], accountNumber: Option[String],
-                        minimum: Option[BigDecimal], toDate: Option[LocalDate], fromDate: Option[LocalDate]): Unit = {
+                        minimum: Option[BigDecimal], toDate: Option[LocalDate], fromDate: Option[LocalDate],
+                        userProfile: Option[UserProfile]): Unit = {
 
     val params = Map(
       "sortCode" -> sortCode,
       "accountNumber" -> accountNumber,
       "minimum" -> minimum,
       "toDate" -> toDate,
-      "fromDate" -> fromDate
+      "fromDate" -> fromDate,
+      "userProfile" -> userProfile
     )
 
     val suppliedParams = for ((k, Some(v)) <- params) yield k -> v
 
     val auditData = Map("method" -> "daily-balance-status") ++ suppliedParams
 
-    auditor.publishEvent(auditEvent(SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
+    val principal = userProfile match {
+      case Some(user) => user.id
+      case None => "anonymous"
+    }
+    auditor.publishEvent(auditEvent(principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
-  def auditSearchResult(auditEventId: UUID, response: AccountDailyBalanceStatusResponse): Unit = {
-    auditor.publishEvent(auditEvent(SEARCH_RESULT, auditEventId,
+  def auditSearchResult(auditEventId: UUID, response: AccountDailyBalanceStatusResponse, userProfile: Option[UserProfile]): Unit = {
+    auditor.publishEvent(auditEvent(userProfile match {
+      case Some(user) => user.id
+      case None => "anonymous"
+    }, SEARCH_RESULT, auditEventId,
       Map(
         "method" -> "daily-balance-status",
         "result" -> response
@@ -105,12 +123,11 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
       toDate <- inputs.toDate
       dob <- inputs.dob
       userId <- inputs.userId
-      accountHolderConsent <- inputs.accountHolderConsent
 
     } yield {
       val bankAccount = Account(sortCode, accountNumber)
 
-      val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
+      val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum, dob, userId, true) // Remove once Bank API finalised
 
       dailyAccountBalanceCheck match {
         case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck),
