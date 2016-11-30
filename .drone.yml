@@ -11,6 +11,7 @@ pipeline:
       - ./gradlew build
     when:
       event: push
+      branch: master
 
   my-docker-build:
     privileged: true
@@ -21,6 +22,7 @@ pipeline:
       - docker build -t quay.io/ukhomeofficedigital/pttg-fs-api:${DRONE_COMMIT_SHA} .
     when:
       event: push
+      branch: master
 
   image_to_quay:
     image: docker:1.11
@@ -31,6 +33,7 @@ pipeline:
       - docker push quay.io/ukhomeofficedigital/pttg-fs-api:${DRONE_COMMIT_SHA}
     when:
       event: push
+      branch: master
 
   predeploy:
     image: plugins/git
@@ -40,6 +43,7 @@ pipeline:
       - git clone https://github.com/UKHomeOffice/kube-pttg-fs-api.git
     when:
       event: [push, deployment]
+      branch: master
 
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd:v0.2.2
@@ -54,6 +58,7 @@ pipeline:
       - ./deploy.sh
     when:
       event: push
+      branch: master
 
   deploy_to_test:
     image: quay.io/ukhomeofficedigital/kd:v0.2.2
