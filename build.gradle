@@ -43,9 +43,6 @@ repositories{
         credentials { // Used by Jenkins, overridden by your settings.xml
             username = System.env.ARTIFACTORY_USER
             password = System.env.ARTIFACTORY_PASS
-
-            println "username: " + username
-            println "password: " + password
         }
     }
 }

@@ -5,7 +5,7 @@ ENV USER pttg
 ENV GROUP pttg
 ENV NAME pttg-fs-api
 
-ARG JAR_PATH
+ENV JAR_PATH build/libs
 ARG VERSION
 
 WORKDIR /app
@@ -15,7 +15,7 @@ RUN groupadd -r ${GROUP} && \
     mkdir -p /app && \
     chown -R ${USER}:${GROUP} /app
 
-COPY ${JAR_PATH}/${NAME}-${VERSION}.jar /app
+COPY ${JAR_PATH}/${NAME}*.jar /app
 COPY run.sh /app
 
 RUN chmod a+x /app/run.sh
