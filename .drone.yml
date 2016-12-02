@@ -4,6 +4,7 @@ pipeline:
     privileged: true
     image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
     environment:
+      - ARTIFACTORY_USER="regt-build-bot"
       - ARTIFACTORY_PASS=${DOCKER_ARTIFACTORY_PASSWORD}
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - PTTG_GH_TOKEN=${PTTG_GH_TOKEN}
