@@ -9,7 +9,6 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - PTTG_GH_TOKEN=${PTTG_GH_TOKEN}
     commands:
-      - docker login -u="regt-build-bot" -p=${DOCKER_ARTIFACTORY_PASSWORD} docker.digital.homeoffice.gov.uk
       - ./gradlew build
     when:
       event: push
