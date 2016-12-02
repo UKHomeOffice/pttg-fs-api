@@ -41,7 +41,7 @@ repositories{
         name 'snapshots' // corresponds to entries in ~/.m2/settings.xml (required - see readme)
         url 'https://artifactory.digital.homeoffice.gov.uk/artifactory/libs-snapshot-local'
         credentials { // Used by Jenkins, overridden by your settings.xml
-            username = "alistair.todd@digital.homeoffice.gov.uk"
+            username = System.env.ARTIFACTORY_USER
             password = System.env.ARTIFACTORY_PASS
 
             println "username: " + username
