@@ -9,6 +9,9 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - PTTG_GH_TOKEN=${PTTG_GH_TOKEN}
     commands:
+      - export ARTIFACTORY_PASS=$$MY_ARTIFACTORY_PASSWORD
+      - echo $ARTIFACTORY_USER
+      - echo $ARTIFACTORY_PASS
       - ./gradlew build
     when:
       event: push
