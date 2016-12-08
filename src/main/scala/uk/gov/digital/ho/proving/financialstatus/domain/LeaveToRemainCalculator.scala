@@ -1,29 +1,38 @@
 package uk.gov.digital.ho.proving.financialstatus.domain
 
-import java.time.LocalDate
+import java.time.{LocalDate, Period}
 
 object LeaveToRemainCalculator {
 
-  private def calcWrapUpPeriod(courseLength: Int, leaveToRemainBoundary: Int, shortLeaveToRemain: Int, longLeaveToRemain: Int): Int = {
-    if (courseLength < leaveToRemainBoundary) shortLeaveToRemain else longLeaveToRemain
+  private def calcWrapUpPeriod(coursePeriod: Period, preSessional: Boolean) = {
+    if (coursePeriod.getYears >= 1) Period.ofMonths(4)
+    else if (coursePeriod.getMonths >= 6) Period.ofMonths(1)
+    else if (preSessional) Period.ofMonths(1) else Period.ofDays(7)
   }
 
-  def calculateLeaveToRemain(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], courseContinuationEndDate: Option[LocalDate],
-                             leaveToRemainBoundary: Int, shortLeaveToRemain: Int, longLeaveToRemain: Int): Option[Int] = {
+  private def calculatePeriod(start: LocalDate, end: LocalDate, inclusive: Boolean = true) = {
+    Period.between(start, end.plusDays(if (inclusive) 1 else 0))
+  }
+
+  private def calculatPeriodInclusive(start: LocalDate, end: LocalDate) = calculatePeriod(start, end)
+
+  private def calculatPeriodExclusive(start: LocalDate, end: LocalDate) = calculatePeriod(start, end, false)
+
+
+  def calculateLeaveToRemain(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], originalCourseStartDate: Option[LocalDate], preSessional: Boolean): Option[Period] = {
     for {
       start <- courseStartDate
       end <- courseEndDate
     } yield {
-      val leaveToRemain = courseContinuationEndDate match {
-        case Some(extEnd) =>
-          val courseLength = CourseLengthCalculator.differenceInMonths(start, extEnd)
-          val continuationCourseLength = CourseLengthCalculator.differenceInMonths(end.plusDays(1), extEnd)
-          continuationCourseLength + calcWrapUpPeriod(courseLength, leaveToRemainBoundary, shortLeaveToRemain, longLeaveToRemain)
-        case None =>
-          val courseLength = CourseLengthCalculator.differenceInMonths(start, end)
-          courseLength + calcWrapUpPeriod(courseLength, leaveToRemainBoundary, shortLeaveToRemain, longLeaveToRemain)
+
+      val startDate = originalCourseStartDate match {
+        case Some(originalStart) => originalStart
+        case None => start
       }
-      leaveToRemain
+
+      val coursePeriod = calculatPeriodInclusive(start, end)
+      val wrapUpPeriod = calcWrapUpPeriod(coursePeriod, preSessional)
+      coursePeriod.plus(wrapUpPeriod)
     }
   }
 }

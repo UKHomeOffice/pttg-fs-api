@@ -40,7 +40,7 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
 
   val INVALID_COURSE_START_DATE_VALUE = getMessage("invalid.course.start.date.value")
   val INVALID_COURSE_END_DATE_VALUE = getMessage("invalid.course.end.date.value")
-  val INVALID_CONTINUATION_END_DATE_VALUE = getMessage("invalid.continuation.end.date.value")
+  val INVALID_ORIGINAL_COURSE_START_DATE_VALUE = getMessage("invalid.original.course.start.date.value")
 
   val INVALID_USER_PROFILE = getMessage("unable.to.retrieve.user.profile")
 

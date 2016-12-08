@@ -21,12 +21,12 @@ trait ThresholdParameterValidator {
                                leaveToRemain: Option[Int],
                                courseStartDate: Option[LocalDate],
                                courseEndDate: Option[LocalDate],
-                               continuationEndDate: Option[LocalDate]
+                               originalCourseStartDate: Option[LocalDate]
                               ): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
 
     var errorList = Vector.empty[(String, String, HttpStatus)]
-    val (validCourseStartDate, validCourseEndDate, validContinuationEndDate) = validateDates(courseStartDate, courseEndDate, continuationEndDate)
-    val isContinuation = validContinuationEndDate && continuationEndDate.isDefined
+    val (validCourseStartDate, validCourseEndDate, validContinuationEndDate) = validateDates(courseStartDate, courseEndDate, originalCourseStartDate)
+    val isContinuation = validContinuationEndDate && originalCourseStartDate.isDefined
     val validDependants = validateDependants(dependants)
     val validCourseLength = validateCourseLength(courseLength, courseMinLength)
     val validTuitionFees = validateTuitionFees(tuitionFees)
@@ -38,16 +38,16 @@ trait ThresholdParameterValidator {
     studentType match {
 
       case NonDoctorate =>
-        if (!courseStartDate.isDefined) {
+        if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
-        } else if (!courseEndDate.isDefined) {
+        } else if (courseEndDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE, HttpStatus.BAD_REQUEST))
         } else if (!validCourseStartDate) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE_VALUE, HttpStatus.BAD_REQUEST))
         } else if (!validCourseEndDate) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE_VALUE, HttpStatus.BAD_REQUEST))
         } else if (!validContinuationEndDate) {
-          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_CONTINUATION_END_DATE_VALUE, HttpStatus.BAD_REQUEST))
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_ORIGINAL_COURSE_START_DATE_VALUE, HttpStatus.BAD_REQUEST))
         } else if (validTuitionFees.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST))
         } else if (validTuitionFeesPaid.isEmpty) {
@@ -60,9 +60,9 @@ trait ThresholdParameterValidator {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_LENGTH_DEPENDANTS, HttpStatus.BAD_REQUEST))
         }
       case DoctorDentist | StudentSabbaticalOfficer =>
-        if (!courseStartDate.isDefined) {
+        if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
-        } else if (!courseEndDate.isDefined) {
+        } else if (courseEndDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE, HttpStatus.BAD_REQUEST))
         } else if (!validCourseStartDate) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE_VALUE, HttpStatus.BAD_REQUEST))
