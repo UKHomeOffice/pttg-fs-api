@@ -1,5 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.domain
 
+import java.time.{LocalDate, Period}
+
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.stereotype.Service
 import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
@@ -12,7 +14,6 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                                   @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int,
                                                   @Value("${non.doctorate.minimum.course.length}") val nonDoctorateMinCourseLength: Int,
                                                   @Value("${non.doctorate.maximum.course.length}") val nonDoctorateMaxCourseLength: Int,
-                                                  @Value("${non.doctorate.minimum.course.length.with.dependants}") val minNonDoctorateCourseLengthWithDependants: Int,
                                                   @Value("${pgdd.sso.minimum.course.length}") val pgddSsoMinCourseLength: Int,
                                                   @Value("${pgdd.sso.maximum.course.length}") val pgddSsoMaxCourseLength: Int,
                                                   @Value("${doctorate.fixed.course.length}") val doctorateFixedCourseLength: Int
@@ -29,12 +30,27 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
 
   def dependantsValue(innerLondon: Boolean): BigDecimal = if (innerLondon) INNER_LONDON_DEPENDANTS else NON_INNER_LONDON_DEPENDANTS
 
+  def maintenancePeriod(start: LocalDate, end: LocalDate) = {
+    val period = Period.between(start, end.plusDays(1))
+    val months = period.getYears * 12 + (if (period.getDays > 0) period.getMonths + 1 else period.getMonths)
+    months
+  }
 
-  def calculateNonDoctorate(innerLondon: Boolean, courseLengthInMonths: Int,
+  def calculateNonDoctorate(innerLondon: Boolean,
                             tuitionFees: BigDecimal, tuitionFeesPaid: BigDecimal,
                             accommodationFeesPaid: BigDecimal,
-                            dependants: Int, leaveToRemain: Int, isContinuation: Boolean
+                            dependants: Int,
+                            courseStartDate: LocalDate,
+                            courseEndDate: LocalDate,
+                            originalCourseStartDate: Option[LocalDate],
+                            isContinuation: Boolean,
+                            isPreSessional: Boolean
                            ): (BigDecimal, Option[CappedValues]) = {
+
+
+    val courseLengthInMonths = maintenancePeriod(courseStartDate, courseEndDate)
+    val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(courseStartDate, courseEndDate, originalCourseStartDate, isPreSessional)
+    val leaveToRemainInMonths = maintenancePeriod(courseStartDate, leaveToRemain)
 
     val (courseLength, courseLengthCapped) = if (courseLengthInMonths > nonDoctorateMaxCourseLength) {
       (nonDoctorateMaxCourseLength, Some(nonDoctorateMaxCourseLength))
@@ -49,11 +65,11 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
 
     val amount = ((accommodationValue(innerLondon) * courseLength)
       + (tuitionFees - tuitionFeesPaid).max(0)
-      + (dependantsValue(innerLondon) * (leaveToRemain).min(nonDoctorateMaxCourseLength) * dependants)
+      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(nonDoctorateMaxCourseLength) * dependants)
       - accommodationFees).max(0)
 
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
-      (amount, if (isContinuation) Some(CappedValues(accommodationFeesCapped, None, courseLengthCapped)) else Some(CappedValues(accommodationFeesCapped, courseLengthCapped, None)))
+      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)))
     } else {
       (amount, None)
     }

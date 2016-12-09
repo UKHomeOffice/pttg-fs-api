@@ -29,7 +29,6 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
   val INVALID_SORT_CODE_VALUE = "000000"
   val INVALID_ACCOUNT_NUMBER_VALUE = "00000000"
   val INVALID_COURSE_LENGTH = getMessage("invalid.course.length")
-  val INVALID_COURSE_LENGTH_DEPENDANTS = getMessage("invalid.course.length.dependants")
 
   val RESOURCE_NOT_FOUND= getMessage("resource.not.found")
   val PATH_ERROR_MISSING_VALUE=getMessage("path.error.missing.value")

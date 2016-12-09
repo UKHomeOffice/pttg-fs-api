@@ -48,6 +48,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                          @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: Optional[JBigDecimal],
                          @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: Optional[JBigDecimal],
                          @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer],
+                         @RequestParam(value = "courseType", required = true) courseType: Optional[String],
                          @CookieValue(value = "kc-access") kcToken: Optional[String]
                         ): ResponseEntity[ThresholdResponse] = {
 
@@ -66,7 +67,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
 
     def threshold = calculateThresholdForStudentType(validatedStudentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate,
-      tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+      tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
 
     auditSearchResult(auditEventId, threshold.getBody, userProfile)
 
@@ -121,37 +122,25 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                                                tuitionFees: Option[BigDecimal],
                                                tuitionFeesPaid: Option[BigDecimal],
                                                accommodationFeesPaid: Option[BigDecimal],
-                                               dependants: Option[Int]): ResponseEntity[ThresholdResponse] = {
-
-    val minCourseLengthWithDependants = maintenanceThresholdCalculator.minNonDoctorateCourseLengthWithDependants
-
-    val courseLength = CourseLengthCalculator.calculateCourseLength(courseStartDate, courseEndDate, originalCourseStartDate)
+                                               dependants: Option[Int],
+                                               courseType: Option[String]
+                                              ): ResponseEntity[ThresholdResponse] = {
 
     studentType match {
 
       case NonDoctorate =>
 
-        val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(courseStartDate, courseEndDate, originalCourseStartDate,
-          nonDoctorateContinuationBoundary, nonDoctorateShortContinuation, nonDoctorateLongContinuation)
-
-        val courseMinLength = maintenanceThresholdCalculator.nonDoctorateMinCourseLength
-
-        val validatedInputs = validateInputs(NonDoctorate, inLondon, courseLength, tuitionFees, tuitionFeesPaid,
-          accommodationFeesPaid, dependants, courseMinLength, minCourseLengthWithDependants, leaveToRemain, courseStartDate, courseEndDate, originalCourseStartDate)
+        val validatedInputs = validateInputs(NonDoctorate, inLondon, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate,courseType)
 
         calculateThreshold(validatedInputs, calculateNonDoctorate)
 
       case Doctorate =>
-        val fixedCourseLength = maintenanceThresholdCalculator.doctorateFixedCourseLength
-        val validatedInputs = validateInputs(Doctorate, inLondon, None, None, None,
-          accommodationFeesPaid, dependants, fixedCourseLength, minCourseLengthWithDependants, None, courseStartDate, courseEndDate, originalCourseStartDate)
+        val validatedInputs = validateInputs(Doctorate, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate,courseType)
 
         calculateThreshold(validatedInputs, calculateDoctorate)
 
       case DoctorDentist | StudentSabbaticalOfficer =>
-        val courseMinLength = maintenanceThresholdCalculator.pgddSsoMinCourseLength
-        val validatedInputs = validateInputs(DoctorDentist, inLondon, courseLength, None, None,
-          accommodationFeesPaid, dependants, courseMinLength, minCourseLengthWithDependants, None, courseStartDate, courseEndDate, originalCourseStartDate)
+        val validatedInputs = validateInputs(DoctorDentist, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate,courseType)
 
         calculateThreshold(validatedInputs, calculateDoctorDentistSabbatical)
 
@@ -187,25 +176,25 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
   private def calculateDoctorDentistSabbatical(inputs: ValidatedInputs): Option[ThresholdResponse] = {
     for {inner <- inputs.inLondon
-         length <- inputs.courseLength
          aFeesPaid <- inputs.accommodationFeesPaid
          deps <- inputs.dependants
     } yield {
-      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDesPgddSso(inner, length, aFeesPaid, deps)
+      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDesPgddSso(inner, 2 /* length */, aFeesPaid, deps)
       new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
 
   private def calculateNonDoctorate(inputs: ValidatedInputs): Option[ThresholdResponse] = {
     for {inner <- inputs.inLondon
-         length <- inputs.courseLength
          tFees <- inputs.tuitionFees
          tFeesPaid <- inputs.tuitionFeesPaid
          aFeesPaid <- inputs.accommodationFeesPaid
          deps <- inputs.dependants
-         leaveToRemain <- inputs.leaveToRemain
+         startDate <- inputs.courseStartDate
+         endDate <- inputs.courseEndDate
+
     } yield {
-      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateNonDoctorate(inner, length, tFees, tFeesPaid, aFeesPaid, deps, leaveToRemain, inputs.isContinuation)
+      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateNonDoctorate(inner, tFees, tFeesPaid, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isContinuation, inputs.isPreSessional)
       new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }

@@ -34,13 +34,31 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
 
     ApplicationEventPublisher auditor = Mock()
     Authentication authenticator = Mock()
+
+//    def thresholdService = new ThresholdService(
+//        new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
+//            maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
+//            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
+//            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
+//        ), getStudentTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
+//    )
+
     def thresholdService = new ThresholdService(
-        new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
-            maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
-            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
-            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
+        new MaintenanceThresholdCalculator(
+            inLondonMaintenance,
+            notInLondonMaintenance,
+            maxMaintenanceAllowance,
+            inLondonDependant,
+            notInLondonDependant,
+            nonDoctorateMinCourseLength,
+            nonDoctorateMaxCourseLength,
+            pgddSsoMinCourseLength,
+            pgddSsoMaxCourseLength,
+            doctorateFixedCourseLength
+        ),
+        getStudentTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
     )
+
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())

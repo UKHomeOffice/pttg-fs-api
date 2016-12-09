@@ -13,21 +13,20 @@ class LeaveToRemainCalculatorTest extends Specification {
 
         expect:
         LeaveToRemainCalculator.calculateLeaveToRemain(DataUtils.buildScalaOption(courseStartDate), DataUtils.buildScalaOption(courseEndDate),
-            DataUtils.buildScalaOption(originalCourseStartDate), nonDoctorateLeaveToRemainBoundary, nonDoctorateShortLeaveToRemain, nonDoctorateLongLeaveToRemain
-        ).get() == leaveToRemain.toString()
+            DataUtils.buildScalaOption(originalCourseStartDate), preSessional).get().toString() == leaveToRemain.toString()
 
         where:
         courseStartDate            | courseEndDate              | originalCourseStartDate    | preSessional || leaveToRemain
-        LocalDate.of(2026, 3, 3)   | LocalDate.of(2026, 12, 20) | null                       | false        || "P11M18D"
-        LocalDate.of(1990, 12, 31) | LocalDate.of(1991, 3, 9)   | LocalDate.of(1991, 7, 10)  | false        || "P2M17D"
-        LocalDate.of(2042, 6, 10)  | LocalDate.of(2042, 12, 11) | LocalDate.of(2043, 12, 18) | false        || "P6M9D"
-        LocalDate.of(1988, 4, 12)  | LocalDate.of(1988, 5, 14)  | LocalDate.of(1989, 6, 2)   | false        || "P1M10D"
-        LocalDate.of(2044, 1, 7)   | LocalDate.of(2044, 9, 25)  | null                       | true         || "P10M19D"
-        LocalDate.of(2009, 11, 29) | LocalDate.of(2010, 11, 5)  | LocalDate.of(2011, 1, 27)  | false        || "P11M15D"
-        LocalDate.of(1994, 7, 17)  | LocalDate.of(1994, 8, 24)  | null                       | true         || "P2M8D"
-        LocalDate.of(2005, 6, 3)   | LocalDate.of(2005, 7, 17)  | null                       | true         || "P2M15D"
-        LocalDate.of(2032, 5, 18)  | LocalDate.of(2032, 6, 19)  | LocalDate.of(2033, 1, 6)   | false        || "P1M9D"
-        LocalDate.of(2040, 7, 30)  | LocalDate.of(2040, 12, 3)  | null                       | false        || "P4M11D"
+        LocalDate.of(1973, 11, 13) | LocalDate.of(1974, 11, 28) | LocalDate.of(1973, 10, 12) | false        || "1975-03-28"
+        LocalDate.of(1996, 4, 10)  | LocalDate.of(1996, 11, 14) | null                       | true         || "1997-01-14"
+        LocalDate.of(2050, 3, 10)  | LocalDate.of(2050, 11, 20) | LocalDate.of(2049, 5, 11)  | false        || "2051-03-20"
+        LocalDate.of(1983, 2, 22)  | LocalDate.of(1983, 3, 22)  | LocalDate.of(1982, 9, 22)  | false        || "1983-05-22"
+        LocalDate.of(2014, 3, 11)  | LocalDate.of(2014, 5, 8)   | LocalDate.of(2013, 11, 29) | false        || "2014-05-15"
+        LocalDate.of(1987, 10, 16) | LocalDate.of(1987, 11, 18) | LocalDate.of(1987, 4, 8)   | false        || "1988-01-18"
+        LocalDate.of(1974, 3, 1)   | LocalDate.of(1975, 1, 1)   | null                       | false        || "1975-03-01"
+        LocalDate.of(2037, 10, 15) | LocalDate.of(2038, 2, 17)  | LocalDate.of(2037, 8, 26)  | false        || "2038-02-24"
+        LocalDate.of(1984, 11, 6)  | LocalDate.of(1985, 1, 10)  | LocalDate.of(1984, 6, 27)  | false        || "1985-03-10"
+        LocalDate.of(1976, 11, 7)  | LocalDate.of(1977, 4, 13)  | null                       | false        || "1977-04-20"
 
     }
 
