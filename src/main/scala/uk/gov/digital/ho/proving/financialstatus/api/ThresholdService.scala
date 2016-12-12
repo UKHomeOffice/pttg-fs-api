@@ -25,6 +25,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 @ControllerAdvice
 class ThresholdService @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
                                     val studentTypeChecker: StudentTypeChecker,
+                                    val courseTypeChecker: CourseTypeChecker,
                                     val serviceMessages: ServiceMessages,
                                     val auditor: ApplicationEventPublisher,
                                     val authenticator: Authentication,
@@ -48,7 +49,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                          @RequestParam(value = "tuitionFeesPaid", required = false) tuitionFeesPaid: Optional[JBigDecimal],
                          @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: Optional[JBigDecimal],
                          @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer],
-                         @RequestParam(value = "courseType", required = true) courseType: Optional[String],
+                         @RequestParam(value = "courseType", required = false) courseType: Optional[String],
                          @CookieValue(value = "kc-access") kcToken: Optional[String]
                         ): ResponseEntity[ThresholdResponse] = {
 
@@ -62,12 +63,13 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
     val auditEventId = nextId
     auditSearchParams(auditEventId, studentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate,
-      tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, userProfile)
+      tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, userProfile, courseType)
 
     val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
+    val validatedCourseType = courseTypeChecker.getCourseType(courseType.getOrElse("Unknown"))
 
     def threshold = calculateThresholdForStudentType(validatedStudentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate,
-      tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
+      tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, validatedCourseType)
 
     auditSearchResult(auditEventId, threshold.getBody, userProfile)
 
@@ -77,7 +79,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
   def auditSearchParams(auditEventId: UUID, studentType: Option[String], inLondon: Option[Boolean],
                         courseStartDate: Optional[LocalDate], courseEndDate: Optional[LocalDate], originalCourseStartDate: Optional[LocalDate],
                         tuitionFees: Option[BigDecimal], tuitionFeesPaid: Option[BigDecimal],
-                        accommodationFeesPaid: Option[BigDecimal], dependants: Option[Int], userProfile: Option[UserProfile]): Unit = {
+                        accommodationFeesPaid: Option[BigDecimal], dependants: Option[Int], userProfile: Option[UserProfile], courseType: Optional[String]): Unit = {
 
     val params = Map(
       "studentType" -> studentType,
@@ -88,7 +90,8 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
       "tuitionFees" -> tuitionFees,
       "tuitionFeesPaid" -> tuitionFeesPaid,
       "accommodationFeesPaid" -> accommodationFeesPaid,
-      "dependants" -> dependants
+      "dependants" -> dependants,
+      "courseType" -> courseType
     )
 
     val suppliedParams = for ((k, Some(v)) <- params) yield k -> v
@@ -123,33 +126,35 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                                                tuitionFeesPaid: Option[BigDecimal],
                                                accommodationFeesPaid: Option[BigDecimal],
                                                dependants: Option[Int],
-                                               courseType: Option[String]
+                                               courseType: CourseType
                                               ): ResponseEntity[ThresholdResponse] = {
 
     studentType match {
 
-      case NonDoctorate =>
+      case NonDoctorateStudent =>
 
-        val validatedInputs = validateInputs(NonDoctorate, inLondon, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate,courseType)
+        courseType match {
+          case UnknownCourse(course) => buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_TYPE(courseTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
+          case _ => val validatedInputs = validateInputs(NonDoctorateStudent, inLondon, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
+            calculateThreshold(validatedInputs, calculateNonDoctorate)
+        }
 
-        calculateThreshold(validatedInputs, calculateNonDoctorate)
-
-      case Doctorate =>
-        val validatedInputs = validateInputs(Doctorate, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate,courseType)
-
+      case DoctorateStudent =>
+        val validatedInputs = validateInputs(DoctorateStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
         calculateThreshold(validatedInputs, calculateDoctorate)
 
-      case DoctorDentist | StudentSabbaticalOfficer =>
-        val validatedInputs = validateInputs(DoctorDentist, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate,courseType)
-
+      case DoctorDentistStudent | StudentSabbaticalOfficer =>
+        val validatedInputs = validateInputs(DoctorDentistStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
         calculateThreshold(validatedInputs, calculateDoctorDentistSabbatical)
 
-      case Unknown(unknownType) =>
+      case UnknownStudent(unknownType) =>
         buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_STUDENT_TYPE(studentTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
     }
   }
 
-  private def calculateThreshold(validatedInputs: Either[Seq[(String, String, HttpStatus)], ValidatedInputs], calculate: ValidatedInputs => Option[ThresholdResponse]) = {
+  private def calculateThreshold(validatedInputs: Either[Seq[(String, String, HttpStatus)], ValidatedInputs], calculate: ValidatedInputs => Option[ThresholdResponse])
+
+  = {
 
     validatedInputs match {
       case Right(inputs) =>
@@ -164,7 +169,9 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  private def calculateDoctorate(inputs: ValidatedInputs): Option[ThresholdResponse] = {
+  private def calculateDoctorate(inputs: ValidatedInputs): Option[ThresholdResponse]
+
+  = {
     for {inner <- inputs.inLondon
          aFeesPaid <- inputs.accommodationFeesPaid
          deps <- inputs.dependants
@@ -174,17 +181,23 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  private def calculateDoctorDentistSabbatical(inputs: ValidatedInputs): Option[ThresholdResponse] = {
+  private def calculateDoctorDentistSabbatical(inputs: ValidatedInputs): Option[ThresholdResponse]
+
+  = {
     for {inner <- inputs.inLondon
          aFeesPaid <- inputs.accommodationFeesPaid
          deps <- inputs.dependants
+         courseStart <- inputs.courseStartDate
+         courseEnd <- inputs.courseEndDate
     } yield {
-      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDesPgddSso(inner, 2 /* length */, aFeesPaid, deps)
+      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDesPgddSso(inner, CourseLengthCalculator.differenceInMonths(courseStart, courseEnd), aFeesPaid, deps)
       new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
 
-  private def calculateNonDoctorate(inputs: ValidatedInputs): Option[ThresholdResponse] = {
+  private def calculateNonDoctorate(inputs: ValidatedInputs): Option[ThresholdResponse]
+
+  = {
     for {inner <- inputs.inLondon
          tFees <- inputs.tuitionFees
          tFeesPaid <- inputs.tuitionFeesPaid
@@ -199,9 +212,13 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  override def logStartupInformation(): Unit = LOGGER.info(maintenanceThresholdCalculator.parameters)
+  override def logStartupInformation(): Unit
 
-  private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] =
+  = LOGGER.info(maintenanceThresholdCalculator.parameters)
+
+  private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse]
+
+  =
     new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
 
 }

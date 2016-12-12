@@ -37,9 +37,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
-            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
-            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
+            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
+        ), getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -72,9 +71,9 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || accommodationFeesPaid | dependants || threshold
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0.00                  | 5          || 4415.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0.00                  | 7          || 11550.00
+        inLondon | courseStartDate          | courseEndDate             || accommodationFeesPaid | dependants || threshold
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0.00                  | 5          || 4415.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0.00                  | 7          || 11550.00
 
     }
 
@@ -87,9 +86,9 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || accommodationFeesPaid | dependants || threshold
-        true     | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0.00                  | 4          || 4645.00
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0.00                  | 15         || 27880.00
+        inLondon | courseStartDate          | courseEndDate             || accommodationFeesPaid | dependants || threshold
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0.00                  | 4          || 4645.00
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0.00                  | 15         || 27880.00
 
     }
 
@@ -101,18 +100,18 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | accommodationFeesPaid | dependants || threshold
-        true     | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 1039.00               | 14         || 12056.00
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | 692.00                | 11         || 20428.00
-        true     | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 622.00                | 3          || 3178.00
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | 154.00                | 9          || 17586.00
-        true     | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 869.00                | 10         || 8846.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | 860.00                | 12         || 17490.00
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 206.00                | 9          || 6929.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | 106.00                | 11         || 16884.00
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 1245.00               | 0          || 0.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | 2106.00               | 11         || 15725.00
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 1845.00               | 0          || 0.00
+        inLondon | courseStartDate          | courseEndDate             | accommodationFeesPaid | dependants || threshold
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 1039.00               | 14         || 12056.00
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | 692.00                | 11         || 20428.00
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 622.00                | 3          || 3178.00
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | 154.00                | 9          || 17586.00
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 869.00                | 10         || 8846.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | 860.00                | 12         || 17490.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 206.00                | 9          || 6929.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | 106.00                | 11         || 16884.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 1245.00               | 0          || 0.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 21) | 2106.00               | 11         || 15725.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 1845.00               | 0          || 0.00
 
     }
 
@@ -141,25 +140,25 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         }
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
-        false    | 5                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 5, 1)  | 1627.00               | 15         || 21165.00  || 1265.00    || 2
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | 270.00                | 10         || 7545.00   || 0          || 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 22.00                 | 1          || 4198.00   || 0          || 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 636.00                | 9          || 17104.00  || 0          || 0
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | 1018.00               | 3          || 2037.00   || 0          || 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 446.00                | 6          || 12224.00  || 0          || 0
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 11) | 372.00                | 6          || 4723.00   || 0          || 0
-        true     | 7                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1)  | 657.00                | 13         || 23843.00  || 0          || 2
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 953.00                | 6          || 11717.00  || 0          || 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 229.00                | 12         || 22581.00  || 0          || 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 23.00                 | 12         || 22787.00  || 0          || 0
-        false    | 3                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1)  | 182.00                | 14         || 20888.00  || 0          || 2
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 12) | 738.00                | 12         || 8437.00   || 0          || 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 73.00                 | 9          || 17667.00  || 0          || 0
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 970.00                | 6          || 4125.00   || 0          || 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 1934.00               | 5          || 9715.00   || 1265.00    || 0
-        true     | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 11) | 223.00                | 4          || 4422.00   || 0          || 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 1078.00               | 14         || 25112.00  || 0          || 0
+        inLondon | courseStartDate          | courseEndDate             | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 5, 1)  | 1627.00               | 15         || 21165.00  || 1265.00    || 2
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | 270.00                | 10         || 7545.00   || 0          || 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 22.00                 | 1          || 4198.00   || 0          || 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 636.00                | 9          || 17104.00  || 0          || 0
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | 1018.00               | 3          || 2037.00   || 0          || 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 446.00                | 6          || 12224.00  || 0          || 0
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 11) | 372.00                | 6          || 4723.00   || 0          || 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1)  | 657.00                | 13         || 23843.00  || 0          || 2
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 953.00                | 6          || 11717.00  || 0          || 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 229.00                | 12         || 22581.00  || 0          || 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 23.00                 | 12         || 22787.00  || 0          || 0
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1)  | 182.00                | 14         || 20888.00  || 0          || 2
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 12) | 738.00                | 12         || 8437.00   || 0          || 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 73.00                 | 9          || 17667.00  || 0          || 0
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 970.00                | 6          || 4125.00   || 0          || 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 1934.00               | 5          || 9715.00   || 1265.00    || 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 11) | 223.00                | 4          || 4422.00   || 0          || 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 1078.00               | 14         || 25112.00  || 0          || 0
     }
 
 
@@ -171,9 +170,9 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         response.andExpect(content().string(containsString("Parameter error: Invalid accommodationFeesPaid")))
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 14         | -1
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 11         | -7
+        inLondon | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 14         | -1
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 11         | -7
     }
 
     def "Tier 4 Student Sabbatical Office - Check invalid characters accommodation fees parameters"() {
@@ -184,9 +183,9 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid accommodationFeesPaid")))
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 14         | "(&"
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 11         | "ddd"
+        inLondon | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 14         | "(&"
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 11         | "ddd"
     }
 
     def "Tier 4 Student Sabbatical Office - Check rounding accommodation fees parameters"() {
@@ -198,13 +197,13 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid || threshold
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0          | 0.0000                || 1015.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.010                 || 2029.99
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.0010                || 2030.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.005                 || 2029.99
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.004                 || 2030.00
-        false    | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | -0.004                || 2030.00
+        inLondon | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid || threshold
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || 0          | 0.0000                || 1015.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.010                 || 2029.99
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.0010                || 2030.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.005                 || 2029.99
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | 0.004                 || 2030.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || 0          | -0.004                || 2030.00
     }
 
     def "Tier 4 Student Sabbatical Office - Check invalid dependants parameters"() {
@@ -215,9 +214,9 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         response.andExpect(content().string(containsString("Parameter error: Invalid dependants")))
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || -5         | 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || -986       | 0
+        inLondon | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || -5         | 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || -986       | 0
     }
 
     def "Tier 4 Student Sabbatical Office - Check invalid characters dependants parameters"() {
@@ -228,9 +227,9 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid dependants")))
 
         where:
-        inLondon | courseLengthInMonths | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
-        false    | 1                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || "(*&66"    | 0
-        true     | 2                    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || "h"        | 0
+        inLondon | courseStartDate          | courseEndDate             || dependants | accommodationFeesPaid
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) || "(*&66"    | 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  || "h"        | 0
     }
 
 }

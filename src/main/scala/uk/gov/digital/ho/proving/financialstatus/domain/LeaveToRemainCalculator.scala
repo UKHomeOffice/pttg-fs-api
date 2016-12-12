@@ -14,9 +14,9 @@ object LeaveToRemainCalculator {
     Period.between(start, end.plusDays(if (inclusive) 1 else 0))
   }
 
-  private def calculatPeriodInclusive(start: LocalDate, end: LocalDate) = calculatePeriod(start, end)
+  private def calculatePeriodInclusive(start: LocalDate, end: LocalDate) = calculatePeriod(start, end)
 
-  private def calculatPeriodExclusive(start: LocalDate, end: LocalDate) = calculatePeriod(start, end, false)
+  private def calculatePeriodExclusive(start: LocalDate, end: LocalDate) = calculatePeriod(start, end, false)
 
 
   def calculateLeaveToRemain(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate],
@@ -31,7 +31,7 @@ object LeaveToRemainCalculator {
         case None => start
       }
 
-      val coursePeriod = calculatPeriodInclusive(startDate, end)
+      val coursePeriod = calculatePeriodInclusive(startDate, end)
       println(s"coursePeriod: $coursePeriod")
 
       val wrapUpPeriod = calcWrapUpPeriod(coursePeriod, preSessional)
@@ -48,7 +48,7 @@ object LeaveToRemainCalculator {
       case None => courseStartDate
     }
 
-    val coursePeriod = calculatPeriodInclusive(startDate, courseEndDate)
+    val coursePeriod = calculatePeriodInclusive(startDate, courseEndDate)
 
     val wrapUpPeriod = calcWrapUpPeriod(coursePeriod, preSessional)
     courseEndDate.plus(wrapUpPeriod)

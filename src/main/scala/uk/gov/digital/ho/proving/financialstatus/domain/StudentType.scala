@@ -19,18 +19,18 @@ class StudentTypeChecker @Autowired()(@Value("${student.type.doctorate}") val do
 
   def getStudentType(studentType: String): StudentType = {
     studentType match {
-      case DOCTORATE => Doctorate
-      case NON_DOCTORATE => NonDoctorate
-      case DOCTOR_DENTIST => DoctorDentist
+      case DOCTORATE => DoctorateStudent
+      case NON_DOCTORATE => NonDoctorateStudent
+      case DOCTOR_DENTIST => DoctorDentistStudent
       case STUDENT_SABBATICAL_OFFICER => StudentSabbaticalOfficer
-      case _ => Unknown(studentType)
+      case _ => UnknownStudent(studentType)
     }
   }
 }
 
 sealed trait StudentType
-case class Unknown(value: String) extends StudentType
-case object Doctorate extends StudentType
-case object NonDoctorate extends StudentType
-case object DoctorDentist extends StudentType
+case class UnknownStudent(value: String) extends StudentType
+case object DoctorateStudent extends StudentType
+case object NonDoctorateStudent extends StudentType
+case object DoctorDentistStudent extends StudentType
 case object StudentSabbaticalOfficer extends StudentType

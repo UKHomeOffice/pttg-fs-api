@@ -18,7 +18,7 @@ trait ThresholdParameterValidator {
                                courseStartDate: Option[LocalDate],
                                courseEndDate: Option[LocalDate],
                                originalCourseStartDate: Option[LocalDate],
-                               courseType: Option[String]
+                               courseType: CourseType
                               ): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
 
     var errorList = Vector.empty[(String, String, HttpStatus)]
@@ -29,11 +29,10 @@ trait ThresholdParameterValidator {
     val validTuitionFeesPaid = validateTuitionFeesPaid(tuitionFeesPaid)
     val validAccommodationFeesPaid = validateAccommodationFeesPaid(accommodationFeesPaid)
     val validInLondon = validateInnerLondon(inLondon)
-    val validCourseType = validateCourseType(courseType)
 
     studentType match {
 
-      case NonDoctorate =>
+      case NonDoctorateStudent =>
         if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
         } else if (courseEndDate.isEmpty) {
@@ -51,7 +50,7 @@ trait ThresholdParameterValidator {
         } else if (validDependants.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
         }
-      case DoctorDentist | StudentSabbaticalOfficer =>
+      case DoctorDentistStudent | StudentSabbaticalOfficer =>
         if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
         } else if (courseEndDate.isEmpty) {
@@ -61,8 +60,8 @@ trait ThresholdParameterValidator {
         } else if (!validCourseEndDate) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE_VALUE, HttpStatus.BAD_REQUEST))
         }
-      case Doctorate =>
-      case Unknown(unknownStudentType) => errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_STUDENT_TYPE(unknownStudentType), HttpStatus.BAD_REQUEST))
+      case DoctorateStudent =>
+      case UnknownStudent(unknownStudentType) => errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_STUDENT_TYPE(unknownStudentType), HttpStatus.BAD_REQUEST))
     }
 
     if (validAccommodationFeesPaid.isEmpty) {
@@ -74,7 +73,7 @@ trait ThresholdParameterValidator {
     }
 
     if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validTuitionFees, validTuitionFeesPaid,
-      validAccommodationFeesPaid, validInLondon, courseStartDate, courseEndDate, originalCourseStartDate, isContinuation, courseType.get == "PRE"))
+      validAccommodationFeesPaid, validInLondon, courseStartDate, courseEndDate, originalCourseStartDate, isContinuation, courseType == PreSessionalCourse))
     else Left(errorList)
   }
 
@@ -87,19 +86,6 @@ trait ThresholdParameterValidator {
   private def validateAccommodationFeesPaid(accommodationFeesPaid: Option[BigDecimal]) = accommodationFeesPaid.filter(_ >= 0)
 
   private def validateInnerLondon(inLondon: Option[Boolean]) = inLondon
-
-  private def validateCourseType(courseType: Option[String]) = courseType.map { course =>
-    course.trim.toUpperCase match {
-      case "MAIN" => false
-      case "PRE" => true
-    }
-  }
-
-  private def validateDependantsAndCourseLength(dependants: Option[Int], courseLength: Option[Int], courseMinLengthWithDependants: Int, isContinuation: Boolean) =
-    for {numOfDependants <- dependants
-         length <- courseLength} yield {
-      (numOfDependants == 0) || (isContinuation && numOfDependants >= 0) || (!isContinuation && numOfDependants > 0 && length >= courseMinLengthWithDependants)
-    }
 
   private def validateDates(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], originalCourseStartDate: Option[LocalDate]): (Boolean, Boolean, Boolean) = {
 
