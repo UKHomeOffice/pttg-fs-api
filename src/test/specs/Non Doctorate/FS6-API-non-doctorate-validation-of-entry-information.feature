@@ -9,6 +9,20 @@ Feature: Validation of the API fields and data
     Account Number - Format should be 12345678 (always 8 numbers, 0-9, no letters, cannot be all 0's)
     Date of birth - should be dd/mm/yyyy (always 8 numbers, 0-9, no letters, cannot be all 0's)
 
+    Background: The API is not provided with End date of 28-day period
+
+        Given a Service is consuming Financial Status API
+        When the Financial Status API is invoked with the following:
+
+            | To Date                 | 2017-06-28 |
+            | From Date               | 2017-06-01 |
+            | Minimum                 | 2350.00    |
+            | Sort Code               | 13-56-09   |
+            | Account Number          | 23568498   |
+            | Date of Birth           | 1984-07-27 |
+            | User Id                 | user12345  |
+
+
 ######################### Validation on the Maintenance Period End Date Field #########################
 
     Scenario: The API is not provided with End date of 28-day period
