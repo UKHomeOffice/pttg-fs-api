@@ -36,9 +36,9 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
-            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,nonDoctorateMinCourseLengthWithDependants,
+            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
             pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor, authenticator, 12,2,4
+        ), getStudentTypeChecker(), getCourseTypeChecker(),  serviceMessages, auditor, authenticator, 12,2,4
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -49,7 +49,7 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
 
     def url = TestUtils.thresholdUrl
 
-    def callApi(studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid) {
+    def callApi(studentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid) {
 
 
         def response = mockMvc.perform(
@@ -62,6 +62,7 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
                 .param("dependants", dependants.toString())
                 .param("tuitionFees", tuitionFees.toString())
                 .param("tuitionFeesPaid", tuitionFeesPaid.toString())
+                .param("courseType", "main")
 
         )
         response.andDo(MockMvcResultHandlers.print())
@@ -71,7 +72,7 @@ class StudentTypeMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Student types"() {
 
         expect:
-        def response = callApi(studentType, true, LocalDate.of(2000,1,1), LocalDate.of(2000,5,31), LocalDate.of(2000,9,3), 0, 0, 0, 0)
+        def response = callApi(studentType, true, LocalDate.of(2000,1,1), LocalDate.of(2000,5,31), LocalDate.of(1999,9,3), 0, 0, 0, 0)
         response.andExpect(status().is(httpStatus))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.message == statusMessage

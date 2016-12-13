@@ -1,5 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
+import java.time.LocalDate
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.annotation.{JsonInclude, JsonUnwrapped}
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBalanceCheck}
@@ -7,8 +9,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBa
 case class StatusResponse(code: String, message: String)
 
 case class CappedValues(@JsonInclude(Include.NON_EMPTY) accommodationFeesPaid: Option[BigDecimal],
-                        @JsonInclude(Include.NON_EMPTY) courseLength: Option[Int] = None,
-                        @JsonInclude(Include.NON_EMPTY) continuationLength: Option[Int] = None
+                        @JsonInclude(Include.NON_EMPTY) courseLength: Option[Int] = None
                        )
 
 case object AccountDailyBalanceStatusResponse {
@@ -26,10 +27,11 @@ case class AccountDailyBalanceStatusResponse(@JsonInclude(Include.NON_EMPTY) acc
                                              @JsonInclude(Include.NON_EMPTY) status: StatusResponse)
 
 case object ThresholdResponse {
-  def apply(status: StatusResponse): ThresholdResponse = ThresholdResponse(None, None, status)
+  def apply(status: StatusResponse): ThresholdResponse = ThresholdResponse(None, None, None, status)
 }
 
 case class ThresholdResponse(@JsonInclude(Include.NON_EMPTY) threshold: Option[BigDecimal],
+                             @JsonInclude(Include.NON_EMPTY) leaveEndDate: Option[LocalDate],
                              @JsonInclude(Include.NON_EMPTY) cappedValues: Option[CappedValues],
                              @JsonInclude(Include.NON_NULL) status: StatusResponse)
 

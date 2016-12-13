@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.restassured.RestDocumentationFilter;
@@ -21,6 +22,7 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfig
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -32,8 +34,10 @@ import static org.springframework.restdocs.restassured.RestAssuredRestDocumentat
 import static org.springframework.restdocs.restassured.operation.preprocess.RestAssuredPreprocessors.modifyUris;
 import static org.springframework.restdocs.snippet.Attributes.key;
 
-@SpringApplicationConfiguration(classes = {ServiceRunner.class, ServiceConfiguration.class})
-@WebIntegrationTest("server.port=0")
+@SpringBootTest(
+    webEnvironment = RANDOM_PORT,
+    classes = {ServiceRunner.class, ServiceConfiguration.class}
+)
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(properties = {
     "barclays.stub.service=http://localhost:8089"
@@ -67,7 +71,6 @@ public class ThresholdCalculator {
             )
         );
 
-
     private FieldDescriptor[] statusModelFields = new FieldDescriptor[]{
         fieldWithPath("status").description("The result status"),
         fieldWithPath("status.code").description("A numeric code identifying the error condition - see <<Errors>>"),
@@ -76,6 +79,7 @@ public class ThresholdCalculator {
 
     private FieldDescriptor[] bodyModelFields = new FieldDescriptor[]{
         fieldWithPath("threshold").description("minimum daily balance"),
+        fieldWithPath("leaveEndDate").description("end date of leave granted")
     };
 
     @Before
@@ -103,12 +107,13 @@ public class ThresholdCalculator {
             .param("inLondon", "true")
             .param("courseStartDate","2000-01-01")
             .param("courseEndDate","2000-05-31")
-            .param("continuationEndDate","2000-07-30")
+            .param("originalCourseStartDate","1999-07-01")
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
             .param("studentType", "nondoctorate")
             .param("dependants", "0")
+            .param("courseType", "main")
             .filter(document.snippets(
                 requestHeaders(
                     headerWithName("Accept").description("The requested media type eg application/json. See <<Schema>> for supported media types.")
@@ -130,12 +135,13 @@ public class ThresholdCalculator {
             .param("inLondon", "true")
             .param("courseStartDate","2000-01-01")
             .param("courseEndDate","2000-05-31")
-            .param("continuationEndDate","2000-07-30")
+            .param("originalCourseStartDate","1999-07-01")
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
             .param("studentType", "nondoctorate")
             .param("dependants", "1")
+            .param("courseType", "main")
              .filter(document.snippets(
                 responseFields(bodyModelFields)
                     .and(statusModelFields),
@@ -149,8 +155,8 @@ public class ThresholdCalculator {
                     parameterWithName("courseEndDate")
                         .description("The end date of the course (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(false)),
-                    parameterWithName("continuationEndDate")
-                        .description("The end date of the course continuation (not required for 'doctorate' student type)")
+                    parameterWithName("originalCourseStartDate")
+                        .description("The start date of the original course (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(true)),
                     parameterWithName("tuitionFees")
                         .description("Total tuition fees (not required for 'doctorate' student type)")
@@ -160,12 +166,15 @@ public class ThresholdCalculator {
                         .attributes(key("optional").value(true)),
                     parameterWithName("accommodationFeesPaid")
                         .description("Accommodation fees already paid")
-                        .attributes(key("optional").value(false)),
+                        .attributes(key("optional").value(true)),
                     parameterWithName("studentType")
                         .description("Type of student. Allowed values are 'doctorate', 'nondoctorate', 'pgdd' and 'sso'. See <<Glossary>>")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
                         .description("The number of dependants to take in to account when calculating the minimum balance")
+                        .attributes(key("optional").value(true)),
+                    parameterWithName("courseType")
+                        .description("Type of course.  Allowed values are 'main' and 'pre-sessional'")
                         .attributes(key("optional").value(true))
                 )
 
@@ -174,7 +183,6 @@ public class ThresholdCalculator {
             .when().get("/maintenance/threshold")
             .then().assertThat().statusCode(is(200));
     }
-
 
     @Test
     public void missingParameterError() throws Exception {
@@ -191,6 +199,5 @@ public class ThresholdCalculator {
             .when().get("/maintenance/threshold")
             .then().assertThat().statusCode(is(400));
     }
-
 
 }

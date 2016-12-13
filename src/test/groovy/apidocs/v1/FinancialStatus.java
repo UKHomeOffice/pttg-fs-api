@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.restassured.RestDocumentationFilter;
@@ -23,6 +24,7 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfig
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -33,8 +35,10 @@ import static org.springframework.restdocs.restassured.RestAssuredRestDocumentat
 import static org.springframework.restdocs.restassured.operation.preprocess.RestAssuredPreprocessors.modifyUris;
 import static org.springframework.restdocs.snippet.Attributes.key;
 
-@SpringApplicationConfiguration(classes = {ServiceRunner.class, ServiceConfiguration.class})
-@WebIntegrationTest("server.port=0")
+@SpringBootTest(
+    webEnvironment = RANDOM_PORT,
+    classes = {ServiceRunner.class, ServiceConfiguration.class}
+)
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(properties = {
     "barclays.stub.service=http://localhost:8089"
@@ -128,7 +132,6 @@ public class FinancialStatus {
             .param("minimum", 1000)
             .param("dob", "2000-01-01")
             .param("userId", "userid123456")
-            .param("accountHolderConsent", "true")
             .filter(document.snippets(
                 requestHeaders(
                     headerWithName("Accept").description("The requested media type eg application/json. See <<Schema>> for supported media types.")
@@ -154,7 +157,6 @@ public class FinancialStatus {
             .param("minimum", 1000)
             .param("dob", "2000-01-01")
             .param("userId", "userid123456")
-            .param("accountHolderConsent", "true")
             .filter(document.snippets(
                 responseFields(bodyModelFields)
                     .and(accountModelFields)
@@ -174,9 +176,6 @@ public class FinancialStatus {
                         .attributes(key("optional").value(false)),
                     parameterWithName("userId")
                         .description("A user ID for the requester - any string")
-                        .attributes(key("optional").value(false)),
-                    parameterWithName("accountHolderConsent")
-                        .description("Has the account holder given consent for the search - true or false")
                         .attributes(key("optional").value(false))
                 ),
                 pathParameters(
@@ -203,7 +202,6 @@ public class FinancialStatus {
             .param("minimum", 100000)
             .param("dob", "2000-01-01")
             .param("userId", "userid123456")
-            .param("accountHolderConsent", "true")
             .filter(document.snippets(
                 responseFields(
                     fieldWithPath("failureReason").description("Contains further details of the failure reason"),
@@ -227,9 +225,6 @@ public class FinancialStatus {
                         .attributes(key("optional").value(false)),
                     parameterWithName("userId")
                         .description("A user ID for the requester - any string. This is for audit trail purposes only.")
-                        .attributes(key("optional").value(false)),
-                    parameterWithName("accountHolderConsent")
-                        .description("Whether the account holder given consent for the search - true or false. This is for audit trail purposes only.")
                         .attributes(key("optional").value(false))
                 ),
                 pathParameters(
@@ -255,7 +250,6 @@ public class FinancialStatus {
             .param("minimum", 1000)
             .param("dob", "2000-01-01")
             .param("userId", "userid123456")
-            .param("accountHolderConsent", "true")
             .filter(document.snippets(
                 responseFields(
                     fieldWithPath("status.code").description("A specific error code to identify further details of this error"),
@@ -279,7 +273,6 @@ public class FinancialStatus {
             .param("minimum", 1000)
             .param("dob", "2000-01-01")
             .param("userId", "userid123456")
-            .param("accountHolderConsent", "true")
             .filter(document.snippets(
                 responseFields(
                     fieldWithPath("failureReason").description("Contains further details of the failure reason"),

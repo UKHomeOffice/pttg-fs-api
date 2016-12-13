@@ -35,9 +35,9 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
-            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
+            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
             pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
+        ), getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)

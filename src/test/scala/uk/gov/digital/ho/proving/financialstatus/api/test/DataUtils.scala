@@ -76,5 +76,7 @@ object DataUtils {
 
   def buildScalaOption[T](value: T): Option[T] = Option(value)
 
+  def buildScalaBigDecimal(value: java.math.BigDecimal): BigDecimal =  new scala.math.BigDecimal(value)
+
   def buildUserProfile(id: String) = UserProfile(id, "Fred", "Flintstone", "fred@bedrock.com")
 }

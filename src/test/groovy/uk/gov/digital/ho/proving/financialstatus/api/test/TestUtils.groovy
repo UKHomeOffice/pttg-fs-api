@@ -2,6 +2,7 @@ package uk.gov.digital.ho.proving.financialstatus.api.test
 
 import org.springframework.context.support.ResourceBundleMessageSource
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
+import uk.gov.digital.ho.proving.financialstatus.domain.CourseTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 
 class TestUtils {
@@ -22,7 +23,6 @@ class TestUtils {
 
     public static def nonDoctorateMinCourseLength = 1
     public static def nonDoctorateMaxCourseLength = 9
-    public static def nonDoctorateMinCourseLengthWithDependants = 7
 
     public static def nonDoctorateLeaveToRemainBoundary = 12
     public static def nonDoctorateShortLeaveToRemain = 2
@@ -34,5 +34,7 @@ class TestUtils {
 
 
     public static def getStudentTypeChecker() { new StudentTypeChecker("doctorate", "nondoctorate", "pgdd", "sso") }
+    public static def getCourseTypeChecker() { new CourseTypeChecker("main", "pre-sessional") }
+
 
 }

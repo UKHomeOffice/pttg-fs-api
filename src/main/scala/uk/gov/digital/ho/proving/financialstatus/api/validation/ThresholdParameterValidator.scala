@@ -11,33 +11,28 @@ trait ThresholdParameterValidator {
 
   protected def validateInputs(studentType: StudentType,
                                inLondon: Option[Boolean],
-                               courseLength: Option[Int],
                                tuitionFees: Option[BigDecimal],
                                tuitionFeesPaid: Option[BigDecimal],
                                accommodationFeesPaid: Option[BigDecimal],
                                dependants: Option[Int],
-                               courseMinLength: Int,
-                               courseMinLengthWithDependants: Int,
-                               leaveToRemain: Option[Int],
                                courseStartDate: Option[LocalDate],
                                courseEndDate: Option[LocalDate],
-                               originalCourseStartDate: Option[LocalDate]
+                               originalCourseStartDate: Option[LocalDate],
+                               courseType: CourseType
                               ): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
 
     var errorList = Vector.empty[(String, String, HttpStatus)]
-    val (validCourseStartDate, validCourseEndDate, validContinuationEndDate) = validateDates(courseStartDate, courseEndDate, originalCourseStartDate)
-    val isContinuation = validContinuationEndDate && originalCourseStartDate.isDefined
+    val (validCourseStartDate, validCourseEndDate, validOriginalCourseStartDate) = validateDates(courseStartDate, courseEndDate, originalCourseStartDate)
+    val isContinuation = validOriginalCourseStartDate && originalCourseStartDate.isDefined
     val validDependants = validateDependants(dependants)
-    val validCourseLength = validateCourseLength(courseLength, courseMinLength)
     val validTuitionFees = validateTuitionFees(tuitionFees)
     val validTuitionFeesPaid = validateTuitionFeesPaid(tuitionFeesPaid)
     val validAccommodationFeesPaid = validateAccommodationFeesPaid(accommodationFeesPaid)
     val validInLondon = validateInnerLondon(inLondon)
-    val validDependantsAndCourseLength = validateDependantsAndCourseLength(validDependants, validCourseLength, courseMinLengthWithDependants, isContinuation)
 
     studentType match {
 
-      case NonDoctorate =>
+      case NonDoctorateStudent =>
         if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
         } else if (courseEndDate.isEmpty) {
@@ -46,20 +41,16 @@ trait ThresholdParameterValidator {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE_VALUE, HttpStatus.BAD_REQUEST))
         } else if (!validCourseEndDate) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE_VALUE, HttpStatus.BAD_REQUEST))
-        } else if (!validContinuationEndDate) {
+        } else if (!validOriginalCourseStartDate) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_ORIGINAL_COURSE_START_DATE_VALUE, HttpStatus.BAD_REQUEST))
         } else if (validTuitionFees.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TUITION_FEES, HttpStatus.BAD_REQUEST))
         } else if (validTuitionFeesPaid.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TUITION_FEES_PAID, HttpStatus.BAD_REQUEST))
-        } else if (validCourseLength.isEmpty) {
-          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST))
         } else if (validDependants.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
-        } else if (!validDependantsAndCourseLength.contains(true)) {
-          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_LENGTH_DEPENDANTS, HttpStatus.BAD_REQUEST))
         }
-      case DoctorDentist | StudentSabbaticalOfficer =>
+      case DoctorDentistStudent | StudentSabbaticalOfficer =>
         if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
         } else if (courseEndDate.isEmpty) {
@@ -68,11 +59,9 @@ trait ThresholdParameterValidator {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE_VALUE, HttpStatus.BAD_REQUEST))
         } else if (!validCourseEndDate) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE_VALUE, HttpStatus.BAD_REQUEST))
-        } else if (validCourseLength.isEmpty) {
-          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_LENGTH, HttpStatus.BAD_REQUEST))
         }
-      case Doctorate =>
-      case Unknown(unknownStudentType) => errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_STUDENT_TYPE(unknownStudentType), HttpStatus.BAD_REQUEST))
+      case DoctorateStudent =>
+      case UnknownStudent(unknownStudentType) => errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_STUDENT_TYPE(unknownStudentType), HttpStatus.BAD_REQUEST))
     }
 
     if (validAccommodationFeesPaid.isEmpty) {
@@ -83,13 +72,12 @@ trait ThresholdParameterValidator {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_IN_LONDON, HttpStatus.BAD_REQUEST))
     }
 
-    if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validCourseLength, validTuitionFees, validTuitionFeesPaid, validAccommodationFeesPaid, validInLondon, leaveToRemain, isContinuation))
+    if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validTuitionFees, validTuitionFeesPaid,
+      validAccommodationFeesPaid, validInLondon, courseStartDate, courseEndDate, originalCourseStartDate, isContinuation, courseType == PreSessionalCourse))
     else Left(errorList)
   }
 
   private def validateDependants(dependants: Option[Int]) = dependants.filter(_ >= 0)
-
-  private def validateCourseLength(courseLength: Option[Int], min: Int) = courseLength.filter(length => min <= length)
 
   private def validateTuitionFees(tuitionFees: Option[BigDecimal]) = tuitionFees.filter(_ >= 0)
 
@@ -99,13 +87,7 @@ trait ThresholdParameterValidator {
 
   private def validateInnerLondon(inLondon: Option[Boolean]) = inLondon
 
-  private def validateDependantsAndCourseLength(dependants: Option[Int], courseLength: Option[Int], courseMinLengthWithDependants: Int, isContinuation: Boolean) =
-    for {numOfDependants <- dependants
-         length <- courseLength} yield {
-      (numOfDependants == 0) || (isContinuation && numOfDependants >= 0) || (!isContinuation && numOfDependants > 0 && length >= courseMinLengthWithDependants)
-    }
-
-  private def validateDates(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], continuationEndDate: Option[LocalDate]): (Boolean, Boolean, Boolean) = {
+  private def validateDates(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], originalCourseStartDate: Option[LocalDate]): (Boolean, Boolean, Boolean) = {
 
     val validation = for {
       startDate <- courseStartDate
@@ -115,17 +97,22 @@ trait ThresholdParameterValidator {
         case true => (true, true)
         case false => (false, false)
       }
-      val continuationOk = continuationEndDate match {
+      val continuationOk = originalCourseStartDate match {
         case None => true
-        case Some(date) => date.isAfter(endDate)
+        case Some(date) => date.isBefore(startDate)
       }
       (startOK, endOK, continuationOk)
     }
     validation.getOrElse((false, false, false))
   }
 
-  case class ValidatedInputs(dependants: Option[Int], courseLength: Option[Int], tuitionFees: Option[BigDecimal],
+  case class ValidatedInputs(dependants: Option[Int], tuitionFees: Option[BigDecimal],
                              tuitionFeesPaid: Option[BigDecimal], accommodationFeesPaid: Option[BigDecimal],
-                             inLondon: Option[Boolean], leaveToRemain: Option[Int], isContinuation: Boolean)
+                             inLondon: Option[Boolean],
+                             courseStartDate: Option[LocalDate],
+                             courseEndDate: Option[LocalDate],
+                             originalCourseStartDate: Option[LocalDate],
+                             isContinuation: Boolean,
+                             isPreSessional: Boolean)
 
 }

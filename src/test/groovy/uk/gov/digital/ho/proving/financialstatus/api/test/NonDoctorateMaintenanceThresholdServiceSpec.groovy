@@ -36,11 +36,19 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     Authentication authenticator = Mock()
 
     def thresholdService = new ThresholdService(
-        new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
-            maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
-            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, nonDoctorateMinCourseLengthWithDependants,
-            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
-        ), getStudentTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
+        new MaintenanceThresholdCalculator(
+            inLondonMaintenance,
+            notInLondonMaintenance,
+            maxMaintenanceAllowance,
+            inLondonDependant,
+            notInLondonDependant,
+            nonDoctorateMinCourseLength,
+            nonDoctorateMaxCourseLength,
+            pgddSsoMinCourseLength,
+            pgddSsoMaxCourseLength,
+            doctorateFixedCourseLength
+        ),
+        getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -51,18 +59,19 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def url = TestUtils.thresholdUrl
 
-    def callApi(studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants) {
+    def callApi(studentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType) {
         def response = mockMvc.perform(
             get(url)
                 .param("studentType", studentType)
                 .param("inLondon", inLondon.toString())
                 .param("courseStartDate", courseStartDate.toString())
                 .param("courseEndDate", courseEndDate.toString())
-                .param("continuationEndDate", (continuationEndDate == null) ? "" : continuationEndDate.toString())
+                .param("originalCourseStartDate", (originalCourseStartDate == null) ? "" : originalCourseStartDate.toString())
                 .param("tuitionFees", tuitionFees.toString())
                 .param("tuitionFeesPaid", tuitionFeesPaid.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())
+                .param("courseType", courseType)
         )
         response.andDo(MockMvcResultHandlers.print())
         response
@@ -71,73 +80,120 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Non Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseStartDate          | courseEndDate            | continuationEndDate | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1) | null                | 7307.00     | 0.00            | 0.00                  | 2          || 26652.00
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 8, 1) | null                | 5878.00     | 0.00            | 0.00                  | 4          || 38478.00
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 9, 1) | null                | 9180.00     | 0.00            | 0.00                  | 10         || 79515.00
-
+        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped
+        LocalDate.of(2054, 11, 3)  | LocalDate.of(2055, 9, 25)  | null                       | false    | 2647.39     | 1824.03         | 111.69                | 12         | "pre-sessional" || 83286.67  || 0.00       || 9
+        LocalDate.of(2019, 7, 9)   | LocalDate.of(2020, 3, 5)   | null                       | false    | 6971.95     | 1506.03         | 631.15                | 8          | "MAIN"          || 61914.77  || 0.00       || 0
+        LocalDate.of(2046, 2, 1)   | LocalDate.of(2046, 6, 30)  | LocalDate.of(2045, 4, 26)  | false    | 2440.54     | 3462.02         | 1428.99               | 6          | "MAIN"          || 40530.00  || 1265.00    || 0
+        LocalDate.of(2021, 9, 21)  | LocalDate.of(2022, 9, 2)   | null                       | false    | 5319.46     | 4610.38         | 1072.18               | 14         | "pre-sessional" || 94451.90  || 0.00       || 9
+        LocalDate.of(1980, 9, 24)  | LocalDate.of(1980, 11, 26) | null                       | false    | 863.92      | 7560.20         | 1022.75               | 0          | "MAIN"          || 2022.25   || 0.00       || 0
+        LocalDate.of(1992, 3, 4)   | LocalDate.of(1992, 11, 27) | LocalDate.of(1991, 7, 15)  | false    | 7899.81     | 9302.17         | 1523.80               | 4          | "MAIN"          || 32350.00  || 1265.00    || 0
+        LocalDate.of(1988, 2, 24)  | LocalDate.of(1988, 10, 9)  | null                       | false    | 6530.41     | 3348.66         | 779.18                | 2          | "pre-sessional" || 22762.57  || 0.00       || 0
+        LocalDate.of(2022, 9, 16)  | LocalDate.of(2023, 3, 20)  | null                       | false    | 4744.19     | 6510.78         | 1919.08               | 2          | "pre-sessional" || 18080.00  || 1265.00    || 0
+        LocalDate.of(2007, 11, 24) | LocalDate.of(2008, 4, 15)  | null                       | false    | 2311.25     | 4481.28         | 875.12                | 0          | "pre-sessional" || 4199.88   || 0.00       || 0
+        LocalDate.of(2036, 3, 4)   | LocalDate.of(2036, 10, 23) | LocalDate.of(2035, 12, 5)  | false    | 6091.41     | 3117.24         | 58.82                 | 13         | "MAIN"          || 90595.35  || 0.00       || 0
+        LocalDate.of(2009, 2, 13)  | LocalDate.of(2009, 11, 20) | LocalDate.of(2008, 3, 7)   | false    | 4220.61     | 4242.61         | 1622.62               | 2          | "MAIN"          || 20110.00  || 1265.00    || 9
+        LocalDate.of(2052, 12, 29) | LocalDate.of(2053, 12, 19) | LocalDate.of(2052, 10, 19) | false    | 1347.65     | 6229.42         | 1869.26               | 3          | "MAIN"          || 26230.00  || 1265.00    || 9
+        LocalDate.of(1977, 4, 29)  | LocalDate.of(1977, 9, 3)   | LocalDate.of(1976, 5, 21)  | false    | 373.26      | 6945.01         | 1042.24               | 4          | "MAIN"          || 28512.76  || 0.00       || 0
     }
 
     def "Tier 4 Non Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseStartDate          | courseEndDate            | continuationEndDate | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1) | null                | 12672.00    | 0.00            | 0.00                  | 13         || 120392.00
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 8, 1) | null                | 14618.00    | 0.00            | 0.00                  | 10         || 100788.00
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 9, 1) | null                | 11896.00    | 0.00            | 0.00                  | 3          || 46096.00
-
+        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped
+        LocalDate.of(1996, 8, 25)  | LocalDate.of(1997, 7, 21)  | null                       | true     | 2823.28     | 9013.39         | 1416.13               | 6          | "pre-sessional" || 55750.00  || 1265.00    || 9
+        LocalDate.of(2019, 3, 15)  | LocalDate.of(2019, 9, 11)  | null                       | true     | 9491.47     | 6708.87         | 1453.33               | 0          | "pre-sessional" || 9107.60   || 1265.00    || 0
+        LocalDate.of(2007, 12, 6)  | LocalDate.of(2008, 2, 16)  | LocalDate.of(2007, 4, 14)  | true     | 9843.80     | 545.74          | 411.11                | 7          | "MAIN"          || 42256.95  || 0.00       || 0
+        LocalDate.of(2014, 10, 17) | LocalDate.of(2015, 2, 21)  | LocalDate.of(2014, 9, 24)  | true     | 4475.87     | 288.91          | 278.04                | 7          | "MAIN"          || 39808.92  || 0.00       || 0
+        LocalDate.of(2004, 10, 8)  | LocalDate.of(2004, 11, 15) | LocalDate.of(2003, 11, 29) | true     | 1626.34     | 5714.44         | 797.08                | 14         | "MAIN"          || 49052.92  || 0.00       || 0
+        LocalDate.of(1986, 11, 7)  | LocalDate.of(1987, 9, 17)  | null                       | true     | 7110.72     | 4064.43         | 1986.92               | 3          | "MAIN"          || 35981.29  || 1265.00    || 9
+        LocalDate.of(1977, 8, 27)  | LocalDate.of(1978, 1, 13)  | null                       | true     | 125.38      | 6579.99         | 1150.86               | 0          | "MAIN"          || 5174.14   || 0.00       || 0
     }
 
     def "Tier 4 Non Doctorate - Check 'Tuition Fees paid'"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseStartDate          | courseEndDate            | continuationEndDate | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1) | null                | 9870.00     | 4713.00         | 0.00                  | 12         || 85702.00
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 8, 1) | null                | 11031.00    | 395.00          | 0.00                  | 12         || 92196.00
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 9, 1) | null                | 12972.00    | 4774.00         | 0.00                  | 5          || 47933.00
-
+        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped
+        LocalDate.of(1996, 8, 25)  | LocalDate.of(1997, 7, 21)  | null                       | true     | 2823.28     | 9013.39         | 1416.13               | 6          | "pre-sessional" || 55750.00  || 1265.00    || 9
+        LocalDate.of(2054, 11, 3)  | LocalDate.of(2055, 9, 25)  | null                       | false    | 2647.39     | 1824.03         | 111.69                | 12         | "pre-sessional" || 83286.67  || 0.00       || 9
+        LocalDate.of(2019, 3, 15)  | LocalDate.of(2019, 9, 11)  | null                       | true     | 9491.47     | 6708.87         | 1453.33               | 0          | "pre-sessional" || 9107.60   || 1265.00    || 0
+        LocalDate.of(2019, 7, 9)   | LocalDate.of(2020, 3, 5)   | null                       | false    | 6971.95     | 1506.03         | 631.15                | 8          | "MAIN"          || 61914.77  || 0.00       || 0
+        LocalDate.of(1986, 11, 7)  | LocalDate.of(1987, 9, 17)  | null                       | true     | 7110.72     | 4064.43         | 1986.92               | 3          | "MAIN"          || 35981.29  || 1265.00    || 9
+        LocalDate.of(2052, 12, 29) | LocalDate.of(2053, 12, 19) | LocalDate.of(2052, 10, 19) | false    | 1347.65     | 6229.42         | 1869.26               | 3          | "MAIN"          || 26230.00  || 1265.00    || 9
+        LocalDate.of(1977, 8, 27)  | LocalDate.of(1978, 1, 13)  | null                       | true     | 125.38      | 6579.99         | 1150.86               | 0          | "MAIN"          || 5174.14   || 0.00       || 0
+        LocalDate.of(1977, 4, 29)  | LocalDate.of(1977, 9, 3)   | LocalDate.of(1976, 5, 21)  | false    | 373.26      | 6945.01         | 1042.24               | 4          | "MAIN"          || 28512.76  || 0.00       || 0
     }
 
 
     def "Tier 4 Non Doctorate - Check 'Accommodation Fees paid'"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
 
         where:
-        inLondon | courseStartDate          | courseEndDate            | continuationEndDate | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1) | null                | 10337.00    | 0.00            | 620.00                | 7          || 59662.00
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 8, 1) | null                | 6749.00     | 0.00            | 485.00                | 6          || 51104.00
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 9, 1) | null                | 6242.00     | 0.00            | 917.00                | 2          || 26700.00
+        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped
+        LocalDate.of(1978, 6, 15)  | LocalDate.of(1978, 8, 28)  | null                       | true     | 4611.60     | 7857.51         | 1421.57               | 0          | "pre-sessional" || 2530.00   || 1265.00    || 0
+        LocalDate.of(1976, 9, 25)  | LocalDate.of(1976, 12, 20) | LocalDate.of(1976, 4, 28)  | true     | 3684.19     | 2185.65         | 250.16                | 14         | "MAIN"          || 64193.38  || 0.00       || 0
+        LocalDate.of(1980, 7, 2)   | LocalDate.of(1981, 4, 23)  | LocalDate.of(1980, 6, 11)  | false    | 3298.51     | 7408.46         | 121.11                | 10         | "MAIN"          || 70213.89  || 0.00       || 9
+        LocalDate.of(2037, 11, 23) | LocalDate.of(2038, 3, 21)  | LocalDate.of(2037, 5, 22)  | true     | 2701.81     | 3514.02         | 1841.44               | 2          | "MAIN"          || 13935.00  || 1265.00    || 0
+        LocalDate.of(2015, 6, 24)  | LocalDate.of(2016, 7, 25)  | null                       | true     | 5185.40     | 7062.12         | 860.11                | 13         | "MAIN"          || 109389.89 || 0.00       || 9
+        LocalDate.of(2023, 4, 25)  | LocalDate.of(2023, 5, 1)   | LocalDate.of(2023, 4, 20)  | true     | 4535.25     | 4095.34         | 915.72                | 0          | "MAIN"          || 789.19    || 0.00       || 0
+        LocalDate.of(1986, 1, 6)   | LocalDate.of(1987, 1, 30)  | LocalDate.of(1984, 12, 20) | true     | 3307.48     | 1283.33         | 1042.50               | 9          | "MAIN"          || 80811.65  || 0.00       || 9
+        LocalDate.of(1998, 11, 25) | LocalDate.of(1999, 3, 31)  | null                       | false    | 5013.42     | 3390.23         | 1733.52               | 0          | "MAIN"          || 5433.19   || 1265.00    || 0
+        LocalDate.of(2051, 8, 19)  | LocalDate.of(2052, 5, 24)  | LocalDate.of(2051, 4, 22)  | false    | 5978.71     | 5946.69         | 1854.43               | 6          | "MAIN"          || 44622.02  || 1265.00    || 9
+        LocalDate.of(2054, 8, 14)  | LocalDate.of(2055, 1, 18)  | null                       | true     | 1657.49     | 9.51            | 601.39                | 0          | "pre-sessional" || 8636.59   || 0.00       || 0
+        LocalDate.of(1989, 2, 20)  | LocalDate.of(1989, 11, 1)  | null                       | false    | 9368.28     | 1717.03         | 986.92                | 4          | "MAIN"          || 40279.33  || 0.00       || 0
+        LocalDate.of(2007, 2, 26)  | LocalDate.of(2008, 2, 4)   | LocalDate.of(2006, 12, 18) | false    | 477.01      | 664.94          | 403.93                | 8          | "MAIN"          || 57691.07  || 0.00       || 9
+    }
 
+    def "Tier 4 Non Doctorate - Check 'Leave to remain values'"() {
+        expect:
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
+        response.andExpect(status().isOk())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
+
+        where:
+        courseStartDate           | courseEndDate              | originalCourseStartDate   | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType || threshold || feesCapped || courseCapped || leaveToRemain
+        LocalDate.of(1987, 1, 11) | LocalDate.of(1987, 6, 22)  | null                      | false    | 7237.58     | 9560.93         | 1716.10               | 0          | "main"     || 4825.00   || 1265.00    || 0            || LocalDate.of(1987, 6, 29)
+        LocalDate.of(2044, 4, 9)  | LocalDate.of(2045, 3, 5)   | LocalDate.of(2043, 3, 16) | false    | 3332.32     | 0.00            | 0.00                  | 4          | "main"     || 36947.32  || 0.00       || 9            || LocalDate.of(2045, 7, 5)
+        LocalDate.of(2024, 1, 5)  | LocalDate.of(2024, 5, 26)  | null                      | false    | 777.00      | 0.00            | 0.00                  | 0          | "main"     || 5852.00   || 0.00       || 0            || LocalDate.of(2024, 6, 2)
+        LocalDate.of(2051, 6, 7)  | LocalDate.of(2052, 3, 27)  | LocalDate.of(2050, 8, 5)  | false    | 8883.53     | 0.00            | 654.79                | 13         | "main"     || 96923.74  || 0.00       || 9            || LocalDate.of(2052, 7, 27)
+        LocalDate.of(2051, 2, 25) | LocalDate.of(2051, 3, 23)  | LocalDate.of(2051, 2, 13) | true     | 7945.40     | 0.00            | 0.00                  | 3          | "main"     || 14280.40  || 0.00       || 0            || LocalDate.of(2051, 3, 30)
+        LocalDate.of(2052, 7, 17) | LocalDate.of(2052, 8, 1)   | null                      | true     | 3820.53     | 0.00            | 0.00                  | 0          | "main"     || 5085.53   || 0.00       || 0            || LocalDate.of(2052, 8, 8)
+        LocalDate.of(1974, 8, 15) | LocalDate.of(1974, 11, 24) | null                      | true     | 1306.75     | 9751.17         | 1872.37               | 0          | "main"     || 3795.00   || 1265.00    || 0            || LocalDate.of(1974, 12, 1)
+        LocalDate.of(1985, 2, 17) | LocalDate.of(1986, 1, 22)  | LocalDate.of(1985, 1, 26) | false    | 8356.47     | 7002.99         | 0.00                  | 1          | "main"     || 16608.48  || 0.00       || 9            || LocalDate.of(1986, 3, 22)
+        LocalDate.of(2004, 2, 13) | LocalDate.of(2004, 12, 19) | LocalDate.of(2003, 9, 23) | true     | 8276.69     | 9238.26         | 811.12                | 1          | "main"     || 18178.88  || 0.00       || 9            || LocalDate.of(2005, 4, 19)
     }
 
     def "Tier 4 Non Doctorate - Check 'All variants'"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
 
         assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
+
         if (feesCapped > 0) {
             assert jsonContent.cappedValues && jsonContent.cappedValues.accommodationFeesPaid != null
             assert jsonContent.cappedValues.accommodationFeesPaid == feesCapped
@@ -145,181 +201,143 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
             assert jsonContent.cappedValues == null || jsonContent.cappedValues.accommodationFeesPaid == null
         }
 
-        if (courseLengthCapped > 0) {
+        if (courseCapped > 0) {
             assert jsonContent.cappedValues && jsonContent.cappedValues.courseLength != null
-            assert jsonContent.cappedValues.courseLength == courseLengthCapped
+            assert jsonContent.cappedValues.courseLength == courseCapped
         } else {
             assert jsonContent.cappedValues == null || jsonContent.cappedValues.courseLength == null
         }
 
-        if (continuationLengthCapped > 0) {
-            assert jsonContent.cappedValues && jsonContent.cappedValues.continuationLength != null
-            assert jsonContent.cappedValues.continuationLength == continuationLengthCapped
-        } else {
-            assert jsonContent.cappedValues == null || jsonContent.cappedValues.continuationLengthCapped == null
-        }
-
-
-        if (feesCapped == 0 && courseLengthCapped == 0 && continuationLengthCapped == 0) {
-            assert jsonContent.cappedvalues == null
+        if (feesCapped == 0 && courseCapped == 0) {
+            assert jsonContent.cappedValues == null
         }
 
         where:
-        courseStartDate            | courseEndDate              | continuationEndDate        | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped || continuationLengthCapped
-        LocalDate.of(2026, 11, 6)  | LocalDate.of(2027, 3, 30)  | LocalDate.of(2028, 4, 19)  | false    | 8684.70     | 2229.62         | 1023.26               | 2          || 26806.82  || 0          || 0                  || 9
-        LocalDate.of(2050, 1, 3)   | LocalDate.of(2050, 4, 1)   | null                       | true     | 2278.82     | 1838.25         | 743.75                | 0          || 3491.82   || 0          || 0                  || 0
-        LocalDate.of(2018, 9, 14)  | LocalDate.of(2019, 5, 2)   | LocalDate.of(2020, 1, 3)   | true     | 6859.43     | 8267.82         | 1547.98               | 1          || 17725.00  || 1265       || 0                  || 0
-        LocalDate.of(2053, 10, 10) | LocalDate.of(2053, 12, 27) | null                       | true     | 128.44      | 6770.43         | 1978.36               | 0          || 2530.00   || 1265       || 0                  || 0
-        LocalDate.of(2033, 8, 22)  | LocalDate.of(2034, 8, 11)  | LocalDate.of(2035, 5, 16)  | true     | 4896.58     | 6128.68         | 1419.93               | 11         || 93775.00  || 1265       || 0                  || 9
-        LocalDate.of(2002, 8, 9)   | LocalDate.of(2003, 3, 17)  | LocalDate.of(2003, 4, 20)  | true     | 7220.57     | 2178.83         | 1882.33               | 5          || 23206.74  || 1265       || 0                  || 0
-        LocalDate.of(2033, 5, 7)   | LocalDate.of(2034, 5, 4)   | LocalDate.of(2035, 5, 20)  | true     | 7218.40     | 9267.38         | 1296.44               | 11         || 93775.00  || 1265       || 0                  || 9
-        LocalDate.of(2021, 1, 5)   | LocalDate.of(2021, 7, 22)  | LocalDate.of(2021, 11, 10) | false    | 6047.41     | 9968.15         | 739.07                | 10         || 44120.93  || 0          || 0                  || 0
-        LocalDate.of(2032, 4, 8)   | LocalDate.of(2033, 3, 21)  | null                       | true     | 1413.13     | 95.80           | 1712.24               | 14         || 117907.33 || 1265       || 9                  || 0
-        LocalDate.of(2000, 2, 14)  | LocalDate.of(2000, 4, 12)  | null                       | true     | 3512.21     | 7267.58         | 1299.83               | 0          || 1265.00   || 1265       || 0                  || 0
-        LocalDate.of(2042, 5, 8)   | LocalDate.of(2042, 5, 14)  | LocalDate.of(2043, 4, 9)   | false    | 5176.87     | 6369.59         | 225.44                | 14         || 94589.56  || 0          || 0                  || 9
-        LocalDate.of(2019, 1, 25)  | LocalDate.of(2020, 1, 6)   | null                       | false    | 2021.46     | 8831.97         | 1773.25               | 9          || 62950.00  || 1265       || 9                  || 0
-        LocalDate.of(2005, 7, 2)   | LocalDate.of(2005, 8, 8)   | null                       | true     | 2667.28     | 9052.54         | 479.60                | 0          || 2050.40   || 0          || 0                  || 0
-        LocalDate.of(2053, 4, 11)  | LocalDate.of(2053, 12, 4)  | LocalDate.of(2054, 9, 4)   | true     | 1425.04     | 2353.40         | 1512.81               | 14         || 116590.00 || 1265       || 0                  || 0
-        LocalDate.of(2029, 1, 31)  | LocalDate.of(2029, 9, 15)  | LocalDate.of(2030, 7, 12)  | false    | 7471.76     | 8925.37         | 1061.32               | 6          || 44793.68  || 0          || 0                  || 9
-        LocalDate.of(2043, 1, 18)  | LocalDate.of(2043, 9, 12)  | LocalDate.of(2043, 9, 25)  | false    | 5669.49     | 7709.83         | 1085.53               | 5          || 10129.47  || 0          || 0                  || 0
-        LocalDate.of(2026, 8, 3)   | LocalDate.of(2027, 7, 27)  | null                       | true     | 5278.71     | 2943.90         | 1601.25               | 12         || 103714.81 || 1265       || 9                  || 0
-        LocalDate.of(1988, 7, 26)  | LocalDate.of(1989, 4, 26)  | LocalDate.of(1989, 8, 1)   | false    | 1342.69     | 5396.66         | 1495.96               | 7          || 40875.00  || 1265       || 0                  || 0
-        LocalDate.of(2001, 4, 20)  | LocalDate.of(2001, 6, 16)  | LocalDate.of(2001, 12, 10) | false    | 9721.64     | 68.69           | 383.65                | 2          || 26239.30  || 0          || 0                  || 0
-        LocalDate.of(2051, 1, 1)   | LocalDate.of(2051, 6, 12)  | LocalDate.of(2051, 7, 1)   | true     | 4452.02     | 9265.89         | 1540.57               | 6          || 15210.00  || 1265       || 0                  || 0
-        LocalDate.of(2007, 5, 3)   | LocalDate.of(2007, 5, 24)  | LocalDate.of(2007, 5, 26)  | false    | 5837.16     | 9712.35         | 1122.51               | 9          || 18252.49  || 0          || 0                  || 0
-        LocalDate.of(2039, 3, 14)  | LocalDate.of(2040, 4, 14)  | null                       | false    | 9528.85     | 7873.90         | 330.50                | 9          || 65539.45  || 0          || 9                  || 0
-        LocalDate.of(2053, 5, 28)  | LocalDate.of(2053, 8, 16)  | null                       | false    | 7647.18     | 9738.94         | 1424.47               | 0          || 1780.00   || 1265       || 0                  || 0
-        LocalDate.of(1998, 5, 26)  | LocalDate.of(1998, 11, 14) | LocalDate.of(1999, 1, 15)  | true     | 6873.44     | 9212.10         | 62.80                 | 11         || 50207.20  || 0          || 0                  || 0
-        LocalDate.of(1983, 12, 8)  | LocalDate.of(1984, 10, 15) | null                       | false    | 1888.35     | 224.03          | 1725.79               | 8          || 58494.32  || 1265       || 9                  || 0
-        LocalDate.of(2041, 6, 1)   | LocalDate.of(2042, 1, 8)   | null                       | true     | 6136.11     | 3533.23         | 1169.03               | 2          || 26763.85  || 0          || 0                  || 0
-        LocalDate.of(1986, 3, 17)  | LocalDate.of(1987, 2, 26)  | null                       | false    | 4908.01     | 507.67          | 1811.31               | 10         || 73470.34  || 1265       || 9                  || 0
-        LocalDate.of(2024, 8, 18)  | LocalDate.of(2024, 8, 21)  | LocalDate.of(2025, 8, 26)  | true     | 1489.33     | 7655.00         | 1015.07               | 11         || 94024.93  || 0          || 0                  || 9
-        LocalDate.of(1973, 11, 18) | LocalDate.of(1974, 8, 4)   | null                       | false    | 3296.05     | 5925.11         | 1271.41               | 10         || 69070.00  || 1265       || 0                  || 0
-        LocalDate.of(2043, 10, 27) | LocalDate.of(2044, 8, 16)  | null                       | false    | 7639.35     | 7465.44         | 1497.73               | 13         || 87603.91  || 1265       || 9                  || 0
-        LocalDate.of(1978, 6, 4)   | LocalDate.of(1979, 5, 31)  | null                       | true     | 7698.27     | 9909.92         | 1878.56               | 5          || 48145.00  || 1265       || 9                  || 0
-        LocalDate.of(1975, 6, 12)  | LocalDate.of(1975, 11, 2)  | LocalDate.of(1976, 5, 7)   | false    | 2307.68     | 18.02           | 505.85                | 10         || 70088.81  || 0          || 0                  || 0
-        LocalDate.of(1988, 4, 10)  | LocalDate.of(1988, 5, 3)   | null                       | true     | 3711.66     | 2722.27         | 471.94                | 0          || 1782.45   || 0          || 0                  || 0
-        LocalDate.of(2042, 4, 22)  | LocalDate.of(2043, 1, 1)   | null                       | true     | 7788.74     | 601.21          | 765.97                | 8          || 78646.56  || 0          || 0                  || 0
-        LocalDate.of(2042, 12, 2)  | LocalDate.of(2042, 12, 7)  | LocalDate.of(2043, 5, 7)   | false    | 9696.12     | 6264.96         | 1506.08               | 7          || 40561.16  || 1265       || 0                  || 0
-        LocalDate.of(1998, 7, 14)  | LocalDate.of(1999, 3, 12)  | LocalDate.of(1999, 8, 25)  | true     | 3538.78     | 9002.79         | 712.03                | 11         || 90532.97  || 0          || 0                  || 0
-        LocalDate.of(2040, 1, 13)  | LocalDate.of(2040, 10, 9)  | null                       | true     | 1164.49     | 5620.33         | 1106.20               | 13         || 109143.80 || 0          || 0                  || 0
-        LocalDate.of(2032, 3, 24)  | LocalDate.of(2032, 7, 24)  | null                       | true     | 4355.88     | 654.41          | 314.79                | 0          || 9711.68   || 0          || 0                  || 0
-        LocalDate.of(2006, 5, 9)   | LocalDate.of(2007, 5, 30)  | null                       | false    | 3794.16     | 9979.74         | 878.49                | 4          || 32736.51  || 0          || 9                  || 0
-        LocalDate.of(2044, 10, 18) | LocalDate.of(2045, 10, 19) | LocalDate.of(2046, 10, 26) | true     | 7384.45     | 8891.79         | 1929.46               | 13         || 108985.00 || 1265       || 0                  || 9
-        LocalDate.of(2006, 7, 9)   | LocalDate.of(2006, 12, 22) | LocalDate.of(2007, 2, 4)   | false    | 5966.78     | 6943.60         | 1051.40               | 1          || 3698.60   || 0          || 0                  || 0
-        LocalDate.of(2037, 7, 9)   | LocalDate.of(2038, 6, 6)   | LocalDate.of(2038, 10, 21) | true     | 5977.83     | 448.57          | 1447.56               | 0          || 10589.26  || 1265       || 0                  || 0
-        LocalDate.of(2038, 8, 5)   | LocalDate.of(2039, 6, 29)  | LocalDate.of(2039, 7, 28)  | true     | 9034.72     | 6383.53         | 883.23                | 12         || 53732.96  || 0          || 0                  || 0
-        LocalDate.of(1984, 11, 20) | LocalDate.of(1985, 1, 27)  | LocalDate.of(1985, 11, 13) | false    | 8691.82     | 3588.33         | 1283.49               | 6          || 49693.49  || 1265       || 0                  || 9
-        LocalDate.of(1980, 5, 31)  | LocalDate.of(1980, 7, 24)  | LocalDate.of(1980, 12, 4)  | true     | 1963.52     | 4514.84         | 413.79                | 4          || 29571.21  || 0          || 0                  || 0
-        LocalDate.of(1976, 5, 21)  | LocalDate.of(1977, 5, 12)  | LocalDate.of(1977, 9, 29)  | false    | 4339.90     | 905.63          | 1925.52               | 0          || 7244.27   || 1265       || 0                  || 0
-        LocalDate.of(2020, 9, 3)   | LocalDate.of(2021, 7, 26)  | LocalDate.of(2022, 8, 13)  | true     | 539.72      | 3481.47         | 840.54                | 14         || 117014.46 || 0          || 0                  || 9
-        LocalDate.of(2051, 9, 5)   | LocalDate.of(2052, 8, 31)  | LocalDate.of(2053, 1, 18)  | true     | 6575.07     | 1322.46         | 729.62                | 1          || 18452.99  || 0          || 0                  || 0
-        LocalDate.of(1996, 12, 22) | LocalDate.of(1997, 9, 9)   | LocalDate.of(1998, 6, 10)  | false    | 2838.57     | 520.63          | 618.70                | 6          || 47554.24  || 0          || 0                  || 9
-        LocalDate.of(1996, 4, 11)  | LocalDate.of(1996, 5, 30)  | LocalDate.of(1997, 2, 16)  | false    | 4982.82     | 8134.18         | 1021.24               | 3          || 26473.76  || 0          || 0                  || 0
+        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped || leaveToRemain
+        LocalDate.of(1982, 1, 14)  | LocalDate.of(1982, 1, 30)  | null                       | true     | 3366.13     | 0.00            | 1815.20               | 0          | "pre-sessional" || 3366.13   || 1265.00    || 0            || LocalDate.of(1982, 2, 28)
+        LocalDate.of(2006, 6, 18)  | LocalDate.of(2006, 12, 27) | LocalDate.of(2005, 7, 13)  | false    | 8263.55     | 0.00            | 0.00                  | 12         | "main"          || 88808.55  || 0.00       || 0            || LocalDate.of(2007, 4, 27)
+        LocalDate.of(2024, 6, 16)  | LocalDate.of(2024, 6, 22)  | null                       | false    | 5260.11     | 0.00            | 0.00                  | 0          | "main"          || 6275.11   || 0.00       || 0            || LocalDate.of(2024, 6, 29)
+        LocalDate.of(2033, 12, 30) | LocalDate.of(2034, 3, 29)  | LocalDate.of(2033, 7, 16)  | false    | 9201.12     | 3524.31         | 0.00                  | 6          | "main"          || 29121.81  || 0.00       || 0            || LocalDate.of(2034, 5, 29)
+        LocalDate.of(2021, 8, 14)  | LocalDate.of(2021, 9, 4)   | null                       | false    | 1799.66     | 1590.73         | 662.13                | 0          | "main"          || 561.80    || 0.00       || 0            || LocalDate.of(2021, 9, 11)
+        LocalDate.of(2018, 1, 21)  | LocalDate.of(2019, 1, 10)  | null                       | true     | 9414.74     | 0.00            | 0.00                  | 2          | "main"          || 36009.74  || 0.00       || 9            || LocalDate.of(2019, 3, 10)
+        LocalDate.of(2022, 1, 29)  | LocalDate.of(2023, 1, 26)  | null                       | true     | 3879.58     | 0.00            | 1690.63               | 5          | "main"          || 52024.58  || 1265.00    || 9            || LocalDate.of(2023, 3, 26)
+        LocalDate.of(2014, 9, 21)  | LocalDate.of(2015, 5, 17)  | LocalDate.of(2013, 12, 21) | true     | 7685.98     | 0.00            | 1892.59               | 12         | "main"          || 107800.98 || 1265.00    || 0            || LocalDate.of(2015, 9, 17)
+        LocalDate.of(1993, 8, 6)   | LocalDate.of(1994, 8, 6)   | null                       | true     | 4615.15     | 0.00            | 972.39                | 9          | "pre-sessional" || 83472.76  || 0.00       || 9            || LocalDate.of(1994, 12, 6)
+        LocalDate.of(1997, 6, 26)  | LocalDate.of(1997, 11, 22) | LocalDate.of(1996, 8, 3)   | true     | 2035.31     | 0.00            | 971.97                | 10         | "main"          || 83438.34  || 0.00       || 0            || LocalDate.of(1998, 3, 22)
+        LocalDate.of(2041, 4, 16)  | LocalDate.of(2041, 10, 28) | null                       | false    | 7711.95     | 0.00            | 0.00                  | 5          | "pre-sessional" || 45416.95  || 0.00       || 0            || LocalDate.of(2041, 12, 28)
+        LocalDate.of(1998, 7, 1)   | LocalDate.of(1999, 1, 18)  | null                       | true     | 5985.04     | 0.00            | 0.00                  | 0          | "main"          || 14840.04  || 0.00       || 0            || LocalDate.of(1999, 3, 18)
+        LocalDate.of(1975, 1, 18)  | LocalDate.of(1975, 4, 12)  | LocalDate.of(1974, 10, 21) | true     | 3784.75     | 4635.35         | 1389.95               | 1          | "main"          || 5910.00   || 1265.00    || 0            || LocalDate.of(1975, 4, 19)
+        LocalDate.of(1981, 4, 22)  | LocalDate.of(1981, 10, 23) | null                       | true     | 7535.53     | 9370.19         | 0.00                  | 2          | "pre-sessional" || 24065.00  || 0.00       || 0            || LocalDate.of(1981, 12, 23)
+        LocalDate.of(2021, 10, 20) | LocalDate.of(2022, 11, 9)  | LocalDate.of(2020, 11, 3)  | false    | 215.85      | 4862.61         | 0.00                  | 0          | "main"          || 9135.00   || 0.00       || 9            || LocalDate.of(2023, 3, 9)
+        LocalDate.of(1981, 10, 13) | LocalDate.of(1982, 1, 21)  | LocalDate.of(1981, 2, 28)  | true     | 4231.18     | 0.00            | 0.00                  | 1          | "main"          || 14361.18  || 0.00       || 0            || LocalDate.of(1982, 3, 21)
+        LocalDate.of(1989, 8, 25)  | LocalDate.of(1990, 4, 11)  | LocalDate.of(1989, 5, 31)  | false    | 9746.65     | 0.00            | 460.95                | 10         | "main"          || 78605.70  || 0.00       || 0            || LocalDate.of(1990, 6, 11)
+        LocalDate.of(2045, 6, 4)   | LocalDate.of(2045, 9, 18)  | null                       | false    | 9505.43     | 8466.91         | 0.00                  | 0          | "main"          || 5098.52   || 0.00       || 0            || LocalDate.of(2045, 9, 25)
+        LocalDate.of(2038, 1, 1)   | LocalDate.of(2038, 5, 2)   | LocalDate.of(2037, 8, 5)   | true     | 6582.54     | 0.00            | 0.00                  | 10         | "main"          || 72057.54  || 0.00       || 0            || LocalDate.of(2038, 7, 2)
+        LocalDate.of(1976, 4, 6)   | LocalDate.of(1976, 8, 28)  | null                       | true     | 1010.16     | 7019.97         | 0.00                  | 0          | "main"          || 6325.00   || 0.00       || 0            || LocalDate.of(1976, 9, 4)
     }
 
     def "Tier 4 Non Doctorate - Check invalid tuition fees parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid tuitionFees")))
 
         where:
-        inLondon | courseStartDate          | courseEndDate             | continuationEndDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | null                | -2          | 1855.00         | 0          | 454.00
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                | -0.05       | 4612.00         | 0          | 336.00
+        inLondon | courseStartDate          | courseEndDate             | originalCourseStartDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | null                    | -2          | 1855.00         | 0          | 454.00
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                    | -0.05       | 4612.00         | 0          | 336.00
     }
 
     def "Tier 4 Non Doctorate - Check invalid characters intuition fees parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid tuitionFees")))
 
         where:
-        inLondon | courseStartDate          | courseEndDate            | continuationEndDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1) | null                | "(*&"       | 4612.00         | 0          | 336.00
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1) | null                | "hh"        | 2720.00         | 0          | 1044.00
+        inLondon | courseStartDate          | courseEndDate            | originalCourseStartDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1) | null                    | "(*&"       | 4612.00         | 0          | 336.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1) | null                    | "hh"        | 2720.00         | 0          | 1044.00
     }
 
     def "Tier 4 Non Doctorate - Check invalid tuition fees paid parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid tuitionFeesPaid")))
 
         where:
-        inLondon | courseStartDate          | courseEndDate             | continuationEndDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                | 1855.00     | -2              | 0          | 454.00
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                | 4612.00     | -0.05           | 0          | 336.00
+        inLondon | courseStartDate          | courseEndDate             | originalCourseStartDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                    | 1855.00     | -2              | 0          | 454.00
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                    | 4612.00     | -0.05           | 0          | 336.00
     }
 
     def "Tier 4 Non Doctorate - Check invalid characters in tuition fees paid parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid tuitionFeesPaid")))
 
         where:
-        inLondon | courseStartDate          | courseEndDate            | continuationEndDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1) | null                | 4612.00     | "*^"            | 0          | 336.00
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1) | null                | 2720.00     | "kk"            | 0          | 1044.00
+        inLondon | courseStartDate          | courseEndDate            | originalCourseStartDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1) | null                    | 4612.00     | "*^"            | 0          | 336.00
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1) | null                    | 2720.00     | "kk"            | 0          | 1044.00
     }
 
     def "Tier 4 Non Doctorate - Check invalid accommodation fees paid parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid accommodationFeesPaid")))
 
         where:
-        inLondon | courseStartDate          | courseEndDate             | continuationEndDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                | 454.00      | 1855.00         | 0          | -2
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                | 336.00      | 4612.00         | 0          | -0.05
+        inLondon | courseStartDate          | courseEndDate             | originalCourseStartDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                    | 454.00      | 1855.00         | 0          | -2
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                    | 336.00      | 4612.00         | 0          | -0.05
     }
 
     def "Tier 4 Non Doctorate - Check invalid characters accommodation fees paid parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid accommodationFeesPaid")))
 
         where:
-        inLondon | courseStartDate          | courseEndDate            | continuationEndDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1) | null                | 336.00      | 4612.00         | 0          | "*(^"
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1) | null                | 1044.00     | 2720.00         | 0          | "hh"
+        inLondon | courseStartDate          | courseEndDate            | originalCourseStartDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1) | null                    | 336.00      | 4612.00         | 0          | "*(^"
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1) | null                    | 1044.00     | 2720.00         | 0          | "hh"
     }
 
     def "Tier 4 Non Doctorate - Check invalid dependants parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid dependants")))
 
         where:
-        inLondon | courseStartDate          | courseEndDate            | continuationEndDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1) | null                | 454.00      | 1855.00         | -5         | 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1) | null                | 336.00      | 4612.00         | -99        | 0
+        inLondon | courseStartDate          | courseEndDate            | originalCourseStartDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1) | null                    | 454.00      | 1855.00         | -5         | 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1) | null                    | 336.00      | 4612.00         | -99        | 0
     }
 
     def "Tier 4 Non Doctorate - Check invalid characters dependants parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid dependants")))
 
         where:
-        inLondon | courseStartDate          | courseEndDate             | continuationEndDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                | 454.00      | 1855.00         | ")(&"      | 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                | 336.00      | 4612.00         | "h"        | 0
+        inLondon | courseStartDate          | courseEndDate             | originalCourseStartDate | tuitionFees | tuitionFeesPaid | dependants | accommodationFeesPaid
+        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | null                    | 454.00      | 1855.00         | ")(&"      | 0
+        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | null                    | 336.00      | 4612.00         | "h"        | 0
     }
 
 }
