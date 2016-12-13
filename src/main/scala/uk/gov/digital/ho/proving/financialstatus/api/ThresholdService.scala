@@ -152,10 +152,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  private def calculateThreshold(validatedInputs: Either[Seq[(String, String, HttpStatus)], ValidatedInputs], calculate: ValidatedInputs => Option[ThresholdResponse])
-
-  = {
-
+  private def calculateThreshold(validatedInputs: Either[Seq[(String, String, HttpStatus)], ValidatedInputs], calculate: ValidatedInputs => Option[ThresholdResponse]) = {
     validatedInputs match {
       case Right(inputs) =>
         val thresholdResponse = calculate(inputs)
@@ -169,35 +166,29 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  private def calculateDoctorate(inputs: ValidatedInputs): Option[ThresholdResponse]
-
-  = {
+  private def calculateDoctorate(inputs: ValidatedInputs): Option[ThresholdResponse] = {
     for {inner <- inputs.inLondon
          aFeesPaid <- inputs.accommodationFeesPaid
          deps <- inputs.dependants
     } yield {
-      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDoctorate(inner, aFeesPaid, deps)
-      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateDoctorate(inner, aFeesPaid, deps)
+      new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
 
-  private def calculateDoctorDentistSabbatical(inputs: ValidatedInputs): Option[ThresholdResponse]
-
-  = {
+  private def calculateDoctorDentistSabbatical(inputs: ValidatedInputs): Option[ThresholdResponse] = {
     for {inner <- inputs.inLondon
          aFeesPaid <- inputs.accommodationFeesPaid
          deps <- inputs.dependants
          courseStart <- inputs.courseStartDate
          courseEnd <- inputs.courseEndDate
     } yield {
-      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateDesPgddSso(inner, CourseLengthCalculator.differenceInMonths(courseStart, courseEnd), aFeesPaid, deps)
-      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateDesPgddSso(inner, CourseLengthCalculator.differenceInMonths(courseStart, courseEnd), aFeesPaid, deps)
+      new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
 
-  private def calculateNonDoctorate(inputs: ValidatedInputs): Option[ThresholdResponse]
-
-  = {
+  private def calculateNonDoctorate(inputs: ValidatedInputs): Option[ThresholdResponse] = {
     for {inner <- inputs.inLondon
          tFees <- inputs.tuitionFees
          tFeesPaid <- inputs.tuitionFeesPaid
@@ -205,20 +196,15 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          deps <- inputs.dependants
          startDate <- inputs.courseStartDate
          endDate <- inputs.courseEndDate
-
     } yield {
-      val (threshold, cappedValues) = maintenanceThresholdCalculator.calculateNonDoctorate(inner, tFees, tFeesPaid, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isContinuation, inputs.isPreSessional)
-      new ThresholdResponse(Some(threshold), cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateNonDoctorate(inner, tFees, tFeesPaid, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isContinuation, inputs.isPreSessional)
+      new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
 
-  override def logStartupInformation(): Unit
+  override def logStartupInformation(): Unit = LOGGER.info(maintenanceThresholdCalculator.parameters)
 
-  = LOGGER.info(maintenanceThresholdCalculator.parameters)
-
-  private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse]
-
-  =
+  private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] =
     new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
 
 }

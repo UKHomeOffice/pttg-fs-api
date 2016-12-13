@@ -45,7 +45,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                             originalCourseStartDate: Option[LocalDate],
                             isContinuation: Boolean,
                             isPreSessional: Boolean
-                           ): (BigDecimal, Option[CappedValues]) = {
+                           ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
 
     val courseLengthInMonths = maintenancePeriod(courseStartDate, courseEndDate)
@@ -69,14 +69,14 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
       - accommodationFees).max(0)
 
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
-      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)))
+      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)), Some(leaveToRemain))
     } else {
-      (amount, None)
+      (amount, None, Some(leaveToRemain))
     }
   }
 
   def calculateDesPgddSso(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
-                          dependants: Int): (BigDecimal, Option[CappedValues]) = {
+                          dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
     val (courseLength, courseLengthCapped) = if (courseLengthInMonths > pgddSsoMaxCourseLength) {
       (pgddSsoMaxCourseLength, Some(pgddSsoMaxCourseLength))
@@ -96,18 +96,18 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
       - accommodationFees).max(0)
 
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
-      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)))
+      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)), None)
     } else {
-      (amount, None)
+      (amount, None, None)
     }
 
   }
 
   def calculateDoctorate(innerLondon: Boolean, accommodationFeesPaid: BigDecimal,
-                         dependants: Int): (BigDecimal, Option[CappedValues]) = {
+                         dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
     calculateDesPgddSso(innerLondon: Boolean, doctorateFixedCourseLength, accommodationFeesPaid: BigDecimal,
-      dependants: Int): (BigDecimal, Option[CappedValues])
+      dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate])
 
   }
 
