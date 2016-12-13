@@ -76,6 +76,7 @@ public class ThresholdCalculator {
 
     private FieldDescriptor[] bodyModelFields = new FieldDescriptor[]{
         fieldWithPath("threshold").description("minimum daily balance"),
+        fieldWithPath("leaveToRemain").description("leave date calculated")
     };
 
     @Before
@@ -109,6 +110,7 @@ public class ThresholdCalculator {
             .param("accommodationFeesPaid", "300")
             .param("studentType", "nondoctorate")
             .param("dependants", "0")
+            .param("courseType", "main")
             .filter(document.snippets(
                 requestHeaders(
                     headerWithName("Accept").description("The requested media type eg application/json. See <<Schema>> for supported media types.")
@@ -130,12 +132,13 @@ public class ThresholdCalculator {
             .param("inLondon", "true")
             .param("courseStartDate","2000-01-01")
             .param("courseEndDate","2000-05-31")
-            .param("continuationEndDate","2000-07-30")
+            .param("originalCourseStartDate","2000-07-30")
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
             .param("studentType", "nondoctorate")
             .param("dependants", "1")
+            .param("courseType", "main")
              .filter(document.snippets(
                 responseFields(bodyModelFields)
                     .and(statusModelFields),
@@ -149,8 +152,8 @@ public class ThresholdCalculator {
                     parameterWithName("courseEndDate")
                         .description("The end date of the course (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(false)),
-                    parameterWithName("continuationEndDate")
-                        .description("The end date of the course continuation (not required for 'doctorate' student type)")
+                    parameterWithName("originalCourseStartDate")
+                        .description("The start date of the original course (not required for 'doctorate' student type)")
                         .attributes(key("optional").value(true)),
                     parameterWithName("tuitionFees")
                         .description("Total tuition fees (not required for 'doctorate' student type)")
@@ -166,6 +169,9 @@ public class ThresholdCalculator {
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
                         .description("The number of dependants to take in to account when calculating the minimum balance")
+                        .attributes(key("optional").value(true)),
+                    parameterWithName("courseType")
+                        .description("Type of course.  Allowed values are 'main' and 'pre-sessional'")
                         .attributes(key("optional").value(true))
                 )
 

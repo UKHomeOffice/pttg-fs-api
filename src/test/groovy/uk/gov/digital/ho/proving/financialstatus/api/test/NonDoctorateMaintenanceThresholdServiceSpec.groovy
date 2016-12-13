@@ -170,7 +170,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
-        assert jsonContent.leaveToRemain == leaveToRemain.toString()
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
 
         where:
         courseStartDate           | courseEndDate              | originalCourseStartDate   | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType || threshold || feesCapped || courseCapped || leaveToRemain
@@ -192,7 +192,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
 
         assert jsonContent.threshold == threshold
-        assert jsonContent.leaveToRemain == leaveToRemain.toString()
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
 
         if (feesCapped > 0) {
             assert jsonContent.cappedValues && jsonContent.cappedValues.accommodationFeesPaid != null
@@ -209,7 +209,7 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         }
 
         if (feesCapped == 0 && courseCapped == 0) {
-            assert jsonContent.cappedvalues == null
+            assert jsonContent.cappedValues == null
         }
 
         where:

@@ -31,7 +31,7 @@ case object ThresholdResponse {
 }
 
 case class ThresholdResponse(@JsonInclude(Include.NON_EMPTY) threshold: Option[BigDecimal],
-                             @JsonInclude(Include.NON_EMPTY) leaveToRemain: Option[LocalDate],
+                             @JsonInclude(Include.NON_EMPTY) leaveEndDate: Option[LocalDate],
                              @JsonInclude(Include.NON_EMPTY) cappedValues: Option[CappedValues],
                              @JsonInclude(Include.NON_NULL) status: StatusResponse)
 
