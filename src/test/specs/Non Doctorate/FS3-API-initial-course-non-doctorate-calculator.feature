@@ -1,9 +1,13 @@
 Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non Doctorate with and without dependants (single current account)
 
     Main applicants Required Maintenance period: Months between course start date and course end date (rounded up & capped to 9 months)
-    Dependants Required Maintenance period - Months between main applicants course start date & course end date wrap up period (rounded up & capped to 9 months)
+    Main applicant Required Maintenance period is rounded up to the full month (E.g course length of 5month and 5days is rounded up to 6months)
+
+    Dependants Required Maintenance period - Months between main applicants course start date & course end date + wrap up period (rounded up & capped to 9 months)
+    Dependants Required Maintenance period is only rounded up to the full month after the wrap up is applied (E.g course length of 5month 2days is wrapped up to 5months and 9days) then rounded up to 6months
+
     Main applicants leave - Entire course length + wrap up period
-    Course length - course start date to course end date
+    Course length - course start date to course end date (Main Course)
     Wrap up period calculated from original course start date to course end date
     Wrap up period - see table below:
 
