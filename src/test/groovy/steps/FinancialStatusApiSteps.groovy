@@ -263,8 +263,11 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
                 while (feild.hasNext()) {
                     String key2 = (String) feild.next()
-                    allKeys.add(key2)
-                    println "BBBBBBBBB" + key2
+                    if((key2 != "code")&&(key2 != "message")) {
+                        allKeys.add(key2)
+
+                        println "BBBBBBBBB" + key2
+                    }
                     if (!(json2.get(key2) instanceof String)) {
                         double values = json2.getDouble(key2)
                         innerJsonValue = String.valueOf(df.format(values))
