@@ -87,6 +87,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String courseEndDate = ""
     String continuationEndDate = ""
     String numberOfDependants = ""
+    String courseType = ""
 
     List<String> Todate = new ArrayList()
     List<String> Fromdate = new ArrayList()
@@ -160,7 +161,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             if (s.equalsIgnoreCase("Course start date")) {
                 courseStartDate = entries.get(s)
 
-                println "tttttttttt" + courseStartDate
             }
             if (s.equalsIgnoreCase("Course end date")) {
                 courseEndDate = entries.get(s)
@@ -173,9 +173,10 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             }
             if (s.equalsIgnoreCase("In London") && entries.get(s).equalsIgnoreCase("Yes")) {
                 inLondon = "true"
-            }
-            if (s.equalsIgnoreCase("In London") && entries.get(s).equalsIgnoreCase("No")) {
+            } else if (s.equalsIgnoreCase("In London") && entries.get(s).equalsIgnoreCase("No")) {
                 inLondon = "false"
+            } else if (s.equalsIgnoreCase("In London")) {
+                inLondon = ""
             }
 
             if (s.equalsIgnoreCase("Tuition fees already paid")) {
@@ -193,6 +194,10 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             }
             if (s.equalsIgnoreCase("Account Holder Consent")) {
                 accountHolderConsent = entries.get(s)
+            }
+
+            if (s.equalsIgnoreCase("Course Type")) {
+                courseType = entries.get(s)
             }
 
         }
@@ -380,7 +385,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&continuationEndDate={continuationEndDate}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}", studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&continuationEndDate={continuationEndDate}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}&courseType={courseType}", studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         jsonAsString = resp.asString()
 
         println("FSPS API Calculator: " + jsonAsString)

@@ -53,7 +53,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
     ###### Continuation Main course ########
 
-    Scenario Chris is on an 5 month continuation main course and has 1 dependants. Chris's maintenance threshold amount calculated.
+    Scenario: Chris is on an 5 month continuation main course and has 1 dependants. Chris's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -67,7 +67,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 12250.50   |
             | Leave end date | 2017-09-10 |
 
-    Scenario Mike is on an 2 month continuation main course and has 3 dependants. Chris's maintenance threshold amount calculated.
+    Scenario: Mike is on an 2 month continuation main course and has 3 dependants. Chris's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -81,7 +81,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 11835.50   |
             | Leave end date | 2016-05-08 |
 
-    Scenario Adam is on an 14 month continuation main course and has 2 dependants. Adam's maintenance threshold amount calculated.
+    Scenario: Adam is on an 14 month continuation main course and has 2 dependants. Adam's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -96,7 +96,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course         | 9          |
             | Leave end date | 2017-08-01 |
 
-    Scenario Paul is on an 2 month continuation main course and does not have dependants. Paul's maintenance threshold amount calculated.
+    Scenario: Paul is on an 2 month continuation main course and does not have dependants. Paul's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -107,9 +107,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 4230.50    |
-            | Leave end date | 2017-02-17 |
+            | Leave end date | 2016-02-17 |
 
-    Scenario Winston is on an 7 month continuation main course and does not have dependants. Winston's maintenance threshold amount calculated.
+    Scenario: Winston is on an 7 month continuation main course and does not have dependants. Winston's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -122,7 +122,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 10555.50   |
             | Leave end date | 2016-12-01 |
 
-    Scenario Lucy is on an 11 month continuation main course and does not have dependants. Lucy's maintenance threshold amount calculated.
+    Scenario: Lucy is on an 11 month continuation main course and does not have dependants. Lucy's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -138,7 +138,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
     ###### Continuation Pre-sessional ########
 
-    Scenario Jane is on an 5 month continuation pre-sessional course and has 2 dependants. Jane's maintenance threshold amount calculated.
+    Scenario: Jane is on an 5 month continuation pre-sessional course and has 2 dependants. Jane's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -152,7 +152,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 18165.50   |
             | Leave end date | 2017-07-10 |
 
-    Scenario Ellie is on an 6 month continuation pre-sessional course and has 3 dependants. Ellie's maintenance threshold amount calculated.
+    Scenario: Ellie is on an 6 month continuation pre-sessional course and has 3 dependants. Ellie's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -166,7 +166,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 29570.50   |
             | Leave end date | 2016-12-01 |
 
-    Scenario Tom is on an 14 month continuation pre-sessional course and has 5 dependants. Tom's maintenance threshold amount calculated.
+    Scenario: Tom is on an 14 month continuation pre-sessional course and has 5 dependants. Tom's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -180,7 +180,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 51110.50   |
             | Leave end date | 2016-07-10 |
 
-    Scenario Lorraine is on an 2 month continuation pre-sessional course and does not have dependants. Lorraine's maintenance threshold amount calculated.
+    Scenario: Lorraine is on an 2 month continuation pre-sessional course and does not have dependants. Lorraine's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -191,9 +191,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 4230.50    |
-            | Leave end date | 2017-05-10 |
+            | Leave end date | 2016-05-10 |
 
-    Scenario Jean is on an 7 month continuation pre-sessional course and does not have dependants. Jean's maintenance threshold amount calculated.
+    Scenario: Jean is on an 7 month continuation pre-sessional course and does not have dependants. Jean's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -206,7 +206,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 10555.50   |
             | Leave end date | 2017-01-08 |
 
-    Scenario Jeanette is on an 11 month continuation pre-sessional course and does not have dependants. Jeanette's maintenance threshold amount calculated.
+    Scenario: Jeanette is on an 11 month continuation pre-sessional course and does not have dependants. Jeanette's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
