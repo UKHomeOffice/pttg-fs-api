@@ -132,7 +132,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course end date            | 2017-01-01 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 28295.50   |
+            | Threshold      | 13085.50   |
             | Course Length  | 9          |
             | Leave end date | 2017-05-01 |
 
@@ -216,6 +216,19 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course end date            | 2017-01-01    |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 28295.50   |
+            | Threshold      | 13085.50   |
             | Course Length  | 9          |
             | Leave end date | 2017-05-01 |
+
+    Scenario: Mark is on an 3 month continuation pre-sessional course and does not have dependants. Jeanette's maintenance threshold amount calculated.
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type                | Pre-sessional |
+            | Original course start date | 2015-09-18    |
+            | Course start date          | 2016-02-06    |
+            | Course end date            | 2016-05-01    |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 5495.50   |
+            | Leave end date | 2016-07-01 |
