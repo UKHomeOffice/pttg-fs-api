@@ -88,6 +88,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String continuationEndDate = ""
     String numberOfDependants = ""
     String courseType = ""
+    String originalCourseStartDate = ""
 
     List<String> Todate = new ArrayList()
     List<String> Fromdate = new ArrayList()
@@ -199,7 +200,9 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             if (s.equalsIgnoreCase("Course Type")) {
                 courseType = entries.get(s)
             }
-
+            if (s.equalsIgnoreCase("Original course start date")) {
+                originalCourseStartDate = entries.get(s)
+            }
         }
     }
 
@@ -385,7 +388,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&continuationEndDate={continuationEndDate}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}&courseType={courseType}", studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&continuationEndDate={continuationEndDate}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}&courseType={courseType}&originalCourseStartDate={originalCourseStartDate}", studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType, originalCourseStartDate)
         jsonAsString = resp.asString()
 
         println("FSPS API Calculator: " + jsonAsString)
@@ -393,8 +396,9 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
-        //validateJsonResult(arg1)
-        validateResult(arg1)
+        validateJsonResult(arg1)
+        // validateResult(arg1)
+
 
     }
 

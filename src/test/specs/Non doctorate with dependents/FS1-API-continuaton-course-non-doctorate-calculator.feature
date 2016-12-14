@@ -64,8 +64,8 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Dependants                 | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 12250.50   |
-            | Leave end date | 2017-09-10 |
+            | Threshold      | 15630.50   |
+            | Leave end date | 2016-09-10 |
 
     Scenario: Mike is on an 2 month continuation main course and has 3 dependants. Chris's maintenance threshold amount calculated.
 
@@ -93,7 +93,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 28295.50   |
-            | Course         | 9          |
+            | Course Length  | 9          |
             | Leave end date | 2017-08-01 |
 
     Scenario: Paul is on an 2 month continuation main course and does not have dependants. Paul's maintenance threshold amount calculated.
@@ -133,7 +133,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 28295.50   |
-            | Course         | 9          |
+            | Course Length  | 9          |
             | Leave end date | 2017-05-01 |
 
     ###### Continuation Pre-sessional ########
@@ -149,7 +149,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Dependants                 | 2             |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 18165.50   |
+            | Threshold      | 19855.50   |
             | Leave end date | 2017-07-10 |
 
     Scenario: Ellie is on an 6 month continuation pre-sessional course and has 3 dependants. Ellie's maintenance threshold amount calculated.
@@ -163,7 +163,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Dependants                 | 3             |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 29570.50   |
+            | Threshold      | 32105.50   |
             | Leave end date | 2016-12-01 |
 
     Scenario: Tom is on an 14 month continuation pre-sessional course and has 5 dependants. Tom's maintenance threshold amount calculated.
@@ -217,5 +217,5 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 28295.50   |
-            | Course         | 9          |
+            | Course Length  | 9          |
             | Leave end date | 2017-05-01 |
