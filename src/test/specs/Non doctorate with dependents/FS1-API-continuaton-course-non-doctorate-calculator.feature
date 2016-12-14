@@ -1,7 +1,11 @@
 Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Student Non Doctorate with and without dependants (single current account)
 
     Main applicants Required Maintenance period - Months between course start date and course end date (rounded up & capped to 9 months)
-    Dependants Required Maintenance period - Months between main applicants course start date and course end date + wrap up period  (rounded up & capped to 9 months)
+    Main applicant Required Maintenance period is rounded up to the full month (E.g continuation course length of 2month and 5days is rounded up to 3months)
+
+    Continuation Maintenance period for main applicant - Duration of the continuation course rounded up (E.g continuation course duration is 2months and 3days is rounded up to 3months)
+
+    Dependants Required Maintenance period for continuation course - Months between main applicants course start date and course end date + wrap up period then  (rounded up & capped to 9 months)
     Main applicants leave - Entire course length + wrap up period
     Course length - course start date to course end date
     Wrap up period calculated from original course start date to course end date
@@ -89,7 +93,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Original course start date | 2015-09-18 |
             | Course start date          | 2016-02-06 |
             | Course end date            | 2017-04-01 |
-            | Dependants                 | 2          |
+            | Dependants                 |    2       |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 28295.50   |
@@ -135,6 +139,19 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 13085.50   |
             | Course Length  | 9          |
             | Leave end date | 2017-05-01 |
+
+    Scenario: John is on an 2 months and 2 days continuation pre-sessional course and does not have dependants. John's maintenance threshold amount calculated.
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type                | Main |
+            | Original course start date | 2015-09-18    |
+            | Course start date          | 2016-02-06    |
+            | Course end date            | 2016-04-07    |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 5495.50   |
+            | Leave end date | 2016-06-07 |
 
     ###### Continuation Pre-sessional ########
 
@@ -220,7 +237,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course Length  | 9          |
             | Leave end date | 2017-05-01 |
 
-    Scenario: Mark is on an 3 month continuation pre-sessional course and does not have dependants. Jeanette's maintenance threshold amount calculated.
+    Scenario: Mark is on an 3 month continuation pre-sessional course and does not have dependants. Mark's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -232,3 +249,4 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | HTTP Status    | 200        |
             | Threshold      | 5495.50   |
             | Leave end date | 2016-07-01 |
+
