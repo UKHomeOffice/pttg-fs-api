@@ -8,7 +8,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
     Dependants Required Maintenance period for continuation course - Months between main applicants course start date and course end date + wrap up period then  (rounded up & capped to 9 months)
     Main applicants leave - Entire course length + wrap up period
     Course length - course start date to course end date
-    Wrap up period calculated from original course start date to course end date
+    Leave is calculated from original course start date to continuation course end date (E.g. Original course start date 01/01/2016, Continuation Course start date 01/05/2016, Continuation course end date 01/07/2016 - leave calculated from 01/05/16 to 01/07/16)
     Wrap up period - see table below:
 
     Main course length 12 month or more = 4 month
