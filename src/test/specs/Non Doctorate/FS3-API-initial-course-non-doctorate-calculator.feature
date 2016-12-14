@@ -117,21 +117,21 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 18160.50   |
-            | Leave end date | 2017-09-28 |
+            | Leave end date | 2016-09-28 |
 
     Scenario: Michael is on an initial 32 months main course and has 3 have dependants. Michael's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Course type       | Main       |
-            | Dependants        | 1          |
+            | Dependants        | 3          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2018-09-03 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 35900.50   |
             | Course length  | 9          |
-            | Leave end date | 2019-01-28 |
+            | Leave end date | 2019-01-03 |
 
         ############## Initial Pre-sessional ######################
 
