@@ -3,7 +3,6 @@ Feature: Validation of the API fields and data
     Student Type - doctorate, nondoctorate, pgdd or sso (mandatory)
     Course Type - pre-sessional or main (mandatory)
     In London - Yes or No options (mandatory)
-    Continuation - Yes or No options (mandatory)
     Course Length - 1-9 months
     Original Course Start Date - Yes or No options (mandatory when Continuation field response is 'yes')
     Accommodation fees already paid - Format should not contain commas or currency symbols
@@ -19,6 +18,8 @@ Feature: Validation of the API fields and data
             | In London                       | Yes          |
             | Course start date               | 2016-01-03   |
             | Course end date                 | 2016-02-03   |
+            | Original course start date      | 2015/12/03   |
+            | Dependents                      | 1            |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
             | Accommodation fees already paid | 0            |
@@ -47,7 +48,7 @@ Feature: Validation of the API fields and data
 
 ######################### Validation on the Course length field #########################
 
-    Scenario: The API is not provided with the Course start date ##this previously was Course length##
+    Scenario: The API is not provided with the Course start date
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Course start date |  |
@@ -105,7 +106,7 @@ Feature: Validation of the API fields and data
 
 ######################### Validation on the Course type field #########################
 
-    Scenario: The API is not provided with Student type field
+    Scenario: The API is not provided with Course type field
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Course Type |  |
@@ -114,3 +115,53 @@ Feature: Validation of the API fields and data
             | Status code    | 0004                                                                     |
             | Status message | Parameter error: Invalid courseType, must be one of [main,pre-sessional] |
 
+######################### Validation on the Dependants field #########################
+
+    Scenario: The API is not provided with the Number of dependants
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | dependants | -4 |
+        Then the service displays the following result
+            | HTTP Status    | 400                                                          |
+            | Status code    | 0004                                                         |
+            | Status message | Parameter error: Invalid dependants, must be zero or greater |
+
+    Scenario: The API is provided with incorrect Number of dependants - not numbers 0-9
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | dependants | ^ |
+        Then the service displays the following result
+            | HTTP Status    | 400                                            |
+            | Status code    | 0002                                           |
+            | Status message | Parameter conversion error: Invalid dependants |
+
+######################### Validation on the Continuation field #########################
+
+    Scenario: The API is not provided with Continuation Yes or No field
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Continuation |  |
+        Then the service displays the following result
+            | HTTP Status    | 400                                                          |
+            | Status code    | 0004                                                         |
+            | Status message | Parameter error: Invalid Continuation, must be true or false |
+
+######################### Validation on the Original course start date field #########################
+
+    Scenario: The API provided with Original course start date that is not before the course start date
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Original course start date | 2018-01-01 |
+        Then the service displays the following result
+            | HTTP Status    | 400                                                                          |
+            | Status code    | 0004                                                                         |
+            | Status message | Parameter error: Parameter conversion error: Invalid originalcourseStartDate |
+
+    Scenario: The API is provided with incorrect Course Length - not numbers 1-9
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course end date | x |
+        Then the service displays the following result
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
+            | Status message | Invalid conversion error: Invalid originalcourseStartDate |
