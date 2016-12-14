@@ -326,27 +326,6 @@ Feature: Validation of the API fields and data
             | Status message | No records for sort code 100908 and account number 21568198 |
 
 
-    Scenario: The API is provided with an Account Holder Consent flag set to false
-
-    Application Raised Date 1st of June
-    She has < than the Total funds required of £2350 for the previous 28 days
-
-        Given a Service is consuming Financial Status API
-        Given the test data for account 23568499
-        When the Financial Status API is invoked with the following:
-            | To Date                | 2016-06-28 |
-            | From Date              | 2016-06-01 |
-            | Minimum                | 2530.00    |
-            | Sort code              | 135610     |
-            | Account number         | 23568499   |
-            | Date of Birth          | 1984-07-27 |
-            | User Id                | user12345  |
-            | Account Holder Consent | false      |
-        Then FSPS Tier four general Case Worker tool API provides the following result
-            | HTTP Status    | 400                                           |
-            | Status code    | 0004                                          |
-            | Status message | Parameter error: Invalid accountHolderConsent |
-
         ######################### Validation on the Date of birth Field #########################
 
     Scenario: The API is not provided with Date of Birth

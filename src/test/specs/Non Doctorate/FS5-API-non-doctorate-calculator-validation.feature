@@ -13,7 +13,7 @@ Feature: Validation of the API fields and data
 
     Background: The API is not provided with Student type field
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        And the default details are
             | Student Type                    | nondoctorate |
             | Course Type                     | main         |
             | In London                       | Yes          |
@@ -114,13 +114,3 @@ Feature: Validation of the API fields and data
             | Status code    | 0004                                                                     |
             | Status message | Parameter error: Invalid courseType, must be one of [main,pre-sessional] |
 
-######################### Validation on the Continuation field #########################
-
-    Scenario: The API is not provided with Student type field
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Continuation |  |
-        Then the service displays the following result
-            | HTTP Status    | 400                                                             |
-            | Status code    | 0004                                                            |
-            | Status message | Parameter error: Invalid contiuationType, must be true or false |
