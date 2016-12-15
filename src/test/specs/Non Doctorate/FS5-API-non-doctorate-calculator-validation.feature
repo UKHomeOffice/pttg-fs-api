@@ -18,7 +18,7 @@ Feature: Validation of the API fields and data
             | In London                       | Yes          |
             | Course start date               | 2016-01-03   |
             | Course end date                 | 2016-02-03   |
-            | Original course start date      | 2015/12/03   |
+            | Original course start date      | 2015-12-03   |
             | Dependents                      | 1            |
             | Total tuition fees              | 3500.50      |
             | Tuition fees already paid       | 0            |
@@ -137,14 +137,6 @@ Feature: Validation of the API fields and data
 
 ######################### Validation on the Continuation field #########################
 
-    Scenario: The API is not provided with Continuation Yes or No field
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Continuation |  |
-        Then the service displays the following result
-            | HTTP Status    | 400                                                          |
-            | Status code    | 0004                                                         |
-            | Status message | Parameter error: Invalid Continuation, must be true or false |
 
 ######################### Validation on the Original course start date field #########################
 
@@ -155,7 +147,7 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                                          |
             | Status code    | 0004                                                                         |
-            | Status message | Parameter error: Parameter conversion error: Invalid originalcourseStartDate |
+            | Status message | Parameter error: Original course start date must be before course start date |
 
     Scenario: The API is provided with incorrect Course Length - not numbers 1-9
         Given A Service is consuming the FSPS Calculator API
@@ -164,4 +156,5 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                               |
             | Status code    | 0002                                              |
-            | Status message | Invalid conversion error: Invalid originalcourseStartDate |
+            | Status message | Parameter conversion error: Invalid courseEndDate |
+
