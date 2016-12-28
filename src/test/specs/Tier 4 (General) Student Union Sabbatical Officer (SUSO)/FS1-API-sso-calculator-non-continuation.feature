@@ -1,10 +1,10 @@
 Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Union Sabbatical Officer with and without dependants (single current account)
 
-    Main applicants Required Maintenance period: Months between course start date and course end date (rounded up & capped to 9 months)
-    Main applicant Required Maintenance period is rounded up to the full month (E.g course length of 5month and 5days is rounded up to 6months)
+    Main applicants Required Maintenance period: Months between course start date and course end date (rounded up & capped to 2 months)
+    Main applicant Required Maintenance period is rounded up to the full month (E.g course length of 1month and 4 days is rounded up to 2 months)
 
-    Dependants Required Maintenance period - Months between main applicants course start date & course end date + wrap up period (rounded up & capped to 9 months)
-    Dependants Required Maintenance period is only rounded up to the full month after the wrap up is applied (E.g course length of 5month 2days is wrapped up to 5months and 9days) then rounded up to 6months
+    Dependants Required Maintenance period - Months between main applicants course start date & course end date + wrap up period (rounded up & capped to 2 months)
+    Dependants Required Maintenance period is only rounded up to the full month after the wrap up is applied (E.g leave length of 1 month 15 days is wrapped up to 2 months) then rounded up to 2months
 
     Main applicants leave - Entire course length + wrap up period
     Course length - course start date to course end date (Main Course)
@@ -28,11 +28,9 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
     Background:
         Given A Service is consuming the FSPS Calculator API
         And the default details are
-            | Student Type                    | sso     |
-            | In London                       | Yes     |
-            | Total tuition fees              | 2000.50 |
-            | Tuition fees already paid       | 200     |
-            | Accommodation fees already paid | 100     |
+            | Student Type                    | sso |
+            | In London                       | Yes |
+            | Accommodation fees already paid | 100 |
 
     #Required Maintenance threshold calculation to pass this feature file
 
@@ -57,79 +55,83 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | sso        |
             | Dependants        | 0          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-07-03 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 10555.50   |
+            | Threshold      | 2430.00    |
+            | Course length  | 6          |
             | Leave end date | 2016-09-03 |
 
     Scenario: Stuart is on an initial 13 months SUSO course and does not have dependants. Stuart's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | sso        |
             | Dependants        | 0          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2017-01-03 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 13085.50   |
-            | Course Length  | 9          |
+            | Course Length  | 13         |
             | Leave end date | 2017-05-03 |
 
-    Scenario: Andy is on an initial 2 months SUSO course and has 2 dependants. Andy's maintenance threshold amount calculated.
+    Scenario: Andy is on an initial 1 months SUSO course and has 2 dependants. Andy's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | sso        |
             | Dependants        | 2          |
             | Course start date | 2016-01-03 |
-            | Course end date   | 2016-02-03 |
+            | Course end date   | 2016-02-02 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 7610.50    |
-            | Leave end date | 2016-02-10 |
+            | Threshold      | 5810.00    |
+            | Course Length  | 1          |
+            | Leave end date | 2016-02-09 |
 
     Scenario: Phil is on an initial 2 months SUSO course and has 2 dependants. Phil's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | sso        |
             | Dependants        | 2          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-02-28 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 9300.50    |
+            | Threshold      | 5810.00    |
+            | Course Length  | 2          |
             | Leave end date | 2016-03-06 |
 
     Scenario: Karen is on an initial 7 months SUSO course and has 1 have dependants. Karen's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | sso        |
             | Dependants        | 1          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-07-28 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 18160.50   |
+            | Threshold      | 4120.00    |
+            | Course Length  | 7          |
             | Leave end date | 2016-09-28 |
 
     Scenario: Michael is on an initial 32 months SUSO course and has 3 have dependants. Michael's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | sso        |
             | Dependants        | 3          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2018-09-03 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 35900.50   |
-            | Course length  | 9          |
+            | Threshold      | 7500.00    |
+            | Course length  | 32         |
             | Leave end date | 2019-01-03 |
 
