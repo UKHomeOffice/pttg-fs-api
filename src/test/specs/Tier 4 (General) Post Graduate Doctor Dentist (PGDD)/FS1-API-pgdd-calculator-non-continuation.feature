@@ -1,5 +1,5 @@
 @wiremock
-Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Graduate Doctor Dentist In and Out of London (single current account and no dependants)
+Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Post Graduate Doctor Dentist In and Out of London (single current account and no dependants)
 
     Acceptance criteria
 

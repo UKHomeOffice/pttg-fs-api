@@ -1,4 +1,4 @@
-Feature: Total Funds Required Calculation - Tier 4 (General) Student Post Grad Doctor or Dentist In & Out London with dependents(single current account)
+Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Post Grad Doctor or Dentist In & Out London with dependents(single current account)
 
     Requirement to meet Tier 4 pass
 

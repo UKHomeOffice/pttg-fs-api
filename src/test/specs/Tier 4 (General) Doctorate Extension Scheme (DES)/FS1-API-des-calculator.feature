@@ -1,9 +1,9 @@
-Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Doctorate Extension Scheme with and without dependants (single current account)
+Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension Scheme with and without dependants (single current account)
 
     Main applicants Required Maintenance period - Months between course start date and course end date (rounded up & capped to 2 months)
     Main applicant Required Maintenance period is rounded up to the full month (E.g continuation course length of 1month and 5days is rounded up to 2months)
 
-    The concept of continuation courses does not apply to the Doctorate Extension Scheme route
+    The concept of continuation or pres-sessional courses do not apply to the Doctorate Extension Scheme route
 
     Dependants Required Maintenance period - Months between main applicants course start date and course end date + wrap up period then  (rounded up & capped to 2 months)
     Main applicants leave - Entire course length + wrap up period

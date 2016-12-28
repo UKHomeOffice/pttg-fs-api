@@ -14,9 +14,8 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
     Main course length 12 month or more = 4 month
     Main course length 6 months or more but less than 12 months = 2 months
     Main course length <6 months = 7 days
-    Pre-sessional course length 12 month or more = 4 month
-    Pre-sessional course length 6 months or more but less than months = 2 months
-    Pre-sessional course length <6 months = 1 months
+
+    The concept of pre-sessional courses does not apply to the SUSO route
 
     Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
