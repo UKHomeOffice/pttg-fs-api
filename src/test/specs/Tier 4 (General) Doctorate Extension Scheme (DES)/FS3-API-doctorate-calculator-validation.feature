@@ -65,7 +65,7 @@ Feature: Validation of the API fields and data
             | Status code    | 0002                                                      |
             | Status message | Parameter conversion error: Invalid accommodationFeesPaid |
 
-    Scenario: The API is provided with incorrect  Accommodation fees already paid - less than zero
+    Scenario: The API is provided with incorrect Accommodation fees already paid - less than zero
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |

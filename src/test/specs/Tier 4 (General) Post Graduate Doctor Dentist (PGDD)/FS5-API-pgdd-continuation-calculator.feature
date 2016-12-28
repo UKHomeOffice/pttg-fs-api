@@ -11,9 +11,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
     Leave is calculated from original course start date to continuation course end date (E.g. Original course start date 01/01/2016, Continuation Course start date 01/05/2016, Continuation course end date 01/07/2016 - leave calculated from 01/05/16 to 01/07/16)
     Wrap up period - see table below:
 
-    Main course length 12 month or more = 4 month
-    Main course length 6 months or more but less than 12 months = 2 months
-    Main course length <6 months = 7 days
+    Main course length 12 month or more = 1 month
+    Main course length 6 months or more but less than 12 months = 1 months
+    Main course length <6 months = 1 month
 
     The concept of pre-sessional courses does not apply to the PGDD route
 
@@ -62,7 +62,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
             | Course Length  | 2          |
-            | Leave end date | 2016-02-17 |
+            | Leave end date | 2016-03-10 |
 
     Scenario: Mike is on a 2 month PGDD continuation course. Mike's Threshold calculated
 
@@ -77,7 +77,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
             | Course Length  | 2          |
-            | Leave end date | 2016-06-10 |
+            | Leave end date | 2016-03-10 |
 
     Scenario: Ann is on a 3 month PGDD continuation course and has 2 dependants. Ann's Threshold calculated
 
@@ -93,7 +93,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
             | HTTP Status    | 200        |
             | Threshold      | 4910.00    |
             | Course Length  | 2          |
-            | Leave end date | 2016-06-09 |
+            | Leave end date | 2016-05-09 |
 
     Scenario: Alvin is on a 5 month PGDD continuation course and has 4 dependants. Alvin's Threshold calculated
 
@@ -108,7 +108,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
             | HTTP Status    | 200        |
             | Threshold      | 8790.00    |
             | Course Length  | 2          |
-            | Leave end date | 2017-02-09 |
+            | Leave end date | 2016-11-09 |
 
     Scenario: Kira is on a 1 month PGDD continuation course and has 1 dependants. Kira's Threshold calculated
 
@@ -122,4 +122,4 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 1610.00    |
-            | Leave end date | 2016-06-08 |
+            | Leave end date | 2016-07-01 |
