@@ -11,11 +11,11 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
     Leave is calculated from original course start date to continuation course end date (E.g. Original course start date 01/01/2016, Continuation Course start date 01/05/2016, Continuation course end date 01/07/2016 - leave calculated from 01/05/16 to 01/07/16)
     Wrap up period - see table below:
 
-    Main course length 12 month or more = 4 month
-    Main course length 6 months or more but less than 12 months = 2 months
-    Main course length <6 months = 7 days
+    SUSO course length 12 month or more = 4 month
+    SUSO course length 6 months or more but less than 12 months = 2 months
+    SUSO course length <6 months = 7 days
 
-    The concept of pre-sessional courses does not apply to the SSO route
+    The concept of pre-sessional courses does not apply to the SUSO route
 
     Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
@@ -48,7 +48,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
     #### SSO continuation course ####
 
-    Scenario: John is on a 2 month SSO continuation course. John's Threshold calculated
+    Scenario: John is on a 2 month SUSO continuation course. John's Threshold calculated
 
 
         Given A Service is consuming the FSPS Calculator API
