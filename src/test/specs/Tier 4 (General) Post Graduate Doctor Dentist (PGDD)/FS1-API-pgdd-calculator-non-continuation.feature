@@ -1,50 +1,59 @@
-@wiremock
 Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Post Graduate Doctor Dentist In and Out of London (single current account and no dependants)
 
-    Acceptance criteria
+Main applicants Required Maintenance period: Months between course start date and course end date (rounded up & capped to 2 months)
+Main applicant Required Maintenance period is rounded up to the full month (E.g course length of 1month and 4days is rounded up to 2months)
 
-    Requirement to meet Tier 4 Doctorate passed and not passed
+Dependants Required Maintenance period - Months between main applicants course start date & course end date + wrap up period (rounded up & capped to 9 months)
+Dependants Required Maintenance period is only rounded up to the full month after the wrap up is applied (E.g course length of 5month 2days is wrapped up to 5months and 9days) then rounded up to 6months
 
-    Not Inner London - The applicant must show evidence of funds to cover £1,015 for each month remaining of the course up to a maximum of 2 months
+Main applicants leave - Entire course length + wrap up period
+Course length - course start date to course end date (Main Course)
+Wrap up period calculated from original course start date to course end date
+Wrap up period - 1 month in all instances regardless of course length
 
-    Required Maintenance threshold calculation to pass this feature file
-    Threshold =  (Required Maintenance funds PGDD (Maintenance Funds required) * (remaining course length) -  (Accommodation fees already paid)
+Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
+Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
-    Tier 4 (General) Sudent - pgdd - In London, In Country - (£1265 x 2) - £0 = £2530
-    Tier 4 (General) Sudent - pgdd - In London, In Country - (£1265 x 1) - £1000 = £265
+    Background:
+        Given A Service is consuming the FSPS Calculator API
+        And the default details are
+            | Student Type                    | pgdd    |
+            | In London                       | Yes     |
+            | Accommodation fees already paid | 0       |
 
-    Tier 4 (General) Sudent - pgdd - Out London, In Country - (£1015 x 2) - £0 = £2030
-    Tier 4 (General) Sudent - pgdd - Out London, In Country - (£1015 x 1) - £500 = £515
+#Required Maintenance threshold calculation to pass this feature file
+
+#Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
+#((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) - (accommodation fees paid)
+
+#12 months: ((£1265 x 12) + (845 x (4+1) x 1) - (£100)
+#8 months:: ((£1265 x 4) + (845 x (4+1) x 1) - (£100)
+#1 months: ((£1265 x 4) + (845 x (4+1) x 1) - (£0)
+
+#Worked examples:
+
+#12 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 12) + (£845 x (12+1) x 1) - (£100) = £4,120
+#8 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 8) + (£845 x (8+1) x 2) - (£100) = £4,960 (maintenance period capped at 2 months for main applicant and dependant)
+#1 month: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 1) + (£845 x (1+1) x 3) - (£0) = £6,335
 
  ##### In London ####
 
-    Scenario: Tony's maintenance threshold amount calculated
-    He is on a 1 month doctorate extension
-    He hasn't paid any accommodation fees
-    He is studying in London at LSE University
-
+    Scenario: Tony's maintenance threshold amount calculated. He is on a 2 month pgdd course
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | pgdd       |
-            | In London                       | Yes        |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-02-03 |
-            | Accommodation fees already paid | 0          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2530.00    |
             | Leave end date | 2016-03-03 |
 
-    Scenario: Shelly's maintenance threshold amount calculated
-    She is on a 2 months doctorate extension
-    She has paid £250.00 of her accommodation fees
-    She is studying in London at LSE University
+    Scenario: Shelly's maintenance threshold amount calculated. She is on a 3 month pgdd course
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd       |
-            | In London                       | Yes        |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-03-03 |
             | Accommodation fees already paid | 0          |
@@ -54,33 +63,51 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
             | Course Length  | 2          |
             | Leave end date | 2016-04-03 |
 
-### Out London ###
-
-    Scenario: John's Threshold calculated
-    He is on a 1 month doctorate extension
-    He hasn't paid any accommodation fees
-    He is studying out of London at Nottingham University
+    Scenario: Martin's Threshold calculated. He is on a 2 month pgdd course and has 1 dependent
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd       |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-02-03 |
+            | dependants                      | 1          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 4220.00    |
+            | Leave end date | 2016-03-03 |
+
+
+    Scenario: Jean's Threshold calculated. She is on a 3 month pdgg course and has 3 dependents
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-03-03 |
+            | Accommodation fees already paid | 250.50     |
+            | dependants                      | 3          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 7349.50    |
+            | Course Length  | 2          |
+            | Leave end date | 2016-04-03 |
+
+### Out London ###
+
+    Scenario: John's maintenance threshold amount calculated. He is on a 2 month pgdd course
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
             | In London                       | No         |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-02-03 |
-            | Accommodation fees already paid | 0          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
             | Leave end date | 2016-03-03 |
 
-    Scenario: Ann's Threshold calculated
-    She is on a 2 months doctorate extension
-    She has paid £250.00 of her accommodation fees
-    She is studying out of London at Nottingham University
+    Scenario: Ann's Threshold maintenance threshold amount. She is on a 5 months pgdd course
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd       |
             | In London                       | No         |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-05-03 |
@@ -90,3 +117,31 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
             | Threshold      | 1780.00    |
             | Course Length  | 2          |
             | Leave end date | 2016-06-03 |
+
+    Scenario: Mo's Threshold calculated. He is on a 2 month course and has 3 dependents
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | In London                       | No         |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-02-03 |
+            | dependants                      | 3          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 6110.00    |
+            | Leave end date | 2016-03-03 |
+
+    Scenario: Adam's Threshold calculated. He is on a 9 month course and has 1 dependents.
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | In London                       | No         |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-08-03 |
+            | Accommodation fees already paid | 100.00     |
+            | dependants                      | 1          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 3290.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2016-09-03 |

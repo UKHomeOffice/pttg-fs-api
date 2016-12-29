@@ -28,21 +28,19 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
     #((Dependants Required Maintenance threshold * 2)  * number of dependants) - (accommodation fees paid)
 
     DES course:
-    #12 months: ((£1265 x 12) + (£845 x (12) x 1) - (£50)
-    #7 months: ((£1265 x 7) + (845 x (7) x 1) - (£100)
-    #1 month: ((£1265 x 2) + (£845 x (2) x 1) - (£100)
+    #12 months: ((£1265 x 12) + (£845 x (12+12) x 1) - (£50)
+    #7 months: ((£1265 x 7) + (845 x (7+12) x 1) - (£100)
+    #1 month: ((£1265 x 2) + (£845 x (1+12) x 1) - (£100)
 
     #Main course worked examples:
 
-    #12 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 12) + (£845 x (12) x 1) - (£50) = £3,325
-    #6 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 7) + (£845 x (7) x 2) - (£100) = £5,810
-    #1 month: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 2) + (£845 x (1) x 3) - (£100) = £7500
-
+    #12 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 12) + (£845 x (12+12) x 1) - (£50) = £3,325
+    #6 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 7) + (£845 x (7+12) x 2) - (£100) = £5,810
+    #1 month: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 2) + (£845 x (1+12) x 3) - (£100) = £7500
 
     #### DES course ####
 
     Scenario: John is on a 2 month DES course. John's Threshold calculated
-
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following

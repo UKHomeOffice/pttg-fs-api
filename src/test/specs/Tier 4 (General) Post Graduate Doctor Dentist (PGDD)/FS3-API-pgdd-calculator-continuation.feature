@@ -9,11 +9,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
     Main applicants leave - Entire course length + wrap up period
     Course length - course start date to course end date
     Leave is calculated from original course start date to continuation course end date (E.g. Original course start date 01/01/2016, Continuation Course start date 01/05/2016, Continuation course end date 01/07/2016 - leave calculated from 01/05/16 to 01/07/16)
-    Wrap up period - see table below:
-
-    Main course length 12 month or more = 1 month
-    Main course length 6 months or more but less than 12 months = 1 months
-    Main course length <6 months = 1 month
+    Wrap up period - 1 month in all instances reagrdless of leave.
 
     The concept of pre-sessional courses does not apply to the PGDD route
 
@@ -34,16 +30,16 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
     #Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
     #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) - (accommodation fees paid)
 
-    #Main course:
-    #12 months or more: ((£1265 x 12) + (£845 x (12+4) x 1) - (£50)
-    #6 months or more but less than 12 months: ((£1265 x 7) + (845 x (7+2) x 1) - (£100)
-    #< 6 months: ((£1265 x 2) + (£845 x (2+7days) x 1) - (£100)
+
+    #12 months: ((£1265 x 12) + (£845 x (12+1) x 1) - (£50)
+    #7 months: ((£1265 x 7) + (845 x (7+1) x 1) - (£100)
+    #1 month: ((£1265 x 1) + (£845 x (1+1) x 1) - (£100)
 
     #Main course worked examples:
 
-    #12 months or more: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 12) + (£845 x (12+4) x 1) - (£50) = £4,170
-    #6 months or more but less than 12 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 7) + (£845 x (7+2) x 2) - (£100) = £5,810
-    #< 6 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 2) + (£845 x (2+7 days) x 3) - (£100) = £7500
+    #12 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 12) + (£845 x (12+1) x 1) - (£50) = £4,170
+    #7 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 7) + (£845 x (7+1) x 2) - (£100) = £5,810
+    #1 month: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 1) + (£845 x (1+1) x 3) - (£100) = £6235
 
 
     #### PGDD continuation course ####
