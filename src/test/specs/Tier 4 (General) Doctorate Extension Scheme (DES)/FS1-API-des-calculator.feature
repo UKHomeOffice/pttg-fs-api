@@ -1,19 +1,14 @@
 Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension Scheme with and without dependants (single current account)
 
-    Main applicants Required Maintenance period - Months between course start date and course end date (rounded up & capped to 2 months)
-    Main applicant Required Maintenance period is rounded up to the full month (E.g continuation course length of 1month and 5days is rounded up to 2months)
+    Main applicants Required Maintenance period - 2 months regardless of course length
 
-    The concept of continuation or pres-sessional courses do not apply to the Doctorate Extension Scheme route
+    The concept of continuation or pre-sessional courses do not apply to the Doctorate Extension Scheme route
 
     Dependants Required Maintenance period - Months between main applicants course start date and course end date + wrap up period then  (rounded up & capped to 2 months)
     Main applicants leave - Entire course length + wrap up period
     Course length - course start date to course end date
     Leave is calculated from course start date to continuation course end date
-    Wrap up period - see table below:
-
-    Main course length 12 month or more = 12 month
-    Main course length 6 months or more but less than 12 months = 12 months
-    Main course length <6 months = 12 month
+    Wrap up period - 12 months regardless of leave
 
     Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
@@ -29,19 +24,19 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
 
     #Required Maintenance threshold calculation to pass this feature file
 
-    #Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
-    #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) - (accommodation fees paid)
+    #Maintenance threshold amount = (Required Maintenance threshold non doctorate * 2) +
+    #((Dependants Required Maintenance threshold * 2)  * number of dependants) - (accommodation fees paid)
 
-    #Main course:
-    #12 months or more: ((£1265 x 12) + (£845 x (12+4) x 1) - (£50)
-    #6 months or more but less than 12 months: ((£1265 x 7) + (845 x (7+2) x 1) - (£100)
-    #< 6 months: ((£1265 x 2) + (£845 x (2+7days) x 1) - (£100)
+    DES course:
+    #12 months: ((£1265 x 12) + (£845 x (12) x 1) - (£50)
+    #7 months: ((£1265 x 7) + (845 x (7) x 1) - (£100)
+    #1 month: ((£1265 x 2) + (£845 x (2) x 1) - (£100)
 
     #Main course worked examples:
 
-    #12 months or more: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 12) + (£845 x (12+4) x 1) - (£50) = £4,170
-    #6 months or more but less than 12 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 7) + (£845 x (7+2) x 2) - (£100) = £5,810
-    #< 6 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 2) + (£845 x (2+1) x 3) - (£100) = £7500
+    #12 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 12) + (£845 x (12) x 1) - (£50) = £3,325
+    #6 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 7) + (£845 x (7) x 2) - (£100) = £5,810
+    #1 month: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 2) + (£845 x (1) x 3) - (£100) = £7500
 
 
     #### DES course ####
@@ -72,7 +67,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
             | Dependants        | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 4910.00    |
+            | Threshold      | 4250.00    |
             | Course Length  | 2          |
             | Leave end date | 2017-04-09 |
 
@@ -100,5 +95,5 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
             | Dependants        | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 1610.00    |
+            | Threshold      | 3720.00    |
             | Leave end date | 2017-06-01 |
