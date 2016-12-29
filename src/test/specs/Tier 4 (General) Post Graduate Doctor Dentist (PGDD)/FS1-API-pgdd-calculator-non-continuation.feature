@@ -112,7 +112,7 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
             | In London                       | No         |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-05-03 |
-            | Accommodation fees already paid | 250        |
+            | Accommodation fees already paid | 250.00        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 1780.00    |

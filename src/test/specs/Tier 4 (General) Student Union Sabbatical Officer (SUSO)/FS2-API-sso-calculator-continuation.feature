@@ -88,7 +88,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Dependants                 | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 4910.00    |
+            | Threshold      | 4250.00    |
             | Course Length  | 2          |
             | Leave end date | 2016-06-09 |
 
