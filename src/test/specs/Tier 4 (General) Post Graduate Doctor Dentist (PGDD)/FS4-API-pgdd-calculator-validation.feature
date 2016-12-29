@@ -1,5 +1,6 @@
 Feature: Validation of the API fields and data
 
+    Student Type - doctorate, nondoctorate, pgdd or sso (mandatory)
     In London - Yes or No options (mandatory)
     Course Length - 1-2 months
     Accommodation fees already paid - Format should not contain commas or currency symbols

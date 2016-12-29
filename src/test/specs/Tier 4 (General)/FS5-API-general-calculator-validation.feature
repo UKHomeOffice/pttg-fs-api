@@ -135,8 +135,6 @@ Feature: Validation of the API fields and data
             | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |
 
-######################### Validation on the Continuation field #########################
-
 
 ######################### Validation on the Original course start date field #########################
 

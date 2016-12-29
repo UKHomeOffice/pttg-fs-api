@@ -1,5 +1,6 @@
 Feature: Validation of the API fields and data
 
+    Stusent Type - doctorate, nondoctorate, pgdd, or sso (mandatory)
     In London - Yes or No options (mandatory)
     Course Length - 1-2 months
     Accommodation fees already paid - Format should not contain commas or currency symbols
@@ -153,3 +154,23 @@ Feature: Validation of the API fields and data
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |
+
+   ######################### Validation on the Original course start date field #########################
+
+    Scenario: The API provided with Original course start date that is not before the course start date
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Original course start date | 2018-01-01 |
+        Then the service displays the following result
+            | HTTP Status    | 400                                                                          |
+            | Status code    | 0004                                                                         |
+            | Status message | Parameter error: Original course start date must be before course start date |
+
+    Scenario: The API is provided with incorrect Course Length - not numbers 1-9
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course end date | x |
+        Then the service displays the following result
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
+            | Status message | Parameter conversion error: Invalid courseEndDate |
