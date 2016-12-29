@@ -30,7 +30,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
     #Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
     #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) - (accommodation fees paid)
 
-
     #12 months: ((£1265 x 12) + (£845 x (12+1) x 1) - (£50)
     #7 months: ((£1265 x 7) + (845 x (7+1) x 2) - (£100)
     #1 month: ((£1265 x 1) + (£845 x (1+1) x 3) - (£100)

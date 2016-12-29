@@ -1,5 +1,7 @@
 Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Union Sabbatical Officer with and without dependants (single current account)
 
+
+    Pre-sessional courses do not apply to the Student Union Sabbatical officer route
     Main applicants Required Maintenance period: Months between course start date and course end date (rounded up & capped to 2 months)
     Main applicant Required Maintenance period is rounded up to the full month (E.g course length of 1month and 4 days is rounded up to 2 months)
 

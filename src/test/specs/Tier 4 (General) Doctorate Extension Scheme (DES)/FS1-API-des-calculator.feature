@@ -1,14 +1,12 @@
 Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension Scheme with and without dependants (single current account)
 
-    Main applicants Required Maintenance period - 2 months regardless of course length
-
-    The concept of continuation or pre-sessional courses do not apply to the Doctorate Extension Scheme route
-
-    Dependants Required Maintenance period - 2 months
+    Continuation or pre-sessional courses do not apply to the Doctorate Extension Scheme route
+    Main applicants Required Maintenance period - always 2 months - regardless of course length
+    Dependants Required Maintenance period - always 2 months - regardless of course length or leave length
     Main applicants leave - Entire course length + wrap up period
     Course length - course start date to course end date
-    Leave is calculated from course start date to continuation course end date
-    Wrap up period - 12 months regardless of leave
+    Leave is calculated from course start date to course end date + wrap up period
+    Wrap up period - always 12 months - regardless of leave
 
     Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
