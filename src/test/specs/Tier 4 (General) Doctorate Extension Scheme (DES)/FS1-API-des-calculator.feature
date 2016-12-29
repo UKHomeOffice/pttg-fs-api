@@ -4,7 +4,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
 
     The concept of continuation or pre-sessional courses do not apply to the Doctorate Extension Scheme route
 
-    Dependants Required Maintenance period - Months between main applicants course start date and course end date + wrap up period then  (rounded up & capped to 2 months)
+    Dependants Required Maintenance period - 2 months
     Main applicants leave - Entire course length + wrap up period
     Course length - course start date to course end date
     Leave is calculated from course start date to continuation course end date
@@ -29,8 +29,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
 
     DES course:
     #12 months: ((£1265 x 12) + (£845 x (12+12) x 1) - (£50)
-    #7 months: ((£1265 x 7) + (845 x (7+12) x 1) - (£100)
-    #1 month: ((£1265 x 2) + (£845 x (1+12) x 1) - (£100)
+    #7 months: ((£1265 x 7) + (845 x (7+12) x 2) - (£100)
+    #1 month: ((£1265 x 1) + (£845 x (1+12) x 3) - (£100) #### check with devs ####
 
     #Main course worked examples:
 

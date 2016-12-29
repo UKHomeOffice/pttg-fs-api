@@ -9,7 +9,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
     Main applicants leave - Entire course length + wrap up period
     Course length - course start date to course end date
     Leave is calculated from original course start date to continuation course end date (E.g. Original course start date 01/01/2016, Continuation Course start date 01/05/2016, Continuation course end date 01/07/2016 - leave calculated from 01/05/16 to 01/07/16)
-    Wrap up period - 1 month in all instances reagrdless of leave.
+    Wrap up period - 1 month in all instances regardless of leave.
 
     The concept of pre-sessional courses does not apply to the PGDD route
 
@@ -32,10 +32,10 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
 
     #12 months: ((£1265 x 12) + (£845 x (12+1) x 1) - (£50)
-    #7 months: ((£1265 x 7) + (845 x (7+1) x 1) - (£100)
-    #1 month: ((£1265 x 1) + (£845 x (1+1) x 1) - (£100)
+    #7 months: ((£1265 x 7) + (845 x (7+1) x 2) - (£100)
+    #1 month: ((£1265 x 1) + (£845 x (1+1) x 3) - (£100)
 
-    #Main course worked examples:
+    #worked examples:
 
     #12 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 12) + (£845 x (12+1) x 1) - (£50) = £4,170
     #7 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 7) + (£845 x (7+1) x 2) - (£100) = £5,810
@@ -49,7 +49,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd       |
             | Original course start date      | 2015-12-15 |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-02-10 |
@@ -64,7 +63,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd       |
             | Original course start date      | 2014-10-15 |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-02-10 |
@@ -79,7 +77,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd       |
             | In London                       | No         |
             | Original course start date      | 2015-09-15 |
             | Course start date               | 2016-01-01 |
@@ -95,7 +92,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd       |
             | Original course start date      | 2015-08-15 |
             | Course start date               | 2016-05-01 |
             | Course end date                 | 2016-10-09 |
@@ -110,7 +106,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd       |
             | Original course start date      | 2016-04-15 |
             | Course start date               | 2016-05-11 |
             | Course end date                 | 2016-06-01 |

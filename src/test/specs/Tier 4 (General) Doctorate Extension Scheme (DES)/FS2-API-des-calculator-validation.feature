@@ -1,10 +1,12 @@
 Feature: Validation of the API fields and data
 
+    Student type - doctorate, nondoctorate, pgdd or sso
+    The end of the 28-day period (mandatory)
     In London - Yes or No options (mandatory)
     Accommodation fees already paid - Format should not contain commas or currency symbols
     To Date - Format should be yyyy-mm-dd
     From Date - Format should be yyyy-mm-dd
-    Dependant - Format should not contain commas
+    Dependants - Format should not contain commas
 
 
 ######################### Validation on the Student type field #########################

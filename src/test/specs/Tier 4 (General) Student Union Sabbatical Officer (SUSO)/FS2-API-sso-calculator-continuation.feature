@@ -34,12 +34,12 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
     #Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
     #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) - (accommodation fees paid)
 
-    #Main course:
+    #SUSO course:
     #12 months or more: ((£1265 x 12) + (£845 x (12+4) x 1) - (£50)
     #6 months or more but less than 12 months: ((£1265 x 7) + (845 x (7+2) x 1) - (£100)
     #< 6 months: ((£1265 x 2) + (£845 x (2+7days) x 1) - (£100)
 
-    #Main course worked examples:
+    #SUSO course worked examples:
 
     #12 months or more: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 12) + (£845 x (12+4) x 1) - (£50) = £4,170
     #6 months or more but less than 12 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 7) + (£845 x (7+2) x 2) - (£100) = £5,810
@@ -53,7 +53,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type               | sso        |
             | Original course start date | 2015-12-15 |
             | Course start date          | 2016-01-03 |
             | Course end date            | 2016-02-10 |
@@ -68,7 +67,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type               | sso        |
             | Original course start date | 2014-10-15 |
             | Course start date          | 2016-01-03 |
             | Course end date            | 2016-02-10 |
@@ -83,7 +81,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type               | sso        |
             | In London                  | No         |
             | Original course start date | 2015-09-15 |
             | Course start date          | 2016-01-01 |
@@ -99,7 +96,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type               | sso        |
             | Original course start date | 2015-08-15 |
             | Course start date          | 2016-05-01 |
             | Course end date            | 2016-10-09 |
@@ -114,7 +110,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type               | sso        |
             | Original course start date | 2016-04-15 |
             | Course start date          | 2016-05-11 |
             | Course end date            | 2016-06-01 |
