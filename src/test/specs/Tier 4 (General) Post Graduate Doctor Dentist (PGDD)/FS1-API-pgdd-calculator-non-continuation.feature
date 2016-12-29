@@ -3,7 +3,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
 Main applicants Required Maintenance period: Months between course start date and course end date (rounded up & capped to 2 months)
 Main applicant Required Maintenance period is rounded up to the full month (E.g course length of 1month and 4days is rounded up to 2months)
 
-Dependants Required Maintenance period - Months between main applicants course start date & course end date + wrap up period (rounded up & capped to 9 months)
+Dependants Required Maintenance period - Months between main applicants course start date & course end date + wrap up period (rounded up & capped to 2 months)
 Dependants Required Maintenance period is only rounded up to the full month after the wrap up is applied (E.g course length of 5month 2days is wrapped up to 5months and 9days) then rounded up to 6months
 
 Main applicants leave - Entire course length + wrap up period
@@ -27,7 +27,7 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
 #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) - (accommodation fees paid)
 
 #12 months: ((£1265 x 12) + (845 x (4+1) x 1) - (£100)
-#8 months:: ((£1265 x 4) + (845 x (8+1) x 2) - (£100)
+#8 months: ((£1265 x 4) + (845 x (8+1) x 2) - (£100)
 #1 months: ((£1265 x 4) + (845 x (1+1) x 3) - (£0)
 
 #Worked examples:
