@@ -64,17 +64,17 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
             | Course Length  | 2          |
             | Leave end date | 2016-04-03 |
 
-    Scenario: Martin's Threshold calculated. He is on a 2 month pgdd course and has 1 dependent
+    Scenario: Martin's Threshold calculated. He is on a 1 month pgdd course and has 1 dependent
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Course start date               | 2016-01-03 |
-            | Course end date                 | 2016-02-03 |
+            | Course end date                 | 2016-01-31 |
             | dependants                      | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 4220.00    |
-            | Leave end date | 2016-03-03 |
+            | Threshold      | 2955.00    |
+            | Leave end date | 2016-02-28 |
 
 
     Scenario: Jean's Threshold calculated. She is on a 3 month pdgg course and has 3 dependents
