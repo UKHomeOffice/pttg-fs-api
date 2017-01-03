@@ -150,7 +150,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
             | Course end date   | 2016-10-10    |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 13085.50   |
+            | Threshold      | 10835.50   |
             | Course Length  | 9          |
             | Leave end date | 2016-12-10 |
 
