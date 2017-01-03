@@ -43,7 +43,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
-            | Leave end date | 2017-02-10 |
 
     Scenario: Ann is on a 3 month DES continuation course and has 2 dependants. Ann's Threshold calculated
 
@@ -55,7 +54,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 4250.00    |
-            | Leave end date | 2017-04-09 |
 
     Scenario: Alvin is on a 5 month DES continuation course and has 4 dependants. Alvin's Threshold calculated
 
@@ -66,7 +64,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 8790.00    |
-            | Leave end date | 2017-10-09 |
 
     Scenario: Kira is on a 1 month DES continuation course and has 1 dependant. Kira's Threshold calculated
 
@@ -77,4 +74,4 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 3720.00    |
-            | Leave end date | 2017-06-01 |
+

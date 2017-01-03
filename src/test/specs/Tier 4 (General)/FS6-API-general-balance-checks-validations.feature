@@ -36,7 +36,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -53,7 +52,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -70,7 +68,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                           |
             | Status code    | 0002                                          |
@@ -89,7 +86,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                        |
             | Status code    | 0004                                       |
@@ -106,7 +102,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                        |
             | Status code    | 0004                                       |
@@ -123,7 +118,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                                   |
             | Status code    | 0002                                                  |
@@ -140,7 +134,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                        |
             | Status code    | 0004                                       |
@@ -160,7 +153,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -178,7 +170,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -195,7 +186,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -212,7 +202,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -232,7 +221,6 @@ Feature: Validation of the API fields and data
             | Account Number         |            |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -250,7 +238,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 2356849    |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0004                                    |
@@ -267,7 +254,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 235684988  |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0004                                    |
@@ -284,7 +270,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 00000000   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0004                                    |
@@ -301,7 +286,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568a98   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -319,7 +303,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 21568198   |
             | Date of Birth          | 1984-07-27 |
             | User Id                | user12345  |
-            | Account Holder Consent | true       |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                         |
             | Status code    | 0007                                                        |
@@ -339,7 +322,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          |            |
             | User Id                | user12345  |
-            | Account Holder Consent | false      |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                    |
             | Status code    | 0004                                   |
@@ -356,7 +338,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 2017-01-15 |
             | User Id                | user12345  |
-            | Account Holder Consent | false      |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                    |
             | Status code    | 0004                                   |
@@ -373,7 +354,6 @@ Feature: Validation of the API fields and data
             | Account Number         | 23568498   |
             | Date of Birth          | 1984-01-1@ |
             | User Id                | user12345  |
-            | Account Holder Consent | false      |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0002                                    |

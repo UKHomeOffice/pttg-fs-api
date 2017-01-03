@@ -135,3 +135,42 @@ Feature: Validation of the API fields and data
             | HTTP Status    | 400                                               |
             | Status code    | 0002                                              |
             | Status message | Parameter conversion error: Invalid courseEndDate |
+
+   ######################### Validation on the Course length field #########################
+
+    Scenario: The API is not provided with the Course start date
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course start date |  |
+        Then the service displays the following result
+            | HTTP Status    | 400                                                 |
+            | Status code    | 0004                                                |
+            | Status message | Parameter conversion error: Invalid courseStartDate |
+
+    Scenario: The API is not provided with the Course end date
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course end date |  |
+        Then the service displays the following result
+            | HTTP Status    | 400                                               |
+            | Status code    | 0004                                              |
+            | Status message | Parameter conversion error: Invalid courseEndDate |
+
+    Scenario: The API is provided with incorrect Course Length - not numbers 1-9
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course end date | x |
+        Then the service displays the following result
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
+            | Status message | Parameter conversion error: Invalid courseEndDate |
+
+    Scenario: The API is provided with incorrect Course Length exceeding 36 months
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course start date | 01/01/2015 |
+            | Course end date   | 10/01/2018 |
+        Then the service displays the following result
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
+            | Status message | Parameter conversion error: Invalid courseEndDate | (what should the error message be?)

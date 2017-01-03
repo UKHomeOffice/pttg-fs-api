@@ -74,7 +74,6 @@ Feature: Validation of the API fields and data
             | Status code    | 0004                                           |
             | Status message | Parameter error: Invalid accommodationFeesPaid |
 
-
         ######################### Validation on the Dependant field #########################
 
     Scenario: The API is not provided with the Number of dependants
