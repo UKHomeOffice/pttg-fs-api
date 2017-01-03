@@ -15,7 +15,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |            |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-02-03 |
@@ -32,7 +31,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | pgdd       |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       |            |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-03-03 |
@@ -50,7 +48,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | pgdd       |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-02-03 |
@@ -65,7 +62,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | pgdd       |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-02-03 |
@@ -80,7 +76,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | pgdd       |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-02-03 |
@@ -97,7 +92,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | pgdd       |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-03-03 |
@@ -112,7 +106,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | pgdd       |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-02-03 |
@@ -122,3 +115,23 @@ Feature: Validation of the API fields and data
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |
+
+    ######################### Validation on the Original course start date field #########################
+
+    Scenario: The API provided with Original course start date that is not before the course start date
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Original course start date | 2018-01-01 |
+        Then the service displays the following result
+            | HTTP Status    | 400                                                                          |
+            | Status code    | 0004                                                                         |
+            | Status message | Parameter error: Original course start date must be before course start date |
+
+    Scenario: The API is provided with incorrect Course Length - not numbers 1-9
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course end date | x |
+        Then the service displays the following result
+            | HTTP Status    | 400                                               |
+            | Status code    | 0002                                              |
+            | Status message | Parameter conversion error: Invalid courseEndDate |

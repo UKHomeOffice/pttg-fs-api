@@ -39,8 +39,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type      | doctorate        |
-            | Course start date | 2016-01-03 |
-            | Course end date   | 2016-02-10 |
             | Dependants        | 0          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
@@ -53,8 +51,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
         When the FSPS Calculator API is invoked with the following
             | Student Type      | doctorate        |
             | In London         | No         |
-            | Course start date | 2016-01-01 |
-            | Course end date   | 2016-04-09 |
             | Dependants        | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
@@ -66,8 +62,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type      | doctorate        |
-            | Course start date | 2016-05-01 |
-            | Course end date   | 2016-10-09 |
             | Dependants        | 4          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
@@ -79,8 +73,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type      | doctorate        |
-            | Course start date | 2016-05-11 |
-            | Course end date   | 2016-06-01 |
             | Dependants        | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
