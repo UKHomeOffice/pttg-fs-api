@@ -3,10 +3,6 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
     Continuation or pre-sessional courses do not apply to the Doctorate Extension Scheme route
     Main applicants Required Maintenance period - always 2 months - regardless of course length
     Dependants Required Maintenance period - always 2 months - regardless of course length or leave length
-    Main applicants leave - Entire course length + wrap up period
-    Course length - course start date to course end date
-    Leave is calculated from course start date to course end date + wrap up period
-    Wrap up period - always 12 months - regardless of leave
 
     Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
@@ -26,15 +22,15 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
     #((Dependants Required Maintenance threshold * 2)  * number of dependants) - (accommodation fees paid)
 
     #DES course:
-    #12 months: ((£1265 x 12) + (£845 x (12+12) x 1) - (£50)
-    #7 months: ((£1265 x 7) + (845 x (7+12) x 2) - (£100)
-    #1 month: ((£1265 x 1) + (£845 x (1+12) x 3) - (£100) #### check with devs ####
+    #12 months: ((£1265 x 2) + (£845 x 2 x 1) - (£50)
+    #7 months: ((£1265 x 2) + (845 x 2 x 2) - (£100)
+    #1 month: ((£1265 x 2) + (£845 x 2 x 3) - (£100) #### check with devs ####
 
     #Main course worked examples:
 
-    #12 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 12) + (£845 x (12+12) x 1) - (£50) = £3,325
-    #6 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 7) + (£845 x (7+12) x 2) - (£100) = £5,810
-    #1 month: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 2) + (£845 x (1+12) x 3) - (£100) = £7500
+    #12 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 1) - (£50) = £3,325
+    #6 months: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 2) - (£100) = £5,810
+    #1 month: Tier 4 (General) Student - des - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 3) - (£100) = £7500
 
     #### DES course ####
 

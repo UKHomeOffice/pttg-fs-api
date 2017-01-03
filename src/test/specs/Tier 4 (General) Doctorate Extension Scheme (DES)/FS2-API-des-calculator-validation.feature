@@ -1,7 +1,6 @@
 Feature: Validation of the API fields and data
 
     Student type - doctorate, nondoctorate, pgdd or sso (mandatory)
-    The end of the 28-day period - (mandatory)
     In London - Yes or No options (mandatory)
     Accommodation fees already paid - Format should not contain commas or currency symbols
     To Date - Format should be yyyy-mm-dd
@@ -15,7 +14,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    |            |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
             | dependants                      | 1          |
@@ -30,7 +28,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       |            |
             | Accommodation fees already paid | 0          |
             | dependants                      | 1          |
@@ -45,7 +42,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Accommodation fees already paid |            |
             | dependants                      | 1          |
@@ -58,7 +54,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Accommodation fees already paid | %%         |
             | dependants                      | 1          |
@@ -71,7 +66,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Accommodation fees already paid | -100       |
             | dependants                      | 1          |
@@ -87,7 +81,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
             | dependants                      | -7         |
@@ -100,7 +93,6 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type                    | doctorate  |
-            | The end of 28-day period        | 2016-06-01 |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
             | dependants                      | @          |
@@ -109,22 +101,3 @@ Feature: Validation of the API fields and data
             | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |
 
-   ######################### Validation on the Original course start date field #########################
-
-    Scenario: The API provided with Original course start date that is not before the course start date
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Original course start date | 2018-01-01 |
-        Then the service displays the following result
-            | HTTP Status    | 400                                                                          |
-            | Status code    | 0004                                                                         |
-            | Status message | Parameter error: Original course start date must be before course start date |
-
-    Scenario: The API is provided with incorrect Course Length - not numbers 1-9
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Course end date | x |
-        Then the service displays the following result
-            | HTTP Status    | 400                                               |
-            | Status code    | 0002                                              |
-            | Status message | Parameter conversion error: Invalid courseEndDate |
