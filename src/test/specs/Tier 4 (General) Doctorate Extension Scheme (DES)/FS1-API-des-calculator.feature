@@ -42,21 +42,20 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | des        |
+            | Student Type      | doctorate        |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-02-10 |
             | Dependants        | 0          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
-            | Course Length  | 2          |
             | Leave end date | 2017-02-10 |
 
     Scenario: Ann is on a 3 month DES continuation course and has 2 dependants. Ann's Threshold calculated
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | des        |
+            | Student Type      | doctorate        |
             | In London         | No         |
             | Course start date | 2016-01-01 |
             | Course end date   | 2016-04-09 |
@@ -64,28 +63,26 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 4250.00    |
-            | Course Length  | 2          |
             | Leave end date | 2017-04-09 |
 
     Scenario: Alvin is on a 5 month DES continuation course and has 4 dependants. Alvin's Threshold calculated
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | des        |
+            | Student Type      | doctorate        |
             | Course start date | 2016-05-01 |
             | Course end date   | 2016-10-09 |
             | Dependants        | 4          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 8790.00    |
-            | Course Length  | 2          |
             | Leave end date | 2017-10-09 |
 
     Scenario: Kira is on a 1 month DES continuation course and has 1 dependant. Kira's Threshold calculated
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | des        |
+            | Student Type      | doctorate        |
             | Course start date | 2016-05-11 |
             | Course end date   | 2016-06-01 |
             | Dependants        | 1          |
