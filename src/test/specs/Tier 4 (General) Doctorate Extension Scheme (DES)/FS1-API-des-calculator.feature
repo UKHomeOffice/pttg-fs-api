@@ -25,7 +25,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
     #Maintenance threshold amount = (Required Maintenance threshold non doctorate * 2) +
     #((Dependants Required Maintenance threshold * 2)  * number of dependants) - (accommodation fees paid)
 
-    DES course:
+    #DES course:
     #12 months: ((£1265 x 12) + (£845 x (12+12) x 1) - (£50)
     #7 months: ((£1265 x 7) + (845 x (7+12) x 2) - (£100)
     #1 month: ((£1265 x 1) + (£845 x (1+12) x 3) - (£100) #### check with devs ####
