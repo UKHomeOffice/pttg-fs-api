@@ -36,9 +36,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
     #worked examples:
 
-    #12 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 12) + (£845 x (12+1) x 1) - (£50) = £4,170
-    #7 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 7) + (£845 x (7+1) x 2) - (£100) = £5,810
-    #1 month: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 1) + (£845 x (1+1) x 3) - (£100) = £6235
+    #12 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 1) - (£50) = £4,170
+    #7 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 2) - (£100) = £5,810
+    #1 month: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 1) + (£845 x 2 x 3) - (£100) = £6235
 
 
     #### PGDD continuation course ####

@@ -41,9 +41,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
     #SUSO course worked examples:
 
-    #12 months or more: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 12) + (£845 x (12+4) x 1) - (£50) = £4,170
-    #6 months or more but less than 12 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 7) + (£845 x (7+2) x 2) - (£100) = £5,810
-    #< 6 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x (2+7 days) x 3) - (£100) = £7500
+    #12 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 1) - (£50) = £4,170
+    #7 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 2) - (£100) = £5,810
+    #2 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 3) - (£100) = £7500
 
 
     #### SSO continuation course ####

@@ -39,15 +39,15 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
     #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
 
     #SUSO course:
-    #12 months or more: ((£1265 x 4) + (845 x (4+4) x 1) + (£10,000 - 0 - 0))
-    #6 months or more but less than 12 months: ((£1265 x 4) + (845 x (4+2) x 1) + (£10,000 - 0 - 0))
-    #< 6 months: ((£1265 x 4) + (845 x (4+7day) x 1) + (£10,000 - 0 - 0))
+    #12 months: ((£1265 x 12) + (845 x (12+4) x 1) + (£10,000 - 0 - 0))
+    #7 months: ((£1265 x 7) + (845 x (7+2) x 2) + (£10,000 - 0 - 0))
+    #2 months: ((£1265 x 2) + (845 x (4+7day) x 3) + (£10,000 - 0 - 0))
 
     #SUSO course worked examples:
 
-    #12 months or more: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 3) + (£845 x (3+4) x 1) + (£10,000 - £0 - £0) = £19,710
-    #6 months or more but less than 12 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 8) + (£845 x (8+2) x 2) + (£7,000 - £300 - £500.50) = £31,529.50 (dependant require maintenance period capped at 9 months)
-    #< 6 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 4) + (£845 x (4+7 days) x 1) + (£10,000 - £0 - £0) = (£18440)
+    #12 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 1) + (£10,000 - £0 - £0) = £14,220
+    #7 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 2) + (£7,000 - £300 - £500.50) = £12,109.50
+    #2 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 3) + (£10,000 - £0 - £0) = (£17,600)
 
 
     ################# SUSO course #######################
