@@ -5,7 +5,6 @@ Feature: Validation of the API fields and data
     The same validations for in and out of London
 
     In London - Yes or No options (mandatory)
-    Course length - 1-2 months (mandatory)
     Accommodation fees already paid - numbers only. Highest amount £1,265. Format should not contain commas or currency symbols
     To date - format should be yyyy-mm-dd (mandatory)
     From date - format should be yyyy-mm-dd (mandatory)

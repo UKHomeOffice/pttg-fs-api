@@ -34,7 +34,7 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
 #Worked examples:
 
 #12 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 1) - (£100) = £4,120
-#8 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 2) - (£100) = £5,810 (maintenance period capped at 2 months for main applicant and dependant)
+#8 months: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 2) - (£100) = £5,810
 #1 month: Tier 4 (General) Student - pgdd - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 3) - (£0) = £6,335
 
  ##### In London ####
