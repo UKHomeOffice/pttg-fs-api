@@ -24,6 +24,9 @@ class TestUtils {
     public static def nonDoctorateMinCourseLength = 1
     public static def nonDoctorateMaxCourseLength = 9
 
+    public static def susoMinCourseLength = 1
+    public static def susoMaxCourseLength = 2
+
     public static def nonDoctorateLeaveToRemainBoundary = 12
     public static def nonDoctorateShortLeaveToRemain = 2
     public static def nonDoctorateLongLeaveToRemain = 4

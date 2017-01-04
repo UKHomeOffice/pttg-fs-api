@@ -118,6 +118,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
     Scenario: Michael is on an initial 33 months SUSO course and has 3 have dependants. Michael's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
             | In London         | No         |
             | Dependants        | 3          |
             | Course start date | 2016-01-03 |

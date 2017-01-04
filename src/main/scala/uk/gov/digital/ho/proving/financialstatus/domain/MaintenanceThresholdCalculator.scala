@@ -16,7 +16,9 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                                   @Value("${non.doctorate.maximum.course.length}") val nonDoctorateMaxCourseLength: Int,
                                                   @Value("${pgdd.sso.minimum.course.length}") val pgddSsoMinCourseLength: Int,
                                                   @Value("${pgdd.sso.maximum.course.length}") val pgddSsoMaxCourseLength: Int,
-                                                  @Value("${doctorate.fixed.course.length}") val doctorateFixedCourseLength: Int
+                                                  @Value("${doctorate.fixed.course.length}") val doctorateFixedCourseLength: Int,
+                                                  @Value("${suso.minimum.course.length}") val susoMinCourseLength: Int,
+                                                  @Value("${suso.maximum.course.length}") val susoMaxCourseLength: Int
                                                  ) {
 
   val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon).setScale(2, BigDecimal.RoundingMode.HALF_UP)
@@ -75,8 +77,46 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     }
   }
 
-  def calculateDesPgddSso(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
-                          dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
+
+  def calculateSUSO(innerLondon: Boolean,
+                    accommodationFeesPaid: BigDecimal,
+                    dependants: Int,
+                    courseStartDate: LocalDate,
+                    courseEndDate: LocalDate,
+                    originalCourseStartDate: Option[LocalDate],
+                    isContinuation: Boolean
+                   ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
+
+
+    val courseLengthInMonths = maintenancePeriod(courseStartDate, courseEndDate)
+    val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(courseStartDate, courseEndDate, originalCourseStartDate, false)
+    val leaveToRemainInMonths = maintenancePeriod(courseStartDate, leaveToRemain)
+
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > susoMaxCourseLength) {
+      (susoMaxCourseLength, Some(susoMaxCourseLength))
+    } else {
+      (courseLengthInMonths, None)
+    }
+    val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) {
+      (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION))
+    } else {
+      (accommodationFeesPaid, None)
+    }
+
+    val amount = ((accommodationValue(innerLondon) * courseLength)
+      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(susoMaxCourseLength) * dependants)
+      - accommodationFees).max(0)
+
+    if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
+      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)), Some(leaveToRemain))
+    } else {
+      (amount, None, Some(leaveToRemain))
+    }
+  }
+
+
+  def calculateDesPgdd(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
+                       dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
     val (courseLength, courseLengthCapped) = if (courseLengthInMonths > pgddSsoMaxCourseLength) {
       (pgddSsoMaxCourseLength, Some(pgddSsoMaxCourseLength))
@@ -106,7 +146,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   def calculateDoctorate(innerLondon: Boolean, accommodationFeesPaid: BigDecimal,
                          dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
-    calculateDesPgddSso(innerLondon: Boolean, doctorateFixedCourseLength, accommodationFeesPaid: BigDecimal,
+    calculateDesPgdd(innerLondon: Boolean, doctorateFixedCourseLength, accommodationFeesPaid: BigDecimal,
       dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate])
 
   }

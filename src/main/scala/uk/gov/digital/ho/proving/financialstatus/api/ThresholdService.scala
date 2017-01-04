@@ -143,9 +143,13 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         val validatedInputs = validateInputs(DoctorateStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
         calculateThreshold(validatedInputs, calculateDoctorate)
 
-      case DoctorDentistStudent | StudentSabbaticalOfficer =>
+      case DoctorDentistStudent  =>
         val validatedInputs = validateInputs(DoctorDentistStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
         calculateThreshold(validatedInputs, calculateDoctorDentistSabbatical)
+
+      case StudentSabbaticalOfficer =>
+        val validatedInputs = validateInputs(DoctorDentistStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
+        calculateThreshold(validatedInputs, calculateSUSO)
 
       case UnknownStudent(unknownType) =>
         buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_STUDENT_TYPE(studentTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
@@ -183,7 +187,19 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
          courseStart <- inputs.courseStartDate
          courseEnd <- inputs.courseEndDate
     } yield {
-      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateDesPgddSso(inner, CourseLengthCalculator.differenceInMonths(courseStart, courseEnd), aFeesPaid, deps)
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateDesPgdd(inner, CourseLengthCalculator.differenceInMonths(courseStart, courseEnd), aFeesPaid, deps)
+      new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
+    }
+  }
+
+  private def calculateSUSO(inputs: ValidatedInputs): Option[ThresholdResponse] = {
+    for {inner <- inputs.inLondon
+         aFeesPaid <- inputs.accommodationFeesPaid
+         deps <- inputs.dependants
+         startDate <- inputs.courseStartDate
+         endDate <- inputs.courseEndDate
+    } yield {
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateSUSO(inner, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isContinuation)
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
