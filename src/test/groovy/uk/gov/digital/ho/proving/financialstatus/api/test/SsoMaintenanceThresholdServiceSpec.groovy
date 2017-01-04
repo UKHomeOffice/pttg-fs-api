@@ -37,7 +37,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
     def thresholdService = new ThresholdService(
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
-            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength, susoMinCourseLength, susoMaxCourseLength
+            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength,
+            susoMinCourseLength, susoMaxCourseLength
         ), getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
     )
 

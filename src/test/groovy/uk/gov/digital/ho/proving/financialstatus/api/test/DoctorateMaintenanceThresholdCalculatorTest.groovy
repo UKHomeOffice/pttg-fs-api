@@ -10,7 +10,8 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
             nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
-            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
+            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength,
+            susoMinCourseLength, susoMaxCourseLength
         )
 
     def bd(a) { new scala.math.BigDecimal(a) }

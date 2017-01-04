@@ -54,7 +54,8 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
             nonDoctorateMaxCourseLength,
             pgddSsoMinCourseLength,
             pgddSsoMaxCourseLength,
-            doctorateFixedCourseLength
+            doctorateFixedCourseLength,
+            susoMinCourseLength, susoMaxCourseLength
         ),
         getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
     )
@@ -67,13 +68,14 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
 
     def url = TestUtils.thresholdUrl
 
-    def callApi(studentType, inLondon, courseStartDate, courseEndDate, accommodationFeesPaid, dependants) {
+    def callApi(studentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants) {
         def response = mockMvc.perform(
             get(url)
                 .param("studentType", studentType)
                 .param("inLondon", inLondon.toString())
                 .param("courseStartDate", courseStartDate.toString())
                 .param("courseEndDate", courseEndDate.toString())
+                .param("originalCourseStartDate", (originalCourseStartDate == null) ? "" : originalCourseStartDate.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())
         )
@@ -135,10 +137,11 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Post Grad Doctor or Dentist - Check 'All variants'"() {
         expect:
-        def response = callApi("pgdd", inLondon, courseStartDate, courseEndDate, accommodationFeesPaid, dependants)
+        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
         if (feesCapped > 0) {
             assert jsonContent.cappedValues && jsonContent.cappedValues.accommodationFeesPaid != null
             assert jsonContent.cappedValues.accommodationFeesPaid == feesCapped
@@ -146,37 +149,39 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
             assert jsonContent.cappedValues == null || jsonContent.cappedValues.accommodationFeesPaid == null
         }
 
-        if (courseLengthCapped > 0) {
+        if (courseCapped > 0) {
             assert jsonContent.cappedValues && jsonContent.cappedValues.courseLength != null
-            assert jsonContent.cappedValues.courseLength == courseLengthCapped
+            assert jsonContent.cappedValues.courseLength == courseCapped
         } else {
             assert jsonContent.cappedValues == null || jsonContent.cappedValues.courseLength == null
         }
 
-        if (feesCapped == 0 && courseLengthCapped == 0) {
+        if (feesCapped == 0 && courseCapped == 0) {
             assert jsonContent.cappedvalues == null
         }
 
         where:
-        inLondon | courseStartDate          | courseEndDate             | accommodationFeesPaid | dependants || threshold || feesCapped || courseLengthCapped
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 5, 1)  | 1627.00               | 15         || 21165.00  || 1265.00    || 2
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 270.00                | 10         || 7545.00   || 0          || 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 22.00                 | 1          || 4198.00   || 0          || 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 636.00                | 9          || 17104.00  || 0          || 0
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 11) | 1018.00               | 3          || 2037.00   || 0          || 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 446.00                | 6          || 12224.00  || 0          || 0
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 31) | 372.00                | 6          || 4723.00   || 0          || 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 7, 1)  | 657.00                | 13         || 23843.00  || 0          || 2
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 953.00                | 6          || 11717.00  || 0          || 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 229.00                | 12         || 22581.00  || 0          || 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 23.00                 | 12         || 22787.00  || 0          || 0
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 3, 1)  | 182.00                | 14         || 20888.00  || 0          || 2
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 21) | 738.00                | 12         || 8437.00   || 0          || 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 73.00                 | 9          || 17667.00  || 0          || 0
-        false    | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 4)  | 970.00                | 6          || 4125.00   || 0          || 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 1934.00               | 5          || 9715.00   || 1265.00    || 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 1, 3)  | 223.00                | 4          || 4422.00   || 0          || 0
-        true     | LocalDate.of(2000, 1, 1) | LocalDate.of(2000, 2, 1)  | 1078.00               | 14         || 25112.00  || 0          || 0
+        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | accommodationFeesPaid | dependants || threshold || feesCapped || courseCapped || leaveToRemain
+        LocalDate.of(1992, 10, 7)  | LocalDate.of(1993, 9, 13)  | LocalDate.of(1992, 7, 1)   | false    | 1742.51               | 8          || 11645.00  || 1265.00    || 2            || LocalDate.of(1993, 10, 13)
+        LocalDate.of(2039, 7, 21)  | LocalDate.of(2039, 11, 14) | LocalDate.of(2038, 10, 8)  | true     | 331.83                | 10         || 19098.17  || 0.00       || 2            || LocalDate.of(2039, 12, 14)
+        LocalDate.of(2021, 6, 28)  | LocalDate.of(2022, 7, 12)  | null                       | true     | 0.00                  | 1          || 4220.00   || 0.00       || 2            || LocalDate.of(2022, 8, 12)
+        LocalDate.of(2024, 2, 3)   | LocalDate.of(2024, 5, 4)   | null                       | false    | 0.00                  | 0          || 2030.00   || 0.00       || 2            || LocalDate.of(2024, 6, 4)
+        LocalDate.of(2027, 3, 4)   | LocalDate.of(2027, 5, 14)  | LocalDate.of(2026, 12, 26) | false    | 0.00                  | 11         || 16990.00  || 0.00       || 2            || LocalDate.of(2027, 6, 14)
+        LocalDate.of(2019, 1, 3)   | LocalDate.of(2019, 6, 17)  | LocalDate.of(2018, 9, 15)  | true     | 184.16                | 12         || 22625.84  || 0.00       || 2            || LocalDate.of(2019, 7, 17)
+        LocalDate.of(2012, 12, 7)  | LocalDate.of(2013, 5, 27)  | LocalDate.of(2012, 5, 31)  | false    | 254.25                | 1          || 3135.75   || 0.00       || 2            || LocalDate.of(2013, 6, 27)
+        LocalDate.of(2045, 4, 10)  | LocalDate.of(2045, 5, 29)  | LocalDate.of(2045, 4, 6)   | false    | 0.00                  | 0          || 2030.00   || 0.00       || 0            || LocalDate.of(2045, 6, 29)
+        LocalDate.of(1982, 7, 29)  | LocalDate.of(1983, 3, 17)  | null                       | false    | 0.00                  | 4          || 7470.00   || 0.00       || 2            || LocalDate.of(1983, 4, 17)
+        LocalDate.of(2041, 8, 28)  | LocalDate.of(2042, 6, 7)   | LocalDate.of(2041, 3, 12)  | false    | 0.00                  | 12         || 18350.00  || 0.00       || 2            || LocalDate.of(2042, 7, 7)
+        LocalDate.of(1985, 1, 12)  | LocalDate.of(1985, 1, 25)  | LocalDate.of(1984, 12, 11) | false    | 1308.00               | 6          || 7910.00   || 1265.00    || 0            || LocalDate.of(1985, 2, 25)
+        LocalDate.of(1992, 11, 16) | LocalDate.of(1993, 2, 22)  | LocalDate.of(1992, 5, 10)  | false    | 0.00                  | 10         || 15630.00  || 0.00       || 2            || LocalDate.of(1993, 3, 22)
+        LocalDate.of(1993, 4, 13)  | LocalDate.of(1993, 11, 23) | LocalDate.of(1993, 1, 15)  | true     | 331.62                | 13         || 24168.38  || 0.00       || 2            || LocalDate.of(1993, 12, 23)
+        LocalDate.of(1997, 6, 14)  | LocalDate.of(1998, 4, 14)  | LocalDate.of(1997, 1, 13)  | true     | 0.00                  | 1          || 4220.00   || 0.00       || 2            || LocalDate.of(1998, 5, 14)
+        LocalDate.of(1994, 6, 16)  | LocalDate.of(1995, 7, 17)  | null                       | false    | 896.02                | 2          || 3853.98   || 0.00       || 2            || LocalDate.of(1995, 8, 17)
+        LocalDate.of(1976, 1, 5)   | LocalDate.of(1976, 3, 7)   | LocalDate.of(1975, 8, 6)   | false    | 0.00                  | 9          || 14270.00  || 0.00       || 2            || LocalDate.of(1976, 4, 7)
+        LocalDate.of(1976, 2, 27)  | LocalDate.of(1977, 1, 4)   | LocalDate.of(1976, 1, 23)  | false    | 940.81                | 8          || 11969.19  || 0.00       || 2            || LocalDate.of(1977, 2, 4)
+        LocalDate.of(2048, 9, 14)  | LocalDate.of(2049, 3, 6)   | null                       | false    | 0.00                  | 0          || 2030.00   || 0.00       || 2            || LocalDate.of(2049, 4, 6)
+        LocalDate.of(1992, 6, 13)  | LocalDate.of(1993, 6, 22)  | LocalDate.of(1991, 7, 3)   | false    | 1061.83               | 0          || 968.17    || 0.00       || 2            || LocalDate.of(1993, 7, 22)
+        LocalDate.of(2052, 2, 2)   | LocalDate.of(2052, 9, 23)  | LocalDate.of(2051, 9, 4)   | true     | 0.00                  | 6          || 12670.00  || 0.00       || 2            || LocalDate.of(2052, 10, 23)
     }
 
     def "Tier 4 Post Grad Doctor or Dentist - Check invalid accommodation fees parameters"() {

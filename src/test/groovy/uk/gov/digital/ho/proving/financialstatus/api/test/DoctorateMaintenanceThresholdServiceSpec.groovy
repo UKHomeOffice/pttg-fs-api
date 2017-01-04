@@ -36,7 +36,8 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
             nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
-            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
+            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength,
+            susoMinCourseLength, susoMaxCourseLength
         ), getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
     )
 

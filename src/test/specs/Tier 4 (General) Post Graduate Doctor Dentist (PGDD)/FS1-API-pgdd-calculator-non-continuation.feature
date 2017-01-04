@@ -1,6 +1,6 @@
 Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Post Graduate Doctor Dentist In and Out of London (single current account and no dependants)
 
-Pre-sessional courses do not apply to the Posr Graduate Doctor Dentist route
+Pre-sessional courses do not apply to the Post Graduate Doctor Dentist route
 Main applicants Required Maintenance period: Months between course start date and course end date (rounded up & capped to 2 months)
 Main applicant Required Maintenance period is rounded up to the full month (E.g course length of 1month and 4days is rounded up to 2months)
 

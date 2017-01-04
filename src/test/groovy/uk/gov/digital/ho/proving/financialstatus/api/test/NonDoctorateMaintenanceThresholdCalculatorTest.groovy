@@ -16,7 +16,8 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
         new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
             maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
             nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
-            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength
+            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength,
+            susoMinCourseLength, susoMaxCourseLength
         )
 
 

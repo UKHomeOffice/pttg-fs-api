@@ -46,7 +46,8 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
             nonDoctorateMaxCourseLength,
             pgddSsoMinCourseLength,
             pgddSsoMaxCourseLength,
-            doctorateFixedCourseLength
+            doctorateFixedCourseLength,
+            susoMinCourseLength, susoMaxCourseLength
         ),
         getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
     )
