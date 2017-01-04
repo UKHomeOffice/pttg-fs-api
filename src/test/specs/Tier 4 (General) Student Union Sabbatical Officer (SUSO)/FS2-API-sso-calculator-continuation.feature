@@ -60,7 +60,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
-            | Course Length  | 2          |
             | Leave end date | 2016-02-17 |
 
     Scenario: Mike is on a 2 month PGDD continuation course. Mike's Threshold calculated
@@ -74,7 +73,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
-            | Course Length  | 2          |
             | Leave end date | 2016-06-10 |
 
     Scenario: Ann is on a 3 month PGDD continuation course and has 2 dependants. Ann's Threshold calculated
