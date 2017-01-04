@@ -145,7 +145,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
 
       case DoctorDentistStudent  =>
         val validatedInputs = validateInputs(DoctorDentistStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
-        calculateThreshold(validatedInputs, calculateDoctorDentistSabbatical)
+        calculateThreshold(validatedInputs, calculatePGDD)
 
       case StudentSabbaticalOfficer =>
         val validatedInputs = validateInputs(StudentSabbaticalOfficer, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
@@ -180,14 +180,14 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
     }
   }
 
-  private def calculateDoctorDentistSabbatical(inputs: ValidatedInputs): Option[ThresholdResponse] = {
+  private def calculatePGDD(inputs: ValidatedInputs): Option[ThresholdResponse] = {
     for {inner <- inputs.inLondon
          aFeesPaid <- inputs.accommodationFeesPaid
          deps <- inputs.dependants
-         courseStart <- inputs.courseStartDate
-         courseEnd <- inputs.courseEndDate
+         startDate <- inputs.courseStartDate
+         endDate <- inputs.courseEndDate
     } yield {
-      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateDesPgdd(inner, CourseLengthCalculator.differenceInMonths(courseStart, courseEnd), aFeesPaid, deps)
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculatePGGD(inner, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isContinuation)
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }

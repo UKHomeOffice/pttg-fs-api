@@ -54,4 +54,8 @@ object LeaveToRemainCalculator {
     courseEndDate.plus(wrapUpPeriod)
   }
 
+  def calculateFixedLeaveToRemain(courseEndDate: LocalDate, period: Period): LocalDate = {
+    courseEndDate.plus(period)
+  }
+
 }

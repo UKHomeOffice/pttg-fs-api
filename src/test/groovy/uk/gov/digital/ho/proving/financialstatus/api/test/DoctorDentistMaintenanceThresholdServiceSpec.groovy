@@ -137,7 +137,7 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Post Grad Doctor or Dentist - Check 'All variants'"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
+        def response = callApi("pgdd", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold

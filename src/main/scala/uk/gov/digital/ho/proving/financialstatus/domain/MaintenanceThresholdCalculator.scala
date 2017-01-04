@@ -115,7 +115,44 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   }
 
 
-  def calculateDesPgdd(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
+  def calculatePGGD(innerLondon: Boolean,
+                    accommodationFeesPaid: BigDecimal,
+                    dependants: Int,
+                    courseStartDate: LocalDate,
+                    courseEndDate: LocalDate,
+                    originalCourseStartDate: Option[LocalDate],
+                    isContinuation: Boolean
+                   ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
+
+
+    val courseLengthInMonths = maintenancePeriod(courseStartDate, courseEndDate)
+    val leaveToRemain = LeaveToRemainCalculator.calculateFixedLeaveToRemain(courseEndDate, Period.ofMonths(1))
+    val leaveToRemainInMonths = maintenancePeriod(courseStartDate, leaveToRemain)
+
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > susoMaxCourseLength) {
+      (susoMaxCourseLength, Some(susoMaxCourseLength))
+    } else {
+      (courseLengthInMonths, None)
+    }
+    val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) {
+      (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION))
+    } else {
+      (accommodationFeesPaid, None)
+    }
+
+    val amount = ((accommodationValue(innerLondon) * courseLength)
+      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(susoMaxCourseLength) * dependants)
+      - accommodationFees).max(0)
+
+    if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
+      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)), Some(leaveToRemain))
+    } else {
+      (amount, None, Some(leaveToRemain))
+    }
+  }
+
+
+  def calculateDES(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
                        dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
     val (courseLength, courseLengthCapped) = if (courseLengthInMonths > pgddSsoMaxCourseLength) {
@@ -146,7 +183,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   def calculateDoctorate(innerLondon: Boolean, accommodationFeesPaid: BigDecimal,
                          dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
-    calculateDesPgdd(innerLondon: Boolean, doctorateFixedCourseLength, accommodationFeesPaid: BigDecimal,
+    calculateDES(innerLondon: Boolean, doctorateFixedCourseLength, accommodationFeesPaid: BigDecimal,
       dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate])
 
   }
