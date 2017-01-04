@@ -173,4 +173,4 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                               |
             | Status code    | 0002                                              |
-            | Status message | Parameter conversion error: Invalid courseEndDate | (what should the error message be?)
+            | Status message | Parameter conversion error: Invalid courseEndDate |
