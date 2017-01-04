@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.financialstatus.api.test
+package uk.gov.digital.ho.proving.financialstatus
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.json.JsonSlurper
@@ -14,6 +14,7 @@ import steps.WireMockTestDataLoader
 import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
@@ -44,7 +45,7 @@ class RestErrorsSpec extends Specification {
 
     def bankUrl = "$serviceName/financialstatus/v1"
 
-    ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
+    ServiceMessages serviceMessages = new ServiceMessages(TestUtils.getMessageSource())
 
     def maxAttempts = 3
     def backoffPeriod = 5
