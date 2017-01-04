@@ -87,7 +87,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
             | Course end date   | 2016-02-02 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 4145.00    |
+            | Threshold      | 4545.00    |
             | Leave end date | 2016-02-09 |
 
     Scenario: Phil is on an initial 2 months SUSO course and has 2 dependants. Phil's maintenance threshold amount calculated.
@@ -125,7 +125,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
             | Course end date   | 2018-09-03 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 7000.00    |
+            | Threshold      | 6010.00    |
             | Course length  | 2          |
             | Leave end date | 2019-01-03 |
 
