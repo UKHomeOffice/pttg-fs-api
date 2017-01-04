@@ -148,7 +148,7 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
         calculateThreshold(validatedInputs, calculateDoctorDentistSabbatical)
 
       case StudentSabbaticalOfficer =>
-        val validatedInputs = validateInputs(DoctorDentistStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
+        val validatedInputs = validateInputs(StudentSabbaticalOfficer, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
         calculateThreshold(validatedInputs, calculateSUSO)
 
       case UnknownStudent(unknownType) =>

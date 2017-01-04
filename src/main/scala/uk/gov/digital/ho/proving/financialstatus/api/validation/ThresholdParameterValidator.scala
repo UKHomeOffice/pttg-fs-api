@@ -50,7 +50,21 @@ trait ThresholdParameterValidator {
         } else if (validDependants.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
         }
-      case DoctorDentistStudent | StudentSabbaticalOfficer =>
+      case StudentSabbaticalOfficer =>
+        if (courseStartDate.isEmpty) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
+        } else if (courseEndDate.isEmpty) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE, HttpStatus.BAD_REQUEST))
+        } else if (!validCourseStartDate) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE_VALUE, HttpStatus.BAD_REQUEST))
+        } else if (!validCourseEndDate) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_END_DATE_VALUE, HttpStatus.BAD_REQUEST))
+        } else if (!validOriginalCourseStartDate) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_ORIGINAL_COURSE_START_DATE_VALUE, HttpStatus.BAD_REQUEST))
+        } else if (validDependants.isEmpty) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
+        }
+      case DoctorDentistStudent =>
         if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
         } else if (courseEndDate.isEmpty) {
@@ -97,11 +111,11 @@ trait ThresholdParameterValidator {
         case true => (true, true)
         case false => (false, false)
       }
-      val continuationOk = originalCourseStartDate match {
+      val originalStartOk = originalCourseStartDate match {
         case None => true
-        case Some(date) => date.isBefore(startDate)
+        case Some(date) => date.isBefore(startDate) && date.isBefore(endDate)
       }
-      (startOK, endOK, continuationOk)
+      (startOK, endOK, originalStartOk)
     }
     validation.getOrElse((false, false, false))
   }

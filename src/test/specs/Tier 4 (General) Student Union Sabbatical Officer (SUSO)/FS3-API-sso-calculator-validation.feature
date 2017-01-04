@@ -157,7 +157,7 @@ Feature: Validation of the API fields and data
             | Course end date                 | 2016-02-03 |
             | Accommodation fees already paid | 0          |
             | dependants                      | 0          |
-            | Original course start date | 2018-01-01 |
+            | Original course start date      | 2018-01-01 |
         Then the service displays the following result
             | HTTP Status    | 400                                                                          |
             | Status code    | 0004                                                                         |
@@ -169,7 +169,7 @@ Feature: Validation of the API fields and data
             | Student Type                    | sso        |
             | In London                       | Yes        |
             | Course start date               | 2016-01-03 |
-            | Course end date                 | x |
+            | Course end date                 | x          |
             | Accommodation fees already paid | 0          |
             | dependants                      | 0          |
 
