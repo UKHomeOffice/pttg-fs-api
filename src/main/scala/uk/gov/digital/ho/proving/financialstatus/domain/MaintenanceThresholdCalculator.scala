@@ -151,35 +151,6 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     }
   }
 
-
-//  def calculateDES(innerLondon: Boolean, courseLengthInMonths: Int, accommodationFeesPaid: BigDecimal,
-//                       dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
-//
-//    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > pgddSsoMaxCourseLength) {
-//      (pgddSsoMaxCourseLength, Some(pgddSsoMaxCourseLength))
-//    } else {
-//      (courseLengthInMonths, None)
-//    }
-//
-//
-//    val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) {
-//      (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION))
-//    } else {
-//      (accommodationFeesPaid, None)
-//    }
-//
-//    val amount = ((accommodationValue(innerLondon) * courseLength)
-//      + (dependantsValue(innerLondon) * courseLength * dependants)
-//      - accommodationFees).max(0)
-//
-//    if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
-//      (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)), None)
-//    } else {
-//      (amount, None, None)
-//    }
-//
-//  }
-
   def calculateDES(innerLondon: Boolean, accommodationFeesPaid: BigDecimal,
                          dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
