@@ -19,7 +19,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorate(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDES(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
         inLondon | accommodationFeesPaid | dependants || threshold
@@ -32,7 +32,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorate(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDES(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
         inLondon | accommodationFeesPaid | dependants || threshold
@@ -45,7 +45,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'Accommodation Fees paid'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorate(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDES(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
 
         where:
         inLondon | accommodationFeesPaid | dependants || threshold
@@ -67,7 +67,7 @@ class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 4 Doctorate - Check 'All variants'"() {
 
         expect:
-        def response = maintenanceThresholdCalculator.calculateDoctorate(inLondon, bd(accommodationFeesPaid), dependants)
+        def response = maintenanceThresholdCalculator.calculateDES(inLondon, bd(accommodationFeesPaid), dependants)
         def thresholdValue = response._1
         def cappedValues = DataUtils.getCappedValues(response._2)
         def cappedAccommodation = cappedValues.accommodationFeesPaid()
