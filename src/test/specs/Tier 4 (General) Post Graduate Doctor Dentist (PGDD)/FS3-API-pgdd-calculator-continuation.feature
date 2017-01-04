@@ -55,7 +55,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
-            | Course Length  | 2          |
             | Leave end date | 2016-03-10 |
 
     Scenario: Mike is on a 2 month PGDD continuation course. Mike's Threshold calculated
@@ -69,7 +68,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
-            | Course Length  | 2          |
             | Leave end date | 2016-03-10 |
 
     Scenario: Ann is on a 3 month PGDD continuation course and has 2 dependants. Ann's Threshold calculated
@@ -83,7 +81,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
             | Dependants                      | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 4910.00    |
+            | Threshold      | 4250.00    |
             | Course Length  | 2          |
             | Leave end date | 2016-05-09 |
 
@@ -111,5 +109,5 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
             | Dependants                      | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 1610.00    |
+            | Threshold      | 2455.00    |
             | Leave end date | 2016-07-01 |

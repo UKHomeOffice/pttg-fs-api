@@ -121,27 +121,31 @@ Feature: Validation of the API fields and data
     Scenario: The API provided with Original course start date that is not before the course start date
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Original course start date | 2018-01-01 |
+            | Original course start date      | 2018-01-01 |
+            | Student Type                    | pgdd       |
+            | In London                       | Yes        |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2017-02-03 |
+            | Accommodation fees already paid | 0          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                                          |
             | Status code    | 0004                                                                         |
             | Status message | Parameter error: Original course start date must be before course start date |
 
-    Scenario: The API is provided with incorrect Course Length - not numbers 1-9
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Course end date | x |
-        Then the service displays the following result
-            | HTTP Status    | 400                                               |
-            | Status code    | 0002                                              |
-            | Status message | Parameter conversion error: Invalid courseEndDate |
+
 
    ######################### Validation on the Course length field #########################
 
     Scenario: The API is not provided with the Course start date
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date |  |
+            | Student Type                    | pgdd       |
+            | In London                       | Yes        |
+            | Course start date               |            |
+            | Course end date                 | 2019-02-03 |
+            | Accommodation fees already paid | 0          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                                 |
             | Status code    | 0004                                                |
@@ -150,7 +154,13 @@ Feature: Validation of the API fields and data
     Scenario: The API is not provided with the Course end date
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course end date |  |
+            | Student Type                    | pgdd       |
+            | In London                       | Yes        |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 |            |
+            | Accommodation fees already paid | 0          |
+            | dependants                      | 1          |
+
         Then the service displays the following result
             | HTTP Status    | 400                                               |
             | Status code    | 0004                                              |
@@ -159,7 +169,13 @@ Feature: Validation of the API fields and data
     Scenario: The API is provided with incorrect Course Length - not numbers 1-9
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course end date | x |
+            | Student Type                    | pgdd       |
+            | In London                       | Yes        |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | x          |
+            | Accommodation fees already paid | 0          |
+            | dependants                      | 1          |
+
         Then the service displays the following result
             | HTTP Status    | 400                                               |
             | Status code    | 0002                                              |
@@ -168,8 +184,12 @@ Feature: Validation of the API fields and data
     Scenario: The API is provided with incorrect Course Length exceeding 36 months
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date | 01/01/2015 |
-            | Course end date   | 10/01/2018 |
+            | Student Type                    | pgdd       |
+            | In London                       | Yes        |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2019-02-03 |
+            | Accommodation fees already paid | 0          |
+            | dependants                      | 1          |
         Then the service displays the following result
             | HTTP Status    | 400                                               |
             | Status code    | 0002                                              |

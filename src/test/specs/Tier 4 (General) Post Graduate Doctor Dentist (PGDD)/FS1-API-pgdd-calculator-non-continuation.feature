@@ -74,7 +74,7 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2955.00    |
-            | Leave end date | 2016-02-28 |
+            | Leave end date | 2016-02-29 |
 
 
     Scenario: Jean's Threshold calculated. She is on a 3 month pdgg course and has 3 dependents
