@@ -32,13 +32,10 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     ApplicationEventPublisher auditor = Mock()
     Authentication authenticator = Mock()
+
     def thresholdService = new ThresholdService(
-        new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
-            maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
-            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
-            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength,
-            susoMinCourseLength, susoMaxCourseLength
-        ), getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
+        maintenanceThresholdServiceBuilder(), getStudentTypeChecker(),
+        getCourseTypeChecker(), serviceMessages, auditor, authenticator
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -130,24 +127,24 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         where:
         inLondon | accommodationFeesPaid | dependants || threshold || feesCapped
         false    | 2627.00               | 15         || 21165.00  || 1265.00
-//        false    | 270.00                | 10         || 15360.00  || 0
-//        true     | 22.00                 | 1          || 4198.00   || 0
-//        true     | 636.00                | 9          || 17104.00  || 0
-//        false    | 1018.00               | 3          || 5092.00   || 0
-//        true     | 446.00                | 6          || 12224.00  || 0
-//        false    | 372.00                | 6          || 9818.00   || 0
-//        true     | 657.00                | 13         || 23843.00  || 0
-//        true     | 953.00                | 6          || 11717.00  || 0
-//        true     | 229.00                | 12         || 22581.00  || 0
-//        true     | 23.00                 | 12         || 22787.00  || 0
-//        false    | 182.00                | 14         || 20888.00  || 0
-//        false    | 738.00                | 12         || 17612.00  || 0
-//        true     | 73.00                 | 9          || 17667.00  || 0
-//        false    | 970.00                | 6          || 9220.00   || 0
-//        true     | 4934.00               | 5          || 9715.00   || 1265.00
-//        true     | 223.00                | 4          || 9067.00   || 0
-//        true     | 1078.00               | 14         || 25112.00  || 0
-//        true     | 250.50                | 3          || 7349.50   || 0
+        false    | 270.00                | 10         || 15360.00  || 0
+        true     | 22.00                 | 1          || 4198.00   || 0
+        true     | 636.00                | 9          || 17104.00  || 0
+        false    | 1018.00               | 3          || 5092.00   || 0
+        true     | 446.00                | 6          || 12224.00  || 0
+        false    | 372.00                | 6          || 9818.00   || 0
+        true     | 657.00                | 13         || 23843.00  || 0
+        true     | 953.00                | 6          || 11717.00  || 0
+        true     | 229.00                | 12         || 22581.00  || 0
+        true     | 23.00                 | 12         || 22787.00  || 0
+        false    | 182.00                | 14         || 20888.00  || 0
+        false    | 738.00                | 12         || 17612.00  || 0
+        true     | 73.00                 | 9          || 17667.00  || 0
+        false    | 970.00                | 6          || 9220.00   || 0
+        true     | 4934.00               | 5          || 9715.00   || 1265.00
+        true     | 223.00                | 4          || 9067.00   || 0
+        true     | 1078.00               | 14         || 25112.00  || 0
+        true     | 250.50                | 3          || 7349.50   || 0
 
 
     }

@@ -34,12 +34,10 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     ApplicationEventPublisher auditor = Mock()
     Authentication authenticator = Mock()
+
     def thresholdService = new ThresholdService(
-        new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
-            maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
-            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength, pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength,
-            susoMinCourseLength, susoMaxCourseLength
-        ), getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
+        maintenanceThresholdServiceBuilder(), getStudentTypeChecker(),
+        getCourseTypeChecker(), serviceMessages, auditor, authenticator
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -70,7 +68,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold
+        assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
 
         where:
         courseStartDate           | courseEndDate             | originalCourseStartDate    | inLondon | accommodationFeesPaid | dependants || threshold || feesCapped || courseCapped || leaveToRemain
@@ -85,7 +84,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold
+        assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
 
         where:
         courseStartDate           | courseEndDate             | originalCourseStartDate   | inLondon | accommodationFeesPaid | dependants || threshold || feesCapped || courseCapped || leaveToRemain
@@ -99,7 +99,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold
+        assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
 
         where:
         courseStartDate            | courseEndDate             | originalCourseStartDate    | inLondon | accommodationFeesPaid | dependants || threshold || feesCapped || courseCapped || leaveToRemain
@@ -197,7 +198,8 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
         response.andExpect(status().isOk())
 
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold
+        assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
 
         where:
         courseStartDate           | courseEndDate              | originalCourseStartDate   | inLondon | accommodationFeesPaid | dependants || threshold || feesCapped || courseCapped || leaveToRemain

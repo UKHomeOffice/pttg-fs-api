@@ -36,20 +36,8 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
     Authentication authenticator = Mock()
 
     def thresholdService = new ThresholdService(
-        new MaintenanceThresholdCalculator(
-            inLondonMaintenance,
-            notInLondonMaintenance,
-            maxMaintenanceAllowance,
-            inLondonDependant,
-            notInLondonDependant,
-            nonDoctorateMinCourseLength,
-            nonDoctorateMaxCourseLength,
-            pgddSsoMinCourseLength,
-            pgddSsoMaxCourseLength,
-            doctorateFixedCourseLength,
-            susoMinCourseLength, susoMaxCourseLength
-        ),
-        getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
+        maintenanceThresholdServiceBuilder(), getStudentTypeChecker(),
+        getCourseTypeChecker(), serviceMessages, auditor, authenticator
     )
 
 
@@ -209,7 +197,8 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
         response.andExpect(status().isOk())
 
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold
+        assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
 
         where:
         courseStartDate            | courseEndDate              | originalCourseStartDate   | inLondon | accommodationFeesPaid | dependants || threshold || feesCapped || courseCapped || leaveToRemain

@@ -6,13 +6,7 @@ import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.*
 
 class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
-    MaintenanceThresholdCalculator maintenanceThresholdCalculator =
-        new MaintenanceThresholdCalculator(inLondonMaintenance, notInLondonMaintenance,
-            maxMaintenanceAllowance, inLondonDependant, notInLondonDependant,
-            nonDoctorateMinCourseLength, nonDoctorateMaxCourseLength,
-            pgddSsoMinCourseLength, pgddSsoMaxCourseLength, doctorateFixedCourseLength,
-            susoMinCourseLength, susoMaxCourseLength
-        )
+    MaintenanceThresholdCalculator maintenanceThresholdCalculator = maintenanceThresholdServiceBuilder()
 
     def bd(a) { new scala.math.BigDecimal(a) }
 

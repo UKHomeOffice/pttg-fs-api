@@ -36,20 +36,8 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     Authentication authenticator = Mock()
 
     def thresholdService = new ThresholdService(
-        new MaintenanceThresholdCalculator(
-            inLondonMaintenance,
-            notInLondonMaintenance,
-            maxMaintenanceAllowance,
-            inLondonDependant,
-            notInLondonDependant,
-            nonDoctorateMinCourseLength,
-            nonDoctorateMaxCourseLength,
-            pgddSsoMinCourseLength,
-            pgddSsoMaxCourseLength,
-            doctorateFixedCourseLength,
-            susoMinCourseLength, susoMaxCourseLength
-        ),
-        getStudentTypeChecker(), getCourseTypeChecker(), serviceMessages, auditor, authenticator, 12, 2, 4
+        maintenanceThresholdServiceBuilder(), getStudentTypeChecker(),
+        getCourseTypeChecker(), serviceMessages, auditor, authenticator
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -84,23 +72,16 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold
+        assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
 
         where:
-        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped
-        LocalDate.of(2054, 11, 3)  | LocalDate.of(2055, 9, 25)  | null                       | false    | 2647.39     | 1824.03         | 111.69                | 12         | "pre-sessional" || 83286.67  || 0.00       || 9
-        LocalDate.of(2019, 7, 9)   | LocalDate.of(2020, 3, 5)   | null                       | false    | 6971.95     | 1506.03         | 631.15                | 8          | "MAIN"          || 61914.77  || 0.00       || 0
-        LocalDate.of(2046, 2, 1)   | LocalDate.of(2046, 6, 30)  | LocalDate.of(2045, 4, 26)  | false    | 2440.54     | 3462.02         | 1428.99               | 6          | "MAIN"          || 40530.00  || 1265.00    || 0
-        LocalDate.of(2021, 9, 21)  | LocalDate.of(2022, 9, 2)   | null                       | false    | 5319.46     | 4610.38         | 1072.18               | 14         | "pre-sessional" || 94451.90  || 0.00       || 9
-        LocalDate.of(1980, 9, 24)  | LocalDate.of(1980, 11, 26) | null                       | false    | 863.92      | 7560.20         | 1022.75               | 0          | "MAIN"          || 2022.25   || 0.00       || 0
-        LocalDate.of(1992, 3, 4)   | LocalDate.of(1992, 11, 27) | LocalDate.of(1991, 7, 15)  | false    | 7899.81     | 9302.17         | 1523.80               | 4          | "MAIN"          || 32350.00  || 1265.00    || 0
-        LocalDate.of(1988, 2, 24)  | LocalDate.of(1988, 10, 9)  | null                       | false    | 6530.41     | 3348.66         | 779.18                | 2          | "pre-sessional" || 22762.57  || 0.00       || 0
-        LocalDate.of(2022, 9, 16)  | LocalDate.of(2023, 3, 20)  | null                       | false    | 4744.19     | 6510.78         | 1919.08               | 2          | "pre-sessional" || 18080.00  || 1265.00    || 0
-        LocalDate.of(2007, 11, 24) | LocalDate.of(2008, 4, 15)  | null                       | false    | 2311.25     | 4481.28         | 875.12                | 0          | "pre-sessional" || 4199.88   || 0.00       || 0
-        LocalDate.of(2036, 3, 4)   | LocalDate.of(2036, 10, 23) | LocalDate.of(2035, 12, 5)  | false    | 6091.41     | 3117.24         | 58.82                 | 13         | "MAIN"          || 90595.35  || 0.00       || 0
-        LocalDate.of(2009, 2, 13)  | LocalDate.of(2009, 11, 20) | LocalDate.of(2008, 3, 7)   | false    | 4220.61     | 4242.61         | 1622.62               | 2          | "MAIN"          || 20110.00  || 1265.00    || 9
-        LocalDate.of(2052, 12, 29) | LocalDate.of(2053, 12, 19) | LocalDate.of(2052, 10, 19) | false    | 1347.65     | 6229.42         | 1869.26               | 3          | "MAIN"          || 26230.00  || 1265.00    || 9
-        LocalDate.of(1977, 4, 29)  | LocalDate.of(1977, 9, 3)   | LocalDate.of(1976, 5, 21)  | false    | 373.26      | 6945.01         | 1042.24               | 4          | "MAIN"          || 28512.76  || 0.00       || 0
+        courseStartDate            | courseEndDate              | originalCourseStartDate   | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped || leaveToRemain
+        LocalDate.of(2025, 9, 19)  | LocalDate.of(2026, 5, 10)  | null                      | false    | 9913.79     | 8361.39         | 0.00                  | 3          | "main"          || 28032.40  || 0.00       || 0            || LocalDate.of(2026, 7, 10)
+        LocalDate.of(2049, 6, 28)  | LocalDate.of(2049, 9, 21)  | LocalDate.of(2048, 11, 8) | false    | 540.29      | 0.00            | 1102.86               | 0          | "main"          || 2482.43   || 0.00       || 0            || LocalDate.of(2049, 11, 21)
+        LocalDate.of(2017, 2, 24)  | LocalDate.of(2017, 12, 22) | null                      | false    | 6945.02     | 0.00            | 0.00                  | 5          | "main"          || 46680.02  || 0.00       || 9            || LocalDate.of(2018, 2, 22)
+        LocalDate.of(2012, 11, 28) | LocalDate.of(2013, 12, 16) | null                      | false    | 4023.16     | 0.00            | 0.00                  | 13         | "pre-sessional" || 92718.16  || 0.00       || 9            || LocalDate.of(2014, 4, 16)
+        LocalDate.of(2046, 2, 28)  | LocalDate.of(2046, 10, 28) | null                      | false    | 9546.08     | 9241.17         | 305.42                | 6          | "pre-sessional" || 45854.49  || 0.00       || 0            || LocalDate.of(2046, 12, 28)
     }
 
     def "Tier 4 Non Doctorate - Check 'Inner London Borough'"() {
@@ -109,63 +90,19 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold
+        assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
 
         where:
-        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped
-        LocalDate.of(1996, 8, 25)  | LocalDate.of(1997, 7, 21)  | null                       | true     | 2823.28     | 9013.39         | 1416.13               | 6          | "pre-sessional" || 55750.00  || 1265.00    || 9
-        LocalDate.of(2019, 3, 15)  | LocalDate.of(2019, 9, 11)  | null                       | true     | 9491.47     | 6708.87         | 1453.33               | 0          | "pre-sessional" || 9107.60   || 1265.00    || 0
-        LocalDate.of(2007, 12, 6)  | LocalDate.of(2008, 2, 16)  | LocalDate.of(2007, 4, 14)  | true     | 9843.80     | 545.74          | 411.11                | 7          | "MAIN"          || 42256.95  || 0.00       || 0
-        LocalDate.of(2014, 10, 17) | LocalDate.of(2015, 2, 21)  | LocalDate.of(2014, 9, 24)  | true     | 4475.87     | 288.91          | 278.04                | 7          | "MAIN"          || 39808.92  || 0.00       || 0
-        LocalDate.of(2004, 10, 8)  | LocalDate.of(2004, 11, 15) | LocalDate.of(2003, 11, 29) | true     | 1626.34     | 5714.44         | 797.08                | 14         | "MAIN"          || 49052.92  || 0.00       || 0
-        LocalDate.of(1986, 11, 7)  | LocalDate.of(1987, 9, 17)  | null                       | true     | 7110.72     | 4064.43         | 1986.92               | 3          | "MAIN"          || 35981.29  || 1265.00    || 9
-        LocalDate.of(1977, 8, 27)  | LocalDate.of(1978, 1, 13)  | null                       | true     | 125.38      | 6579.99         | 1150.86               | 0          | "MAIN"          || 5174.14   || 0.00       || 0
+        courseStartDate           | courseEndDate              | originalCourseStartDate   | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped || leaveToRemain
+        LocalDate.of(2045, 4, 5)  | LocalDate.of(2046, 3, 11)  | null                      | true     | 7948.65     | 0.00            | 1936.85               | 14         | "main"          || 124538.65 || 1265.00    || 9            || LocalDate.of(2046, 5, 11)
+        LocalDate.of(1987, 1, 27) | LocalDate.of(1987, 9, 26)  | null                      | true     | 3374.60     | 0.00            | 0.00                  | 14         | "pre-sessional" || 119964.60 || 0.00       || 0            || LocalDate.of(1987, 11, 26)
+        LocalDate.of(2052, 3, 30) | LocalDate.of(2052, 10, 31) | null                      | true     | 9842.10     | 0.00            | 0.00                  | 9          | "pre-sessional" || 88407.10  || 0.00       || 0            || LocalDate.of(2052, 12, 31)
+        LocalDate.of(1998, 9, 1)  | LocalDate.of(1999, 9, 19)  | null                      | true     | 5598.88     | 9321.15         | 0.00                  | 8          | "pre-sessional" || 72225.00  || 0.00       || 9            || LocalDate.of(2000, 1, 19)
+        LocalDate.of(2024, 10, 7) | LocalDate.of(2025, 3, 13)  | LocalDate.of(2023, 11, 2) | true     | 7355.01     | 0.00            | 0.00                  | 11         | "main"          || 98600.01  || 0.00       || 0            || LocalDate.of(2025, 7, 13)
     }
 
     def "Tier 4 Non Doctorate - Check 'Tuition Fees paid'"() {
-        expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
-        response.andExpect(status().isOk())
-        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold
-
-        where:
-        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped
-        LocalDate.of(1996, 8, 25)  | LocalDate.of(1997, 7, 21)  | null                       | true     | 2823.28     | 9013.39         | 1416.13               | 6          | "pre-sessional" || 55750.00  || 1265.00    || 9
-        LocalDate.of(2054, 11, 3)  | LocalDate.of(2055, 9, 25)  | null                       | false    | 2647.39     | 1824.03         | 111.69                | 12         | "pre-sessional" || 83286.67  || 0.00       || 9
-        LocalDate.of(2019, 3, 15)  | LocalDate.of(2019, 9, 11)  | null                       | true     | 9491.47     | 6708.87         | 1453.33               | 0          | "pre-sessional" || 9107.60   || 1265.00    || 0
-        LocalDate.of(2019, 7, 9)   | LocalDate.of(2020, 3, 5)   | null                       | false    | 6971.95     | 1506.03         | 631.15                | 8          | "MAIN"          || 61914.77  || 0.00       || 0
-        LocalDate.of(1986, 11, 7)  | LocalDate.of(1987, 9, 17)  | null                       | true     | 7110.72     | 4064.43         | 1986.92               | 3          | "MAIN"          || 35981.29  || 1265.00    || 9
-        LocalDate.of(2052, 12, 29) | LocalDate.of(2053, 12, 19) | LocalDate.of(2052, 10, 19) | false    | 1347.65     | 6229.42         | 1869.26               | 3          | "MAIN"          || 26230.00  || 1265.00    || 9
-        LocalDate.of(1977, 8, 27)  | LocalDate.of(1978, 1, 13)  | null                       | true     | 125.38      | 6579.99         | 1150.86               | 0          | "MAIN"          || 5174.14   || 0.00       || 0
-        LocalDate.of(1977, 4, 29)  | LocalDate.of(1977, 9, 3)   | LocalDate.of(1976, 5, 21)  | false    | 373.26      | 6945.01         | 1042.24               | 4          | "MAIN"          || 28512.76  || 0.00       || 0
-    }
-
-
-    def "Tier 4 Non Doctorate - Check 'Accommodation Fees paid'"() {
-        expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
-        response.andExpect(status().isOk())
-        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.threshold == threshold
-
-        where:
-        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped
-        LocalDate.of(1978, 6, 15)  | LocalDate.of(1978, 8, 28)  | null                       | true     | 4611.60     | 7857.51         | 1421.57               | 0          | "pre-sessional" || 2530.00   || 1265.00    || 0
-        LocalDate.of(1976, 9, 25)  | LocalDate.of(1976, 12, 20) | LocalDate.of(1976, 4, 28)  | true     | 3684.19     | 2185.65         | 250.16                | 14         | "MAIN"          || 64193.38  || 0.00       || 0
-        LocalDate.of(1980, 7, 2)   | LocalDate.of(1981, 4, 23)  | LocalDate.of(1980, 6, 11)  | false    | 3298.51     | 7408.46         | 121.11                | 10         | "MAIN"          || 70213.89  || 0.00       || 9
-        LocalDate.of(2037, 11, 23) | LocalDate.of(2038, 3, 21)  | LocalDate.of(2037, 5, 22)  | true     | 2701.81     | 3514.02         | 1841.44               | 2          | "MAIN"          || 13935.00  || 1265.00    || 0
-        LocalDate.of(2015, 6, 24)  | LocalDate.of(2016, 7, 25)  | null                       | true     | 5185.40     | 7062.12         | 860.11                | 13         | "MAIN"          || 109389.89 || 0.00       || 9
-        LocalDate.of(2023, 4, 25)  | LocalDate.of(2023, 5, 1)   | LocalDate.of(2023, 4, 20)  | true     | 4535.25     | 4095.34         | 915.72                | 0          | "MAIN"          || 789.19    || 0.00       || 0
-        LocalDate.of(1986, 1, 6)   | LocalDate.of(1987, 1, 30)  | LocalDate.of(1984, 12, 20) | true     | 3307.48     | 1283.33         | 1042.50               | 9          | "MAIN"          || 80811.65  || 0.00       || 9
-        LocalDate.of(1998, 11, 25) | LocalDate.of(1999, 3, 31)  | null                       | false    | 5013.42     | 3390.23         | 1733.52               | 0          | "MAIN"          || 5433.19   || 1265.00    || 0
-        LocalDate.of(2051, 8, 19)  | LocalDate.of(2052, 5, 24)  | LocalDate.of(2051, 4, 22)  | false    | 5978.71     | 5946.69         | 1854.43               | 6          | "MAIN"          || 44622.02  || 1265.00    || 9
-        LocalDate.of(2054, 8, 14)  | LocalDate.of(2055, 1, 18)  | null                       | true     | 1657.49     | 9.51            | 601.39                | 0          | "pre-sessional" || 8636.59   || 0.00       || 0
-        LocalDate.of(1989, 2, 20)  | LocalDate.of(1989, 11, 1)  | null                       | false    | 9368.28     | 1717.03         | 986.92                | 4          | "MAIN"          || 40279.33  || 0.00       || 0
-        LocalDate.of(2007, 2, 26)  | LocalDate.of(2008, 2, 4)   | LocalDate.of(2006, 12, 18) | false    | 477.01      | 664.94          | 403.93                | 8          | "MAIN"          || 57691.07  || 0.00       || 9
-    }
-
-    def "Tier 4 Non Doctorate - Check 'Leave to remain values'"() {
         expect:
         def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
@@ -174,16 +111,30 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
         assert jsonContent.leaveEndDate == leaveToRemain.toString()
 
         where:
-        courseStartDate           | courseEndDate              | originalCourseStartDate   | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType || threshold || feesCapped || courseCapped || leaveToRemain
-        LocalDate.of(1987, 1, 11) | LocalDate.of(1987, 6, 22)  | null                      | false    | 7237.58     | 9560.93         | 1716.10               | 0          | "main"     || 4825.00   || 1265.00    || 0            || LocalDate.of(1987, 6, 29)
-        LocalDate.of(2044, 4, 9)  | LocalDate.of(2045, 3, 5)   | LocalDate.of(2043, 3, 16) | false    | 3332.32     | 0.00            | 0.00                  | 4          | "main"     || 36947.32  || 0.00       || 9            || LocalDate.of(2045, 7, 5)
-        LocalDate.of(2024, 1, 5)  | LocalDate.of(2024, 5, 26)  | null                      | false    | 777.00      | 0.00            | 0.00                  | 0          | "main"     || 5852.00   || 0.00       || 0            || LocalDate.of(2024, 6, 2)
-        LocalDate.of(2051, 6, 7)  | LocalDate.of(2052, 3, 27)  | LocalDate.of(2050, 8, 5)  | false    | 8883.53     | 0.00            | 654.79                | 13         | "main"     || 96923.74  || 0.00       || 9            || LocalDate.of(2052, 7, 27)
-        LocalDate.of(2051, 2, 25) | LocalDate.of(2051, 3, 23)  | LocalDate.of(2051, 2, 13) | true     | 7945.40     | 0.00            | 0.00                  | 3          | "main"     || 14280.40  || 0.00       || 0            || LocalDate.of(2051, 3, 30)
-        LocalDate.of(2052, 7, 17) | LocalDate.of(2052, 8, 1)   | null                      | true     | 3820.53     | 0.00            | 0.00                  | 0          | "main"     || 5085.53   || 0.00       || 0            || LocalDate.of(2052, 8, 8)
-        LocalDate.of(1974, 8, 15) | LocalDate.of(1974, 11, 24) | null                      | true     | 1306.75     | 9751.17         | 1872.37               | 0          | "main"     || 3795.00   || 1265.00    || 0            || LocalDate.of(1974, 12, 1)
-        LocalDate.of(1985, 2, 17) | LocalDate.of(1986, 1, 22)  | LocalDate.of(1985, 1, 26) | false    | 8356.47     | 7002.99         | 0.00                  | 1          | "main"     || 16608.48  || 0.00       || 9            || LocalDate.of(1986, 3, 22)
-        LocalDate.of(2004, 2, 13) | LocalDate.of(2004, 12, 19) | LocalDate.of(2003, 9, 23) | true     | 8276.69     | 9238.26         | 811.12                | 1          | "main"     || 18178.88  || 0.00       || 9            || LocalDate.of(2005, 4, 19)
+        courseStartDate            | courseEndDate              | originalCourseStartDate   | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped || leaveToRemain
+        LocalDate.of(2026, 5, 20)  | LocalDate.of(2026, 7, 5)   | null                      | true     | 5848.39     | 1550.61         | 1226.56               | 0          | "pre-sessional" || 5601.22   || 0.00       || 0            || LocalDate.of(2026, 8, 5)
+        LocalDate.of(2011, 2, 14)  | LocalDate.of(2011, 11, 5)  | null                      | true     | 1904.64     | 6104.90         | 0.00                  | 4          | "pre-sessional" || 41805.00  || 0.00       || 0            || LocalDate.of(2012, 1, 5)
+        LocalDate.of(1989, 2, 19)  | LocalDate.of(1989, 11, 17) | null                      | true     | 4448.59     | 693.45          | 549.17                | 8          | "main"          || 75430.97  || 0.00       || 0            || LocalDate.of(1990, 1, 17)
+        LocalDate.of(2022, 11, 22) | LocalDate.of(2022, 11, 25) | LocalDate.of(2022, 2, 7)  | true     | 8655.07     | 7931.61         | 1442.91               | 1          | "main"          || 3258.46   || 1265.00    || 0            || LocalDate.of(2023, 1, 25)
+        LocalDate.of(2041, 12, 13) | LocalDate.of(2042, 5, 11)  | LocalDate.of(2041, 9, 18) | true     | 3714.25     | 2078.81         | 1387.64               | 3          | "main"          || 24440.44  || 1265.00    || 0            || LocalDate.of(2042, 7, 11)
+    }
+
+
+    def "Tier 4 Non Doctorate - Check 'Accommodation Fees paid'"() {
+        expect:
+        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
+        response.andExpect(status().isOk())
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        assert jsonContent.threshold == threshold
+        assert jsonContent.leaveEndDate == leaveToRemain.toString()
+
+        where:
+        courseStartDate            | courseEndDate              | originalCourseStartDate    | inLondon | tuitionFees | tuitionFeesPaid | accommodationFeesPaid | dependants | courseType      || threshold || feesCapped || courseCapped || leaveToRemain
+        LocalDate.of(2020, 12, 21) | LocalDate.of(2021, 1, 13)  | LocalDate.of(2020, 6, 10)  | false    | 7782.74     | 5673.53         | 273.57                | 5          | "main"          || 13050.64  || 0.00       || 0            || LocalDate.of(2021, 3, 13)
+        LocalDate.of(2032, 10, 29) | LocalDate.of(2032, 12, 26) | LocalDate.of(2032, 7, 21)  | true     | 8282.28     | 9884.50         | 772.95                | 5          | "main"          || 14432.05  || 0.00       || 0            || LocalDate.of(2033, 1, 2)
+        LocalDate.of(2001, 3, 11)  | LocalDate.of(2001, 12, 11) | LocalDate.of(2000, 10, 23) | false    | 8791.47     | 7608.61         | 864.05                | 4          | "main"          || 33933.81  || 0.00       || 9            || LocalDate.of(2002, 4, 11)
+        LocalDate.of(2043, 12, 19) | LocalDate.of(2044, 11, 25) | null                       | true     | 8292.34     | 8637.29         | 945.42                | 6          | "main"          || 56069.58  || 0.00       || 9            || LocalDate.of(2045, 1, 25)
+        LocalDate.of(2021, 3, 5)   | LocalDate.of(2021, 6, 4)   | null                       | false    | 6585.10     | 0.00            | 1076.32               | 0          | "pre-sessional" || 8553.78   || 0.00       || 0            || LocalDate.of(2021, 7, 4)
     }
 
     def "Tier 4 Non Doctorate - Check 'All variants'"() {

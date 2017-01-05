@@ -12,13 +12,10 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                                   @Value("${maximum.accommodation.value}") val maxAccommodation: Int,
                                                   @Value("${inner.london.dependant.value}") val innerLondonDependants: Int,
                                                   @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int,
-                                                  @Value("${non.doctorate.minimum.course.length}") val nonDoctorateMinCourseLength: Int,
-                                                  @Value("${non.doctorate.maximum.course.length}") val nonDoctorateMaxCourseLength: Int,
-                                                  @Value("${pgdd.sso.minimum.course.length}") val pgddSsoMinCourseLength: Int,
-                                                  @Value("${pgdd.sso.maximum.course.length}") val pgddSsoMaxCourseLength: Int,
+                                                  @Value("${non.doctorate.capped.course.length}") val nonDoctorateCappedCourseLength: Int,
+                                                  @Value("${pgdd.capped.course.length}") val pgddCappedCourseLength: Int,
                                                   @Value("${doctorate.fixed.course.length}") val doctorateFixedCourseLength: Int,
-                                                  @Value("${suso.minimum.course.length}") val susoMinCourseLength: Int,
-                                                  @Value("${suso.maximum.course.length}") val susoMaxCourseLength: Int
+                                                  @Value("${suso.capped.course.length}") val susoCappedCourseLength: Int
                                                  ) {
 
   val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon).setScale(2, BigDecimal.RoundingMode.HALF_UP)
@@ -32,7 +29,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
 
   def dependantsValue(innerLondon: Boolean): BigDecimal = if (innerLondon) INNER_LONDON_DEPENDANTS else NON_INNER_LONDON_DEPENDANTS
 
-  def maintenancePeriod(start: LocalDate, end: LocalDate) = {
+  private def maintenancePeriod(start: LocalDate, end: LocalDate) = {
     val period = Period.between(start, end.plusDays(1))
     val months = period.getYears * 12 + (if (period.getDays > 0) period.getMonths + 1 else period.getMonths)
     months
@@ -54,8 +51,8 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(courseStartDate, courseEndDate, originalCourseStartDate, isPreSessional)
     val leaveToRemainInMonths = maintenancePeriod(courseStartDate, leaveToRemain)
 
-    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > nonDoctorateMaxCourseLength) {
-      (nonDoctorateMaxCourseLength, Some(nonDoctorateMaxCourseLength))
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > nonDoctorateCappedCourseLength) {
+      (nonDoctorateCappedCourseLength, Some(nonDoctorateCappedCourseLength))
     } else {
       (courseLengthInMonths, None)
     }
@@ -67,7 +64,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
 
     val amount = ((accommodationValue(innerLondon) * courseLength)
       + (tuitionFees - tuitionFeesPaid).max(0)
-      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(nonDoctorateMaxCourseLength) * dependants)
+      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(nonDoctorateCappedCourseLength) * dependants)
       - accommodationFees).max(0)
 
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
@@ -92,8 +89,8 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(courseStartDate, courseEndDate, originalCourseStartDate, false)
     val leaveToRemainInMonths = maintenancePeriod(courseStartDate, leaveToRemain)
 
-    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > susoMaxCourseLength) {
-      (susoMaxCourseLength, Some(susoMaxCourseLength))
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > susoCappedCourseLength) {
+      (susoCappedCourseLength, Some(susoCappedCourseLength))
     } else {
       (courseLengthInMonths, None)
     }
@@ -104,7 +101,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     }
 
     val amount = ((accommodationValue(innerLondon) * courseLength)
-      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(susoMaxCourseLength) * dependants)
+      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(susoCappedCourseLength) * dependants)
       - accommodationFees).max(0)
 
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
@@ -129,8 +126,8 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     val leaveToRemain = LeaveToRemainCalculator.calculateFixedLeaveToRemain(courseEndDate, Period.ofMonths(1))
     val leaveToRemainInMonths = maintenancePeriod(courseStartDate, leaveToRemain)
 
-    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > susoMaxCourseLength) {
-      (susoMaxCourseLength, Some(susoMaxCourseLength))
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > susoCappedCourseLength) {
+      (susoCappedCourseLength, Some(susoCappedCourseLength))
     } else {
       (courseLengthInMonths, None)
     }
@@ -141,7 +138,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     }
 
     val amount = ((accommodationValue(innerLondon) * courseLength)
-      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(susoMaxCourseLength) * dependants)
+      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(susoCappedCourseLength) * dependants)
       - accommodationFees).max(0)
 
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {

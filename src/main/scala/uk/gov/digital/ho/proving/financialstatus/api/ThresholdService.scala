@@ -28,10 +28,11 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
                                     val courseTypeChecker: CourseTypeChecker,
                                     val serviceMessages: ServiceMessages,
                                     val auditor: ApplicationEventPublisher,
-                                    val authenticator: Authentication,
-                                    @Value("${non.doctorate.continuation.boundary}") val nonDoctorateContinuationBoundary: Int,
-                                    @Value("${non.doctorate.short.continuation}") val nonDoctorateShortContinuation: Int,
-                                    @Value("${non.doctorate.long.continuation}") val nonDoctorateLongContinuation: Int
+                                    val authenticator: Authentication
+//                                    ,
+//                                    @Value("${non.doctorate.continuation.boundary}") val nonDoctorateContinuationBoundary: Int,
+//                                    @Value("${non.doctorate.short.continuation}") val nonDoctorateShortContinuation: Int,
+//                                    @Value("${non.doctorate.long.continuation}") val nonDoctorateLongContinuation: Int
                                    ) extends FinancialStatusBaseController with ThresholdParameterValidator {
 
   val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
