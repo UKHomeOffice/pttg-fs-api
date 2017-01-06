@@ -7,7 +7,7 @@ import java.time.LocalDate
 import java.util.{Optional, UUID}
 
 import org.apache.http.conn.HttpHostConnectException
-import org.slf4j.{Logger, LoggerFactory}
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.PropertySource
@@ -33,7 +33,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                                        val authenticator: Authentication
                                       ) extends FinancialStatusBaseController with DailyBalanceParameterValidator {
 
-  val LOGGER: Logger = LoggerFactory.getLogger(classOf[DailyBalanceService])
+  private val LOGGER = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
   logStartupInformation()
 

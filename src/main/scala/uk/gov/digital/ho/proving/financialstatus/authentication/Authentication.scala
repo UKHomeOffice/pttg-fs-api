@@ -13,7 +13,7 @@ class Authentication @Autowired()(val objectMapper: ObjectMapper,
                                   rest: RestTemplate,
                                   @Value("${keycloak.account.url}") keycloakAccountUrl: String) {
 
-  val LOGGER: Logger = LoggerFactory.getLogger(classOf[Authentication])
+  private val LOGGER = LoggerFactory.getLogger(classOf[Authentication])
 
   def getUserProfileFromToken(accessToken: String): Option[UserProfile] = {
 

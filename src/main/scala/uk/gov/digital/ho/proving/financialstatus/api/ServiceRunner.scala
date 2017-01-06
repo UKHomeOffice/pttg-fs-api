@@ -15,7 +15,7 @@ class ServerConfig
 
 object ServiceRunner {
 
-  val LOGGER: Logger = LoggerFactory.getLogger(classOf[ServerConfig])
+  private val LOGGER = LoggerFactory.getLogger(classOf[ServerConfig])
 
   def main(args: Array[String]) {
     val ctx: ApplicationContext = SpringApplication.run(classOf[ServerConfig])
