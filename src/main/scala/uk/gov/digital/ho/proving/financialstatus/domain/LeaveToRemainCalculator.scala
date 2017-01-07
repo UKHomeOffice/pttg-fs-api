@@ -4,9 +4,12 @@ import java.time.{LocalDate, Period}
 
 object LeaveToRemainCalculator {
 
+  private val ONE_YEAR = 1
+  private val SIX_MONTHS = 6
+
   private def calcWrapUpPeriod(coursePeriod: Period, preSessional: Boolean) = {
-    if (coursePeriod.getYears >= 1) Period.ofMonths(4)
-    else if (coursePeriod.getMonths >= 6) Period.ofMonths(2)
+    if (coursePeriod.getYears >= ONE_YEAR) Period.ofMonths(4)
+    else if (coursePeriod.getMonths >= SIX_MONTHS) Period.ofMonths(2)
     else if (preSessional) Period.ofMonths(1) else Period.ofDays(7)
   }
 
@@ -52,6 +55,10 @@ object LeaveToRemainCalculator {
 
     val wrapUpPeriod = calcWrapUpPeriod(coursePeriod, preSessional)
     courseEndDate.plus(wrapUpPeriod)
+  }
+
+  def calculateFixedLeaveToRemain(courseEndDate: LocalDate, period: Period): LocalDate = {
+    courseEndDate.plus(period)
   }
 
 }

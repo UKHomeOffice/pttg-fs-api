@@ -9,8 +9,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBa
 case class StatusResponse(code: String, message: String)
 
 case class CappedValues(@JsonInclude(Include.NON_EMPTY) accommodationFeesPaid: Option[BigDecimal],
-                        @JsonInclude(Include.NON_EMPTY) courseLength: Option[Int] = None
-                       )
+                        @JsonInclude(Include.NON_EMPTY) courseLength: Option[Int] = None)
 
 case object AccountDailyBalanceStatusResponse {
   def apply(dailyBalanceCheck: Option[AccountDailyBalanceCheck], status: StatusResponse): AccountDailyBalanceStatusResponse = {

@@ -10,10 +10,10 @@ class StudentTypeChecker @Autowired()(@Value("${student.type.doctorate}") val do
                                       @Value("${student.type.student.sabbatical.officer}") val studentSabbaticalOfficer: String
                                      ) {
 
-  val DOCTORATE = doctorate
-  val NON_DOCTORATE = nonDoctorate
-  val DOCTOR_DENTIST = doctorDentist
-  val STUDENT_SABBATICAL_OFFICER = studentSabbaticalOfficer
+  private val DOCTORATE = doctorate
+  private val NON_DOCTORATE = nonDoctorate
+  private val DOCTOR_DENTIST = doctorDentist
+  private val STUDENT_SABBATICAL_OFFICER = studentSabbaticalOfficer
 
   val values = Vector(DOCTORATE, NON_DOCTORATE, DOCTOR_DENTIST, STUDENT_SABBATICAL_OFFICER)
 
