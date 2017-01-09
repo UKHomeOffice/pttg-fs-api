@@ -206,7 +206,7 @@ Feature: Validation of the API fields and data
             | Status code    | 0007                                                        |
             | Status message | No records for sort code 100908 and account number 21568198 |
 
-        ######################### Validation on the Date of birth Field #########################
+        ######################### Validation on the Date of Birth Field #########################
 
     Scenario: The API is not provided with Date of Birth
 

@@ -1,12 +1,15 @@
-Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 applicant with & without dependants (single current account)
+Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General applicant with & without dependants (single current account)
 
-    Requirement to meet Tier 2 pass
-    Applicant does not have required closing balance every day for a consecutive 90 day period from the date of the Maintenance End Date
+    Requirement to meet Tier 2 & 5 pass
+
+    Applicant has required closing balance every day for a consecutive 90 day period from the date of the Maintenance End Date
 
     Background:
     | Sort code      | 111111     |
     | Account number | 12345678   |
     | Date of Birth  | 1984-07-27 |
+
+
     ##### not pass #####
 
     Scenario: Sam is a Tier 2 applicant and does not have sufficient funds.
@@ -33,7 +36,7 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 applicant w
             | Sort code            | 111111         |
             | Account number       | 12345678       |
 
-    Scenario: Barry is a Tier 2 applicant and does not have sufficient financial funds
+    Scenario: Barry is a Tier 5 applicant and does not have sufficient financial funds
 
     Application Raised Date 4th of July
     He has < than the Total Funds Required of £1575 for the previous 90 days
@@ -57,7 +60,7 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 applicant w
             | Sort code            | 111111       |
             | Account number       | 12345678     |
 
-    Scenario: Jacques is a Tier 2 applicant and does not have sufficient financial funds
+    Scenario: Jacques is a Tier 5 applicant and does not have sufficient financial funds
 
     Application Raised Date 4th of July
     He has < than the Total Funds Required of £945.00 for the previous 90 days
@@ -106,7 +109,7 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 applicant w
 
     ##### pass #####
 
-    Scenario: Shelly is a Tier 2 applicant and has sufficient financial funds
+    Scenario: Shelly is a Tier 5 applicant and has sufficient financial funds
 
     Application Raised Date 1st of June
     She has >= than the threshold of £1575 for the previous 90 days

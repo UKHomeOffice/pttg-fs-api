@@ -1,3 +1,5 @@
+Tiers 2 & 5 validation
+
 Feature: Validation of the API fields and data
 
     Background: The API is not provided with Student type field
