@@ -14,16 +14,16 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_Two API is invoked with the following
             | Dependants | -4 |
-        Then the service displays the following result
+        Then The Tier_Two Financial Status API provides the following results:
             | HTTP Status    | 400                                                          |
             | Status code    | 0004                                                         |
             | Status message | Parameter error: Invalid dependants, must be zero or greater |
 
     Scenario: The API is provided with incorrect Number of dependants - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        When the FSPS Calculator Tier_five API is invoked with the following
             | Dependants | ^ |
-        Then the service displays the following result
+        Then The Tier_five Financial Status API provides the following results:
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |
@@ -32,9 +32,9 @@ Feature: Validation of the API fields and data
 
     Scenario: The API is not provided with details as to whether there is a main dependant
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        When the FSPS Calculator Tier_Two API is invoked with the following
             | Applicant type |  |
-        Then the service displays the following result
+        Then The Tier_Two Financial Status API provides the following results:
             | HTTP Status    | 400                                                         |
             | Status code    | 0004                                                        |
             | Status message | Parameter error: Invalid main applicants, must be yes or no |
