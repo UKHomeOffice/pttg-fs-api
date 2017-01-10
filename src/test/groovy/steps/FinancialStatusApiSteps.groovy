@@ -417,9 +417,17 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
         validateJsonResult(arg1)
-        // validateResult(arg1)
+         //validateResult(arg1)
 
 
+    }
+    @Then("^The Tier_Two Financial Status API provides the following results:\$")
+    public void the_Tier_Two_Financial_Status_API_provides_the_following_results(DataTable arg1)  {
+        validateResult(arg1)
+    }
+    @Then("^The Tier_five Financial Status API provides the following results:\$")
+    public void the_Tier_five_Financial_Status_API_provides_the_following_results(DataTable arg1) throws Throwable {
+        validateResult(arg1)
     }
 
     @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")
