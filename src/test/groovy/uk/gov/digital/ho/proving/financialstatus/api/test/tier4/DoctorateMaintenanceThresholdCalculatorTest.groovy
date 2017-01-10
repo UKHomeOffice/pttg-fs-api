@@ -1,12 +1,12 @@
-package uk.gov.digital.ho.proving.financialstatus.api.test
+package uk.gov.digital.ho.proving.financialstatus.api.test.tier4
 
 import spock.lang.Specification
+import uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
-import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.*
 
 class DoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
-    MaintenanceThresholdCalculator maintenanceThresholdCalculator = maintenanceThresholdServiceBuilder()
+    MaintenanceThresholdCalculator maintenanceThresholdCalculator = TestUtilsTier4.maintenanceThresholdServiceBuilder()
 
     def bd(a) { new scala.math.BigDecimal(a) }
 

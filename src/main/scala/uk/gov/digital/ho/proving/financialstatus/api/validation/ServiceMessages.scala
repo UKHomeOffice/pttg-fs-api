@@ -49,6 +49,8 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
 
   def INVALID_COURSE_TYPE(params: String*): String = getMessage("invalid.course.type", params)
 
+  def INVALID_APPLICANT_TYPE(params: String*): String = getMessage("invalid.applicant.type", params)
+
 
   def NO_RECORDS_FOR_ACCOUNT(params: String*): String = getMessage("no.records.for.account", params)
 

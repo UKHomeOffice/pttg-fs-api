@@ -1,8 +1,9 @@
-package uk.gov.digital.ho.proving.financialstatus.api.test
+package uk.gov.digital.ho.proving.financialstatus.api.test.tier4
 
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
+import uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.Account
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 

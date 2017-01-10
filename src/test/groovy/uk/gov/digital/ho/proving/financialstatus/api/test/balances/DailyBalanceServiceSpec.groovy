@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.financialstatus.api.test
+package uk.gov.digital.ho.proving.financialstatus.api.test.balances
 
 import groovy.json.JsonSlurper
 import org.springframework.context.ApplicationEventPublisher
@@ -10,13 +10,14 @@ import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils
+import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
 import java.time.LocalDate
 
-import static TestUtils.getMessageSource
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class DailyBalanceServiceSpec extends Specification {
 
-    ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
+    ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
     def mockBankService = Mock(BankService)
 

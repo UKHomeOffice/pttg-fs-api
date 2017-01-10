@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.financialstatus.api.test
+package uk.gov.digital.ho.proving.financialstatus.api.test.balances
 
 import cucumber.api.java.Before
 import groovy.json.JsonSlurper
