@@ -23,7 +23,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
         When the FSPS Calculator Tier_Two API is invoked with the following
             | Applicant type | Main |
             | Dependants     | 0   |
-        Then The Financial Status API provides the following results:
+        Then The Tier_Two Financial Status API provides the following results:
             | HTTP Status | 200    |
             | Threshold   | 945.00 |
 
@@ -33,7 +33,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
         When the FSPS Calculator Tier_five API is invoked with the following
             | Applicant type | Main |
             | Dependants     | 1   |
-        Then The Financial Status API provides the following results:
+        Then The Tier_five Financial Status API provides the following results:
             | HTTP Status | 200     |
             | Threshold   | 1575.00 |
 
@@ -43,7 +43,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
         When the FSPS Calculator Tier_Two API is invoked with the following
             | Applicant type | Main |
             | Dependants     | 2   |
-        Then The Financial Status API provides the following results:
+        Then The Tier_Two Financial Status API provides the following results:
             | HTTP Status | 200     |
             | Threshold   | 2205.00 |
 
@@ -55,6 +55,6 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
         When the FSPS Calculator Tier_Two API is invoked with the following
             | Applicant type | Dependant |
             | Dependants     | 0   |
-        Then The Financial Status API provides the following results:
+        Then The Tier_Two Financial Status API provides the following results:
             | HTTP Status | 200    |
             | Threshold   | 630.00 |
