@@ -16,7 +16,6 @@ You will need a settings.xml file in ~/.m2 containing the following xml with you
       <password>the-api-key-from-artifactory</password>
     </server>
   </servers>
-
   <profiles>
     <profile>
       <repositories>
