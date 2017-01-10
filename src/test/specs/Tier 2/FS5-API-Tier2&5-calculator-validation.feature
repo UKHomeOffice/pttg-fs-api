@@ -1,19 +1,19 @@
-Tiers 2 & 5 validation
+#Tiers 2 & 5 validation
 
 Feature: Validation of the API fields and data
 
     Background: The API is not provided with Student type field
         Given A Service is consuming the FSPS Calculator API
         And the default details are
-            | Main applicant | yes |
-            | Dependents     | 0   |
+            | Applicant type | Main |
+            | Dependants     | 0    |
 
 ######################### Validation on the Dependants field #########################
 
     Scenario: The API is not provided with the Number of dependants
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | dependants | -4 |
+        When the FSPS Calculator Tier_Two API is invoked with the following
+            | Dependants | -4 |
         Then the service displays the following result
             | HTTP Status    | 400                                                          |
             | Status code    | 0004                                                         |
@@ -22,7 +22,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is provided with incorrect Number of dependants - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | dependants | ^ |
+            | Dependants | ^ |
         Then the service displays the following result
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |
@@ -33,7 +33,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is not provided with details as to whether there is a main dependant
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Main applicant |  |
+            | Applicant type |  |
         Then the service displays the following result
             | HTTP Status    | 400                                                         |
             | Status code    | 0004                                                        |

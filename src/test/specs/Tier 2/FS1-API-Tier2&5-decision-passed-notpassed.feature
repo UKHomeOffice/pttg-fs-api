@@ -14,8 +14,8 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
 
     Scenario: Sam is a Tier 2 applicant and does not have sufficient funds.
 
-    Application Raised Date 1st of June
-    He has < than the Total Fund Required of £945 for the previous 90 days
+    #Application Raised Date 1st of June
+    #He has < than the Total Fund Required of £945 for the previous 90 days
 
         Given a Service is consuming Financial Status API
         Given the test data for account 23568498
@@ -23,7 +23,7 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | Minimum       | 945.00     |
             | To Date       | 2016-06-01 |
             | From Date     | 2016-03-04 |
-            | User Id       | user12345  |
+
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200            |
             | Pass                 | false          |
@@ -38,8 +38,8 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
 
     Scenario: Barry is a Tier 5 applicant and does not have sufficient financial funds
 
-    Application Raised Date 4th of July
-    He has < than the Total Funds Required of £1575 for the previous 90 days
+    #Application Raised Date 4th of July
+    #He has < than the Total Funds Required of £1575 for the previous 90 days
 
         Given a Service is consuming Financial Status API
         Given the test data for account 01078911
@@ -62,8 +62,8 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
 
     Scenario: Jacques is a Tier 5 applicant and does not have sufficient financial funds
 
-    Application Raised Date 4th of July
-    He has < than the Total Funds Required of £945.00 for the previous 90 days
+    #Application Raised Date 4th of July
+    #He has < than the Total Funds Required of £945.00 for the previous 90 days
 
         Given a Service is consuming Financial Status API
         Given the test data for account 17926767
@@ -86,8 +86,8 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
 
     Scenario: Lucas is a Tier 2 applicant - funds have been in her account for less than 90 days
 
-    Application Raised Date 1st of June
-    She has < than the Total Fund Required of £2205 for the previous 90 days
+   # Application Raised Date 1st of June
+    #She has < than the Total Fund Required of £2205 for the previous 90 days
 
         Given a Service is consuming Financial Status API
         Given the test data for account 23568491
@@ -111,8 +111,8 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
 
     Scenario: Shelly is a Tier 5 applicant and has sufficient financial funds
 
-    Application Raised Date 1st of June
-    She has >= than the threshold of £1575 for the previous 90 days
+    #Application Raised Date 1st of June
+    #She has >= than the threshold of £1575 for the previous 90 days
 
         Given a Service is consuming Financial Status API
         Given the test data for account 01010312
@@ -134,8 +134,8 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
 
     Scenario: Brian is Tier 2 applicant and has sufficient financial funds
 
-    Application Raised Date 4th of July
-    He has >= than the threshold of £945 for the previous 90 days
+    #Application Raised Date 4th of July
+    #He has >= than the threshold of £945 for the previous 90 days
 
         Given a Service is consuming Financial Status API
         Given the test data for account 01078912

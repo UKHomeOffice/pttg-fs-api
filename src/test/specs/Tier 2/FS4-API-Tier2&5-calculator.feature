@@ -20,8 +20,8 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
     Scenario: Leo is Tier 2 applicant. Leo's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Main applicant | Yes |
+        When the FSPS Calculator Tier_Two API is invoked with the following
+            | Applicant type | Main |
             | Dependants     | 0   |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200    |
@@ -30,8 +30,8 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
     Scenario: Fran is Tier 5 applicant. Fran's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Main applicant | Yes |
+        When the FSPS Calculator Tier_five API is invoked with the following
+            | Applicant type | Main |
             | Dependants     | 1   |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
@@ -40,8 +40,8 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
     Scenario: Karen is Tier 2 applicant. Karen's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Main applicant | Yes |
+        When the FSPS Calculator Tier_Two API is invoked with the following
+            | Applicant type | Main |
             | Dependants     | 2   |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
@@ -52,9 +52,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
     Scenario: Stu is Tier 2 applicant. Stu's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
-            | Main applicant | No |
-            | Dependants     | 1   |
+        When the FSPS Calculator Tier_Two API is invoked with the following
+            | Applicant type | Dependant |
+            | Dependants     | 0   |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200    |
             | Threshold   | 630.00 |
