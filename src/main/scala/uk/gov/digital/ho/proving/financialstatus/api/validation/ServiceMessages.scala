@@ -43,7 +43,7 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
 
   val INVALID_USER_PROFILE: String = getMessage("unable.to.retrieve.user.profile")
 
-  def INVALID_DATES(params: Int*): String = getMessage("invalid.dates", params)
+  val INVALID_DATES: String = getMessage("invalid.dates")
 
   def INVALID_STUDENT_TYPE(params: String*): String = getMessage("invalid.student.type", params)
 

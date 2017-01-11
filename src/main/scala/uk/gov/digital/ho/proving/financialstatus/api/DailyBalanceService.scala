@@ -62,8 +62,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
     val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
 
-    val validatedInputs = validateInputs(cleanSortCode, accountNumber, minimum, fromDate, toDate,
-      accountStatusChecker.numberConsecutiveDays, dob, userProfile)
+    val validatedInputs = validateInputs(cleanSortCode, accountNumber, minimum, fromDate, toDate, dob, userProfile)
 
     validatedInputs match {
       case Right(inputs) =>

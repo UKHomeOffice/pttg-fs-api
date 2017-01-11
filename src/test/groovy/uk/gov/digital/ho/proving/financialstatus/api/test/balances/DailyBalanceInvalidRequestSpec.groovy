@@ -35,13 +35,10 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def invalidFromDate = "Parameter error: Invalid from date"
     def invalidConversionFromDate = "Parameter conversion error: Invalid from date"
     def invalidConversionToDate = "Parameter conversion error: Invalid to date"
-    def invalidConversionAccountHolderConsent = "Parameter conversion error: Invalid accountHolderConsent"
 
     def invalidToDate = "Parameter error: Invalid to date"
     def invalidDob = "Parameter error: Invalid date of birth"
-    def invalidUserId = "Parameter error: Invalid userId"
-    def invalidAccountHolderConsent = "Parameter error: Invalid accountHolderConsent"
-    def invalidDateRange = "Parameter error: Invalid dates, from date must be 27 days before to date"
+    def invalidDateRange = "Parameter error: Invalid dates, from date must be before to date"
 
     @Before
     def setup() {
@@ -52,8 +49,6 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
         given:
         def url = "/pttg/financialstatusservice/v1/accounts/12345a/12345678/dailybalancestatus"
-
-        // 1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
 
         when:
         def response = mockMvc.perform(
@@ -66,7 +61,6 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         )
 
         then:
-        // response.andDo(MockMvcResultHandlers.print())
         response.andExpect(status().isNotFound())
     }
 
@@ -139,8 +133,6 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         given:
         def url = "/pttg/financialstatusservice/v1/accounts/12345/123d5678/dailybalancestatus"
 
-        // 1 * mockBankService.fetchAccountDailyBalances(_, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, 2560.23, 3500, true, false)
-
         when:
         def response = mockMvc.perform(
             get(url).param("toDate", "2016-06-09")
@@ -152,7 +144,6 @@ class DailyBalanceInvalidRequestSpec extends Specification {
         )
 
         then:
-        // response.andDo(MockMvcResultHandlers.print())
         response.andExpect(status().isNotFound())
     }
 
