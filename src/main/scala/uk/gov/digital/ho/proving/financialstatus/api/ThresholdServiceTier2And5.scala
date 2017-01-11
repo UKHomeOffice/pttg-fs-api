@@ -26,7 +26,7 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
                                              val serviceMessages: ServiceMessages,
                                              val auditor: ApplicationEventPublisher,
                                              val authenticator: Authentication
-                                            ) extends FinancialStatusBaseController  {
+                                            ) extends FinancialStatusBaseController {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdServiceTier2And5])
 
@@ -48,27 +48,34 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
 
     val auditEventId = nextId
     auditSearchParams(auditEventId, applicantType, dependants, userProfile)
-
     val validatedApplicantType = applicantTypeChecker.getApplicantType(applicantType.getOrElse("Unknown"))
 
     def threshold = calculateThresholdForApplicantType(validatedApplicantType, dependants)
 
     auditSearchResult(auditEventId, threshold.getBody, userProfile)
-
     threshold
   }
 
 
-  private def calculateThresholdForApplicantType(validatedApplicantType: ApplicantType, dependants: Option[Int]):  ResponseEntity[ThresholdResponse] = {
+  private def calculateThresholdForApplicantType(validatedApplicantType: ApplicantType, dependants: Option[Int]): ResponseEntity[ThresholdResponse] = {
     validatedApplicantType match {
-      case UnknownApplicant(_) =>buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_APPLICANT_TYPE(applicantTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
-      case _ => dependants match {
-        case Some(validDependants) =>
-          val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType, validDependants)
-          new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)),HttpStatus.OK)
-        case None =>buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
+      case UnknownApplicant(_) => buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_APPLICANT_TYPE(applicantTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
+      case MainApplicant =>
+        dependants match {
+          case _ => dependants match {
+            case Some(validDependants) =>
+              if (validDependants >= 0) {
+                val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType, validDependants)
+                new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
+              } else {
+                buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
+              }
+            case None => buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
+          }
+        }
+      case DependantApplicant => val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType)
+        new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
 
-      }
     }
   }
 

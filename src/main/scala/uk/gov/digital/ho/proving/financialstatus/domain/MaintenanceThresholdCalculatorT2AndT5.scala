@@ -10,6 +10,7 @@ class MaintenanceThresholdCalculatorT2AndT5 @Autowired()(@Value("${t2t5.main.app
   private val MAIN_APPLICANT_VALUE = BigDecimal(mainApplicantValue).setScale(2, BigDecimal.RoundingMode.HALF_UP)
   private val DEPENDANT_APPLICANT_VALUE = BigDecimal(dependantApplicantLength).setScale(2, BigDecimal.RoundingMode.HALF_UP)
 
+  def calculateThresholdForT2AndT5(applicantType: ApplicantType): Option[BigDecimal] = calculateThresholdForT2AndT5(applicantType, 0)
 
   def calculateThresholdForT2AndT5(applicantType: ApplicantType, dependants: Int): Option[BigDecimal] = {
     applicantType match {
