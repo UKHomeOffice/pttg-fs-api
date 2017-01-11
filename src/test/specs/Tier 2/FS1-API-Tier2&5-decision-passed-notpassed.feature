@@ -4,10 +4,12 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
 
     Applicant has required closing balance every day for a consecutive 90 day period from the date of the Maintenance End Date
 
-    Background:
-    | Sort code      | 111111     |
-    | Account number | 12345678   |
-    | Date of Birth  | 1984-07-27 |
+   # Background:
+     #   Given a Service is consuming Financial Status API
+     #   When the Financial Status API is invoked with the following:
+      #      | Sort code      | 111111     |
+      #      | Account number | 12345678   |
+      #      | Date of Birth  | 1984-07-27 |
 
 
     ##### not pass #####
@@ -17,13 +19,17 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
     #Application Raised Date 1st of June
     #He has < than the Total Fund Required of £945 for the previous 90 days
 
-        Given a Service is consuming Financial Status API
+        #Given a Service is consuming Financial Status API
         Given the test data for account 23568498
         When the Financial Status API is invoked with the following:
-            | Minimum       | 945.00     |
-            | To Date       | 2016-06-01 |
-            | From Date     | 2016-03-04 |
-
+            | Minimum                | 945.00     |
+            | To Date                | 2016-06-01 |
+            | From Date              | 2016-03-04 |
+            | Sort code              | 111111     |
+            | Account number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | Account Holder Consent | Yes        |
+            | User Id                | user12345  |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200            |
             | Pass                 | false          |
@@ -41,13 +47,13 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
     #Application Raised Date 4th of July
     #He has < than the Total Funds Required of £1575 for the previous 90 days
 
-        Given a Service is consuming Financial Status API
+       # Given a Service is consuming Financial Status API
         Given the test data for account 01078911
         When the Financial Status API is invoked with the following:
-            | Minimum       | 2030.00    |
-            | To Date       | 2016-07-04 |
-            | From Date     | 2016-04-06 |
-            | User Id       | user12345  |
+            | Minimum   | 2030.00    |
+            | To Date   | 2016-07-04 |
+            | From Date | 2016-04-06 |
+            | User Id   | user12345  |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200          |
             | Pass                 | false        |
@@ -65,13 +71,13 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
     #Application Raised Date 4th of July
     #He has < than the Total Funds Required of £945.00 for the previous 90 days
 
-        Given a Service is consuming Financial Status API
+       # Given a Service is consuming Financial Status API
         Given the test data for account 17926767
         When the Financial Status API is invoked with the following:
-            | Minimum       | 2537.48    |
-            | To Date       | 2016-07-04 |
-            | From Date     | 2016-04-06 |
-            | User Id       | user12345  |
+            | Minimum   | 2537.48    |
+            | To Date   | 2016-07-04 |
+            | From Date | 2016-04-06 |
+            | User Id   | user12345  |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200             |
             | Pass                 | false           |
@@ -89,13 +95,13 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
    # Application Raised Date 1st of June
     #She has < than the Total Fund Required of £2205 for the previous 90 days
 
-        Given a Service is consuming Financial Status API
+       # Given a Service is consuming Financial Status API
         Given the test data for account 23568491
         When the Financial Status API is invoked with the following:
-            | Minimum       | 2205.00    |
-            | To Date       | 2016-06-01 |
-            | From Date     | 2016-03-04 |
-            | User Id       | user12345  |
+            | Minimum   | 2205.00    |
+            | To Date   | 2016-06-01 |
+            | From Date | 2016-03-04 |
+            | User Id   | user12345  |
         Then The Financial Status API provides the following results:
             | HTTP Status         | 200        |
             | Pass                | false      |
@@ -114,13 +120,13 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
     #Application Raised Date 1st of June
     #She has >= than the threshold of £1575 for the previous 90 days
 
-        Given a Service is consuming Financial Status API
+        #Given a Service is consuming Financial Status API
         Given the test data for account 01010312
         When the Financial Status API is invoked with the following:
-            | Minimum       | 1575.00    |
-            | To Date       | 2016-06-01 |
-            | From Date     | 2016-03-04 |
-            | User Id       | user12345  |
+            | Minimum   | 1575.00    |
+            | To Date   | 2016-06-01 |
+            | From Date | 2016-03-04 |
+            | User Id   | user12345  |
         Then The Financial Status API provides the following results:
             | HTTP Status         | 200          |
             | Pass                | true         |
@@ -137,13 +143,13 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
     #Application Raised Date 4th of July
     #He has >= than the threshold of £945 for the previous 90 days
 
-        Given a Service is consuming Financial Status API
+       # Given a Service is consuming Financial Status API
         Given the test data for account 01078912
         When the Financial Status API is invoked with the following:
-            | Minimum       | 945.00     |
-            | To Date       | 2016-07-04 |
-            | From Date     | 2016-04-06 |
-            | User Id       | user12345  |
+            | Minimum   | 945.00     |
+            | To Date   | 2016-07-04 |
+            | From Date | 2016-04-06 |
+            | User Id   | user12345  |
         Then The Financial Status API provides the following results:
             | HTTP Status         | 200         |
             | Pass                | true        |
