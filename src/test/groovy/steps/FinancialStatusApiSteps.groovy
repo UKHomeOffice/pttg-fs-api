@@ -445,6 +445,17 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         validateResult(arg1)
     }
 
+    @Then("^The Tier_Two Financial Status API provides the following validation results:\$")
+    public void the_Tier_Two_Financial_Status_API_provides_the_following_validation_results(DataTable arg1) {
+        validateResult(arg1)
+    }
+
+    @Then("^The Tier_five Financial Status API provides the following validation results:\$")
+    public void the_Tier_five_Financial_Status_API_provides_the_following_validation_results(DataTable arg1) {
+        validateResult(arg1)
+    }
+
+
     @Then("^the health check response status should be (\\d+)\$")
     def the_response_status_should_be(int expected) {
 
