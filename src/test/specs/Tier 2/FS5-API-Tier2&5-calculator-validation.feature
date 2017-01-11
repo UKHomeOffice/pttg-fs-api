@@ -14,7 +14,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_Two API is invoked with the following
             | Dependants | -4 |
-        Then The Tier_Two Financial Status API provides the following results:
+        Then The Tier_Two Financial Status API provides the following validation results:
             | HTTP Status    | 400                                                          |
             | Status code    | 0004                                                         |
             | Status message | Parameter error: Invalid dependants, must be zero or greater |
@@ -23,7 +23,7 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_five API is invoked with the following
             | Dependants | ^ |
-        Then The Tier_five Financial Status API provides the following results:
+        Then The Tier_five Financial Status API provides the following validation results:
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |
@@ -34,9 +34,9 @@ Feature: Validation of the API fields and data
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_Two API is invoked with the following
             | Applicant type |  |
-        Then The Tier_Two Financial Status API provides the following results:
-            | HTTP Status    | 400                                                                     |
-            | Status code    | 0004                                                                    |
+        Then The Tier_Two Financial Status API provides the following validation results:
+            | HTTP Status    | 400                                                         |
+            | Status code    | 0004                                                        |
             | Status message | Parameter error: Invalid applicantType, must be one of [main,dependant] |
 
 
