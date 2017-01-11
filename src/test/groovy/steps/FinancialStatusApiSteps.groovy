@@ -383,7 +383,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     }
 
-
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
