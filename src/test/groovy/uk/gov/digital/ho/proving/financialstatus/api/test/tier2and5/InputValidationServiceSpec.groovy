@@ -14,15 +14,13 @@ import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 
-import java.time.LocalDate
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 
 @WebAppConfiguration
 @ContextConfiguration(classes = ServiceConfiguration.class)
-class ApplicantTypeCheckerServiceSpec extends Specification {
+class InputValidationServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
@@ -52,7 +50,7 @@ class ApplicantTypeCheckerServiceSpec extends Specification {
         response
     }
 
-    def "Tier 2/5 Applicant types"() {
+    def "Tier 2/5 Applicant types validation"() {
 
         expect:
         def response = callApi(applicantType, 0)
@@ -71,5 +69,25 @@ class ApplicantTypeCheckerServiceSpec extends Specification {
         "rubbish"     || 400        || "Parameter error: Invalid applicantType, must be one of [main,dependant]"
         ""            || 400        || "Parameter error: Invalid applicantType, must be one of [main,dependant]"
     }
+
+    def "Tier 2/5 Input validation for dependants"() {
+        expect:
+        def response = callApi(applicantType, dependants)
+        response.andExpect(status().is(httpStatus))
+        def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
+        jsonContent.status.message == statusMessage
+
+        where:
+        applicantType | dependants || httpStatus || statusMessage
+        "main"        | -1         || 400        || "Parameter error: Invalid dependants, must be zero or greater"
+        "main"        | 0          || 200        || "OK"
+        "main"        | 1          || 200        || "OK"
+        "dependant"   | -1         || 200        || "OK"
+        "dependant"   | 0          || 200        || "OK"
+        "dependant"   | 1          || 200        || "OK"
+        "dependant"   | 2          || 200        || "OK"
+
+    }
+
 
 }
