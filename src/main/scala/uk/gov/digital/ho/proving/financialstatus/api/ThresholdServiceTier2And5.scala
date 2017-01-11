@@ -19,14 +19,14 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
-@RequestMapping(value = Array("/pttg/financialstatusservice/v1/{tier:t2|t4}/maintenance"))
+@RequestMapping(value = Array("/pttg/financialstatusservice/v1/{tier:t2|t5}/maintenance"))
 @ControllerAdvice
 class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculatorT2AndT5,
                                              val applicantTypeChecker: ApplicantTypeChecker,
                                              val serviceMessages: ServiceMessages,
                                              val auditor: ApplicationEventPublisher,
                                              val authenticator: Authentication
-                                            ) extends FinancialStatusBaseController with ThresholdParameterValidator {
+                                            ) extends FinancialStatusBaseController  {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdServiceTier2And5])
 
