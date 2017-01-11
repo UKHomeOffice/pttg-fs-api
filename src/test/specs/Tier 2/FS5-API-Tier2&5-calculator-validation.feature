@@ -35,9 +35,9 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator Tier_Two API is invoked with the following
             | Applicant type |  |
         Then The Tier_Two Financial Status API provides the following results:
-            | HTTP Status    | 400                                                         |
-            | Status code    | 0004                                                        |
-            | Status message | Parameter error: Invalid main applicants, must be yes or no |
+            | HTTP Status    | 400                                                                     |
+            | Status code    | 0004                                                                    |
+            | Status message | Parameter error: Invalid applicantType, must be one of [main,dependant] |
 
 
 
