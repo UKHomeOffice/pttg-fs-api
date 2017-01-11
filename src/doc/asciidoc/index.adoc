@@ -25,7 +25,7 @@ For further assistance see the <<Contact>> section.
 == Versioning
 This is version 1 of the income proving API. In this version all resource URIs are prefixed with:
 
-`/pttg/financialstatusservice/v1/`
+`/pttg/financialstatus/v1/`
 
 == Schema
 include::common/schema.adoc[]
@@ -58,7 +58,7 @@ Tier 4 application.
 === Check the Financial Status of an individual
 
 This version can check the financial status for applicants with a Barclays current account in their name only. The sort
-code, account number, aand date of birth must precisely match the account record at Barclays. The daily closing balances
+code, account number, and date of birth must precisely match the account record at Barclays. The daily closing balances
 for the given account on each day in the date range (inclusive) will be checked against the supplied `minimum`. The
 result will be a `pass` only when the daily closing balance is greater than or equal to the minimum on each of the days.
 

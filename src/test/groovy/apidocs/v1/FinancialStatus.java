@@ -45,7 +45,7 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 })
 public class FinancialStatus {
 
-    public static final String BASEPATH = "/pttg/financialstatusservice/v1/";
+    public static final String BASEPATH = "/pttg/financialstatus/v1/";
 
     @Rule
     public JUnitRestDocumentation restDocumentationRule = new JUnitRestDocumentation("build/generated-snippets");

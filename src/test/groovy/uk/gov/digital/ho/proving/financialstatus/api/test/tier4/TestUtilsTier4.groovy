@@ -9,7 +9,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 
 class TestUtilsTier4 {
 
-    public static def thresholdUrl = "/pttg/financialstatusservice/v1/maintenance/threshold"
+    public static def thresholdUrl = "/pttg/financialstatus/v1/t4/maintenance/threshold"
 
     public static getMessageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();

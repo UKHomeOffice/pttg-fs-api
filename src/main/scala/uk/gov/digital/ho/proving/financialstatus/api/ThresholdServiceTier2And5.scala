@@ -19,7 +19,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
-@RequestMapping(value = Array("/pttg/financialstatusservice/v1/{tier:t2|t5}/maintenance"))
+@RequestMapping(value = Array("/pttg/financialstatus/v1/{tier:t2|t5}/maintenance"))
 @ControllerAdvice
 class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculatorT2AndT5,
                                              val applicantTypeChecker: ApplicantTypeChecker,

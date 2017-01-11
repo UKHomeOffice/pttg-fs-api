@@ -37,7 +37,7 @@ class RestErrorsSpec extends Specification {
     def serviceName = "http://localhost:8083"
     def stubPort = 8083
     def stubUrl = "/financialstatus/v1/123456/12345678/balances*"
-    def apiUrl = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+    def apiUrl = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
     def verifyUrl = "/financialstatus/v1/123456/12345678/balances.*"
 
     def bankUrl = "$serviceName/financialstatus/v1"

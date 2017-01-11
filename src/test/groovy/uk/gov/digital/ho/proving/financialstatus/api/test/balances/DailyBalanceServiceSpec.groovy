@@ -42,7 +42,7 @@ class DailyBalanceServiceSpec extends Specification {
     def "daily balance threshold check pass"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/12-34-56/12345678/dailybalancestatus"
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
         def dob = LocalDate.of(2000, 1, 1)
@@ -81,7 +81,7 @@ class DailyBalanceServiceSpec extends Specification {
     def "daily balance threshold check fail (minimum below threshold)"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/12-34-56/12345678/dailybalancestatus"
 
         def lowestIndex = 5
         def toDate = LocalDate.of(2016, 6, 9)
@@ -128,7 +128,7 @@ class DailyBalanceServiceSpec extends Specification {
     def "daily balance threshold check fail (not enough entries)"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/12-34-56/12345678/dailybalancestatus"
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
         def dob = LocalDate.of(2000, 1, 1)

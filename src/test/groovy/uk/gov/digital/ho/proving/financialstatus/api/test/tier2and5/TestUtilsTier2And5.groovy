@@ -6,7 +6,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalc
 
 class TestUtilsTier2And5 {
 
-    public static def thresholdUrl = "/pttg/financialstatusservice/v1/t2/maintenance/threshold"
+    public static def thresholdUrl = "/pttg/financialstatus/v1/t2/maintenance/threshold"
 
     static getMessageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();

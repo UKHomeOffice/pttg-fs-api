@@ -48,7 +48,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def "daily balance reject invalid sort code (invalid character)"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/12345a/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/12345a/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -67,7 +67,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def "daily balance reject invalid sort code (too few numbers)"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/12345/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/12345/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -88,7 +88,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid sort code (too many numbers)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/1234567/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/1234567/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -109,7 +109,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid sort code (all zeroes)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/000000/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/000000/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -131,7 +131,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def "daily balance reject invalid account number (invalid character)"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/12345/123d5678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/12345/123d5678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -150,7 +150,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
     def "daily balance reject invalid account number (too few numbers)"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/1234567/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/1234567/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -171,7 +171,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid account number (too many numbers)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/123456789/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/123456789/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -192,7 +192,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid account number (all zeroes)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/00000000/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/00000000/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -213,7 +213,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid minimum value (below zero)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -234,7 +234,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid minimum value (equal to zero)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -257,7 +257,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid from date (invalid year)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -278,7 +278,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid from date (invalid month)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -299,7 +299,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid from date (invalid day)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -322,7 +322,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid to date (invalid year)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -343,7 +343,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid to date (invalid month)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -364,7 +364,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid to date (invalid day)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -388,7 +388,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid date ranges (from date after to date)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -409,7 +409,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject invalid date ranges (from date equal to date)"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -430,7 +430,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject future toDate date"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
         def toDate = LocalDate.now().plusDays(1)
         def fromDate = toDate.minusDays(27)
 
@@ -454,7 +454,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject future fromDate date"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
         def fromDate = LocalDate.now().plusDays(1)
         def toDate = fromDate.minusDays(27)
 
@@ -480,7 +480,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject missing from date value"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -502,7 +502,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject missing to date value"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -524,7 +524,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject missing minimum value"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(
@@ -545,7 +545,7 @@ class DailyBalanceInvalidRequestSpec extends Specification {
 
     def "daily balance reject missing to dob value"() {
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
 
         when:
         def response = mockMvc.perform(

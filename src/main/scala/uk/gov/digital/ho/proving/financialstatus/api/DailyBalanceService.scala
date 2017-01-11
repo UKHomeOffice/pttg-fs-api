@@ -25,7 +25,7 @@ import scala.util._
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
-@RequestMapping(path = Array("/pttg/financialstatusservice/v1/accounts/"))
+@RequestMapping(path = Array("/pttg/financialstatus/v1/accounts/"))
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
                                        val serviceMessages: ServiceMessages,
