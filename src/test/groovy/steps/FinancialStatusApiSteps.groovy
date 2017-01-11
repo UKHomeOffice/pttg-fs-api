@@ -405,7 +405,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the FSPS Calculator Tier_Two API is invoked with the following\$")
     public void the_FSPS_Calculator_Tier_Two_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/t5/maintenance/threshold?applicantType={studentType}&dependants={dependants}", applicantType, dependants)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/t2/maintenance/threshold?applicantType={studentType}&dependants={dependants}", applicantType, dependants)
         jsonAsString = resp.asString()
         println("FSPS API Calculator: " + jsonAsString)
     }
@@ -427,7 +427,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
     @Then("^The Tier_Two Financial Status API provides the following results:\$")
     public void the_Tier_Two_Financial_Status_API_provides_the_following_results(DataTable arg1)  {
-        validateResult(arg1)
+        validateJsonResult(arg1)
     }
     @Then("^The Tier_five Financial Status API provides the following results:\$")
     public void the_Tier_five_Financial_Status_API_provides_the_following_results(DataTable arg1) throws Throwable {
