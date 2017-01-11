@@ -11,8 +11,8 @@ trait DailyBalanceParameterValidator {
 
   val serviceMessages: ServiceMessages
 
-  val sortCodePattern = """^[0-9]{6}$""".r
-  val accountNumberPattern = """^[0-9]{8}$""".r
+  private val sortCodePattern = """^[0-9]{6}$""".r
+  private val accountNumberPattern = """^[0-9]{8}$""".r
 
   protected def validateInputs(sortCode: Option[String],
                                accountNumber: Option[String],

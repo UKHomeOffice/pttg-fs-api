@@ -8,8 +8,8 @@ class CourseTypeChecker @Autowired()(@Value("${course.type.main}") val main: Str
                                      @Value("${course.type.pre.sessional}") val preSessional: String
                                     ) {
 
-  val MAIN = main
-  val PRE_SESSIONAL = preSessional
+  private val MAIN = main
+  private val PRE_SESSIONAL = preSessional
 
   val values = Vector(MAIN, PRE_SESSIONAL)
 
