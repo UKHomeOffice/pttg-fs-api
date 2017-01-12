@@ -286,13 +286,14 @@ Feature: Validation of the API fields and data
 
     Scenario: The API is provided with an account number with less than 28 days record
 
+        Given the test data for account 23568493
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
             | To Date        | 2016-06-29 |
-            | From Date      | 2016-06-01 |
+            | From Date      | 2016-07-31 |
             | Minimum        | 2350.00    |
-            | Sort Code      | 13-56-09   |
-            | Account Number | 11111111   |
+            | Sort Code      | 11-11-11   |
+            | Account Number | 23568493   |
             | Date of Birth  | 1984-01-11 |
             | User Id        | user12345  |
         Then FSPS Tier four general Case Worker tool API provides the following result
