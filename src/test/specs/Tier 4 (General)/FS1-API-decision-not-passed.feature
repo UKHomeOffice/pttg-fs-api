@@ -5,7 +5,6 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
     Applicant does not have required closing balance every day for a consecutive 28 day period from the date of the Maintenance End Date
 
 #Added to Jira PT-28 - Add 'Account holder name' to FSPS API
-#change to trigger build
     Scenario: Shelly is a general student and does not have sufficient financial funds
 
     Application Raised Date 1st of June
