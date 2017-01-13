@@ -6,7 +6,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
 
 #Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Shelly is a general student and does not have sufficient financial funds
-#change trigger build
+
     Application Raised Date 1st of June
     She has < than the Total Fund Required of £2350 for the previous 28 days
 
