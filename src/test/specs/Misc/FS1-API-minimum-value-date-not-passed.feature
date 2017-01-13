@@ -1,7 +1,5 @@
 Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student (single current account and no dependants)
 
-
-
     Applicant does not have required closing balance every day for a consecutive 28 day period from the date of the Maintenance End Date
     If not passed, API will show minimum balance and the date it was. If there is more than one days when the applicants balance was below the threshold, on the output page will see first date
 
