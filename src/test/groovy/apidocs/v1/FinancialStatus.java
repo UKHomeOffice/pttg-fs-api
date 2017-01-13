@@ -123,7 +123,7 @@ public class FinancialStatus {
     @Test
     public void commonHeaders() throws Exception {
 
-        testDataLoader.stubTestData("01010312", "/financialstatus/v1.*");
+        testDataLoader.stubTestData("01010312", "/financialstatus/v1");
 
         given(documentationSpec)
             .spec(requestSpec)
@@ -148,7 +148,7 @@ public class FinancialStatus {
     @Test
     public void financialStatus() throws Exception {
 
-        testDataLoader.stubTestData("01010312", "/financialstatus/v1.*");
+        testDataLoader.stubTestData("01010312", "/financialstatus/v1");
 
         given(documentationSpec)
             .spec(requestSpec)

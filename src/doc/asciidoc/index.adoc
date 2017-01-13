@@ -10,8 +10,8 @@ current accounts held in the applicant's name.
 
 This API can be used to:
 
- . Calculate the minimum balance requirement for a Tier 4 application
- . Check whether an individual meets the <<Financial Status>> requirements for a Tier 4 application by consulting the
+ . Calculate the minimum balance requirement for a Tier 2, 4 or 5 application
+ . Check whether an individual meets the <<Financial Status>> requirements for a Tier 2, 4 or 5 application by consulting the
  daily closing balance of their Barclays current account and comparing it against a minimum balance requirement
 
 This guide has three main sections:
@@ -53,7 +53,7 @@ include::common/auth.adoc[]
 == Financial Status
 
 The Financial Status resource conveys whether an individual meets the financial status requirements for a
-Tier 4 application.
+Tier 2, 4 or 5 application.
 
 === Check the Financial Status of an individual
 
@@ -113,7 +113,7 @@ include::{snippets}/financial-status-not-enough-data/response-fields.adoc[]
 
 ==== `No matching account` response
 
-If the supplied account number. sort code, and date of birth does not correspond to any active account the response will
+If the supplied account number, sort code, and date of birth does not correspond to any active account the response will
 be a 404 with the following response body:
 
 include::{snippets}/financial-status-no-account/http-response.adoc[]
@@ -121,32 +121,84 @@ include::{snippets}/financial-status-no-account/http-response.adoc[]
 
 == Maintenance
 
+== Threshold calculation for Tier 2
 
-== Threshold calculation
+Calculates the maintenance threshold value for applicants based on applicant type and possible dependants.
+
+=== Example request
+
+include::{snippets}/threshold-calculation-tier2/http-request.adoc[]
+
+include::{snippets}/threshold-calculation-tier2/curl-request.adoc[]
+
+
+=== Request Parameters
+
+include::{snippets}/threshold-calculation-tier2/request-parameters.adoc[]
+
+
+=== Example of a successful response
+
+include::{snippets}/threshold-calculation-tier2/http-response.adoc[]
+
+
+=== Threshold response content
+
+include::{snippets}/threshold-calculation-tier2/response-fields.adoc[]
+
+
+
+== Threshold calculation for Tier 4
 
 Calculates the maintenance threshold value for student based on student type, course length, tuition and accommodation
 fees and any costs already paid.
 
 === Example request
 
-include::{snippets}/threshold-calculation/http-request.adoc[]
+include::{snippets}/threshold-calculation-tier4/http-request.adoc[]
 
-include::{snippets}/threshold-calculation/curl-request.adoc[]
+include::{snippets}/threshold-calculation-tier4/curl-request.adoc[]
 
 
 === Request Parameters
 
-include::{snippets}/threshold-calculation/request-parameters.adoc[]
+include::{snippets}/threshold-calculation-tier4/request-parameters.adoc[]
 
 
 === Example of a successful response
 
-include::{snippets}/threshold-calculation/http-response.adoc[]
+include::{snippets}/threshold-calculation-tier4/http-response.adoc[]
 
 
 === Threshold response content
 
-include::{snippets}/threshold-calculation/response-fields.adoc[]
+include::{snippets}/threshold-calculation-tier4/response-fields.adoc[]
+
+
+== Threshold calculation for Tier 5
+
+Calculates the maintenance threshold value for applicants based on applicant type and possible dependants.
+
+=== Example request
+
+include::{snippets}/threshold-calculation-tier5/http-request.adoc[]
+
+include::{snippets}/threshold-calculation-tier5/curl-request.adoc[]
+
+
+=== Request Parameters
+
+include::{snippets}/threshold-calculation-tier5/request-parameters.adoc[]
+
+
+=== Example of a successful response
+
+include::{snippets}/threshold-calculation-tier5/http-response.adoc[]
+
+
+=== Threshold response content
+
+include::{snippets}/threshold-calculation-tier5/response-fields.adoc[]
 
 
 

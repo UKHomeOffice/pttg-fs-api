@@ -42,7 +42,7 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 @TestPropertySource(properties = {
     "barclays.stub.service=http://localhost:8089"
 })
-public class ThresholdCalculator {
+public class ThresholdCalculatorTier4 {
 
     public static final String BASEPATH = "/pttg/financialstatus/v1/t4";
 
@@ -128,7 +128,7 @@ public class ThresholdCalculator {
     }
 
     @Test
-    public void thresholdCalculation() throws Exception {
+    public void thresholdCalculationTier4() throws Exception {
 
         given(documentationSpec)
             .spec(requestSpec)

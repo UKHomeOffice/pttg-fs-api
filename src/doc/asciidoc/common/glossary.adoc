@@ -32,3 +32,16 @@ Student Type:: Meanings of the student type names accepted by the API
 |Student Sabbatical Officer
 
 |===
+
+Applicant Type:: Meanings of the applicant type names accepted by the API
+[caption=]
+.Applicant Types
+|===
+|Applicant Type Name|Description
+
+|main
+|Main applicant possibly with dependants
+|dependant
+|The dependant of a main applicant
+
+|===
