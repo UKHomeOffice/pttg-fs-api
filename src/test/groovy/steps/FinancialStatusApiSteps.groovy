@@ -320,6 +320,11 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                 case "HTTP Status":
                     assert entries.get(key) == resp.getStatusCode().toString();
                     break;
+                case "Minimum":
+                    String jsonPath = fkm.buildJsonPath(key)
+                    double value = Double.parseDouble(entries.get(key))
+                    assert value == Double.parseDouble(read(jsonAsString, jsonPath));
+                    break;
                 default:
                     String jsonPath = fkm.buildJsonPath(key)
 
