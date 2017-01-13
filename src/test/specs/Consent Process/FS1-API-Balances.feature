@@ -1,4 +1,4 @@
-Feature: Outgoing API request to the Barclays Consent API and handling the incoming responses
+Feature: Outgoing API request to the Barclays Balances API and handling the incoming responses
 
     Sort code – 6 digits – sort code of the applicants current account
     Account number – 8 digits – account number of the applicants current account an Account number will be padded with leading zeroes to ensure it to be 8 digits
@@ -9,6 +9,7 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
 
     Background:
         Given A Service is consuming the FSPS Calculator API
+        And the service is consuming the Barclays Balances API
         And the default details are
             | Sort code      |             |
             | Account number |             |
@@ -17,16 +18,16 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
             | FromDate       |             |
             | ToDate         |             |
 
-    Scenario: Outgoing Balances API request and consent has not been granted
+    Scenario: Balances API request and consent has not been granted
 
-        Given A Service is consuming the Barclays Balances API
+        Given the applicant has not granted consent
         When the Balances API is invoked
-        Then The Barclays Consent API provides the following error response:
+        Then the Barclays Consent API provides the following error response:
             | Account-Holder consent unavailable |
 
-    Scenario: Outgoing Balances API request and consent has expired (e.g. greater than 24 hopurs)
+    Scenario: Balances API request and consent has expired (e.g. greater than 24 hours)
 
-        Given A Service is consuming the Barclays Balances API
+        Given the consent request has expired
         When the Balances API is invoked
         Then The Barclays Consent API provides the following error response:
             | Account-Holder consent unavailable |
