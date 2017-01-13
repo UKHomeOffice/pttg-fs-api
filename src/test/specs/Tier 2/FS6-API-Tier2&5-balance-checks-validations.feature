@@ -14,8 +14,8 @@ Feature: Validation of the API fields and data
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
 
-            | To Date        | 2017-07-04 |
-            | From Date      | 2017-04-06 |
+            | To Date        | 2016-07-04 |
+            | From Date      | 2016-04-06 |
             | Minimum        | 945.00     |
             | Sort Code      | 13-56-09   |
             | Account Number | 23568498   |
@@ -204,7 +204,7 @@ Feature: Validation of the API fields and data
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                         |
             | Status code    | 0007                                                        |
-            | Status message | No records for sort code 100908 and account number 21568198 |
+            | Status message | No records for sort code 135609 and account number 21568198 |
 
         ######################### Validation on the Date of Birth Field #########################
 
