@@ -18,7 +18,7 @@ Feature: Validation of the API fields and data
             | From Date      | 2016-04-06 |
             | Minimum        | 945.00     |
             | Sort Code      | 13-56-09   |
-            | Account Number | 23568498   |
+            | Account Number | 23568495   |
             | Date of Birth  | 1984-07-27 |
             | User Id        | user12345  |
 
@@ -222,7 +222,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Date of Birth  | 2017-01-15 |
+            | Date of Birth  | 2019-01-15 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                    |
             | Status code    | 0004                                   |

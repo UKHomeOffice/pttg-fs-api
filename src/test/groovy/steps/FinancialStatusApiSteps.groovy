@@ -314,7 +314,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
         Map<String, String> entries = arg.asMap(String.class, String.class);
         String[] tableKey = entries.keySet();
-
+         DecimalFormat df2 = new DecimalFormat(".##");
         for (String key : tableKey) {
             switch (key) {
                 case "HTTP Status":
@@ -322,9 +322,24 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                     break;
                 case "Minimum":
                     String jsonPath = fkm.buildJsonPath(key)
-                    double value = Double.parseDouble(entries.get(key))
-                    assert value == Double.parseDouble(read(jsonAsString, jsonPath));
+                    String value = entries.get(key)
+                    String jsonValue = read(jsonAsString, jsonPath).toString();
+                    assert df2.format(Double.parseDouble(value)) == df2.format(Double.parseDouble(jsonValue))
                     break;
+
+                case "Lowest Balance Value":
+                    String jsonPath = fkm.buildJsonPath(key)
+                    String value = entries.get(key)
+                    String jsonValue = read(jsonAsString, jsonPath).toString();
+                    assert df2.format(Double.parseDouble(value)) == df2.format(Double.parseDouble(jsonValue))
+                    break;
+                case "Threshold":
+                    String jsonPath = fkm.buildJsonPath(key)
+                    String value = entries.get(key)
+                    String jsonValue = read(jsonAsString, jsonPath).toString();
+                    assert df2.format(Double.parseDouble(value)) == df2.format(Double.parseDouble(jsonValue))
+                    break;
+
                 default:
                     String jsonPath = fkm.buildJsonPath(key)
 
@@ -426,7 +441,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
         validateJsonResult(arg1)
-         //validateResult(arg1)
+        // validateResult(arg1)
 
 
     }
