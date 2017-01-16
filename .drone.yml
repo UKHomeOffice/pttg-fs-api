@@ -50,11 +50,7 @@ pipeline:
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
-      - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-dev
-      - ENVIRONMENT=dev
-      - VERSION=${DRONE_COMMIT_SHA}
-      - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
       - git checkout v1.1
