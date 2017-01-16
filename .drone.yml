@@ -53,7 +53,6 @@ pipeline:
       - KUBE_NAMESPACE=pt-i-dev
     commands:
       - cd kube-pttg-fs-api
-      - git checkout v1.1
       - ./deploy.sh
     when:
       event: push
