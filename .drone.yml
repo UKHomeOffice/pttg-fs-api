@@ -32,7 +32,7 @@ pipeline:
     commands:
       - docker login -u="pttg-fs-robot" -p=${DOCKER_ARTIFACTORY_PASSWORD} docker.digital.homeoffice.gov.uk
       - docker tag pttg-fs-api quay.io/ukhomeofficedigital/pttg-fs-api:${DRONE_COMMIT_SHA}
-      - docker push quay.io/ukhomeofficedigital/pttg-fs-api:${DRONE_COMMIT_SHA}
+      - docker push docker.digital.homeoffice.gov.uk/ukhomeofficedigital/<node-hello-world>:${DRONE_COMMIT_SHA}
     when:
       event: push
       branch: master
