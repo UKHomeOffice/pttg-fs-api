@@ -57,6 +57,7 @@ pipeline:
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
+      - git checkout v1.1
       - ./deploy.sh
     when:
       event: push
