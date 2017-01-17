@@ -20,7 +20,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
-       - docker build -t quay.io/ukhomeofficedigital/pttg-fs-api:${DRONE_COMMIT_SHA} .
+      - docker build -t quay.io/ukhomeofficedigital/pttg-fs-api:${DRONE_COMMIT_SHA} .
     when:
       event: push
       branch: master
