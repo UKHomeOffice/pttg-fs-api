@@ -11,12 +11,12 @@ Feature: Outgoing API request to the Barclays Balances API and handling the inco
         Given A Service is consuming the FSPS Calculator API
         And the service is consuming the Barclays Balances API
         And the default details are
-            | Sort code      |             |
-            | Account number |             |
-            | Date of birth  | DD-MMM-YYYY |
-            | User ID        |             |
-            | FromDate       |             |
-            | ToDate         |             |
+            | Sort code      | 22-22-23   |
+            | Account number | 22222223   |
+            | Date of birth  | 25/03/1987 |
+            | User ID        |            |
+            | FromDate       | 03/05/2016 |
+            | ToDate         | 30/05/2016 |
 
     Scenario: Balances API request and consent has not been granted
 

@@ -13,10 +13,10 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
         Given the Service is consuming the FSPS Calculator API
         And the service is consuming the Barclays Consent API
         And the default details are
-            | Sort code      |             |
-            | Account number |             |
-            | Date of birth  | DD-MMM-YYYY |
-            | User ID        |             |
+            | Sort code      | 22-22-23   |
+            | Account number | 22222223   |
+            | Date of birth  | 25/03/1987 |
+            | User ID        |            |
 
     Scenario: 'Initiated' status returned in the Barclays Consent API response
 
