@@ -1,6 +1,5 @@
 package uk.gov.digital.ho.proving.financialstatus
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.json.JsonSlurper
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
@@ -14,17 +13,15 @@ import steps.WireMockTestDataLoader
 import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
-import uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils
+import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.Account
-import uk.gov.digital.ho.proving.financialstatus.domain.AccountDailyBalances
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
 import java.time.LocalDate
 
-import static TestUtils.getMessageSource
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -40,12 +37,12 @@ class RestErrorsSpec extends Specification {
     def serviceName = "http://localhost:8083"
     def stubPort = 8083
     def stubUrl = "/financialstatus/v1/123456/12345678/balances*"
-    def apiUrl = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+    def apiUrl = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
     def verifyUrl = "/financialstatus/v1/123456/12345678/balances.*"
 
     def bankUrl = "$serviceName/financialstatus/v1"
 
-    ServiceMessages serviceMessages = new ServiceMessages(TestUtils.getMessageSource())
+    ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
     def maxAttempts = 3
     def backoffPeriod = 5

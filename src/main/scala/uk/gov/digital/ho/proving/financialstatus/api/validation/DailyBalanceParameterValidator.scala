@@ -19,7 +19,6 @@ trait DailyBalanceParameterValidator {
                                minimum: Option[BigDecimal],
                                fromDate: Option[LocalDate],
                                toDate: Option[LocalDate],
-                               numberConsecutiveDays: Int,
                                dob: Option[LocalDate],
                                userProfile: Option[UserProfile]
                               ): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
@@ -45,12 +44,12 @@ trait DailyBalanceParameterValidator {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
     } else if (validDob.isEmpty) {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DOB_DATE, HttpStatus.BAD_REQUEST))
-    } else {
+    }  else {
       for {from <- fromDate
            to <- toDate
       } yield {
-        if (!from.isBefore(to) || (!from.plusDays(numberConsecutiveDays - 1).equals(to))) {
-          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DATES(numberConsecutiveDays - 1), HttpStatus.BAD_REQUEST))
+        if (!from.isBefore(to) ) {
+          errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DATES, HttpStatus.BAD_REQUEST))
         }
       }
     }

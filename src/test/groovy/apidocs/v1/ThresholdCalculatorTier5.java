@@ -9,8 +9,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -42,9 +40,9 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 @TestPropertySource(properties = {
     "barclays.stub.service=http://localhost:8089"
 })
-public class ThresholdCalculator {
+public class ThresholdCalculatorTier5 {
 
-    public static final String BASEPATH = "/pttg/financialstatusservice/v1/";
+    public static final String BASEPATH = "/pttg/financialstatus/v1/t5";
 
     @Rule
     public JUnitRestDocumentation restDocumentationRule = new JUnitRestDocumentation("build/generated-snippets");
@@ -78,8 +76,7 @@ public class ThresholdCalculator {
     };
 
     private FieldDescriptor[] bodyModelFields = new FieldDescriptor[]{
-        fieldWithPath("threshold").description("minimum daily balance"),
-        fieldWithPath("leaveEndDate").description("end date of leave granted")
+        fieldWithPath("threshold").description("minimum daily balance")
     };
 
     @Before
@@ -104,16 +101,8 @@ public class ThresholdCalculator {
 
         given(documentationSpec)
             .spec(requestSpec)
-            .param("inLondon", "true")
-            .param("courseStartDate","2000-01-01")
-            .param("courseEndDate","2000-05-31")
-            .param("originalCourseStartDate","1999-07-01")
-            .param("tuitionFees", "12500")
-            .param("tuitionFeesPaid", "250.50")
-            .param("accommodationFeesPaid", "300")
-            .param("studentType", "nondoctorate")
+            .param("applicantType", "main")
             .param("dependants", "0")
-            .param("courseType", "main")
             .filter(document.snippets(
                 requestHeaders(
                     headerWithName("Accept").description("The requested media type eg application/json. See <<Schema>> for supported media types.")
@@ -128,53 +117,21 @@ public class ThresholdCalculator {
     }
 
     @Test
-    public void thresholdCalculation() throws Exception {
+    public void thresholdCalculationTier5() throws Exception {
 
         given(documentationSpec)
             .spec(requestSpec)
-            .param("inLondon", "true")
-            .param("courseStartDate","2000-01-01")
-            .param("courseEndDate","2000-05-31")
-            .param("originalCourseStartDate","1999-07-01")
-            .param("tuitionFees", "12500")
-            .param("tuitionFeesPaid", "250.50")
-            .param("accommodationFeesPaid", "300")
-            .param("studentType", "nondoctorate")
+            .param("applicantType", "main")
             .param("dependants", "1")
-            .param("courseType", "main")
              .filter(document.snippets(
                 responseFields(bodyModelFields)
                     .and(statusModelFields),
                 requestParameters(
-                    parameterWithName("inLondon")
-                        .description("Whether the location is in London - true or false")
-                        .attributes(key("optional").value(false)),
-                    parameterWithName("courseStartDate")
-                        .description("The start date of the course (not required for 'doctorate' student type)")
-                        .attributes(key("optional").value(false)),
-                    parameterWithName("courseEndDate")
-                        .description("The end date of the course (not required for 'doctorate' student type)")
-                        .attributes(key("optional").value(false)),
-                    parameterWithName("originalCourseStartDate")
-                        .description("The start date of the original course (not required for 'doctorate' student type)")
-                        .attributes(key("optional").value(true)),
-                    parameterWithName("tuitionFees")
-                        .description("Total tuition fees (not required for 'doctorate' student type)")
-                        .attributes(key("optional").value(true)),
-                    parameterWithName("tuitionFeesPaid")
-                        .description("Tuition fees already paid (not required for 'doctorate' student type)")
-                        .attributes(key("optional").value(true)),
-                    parameterWithName("accommodationFeesPaid")
-                        .description("Accommodation fees already paid")
-                        .attributes(key("optional").value(true)),
-                    parameterWithName("studentType")
-                        .description("Type of student. Allowed values are 'doctorate', 'nondoctorate', 'pgdd' and 'sso'. See <<Glossary>>")
+                    parameterWithName("applicantType")
+                        .description("Type of applicant. Allowed values are 'main', 'dependant'. See <<Glossary>>")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
                         .description("The number of dependants to take in to account when calculating the minimum balance")
-                        .attributes(key("optional").value(true)),
-                    parameterWithName("courseType")
-                        .description("Type of course.  Allowed values are 'main' and 'pre-sessional'")
                         .attributes(key("optional").value(true))
                 )
 

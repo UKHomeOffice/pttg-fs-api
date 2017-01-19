@@ -25,7 +25,7 @@ import scala.util._
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
-@RequestMapping(path = Array("/pttg/financialstatusservice/v1/accounts/"))
+@RequestMapping(path = Array("/pttg/financialstatus/v1/accounts/"))
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
                                        val serviceMessages: ServiceMessages,
@@ -62,8 +62,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
     val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
 
-    val validatedInputs = validateInputs(cleanSortCode, accountNumber, minimum, fromDate, toDate,
-      accountStatusChecker.numberConsecutiveDays, dob, userProfile)
+    val validatedInputs = validateInputs(cleanSortCode, accountNumber, minimum, fromDate, toDate, dob, userProfile)
 
     validatedInputs match {
       case Right(inputs) =>
