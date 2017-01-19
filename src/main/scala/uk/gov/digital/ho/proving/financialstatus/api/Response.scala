@@ -34,3 +34,8 @@ case class ThresholdResponse(@JsonInclude(Include.NON_EMPTY) threshold: Option[B
                              @JsonInclude(Include.NON_EMPTY) cappedValues: Option[CappedValues],
                              @JsonInclude(Include.NON_NULL) status: StatusResponse)
 
+
+case class BankConsentResponse(@JsonInclude(Include.NON_EMPTY) sortCode: Option[String],
+                               @JsonInclude(Include.NON_EMPTY) accountNumber: Option[String],
+                               @JsonInclude(Include.NON_EMPTY) consent: Option[String],
+                               @JsonInclude(Include.NON_NULL) status: StatusResponse)

@@ -21,5 +21,4 @@ trait FinancialStatusBaseController  {
   implicit def toOptionBigDecimal(optional: Optional[JBigDecimal]): Option[BigDecimal] =
     if (optional.isPresent) Some(BigDecimal(optional.get).setScale(BIG_DECIMAL_SCALE, BigDecimal.RoundingMode.HALF_UP)) else None
 
-  def logStartupInformation(): Unit = {}
 }

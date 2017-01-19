@@ -35,8 +35,6 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
   private val LOGGER = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
-  logStartupInformation()
-
   @RequestMapping(value = Array("{sortCode:[0-9]+|[0-9-]+}/{accountNumber:[0-9]+}/dailybalancestatus"),
     method = Array(RequestMethod.GET),
     produces = Array(MediaType.APPLICATION_JSON_VALUE))
@@ -166,10 +164,6 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
   def buildErrorResponse(headers: HttpHeaders, statusCode: String,
                          statusMessage: String, status: HttpStatus): ResponseEntity[AccountDailyBalanceStatusResponse] = {
     new ResponseEntity(AccountDailyBalanceStatusResponse(StatusResponse(statusCode, statusMessage)), headers, status)
-  }
-
-  override def logStartupInformation(): Unit = {
-    LOGGER.info(accountStatusChecker.parameters)
   }
 
 }
