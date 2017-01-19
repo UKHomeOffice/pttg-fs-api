@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.financialstatus.api.test
+package uk.gov.digital.ho.proving.financialstatus.api.test.tier4
 
 import groovy.json.JsonSlurper
 import org.springframework.context.ApplicationEventPublisher
@@ -7,19 +7,17 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.api.ThresholdService
+import uk.gov.digital.ho.proving.financialstatus.api.ThresholdServiceTier4
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
-import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
 import static org.hamcrest.core.StringContains.containsString
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
-import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.*
 
 /**
  * @Author Home Office Digital
@@ -28,14 +26,14 @@ import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.*
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
-    ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
+    ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
     ApplicationEventPublisher auditor = Mock()
     Authentication authenticator = Mock()
 
-    def thresholdService = new ThresholdService(
-        maintenanceThresholdServiceBuilder(), getStudentTypeChecker(),
-        getCourseTypeChecker(), serviceMessages, auditor, authenticator
+    def thresholdService = new ThresholdServiceTier4(
+        TestUtilsTier4.maintenanceThresholdServiceBuilder(), TestUtilsTier4.getStudentTypeChecker(),
+        TestUtilsTier4.getCourseTypeChecker(), serviceMessages, auditor, authenticator
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -44,7 +42,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
         .build()
 
 
-    def url = TestUtils.thresholdUrl
+    def url = TestUtilsTier4.thresholdUrl
 
 
     def callApi(studentType, inLondon, accommodationFeesPaid, dependants) {

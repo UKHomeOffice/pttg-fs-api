@@ -36,7 +36,7 @@ import static uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils.build
 )
 class AuditIntegrationSpec extends Specification {
 
-    def path = "/pttg/financialstatusservice/v1/maintenance/threshold?"
+    def path = "/pttg/financialstatus/v1/t4/maintenance/threshold?"
     def params = "inLondon=true&studentType=doctorate&accommodationFeesPaid=123.45"
     def url
 
