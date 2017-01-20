@@ -9,8 +9,9 @@ import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 @Service
 class UserConsentStatusChecker @Autowired()(bankService: BankService) {
 
-  def checkUserConsent(accountId: String, sortCode: String, accountNumber: String, dob: LocalDate) = {
-    bankService.checkUserConsent(accountId, sortCode, accountNumber, dob)
+  def checkUserConsent(accountId: String, sortCode: String, accountNumber: String, dob: LocalDate, userId: String) = {
+    val response = bankService.checkUserConsent(accountId, sortCode, accountNumber, dob, userId)
+    response
   }
 
 }

@@ -18,7 +18,6 @@ import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
-
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(value = Array("/pttg/financialstatus/v1/accounts/"))
@@ -39,18 +38,12 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
                   @CookieValue(value = "kc-access") kcToken: Optional[String]
                  ): ResponseEntity[BankConsentResponse] = {
 
-    val accessToken: Option[String] = kcToken
-
-    // Get the user's profile
-    val userProfile = accessToken match {
-      case Some(token) => authenticator.getUserProfileFromToken(token)
-      case None => None
-    }
+    val (userProfile, userId) = getUserProfile(kcToken)
 
     val auditEventId = nextId
     auditSearchParams(auditEventId, sortCode, accountNumber, userProfile)
 
-    val consent = checkConsent(sortCode, accountNumber, dob)
+    val consent = checkConsent(sortCode, accountNumber, dob, userId)
 
     consent match {
       case Some(result) => auditSearchResult(auditEventId, result.toString, userProfile)
@@ -60,12 +53,13 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
 
   }
 
-  def checkConsent(sortCode: Option[String], accountNumber: Option[String], dob: Option[LocalDate]) = {
+  def checkConsent(sortCode: Option[String], accountNumber: Option[String], dob: Option[LocalDate], userId: String) = {
 
     val consent = for {sCode <- sortCode
                        accountNo <- accountNumber
                        dateOfBirth <- dob} yield {
-      val response = userConsentStatusChecker.checkUserConsent(sCode + accountNo, sCode, accountNo, dateOfBirth)
+
+      val response = userConsentStatusChecker.checkUserConsent(sCode + accountNo, sCode, accountNo, dateOfBirth, userId)
       response
     }
     consent
@@ -101,6 +95,20 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
         "result" -> response
       )
     ))
+  }
+
+  private def getUserProfile(token: Option[String]) : (Option[UserProfile], String) = {
+    // Get the user's profile
+    val userProfile = token match {
+      case Some(token) => authenticator.getUserProfileFromToken(token)
+      case None => None
+    }
+
+    userProfile match {
+      case Some(profile) => (userProfile, profile.id)
+      case None => (None, "")
+    }
+
   }
 
   private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus) =

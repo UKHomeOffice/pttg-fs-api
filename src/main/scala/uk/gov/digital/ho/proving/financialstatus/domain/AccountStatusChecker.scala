@@ -22,13 +22,12 @@ class AccountStatusChecker @Autowired()(bankService: BankService, @Value("${dail
   }
 
   def checkDailyBalancesAreAboveMinimum(account: Account, fromDate: LocalDate, toDate: LocalDate,
-                                        threshold: BigDecimal, dob: LocalDate, userId: String,
-                                        accountHolderConsent: Boolean): Try[AccountDailyBalanceCheck] = {
+                                        threshold: BigDecimal, dob: LocalDate, userId: String): Try[AccountDailyBalanceCheck] = {
 
     val numberConsecutiveDays = DAYS.between(fromDate, toDate) + 1 // Inclusive of last day
 
     Try {
-      val accountDailyBalances = bankService.fetchAccountDailyBalances(account, fromDate, toDate, dob, userId, accountHolderConsent)
+      val accountDailyBalances = bankService.fetchAccountDailyBalances(account, fromDate, toDate, dob, userId)
 
       if (accountDailyBalances.balances.length < numberConsecutiveDays) {
         AccountDailyBalanceCheck(accountDailyBalances.accountHolderName, fromDate, toDate, threshold, false, Some(BalanceCheckFailure(recordCount = Some(accountDailyBalances.balances.length))))

@@ -124,7 +124,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
     } yield {
       val bankAccount = Account(sortCode, accountNumber)
 
-      val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum, dob, userId, true) // Remove once Bank API finalised
+      val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum, dob, userId)
 
       dailyAccountBalanceCheck match {
         case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck),
