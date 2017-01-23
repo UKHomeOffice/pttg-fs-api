@@ -12,11 +12,14 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation._
+import org.springframework.web.client.HttpClientErrorException
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain._
+
+import scala.util.{Failure, Success, Try}
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
@@ -43,14 +46,21 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
     val auditEventId = nextId
     auditSearchParams(auditEventId, sortCode, accountNumber, userProfile)
 
-    val consent = checkConsent(sortCode, accountNumber, dob, userId)
+    val response = Try {
+      val consent = checkConsent(sortCode, accountNumber, dob, userId)
 
-    consent match {
-      case Some(result) => auditSearchResult(auditEventId, result.toString, userProfile)
-        new ResponseEntity(BankConsentResponse(sortCode, accountNumber, Option(consent.get.result.status), StatusResponse(HttpStatus.OK.value().toString, HttpStatus.OK.getReasonPhrase)), HttpStatus.OK)
-      case None => buildErrorResponse(headers, "400", "400", HttpStatus.BAD_REQUEST)
+      consent match {
+        case Some(result) => auditSearchResult(auditEventId, result.toString, userProfile)
+          new ResponseEntity(BankConsentResponse(sortCode, accountNumber, Option(consent.get.result.status), StatusResponse(HttpStatus.OK.value().toString, HttpStatus.OK.getReasonPhrase)), HttpStatus.OK)
+        case None => buildErrorResponse(headers, "400", "400", HttpStatus.BAD_REQUEST)
+      }
     }
-
+    response match {
+      case Success(success) => success
+      case Failure(exception: HttpClientErrorException) => buildErrorResponse(headers, serviceMessages.REST_API_CLIENT_ERROR,
+        serviceMessages.NO_RECORDS_FOR_ACCOUNT(sortCode.getOrElse(""), accountNumber.getOrElse("")), HttpStatus.valueOf(exception.getRawStatusCode))
+      case Failure(exception) => buildErrorResponse(headers, serviceMessages.REST_INTERNAL_ERROR, exception.getMessage,HttpStatus.INTERNAL_SERVER_ERROR)
+    }
   }
 
   def checkConsent(sortCode: Option[String], accountNumber: Option[String], dob: Option[LocalDate], userId: String) = {
