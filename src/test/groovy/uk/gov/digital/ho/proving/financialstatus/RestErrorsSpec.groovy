@@ -66,7 +66,7 @@ class RestErrorsSpec extends Specification {
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
     def buildUrl(Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId) {
-        return "$bankUrl/${account.sortCode}/${account.accountNumber}/balances?fromDate=$fromDate&toDate=$toDate&dob=$dob"
+        return "$bankUrl/${account.sortCode()}/${account.accountNumber()}/balances?fromDate=$fromDate&toDate=$toDate&dob=$dob"
     }
 
     def setupSpec() {
@@ -93,7 +93,7 @@ class RestErrorsSpec extends Specification {
 
         mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String) >> {
             Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId ->
-                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId))
+                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId).toString(),"1","1","1")
         }
 
         when:
@@ -119,7 +119,7 @@ class RestErrorsSpec extends Specification {
 
         mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String) >> {
             Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId ->
-                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId))
+                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId).toString(),"1","1","1")
         }
 
         when:
@@ -148,7 +148,7 @@ class RestErrorsSpec extends Specification {
 
         mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String) >> {
             Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId ->
-                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId))
+                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId).toString(),"!","1","1")
         }
 
         when:
