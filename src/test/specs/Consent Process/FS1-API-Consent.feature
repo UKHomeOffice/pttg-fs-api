@@ -69,3 +69,12 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
         Then The Barclays Consent API provides the following response:
             | Response Code        | 458                    |
             | Response Description | dateOfBirth is invalid |
+
+
+    Scenario: Valid UK mobile number is not available
+
+        Given the Consent API is invoked
+        When Valid UK mobile number is not found at Barclays
+        Then he Barclays Consent API provides the following response:
+            | Response Code        | 446                      |
+            | Response Description | Mobile Number is Invalid |
