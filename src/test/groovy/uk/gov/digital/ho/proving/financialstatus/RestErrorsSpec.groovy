@@ -1,6 +1,5 @@
 package uk.gov.digital.ho.proving.financialstatus
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.json.JsonSlurper
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
@@ -14,17 +13,15 @@ import steps.WireMockTestDataLoader
 import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
-import uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils
+import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.Account
-import uk.gov.digital.ho.proving.financialstatus.domain.AccountDailyBalances
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
 import java.time.LocalDate
 
-import static TestUtils.getMessageSource
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -40,12 +37,12 @@ class RestErrorsSpec extends Specification {
     def serviceName = "http://localhost:8083"
     def stubPort = 8083
     def stubUrl = "/financialstatus/v1/123456/12345678/balances*"
-    def apiUrl = "/pttg/financialstatusservice/v1/accounts/123456/12345678/dailybalancestatus"
+    def apiUrl = "/pttg/financialstatus/v1/accounts/123456/12345678/dailybalancestatus"
     def verifyUrl = "/financialstatus/v1/123456/12345678/balances.*"
 
     def bankUrl = "$serviceName/financialstatus/v1"
 
-    ServiceMessages serviceMessages = new ServiceMessages(TestUtils.getMessageSource())
+    ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
     def maxAttempts = 3
     def backoffPeriod = 5
@@ -68,8 +65,8 @@ class RestErrorsSpec extends Specification {
     def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages, auditor, authenticator)
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
-    def buildUrl(Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent) {
-        return "$bankUrl/${account.sortCode}/${account.accountNumber}/balances?fromDate=$fromDate&toDate=$toDate&dob=$dob&userId=$userId&accountHolderConsent=$accountHolderConsent"
+    def buildUrl(Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId) {
+        return "$bankUrl/${account.sortCode()}/${account.accountNumber()}/balances?fromDate=$fromDate&toDate=$toDate&dob=$dob".toString()
     }
 
     def setupSpec() {
@@ -94,9 +91,9 @@ class RestErrorsSpec extends Specification {
         given:
         testDataLoader.withDelayedAndStatusResponse(stubUrl, 3, 404)
 
-        mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String, _ as Boolean) >> {
-            Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent ->
-                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId, accountHolderConsent))
+        mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String) >> {
+            Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId ->
+                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId), "1", "1", "1")
         }
 
         when:
@@ -105,11 +102,7 @@ class RestErrorsSpec extends Specification {
                 .param("fromDate", "2016-05-13")
                 .param("toDate", "2016-06-09")
                 .param("minimum", "2560.23")
-                .param("dob","2000-01-01")
-                .param("userId", "user123456")
-                .param("accountHolderConsent", "true")
-
-
+                .param("dob", "2000-01-01")
         )
         then:
         response.andExpect(status().is(404))
@@ -124,9 +117,9 @@ class RestErrorsSpec extends Specification {
         given:
         testDataLoader.withDelayedAndStatusResponse(stubUrl, 4, 500)
 
-        mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String, _ as Boolean) >> {
-            Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent ->
-                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId, accountHolderConsent))
+        mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String) >> {
+            Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId ->
+                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId), "1", "1", "1")
         }
 
         when:
@@ -135,9 +128,7 @@ class RestErrorsSpec extends Specification {
                 .param("fromDate", "2016-05-13")
                 .param("toDate", "2016-06-09")
                 .param("minimum", "2560.23")
-                .param("dob","2000-01-01")
-                .param("userId", "user123456")
-                .param("accountHolderConsent", "true")
+                .param("dob", "2000-01-01")
 
         )
         then:
@@ -155,9 +146,9 @@ class RestErrorsSpec extends Specification {
         given:
         testDataLoader.withDelayedAndStatusResponse(stubUrl, 7, 200)
 
-        mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String, _ as Boolean) >> {
-            Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId, boolean accountHolderConsent ->
-                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId, accountHolderConsent))
+        mockBankService.fetchAccountDailyBalances(_ as Account, _ as LocalDate, _ as LocalDate, _ as LocalDate, _ as String) >> {
+            Account account, LocalDate fromDate, LocalDate toDate, LocalDate dob, String userId ->
+                httpUtils.performRequest(buildUrl(account, fromDate, toDate, dob, userId), "!", "1", "1")
         }
 
         when:
@@ -166,9 +157,7 @@ class RestErrorsSpec extends Specification {
                 .param("fromDate", "2016-05-13")
                 .param("toDate", "2016-06-09")
                 .param("minimum", "2560.23")
-                .param("dob","2000-01-01")
-                .param("userId", "user123456")
-                .param("accountHolderConsent", "true")
+                .param("dob", "2000-01-01")
 
         )
         then:
@@ -178,7 +167,6 @@ class RestErrorsSpec extends Specification {
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.message == "Connection timeout"
     }
-
 
 
 }

@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.financialstatus.api.test
+package uk.gov.digital.ho.proving.financialstatus.api.test.balances
 
 import groovy.json.JsonSlurper
 import org.springframework.context.ApplicationEventPublisher
@@ -10,13 +10,14 @@ import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils
+import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
 import java.time.LocalDate
 
-import static TestUtils.getMessageSource
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @ContextConfiguration(classes = ServiceConfiguration.class)
 class DailyBalanceServiceSpec extends Specification {
 
-    ServiceMessages serviceMessages = new ServiceMessages(getMessageSource())
+    ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
     def mockBankService = Mock(BankService)
 
@@ -41,7 +42,7 @@ class DailyBalanceServiceSpec extends Specification {
     def "daily balance threshold check pass"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/12-34-56/12345678/dailybalancestatus"
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
         def dob = LocalDate.of(2000, 1, 1)
@@ -52,7 +53,7 @@ class DailyBalanceServiceSpec extends Specification {
         def lower = new BigDecimal(2560.23).setScale(2, BigDecimal.ROUND_HALF_UP)
         def upper = new BigDecimal(3500.00).setScale(2, BigDecimal.ROUND_HALF_UP)
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, lower, upper, true, false)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, lower, upper, true, false)
 
         when:
         def response = mockMvc.perform(
@@ -80,7 +81,7 @@ class DailyBalanceServiceSpec extends Specification {
     def "daily balance threshold check fail (minimum below threshold)"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/12-34-56/12345678/dailybalancestatus"
 
         def lowestIndex = 5
         def toDate = LocalDate.of(2016, 6, 9)
@@ -97,7 +98,7 @@ class DailyBalanceServiceSpec extends Specification {
         def lowest = 1800.00
 
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateDailyBalancesForFail(fromDate, toDate, lower, upper, lowest, lowestIndex)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _) >> DataUtils.generateDailyBalancesForFail(fromDate, toDate, lower, upper, lowest, lowestIndex)
 
         when:
         def response = mockMvc.perform(
@@ -127,7 +128,7 @@ class DailyBalanceServiceSpec extends Specification {
     def "daily balance threshold check fail (not enough entries)"() {
 
         given:
-        def url = "/pttg/financialstatusservice/v1/accounts/12-34-56/12345678/dailybalancestatus"
+        def url = "/pttg/financialstatus/v1/accounts/12-34-56/12345678/dailybalancestatus"
         def toDate = LocalDate.of(2016, 6, 9)
         def fromDate = toDate.minusDays(27)
         def dob = LocalDate.of(2000, 1, 1)
@@ -139,7 +140,7 @@ class DailyBalanceServiceSpec extends Specification {
         def lower = new BigDecimal(2660.23).setScale(2, BigDecimal.ROUND_HALF_UP)
         def upper = new BigDecimal(3500.00).setScale(2, BigDecimal.ROUND_HALF_UP)
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(mockFromDate, toDate, lower, upper, true, false)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(mockFromDate, toDate, lower, upper, true, false)
 
         when:
         def response = mockMvc.perform(

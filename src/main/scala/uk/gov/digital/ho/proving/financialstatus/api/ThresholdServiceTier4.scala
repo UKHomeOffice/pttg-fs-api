@@ -21,19 +21,17 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
-@RequestMapping(value = Array("/pttg/financialstatusservice/v1/maintenance"))
+@RequestMapping(value = Array("/pttg/financialstatus/v1/t4/maintenance"))
 @ControllerAdvice
-class ThresholdService @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
-                                    val studentTypeChecker: StudentTypeChecker,
-                                    val courseTypeChecker: CourseTypeChecker,
-                                    val serviceMessages: ServiceMessages,
-                                    val auditor: ApplicationEventPublisher,
-                                    val authenticator: Authentication
+class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
+                                         val studentTypeChecker: StudentTypeChecker,
+                                         val courseTypeChecker: CourseTypeChecker,
+                                         val serviceMessages: ServiceMessages,
+                                         val auditor: ApplicationEventPublisher,
+                                         val authenticator: Authentication
                                    ) extends FinancialStatusBaseController with ThresholdParameterValidator {
 
-  private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdService])
-
-  logStartupInformation()
+  private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdServiceTier4])
 
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
   def calculateThreshold(@RequestParam(value = "studentType") studentType: Optional[String],
@@ -213,8 +211,6 @@ class ThresholdService @Autowired()(val maintenanceThresholdCalculator: Maintena
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
-
-  override def logStartupInformation(): Unit = LOGGER.info(maintenanceThresholdCalculator.parameters)
 
   private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] =
     new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)

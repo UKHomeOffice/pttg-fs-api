@@ -25,7 +25,7 @@ import scala.util._
 
 @RestController
 @PropertySource(value = Array("classpath:application.properties"))
-@RequestMapping(path = Array("/pttg/financialstatusservice/v1/accounts/"))
+@RequestMapping(path = Array("/pttg/financialstatus/v1/accounts/"))
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
                                        val serviceMessages: ServiceMessages,
@@ -34,8 +34,6 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
                                       ) extends FinancialStatusBaseController with DailyBalanceParameterValidator {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[DailyBalanceService])
-
-  logStartupInformation()
 
   @RequestMapping(value = Array("{sortCode:[0-9]+|[0-9-]+}/{accountNumber:[0-9]+}/dailybalancestatus"),
     method = Array(RequestMethod.GET),
@@ -62,8 +60,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
     val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
 
-    val validatedInputs = validateInputs(cleanSortCode, accountNumber, minimum, fromDate, toDate,
-      accountStatusChecker.numberConsecutiveDays, dob, userProfile)
+    val validatedInputs = validateInputs(cleanSortCode, accountNumber, minimum, fromDate, toDate, dob, userProfile)
 
     validatedInputs match {
       case Right(inputs) =>
@@ -127,7 +124,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
     } yield {
       val bankAccount = Account(sortCode, accountNumber)
 
-      val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum, dob, userId, true) // Remove once Bank API finalised
+      val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum, dob, userId)
 
       dailyAccountBalanceCheck match {
         case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck),
@@ -167,10 +164,6 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
   def buildErrorResponse(headers: HttpHeaders, statusCode: String,
                          statusMessage: String, status: HttpStatus): ResponseEntity[AccountDailyBalanceStatusResponse] = {
     new ResponseEntity(AccountDailyBalanceStatusResponse(StatusResponse(statusCode, statusMessage)), headers, status)
-  }
-
-  override def logStartupInformation(): Unit = {
-    LOGGER.info(accountStatusChecker.parameters)
   }
 
 }

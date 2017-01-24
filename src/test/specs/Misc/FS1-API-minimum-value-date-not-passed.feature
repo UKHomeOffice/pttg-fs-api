@@ -1,6 +1,5 @@
 Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student (single current account and no dependants)
 
-
     Applicant does not have required closing balance every day for a consecutive 28 day period from the date of the Maintenance End Date
     If not passed, API will show minimum balance and the date it was. If there is more than one days when the applicants balance was below the threshold, on the output page will see first date
 
@@ -8,7 +7,6 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
 
     Application Raised Date 1st of June
     She has < than the Total funds required of £2350 for the previous 28 days
-
 
         Given a Service is consuming Financial Status API
         Given the test data for account 23568499
@@ -29,7 +27,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | To date              | 2016-06-01 |
             | Lowest Balance Date  | 2016-05-30 |
             | Lowest Balance Value | 2429.99    |
-            | sort code            | 135610     |
+            | Sort code            | 135610     |
             | Account number       | 23568499   |
 
 

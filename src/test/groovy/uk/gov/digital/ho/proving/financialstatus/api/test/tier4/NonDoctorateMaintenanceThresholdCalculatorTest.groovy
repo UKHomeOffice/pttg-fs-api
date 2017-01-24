@@ -1,18 +1,18 @@
-package uk.gov.digital.ho.proving.financialstatus.api.test
+package uk.gov.digital.ho.proving.financialstatus.api.test.tier4
 
 import spock.lang.Specification
+import uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
 
 import java.time.LocalDate
 
-import static uk.gov.digital.ho.proving.financialstatus.api.test.TestUtils.*
 import static uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils.buildScalaBigDecimal
 import static uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils.buildScalaOption
 
 
 class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
 
-    MaintenanceThresholdCalculator maintenanceThresholdCalculator = maintenanceThresholdServiceBuilder()
+    MaintenanceThresholdCalculator maintenanceThresholdCalculator = TestUtilsTier4.maintenanceThresholdServiceBuilder()
 
 
     def "Tier 4 Non Doctorate - Check 'Non Inner London Borough'"() {

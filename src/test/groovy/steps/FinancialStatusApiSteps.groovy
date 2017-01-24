@@ -314,12 +314,32 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
         Map<String, String> entries = arg.asMap(String.class, String.class);
         String[] tableKey = entries.keySet();
-
+         DecimalFormat df2 = new DecimalFormat(".##");
         for (String key : tableKey) {
             switch (key) {
                 case "HTTP Status":
                     assert entries.get(key) == resp.getStatusCode().toString();
                     break;
+                case "Minimum":
+                    String jsonPath = fkm.buildJsonPath(key)
+                    String value = entries.get(key)
+                    String jsonValue = read(jsonAsString, jsonPath).toString();
+                    assert df2.format(Double.parseDouble(value)) == df2.format(Double.parseDouble(jsonValue))
+                    break;
+
+                case "Lowest Balance Value":
+                    String jsonPath = fkm.buildJsonPath(key)
+                    String value = entries.get(key)
+                    String jsonValue = read(jsonAsString, jsonPath).toString();
+                    assert df2.format(Double.parseDouble(value)) == df2.format(Double.parseDouble(jsonValue))
+                    break;
+                case "Threshold":
+                    String jsonPath = fkm.buildJsonPath(key)
+                    String value = entries.get(key)
+                    String jsonValue = read(jsonAsString, jsonPath).toString();
+                    assert df2.format(Double.parseDouble(value)) == df2.format(Double.parseDouble(jsonValue))
+                    break;
+
                 default:
                     String jsonPath = fkm.buildJsonPath(key)
 
@@ -376,7 +396,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the Financial Status API is invoked\$")
     public void the_Financial_Status_API_is_invoked() {
 
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
         jsonAsString = resp.asString()
 
         println("Family Case Worker API: " + jsonAsString)
@@ -387,7 +407,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
         jsonAsString = resp.asString()
 
         println("Family Case Worker API: " + jsonAsString)
@@ -396,9 +416,25 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the FSPS Calculator API is invoked with the following\$")
     public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatusservice/v1/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&continuationEndDate={continuationEndDate}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}&courseType={courseType}&originalCourseStartDate={originalCourseStartDate}", studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType, originalCourseStartDate)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t4/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&continuationEndDate={continuationEndDate}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}&courseType={courseType}&originalCourseStartDate={originalCourseStartDate}", studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType, originalCourseStartDate)
         jsonAsString = resp.asString()
 
+        println("FSPS API Calculator: " + jsonAsString)
+    }
+
+    @When("^the FSPS Calculator Tier_Two API is invoked with the following\$")
+    public void the_FSPS_Calculator_Tier_Two_API_is_invoked_with_the_following(DataTable arg1) {
+        getTableData(arg1)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t2/maintenance/threshold?applicantType={studentType}&dependants={dependants}", applicantType, dependants)
+        jsonAsString = resp.asString()
+        println("FSPS API Calculator: " + jsonAsString)
+    }
+
+    @When("^the FSPS Calculator Tier_five API is invoked with the following\$")
+    public void the_FSPS_Calculator_Tier_five_API_is_invoked_with_the_following(DataTable arg1) {
+        getTableData(arg1)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t5/maintenance/threshold?applicantType={studentType}&dependants={dependants}", applicantType, dependants)
+        jsonAsString = resp.asString()
         println("FSPS API Calculator: " + jsonAsString)
     }
 
@@ -408,6 +444,14 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         // validateResult(arg1)
 
 
+    }
+    @Then("^The Tier_Two Financial Status API provides the following results:\$")
+    public void the_Tier_Two_Financial_Status_API_provides_the_following_results(DataTable arg1)  {
+        validateJsonResult(arg1)
+    }
+    @Then("^The Tier_five Financial Status API provides the following results:\$")
+    public void the_Tier_five_Financial_Status_API_provides_the_following_results(DataTable arg1) throws Throwable {
+        validateJsonResult(arg1)
     }
 
     @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")
@@ -420,6 +464,17 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     public void the_service_displays_the_following_result(DataTable arg1) {
         validateResult(arg1)
     }
+
+    @Then("^The Tier_Two Financial Status API provides the following validation results:\$")
+    public void the_Tier_Two_Financial_Status_API_provides_the_following_validation_results(DataTable arg1) {
+        validateResult(arg1)
+    }
+
+    @Then("^The Tier_five Financial Status API provides the following validation results:\$")
+    public void the_Tier_five_Financial_Status_API_provides_the_following_validation_results(DataTable arg1) {
+        validateResult(arg1)
+    }
+
 
     @Then("^the health check response status should be (\\d+)\$")
     def the_response_status_should_be(int expected) {
