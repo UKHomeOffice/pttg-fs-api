@@ -51,8 +51,8 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
 
       consent match {
         case Some(result) => auditSearchResult(auditEventId, result.toString, userProfile)
-          new ResponseEntity(BankConsentResponse(Option(consent.get.result.status), StatusResponse(HttpStatus.OK.value().toString, HttpStatus.OK.getReasonPhrase)), HttpStatus.OK)
-        case None => buildErrorResponse(headers, "400", "400", HttpStatus.BAD_REQUEST)
+          new ResponseEntity(BankConsentResponse(Option(consent.get.result.status), StatusResponse(HttpStatus.OK.value().toString, result.result.description)), HttpStatus.OK)
+        case None => buildErrorResponse(headers, "404", "404", HttpStatus.NOT_FOUND)
       }
     }
     response match {
