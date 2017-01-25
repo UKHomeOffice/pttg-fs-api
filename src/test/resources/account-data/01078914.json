@@ -4,6 +4,6 @@
     "accountNumber": "01078914",
     "result": {
         "status": "INITIATED",
-        "description": "sample description"
+        "description": "Consent request has been initiated to Account-Holder"
     }
 }

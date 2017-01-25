@@ -27,7 +27,7 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
             | Account number | 01078914   |
             | Date of birth  | 1987-03-25 |
         Then the Barclays Consent API provides the following response:
-            | status      | "INITIATED"                                            |
+            | Consent      | "INITIATED"                                            |
             | description | "Consent request has been initiated to Account-Holder" |
 
     Scenario: 'Pending' status returned in the Barclays Consent API response
