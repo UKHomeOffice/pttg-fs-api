@@ -34,21 +34,21 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
 
         When the Consent API is invoked
         Then the Barclays Consent API provides the following response:
-            | status      | "PENDING"                               |
+            | Consent      | "PENDING"                               |
             | description | "Awaiting response from Account-Holder" |
 
     Scenario: 'Success' status returned in the Barclays Consent API response
 
         When the Consent API is invoked
         Then the Barclays Consent API provides the following response::
-            | status      | "SUCCESS                               |
+            | Consent      | "SUCCESS                               |
             | description | "Consent received from Account-Holder" |
 
     Scenario: 'Failure' status returned in the Barclays Consent API response
 
         When the Consent API is invoked
         Then The Barclays Consent API provides the following response:
-            | status      | "FAILURE"                        |
+            | Consent      | "FAILURE"                        |
             | description | "Account-Holder refused consent" |
 
     Scenario:  Account Number does not match the data held at Barclays for that applicant
