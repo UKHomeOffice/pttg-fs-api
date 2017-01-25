@@ -10,16 +10,17 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
     User ID – the unique identifier of the user
 
     Background:
-        Given the Service is consuming the FSPS Calculator API
-        And the service is consuming the Barclays Consent API
+        Given A Service is consuming the FSPS Calculator API
+        And the service is consuming the Barclays Balances API
         And the default details are
-            | Sort code      | 22-22-23   |
-            | Account number | 22222223   |
-            | Date of birth  | 25/03/1987 |
-            | User ID        |            |
+            | Sort code      | 111111   |
+            | Account number | 01078911   |
+            | Date of birth  | 1987-03-25 |
+
 
     Scenario: 'Initiated' status returned in the Barclays Consent API response
 
+        Given the test data for account 01078911
         When the Consent API is invoked
         Then the Barclays Consent API provides the following response:
             | status      | "INITIATED"                                            |

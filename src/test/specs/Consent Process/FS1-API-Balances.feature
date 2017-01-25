@@ -13,10 +13,11 @@ Feature: Outgoing API request to the Barclays Balances API and handling the inco
         And the default details are
             | Sort code      | 22-22-23   |
             | Account number | 22222223   |
-            | Date of birth  | 25/03/1987 |
-            | User ID        |            |
-            | FromDate       | 03/05/2016 |
-            | ToDate         | 30/05/2016 |
+            | Date of birth  | 1987-03-25 |
+            | User ID        | 12345      |
+            | Minimum        | 1234       |
+            | From Date       | 2016-05-03 |
+            | To Date         | 2016-05-30 |
 
     Scenario: Balances API request and consent has not been granted
 
