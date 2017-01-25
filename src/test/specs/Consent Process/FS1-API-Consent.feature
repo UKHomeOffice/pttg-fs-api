@@ -76,7 +76,7 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
             | Account number | 01078918   |
             | Date of birth  | 1987-03-25 |
         Then the Barclays Consent API provides the following response:
-            | Response Code        | 455           |
+            | Response Code        | 404           |
             | Response Description | No Data Found |
 
     Scenario:  Sort Code does not match the data held at Barclays for that applicant
@@ -84,7 +84,7 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
         Given the Consent API is invoked
         When a sort code not found at Barclays
         Then The Barclays Consent API provides the following response:
-            | Response Code        | 455           |
+            | Response Code        | 404           |
             | Response Description | No Data Found |
 
     Scenario:  Date of birth does not match the data held at Barclays for that applicant
@@ -92,14 +92,14 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
         Given the Consent API is invoked
         When Date of birth is not found at Barclays
         Then The Barclays Consent API provides the following response:
-            | Response Code        | 458                    |
-            | Response Description | dateOfBirth is invalid |
+            | Response Code        | 404           |
+            | Response Description | No Data Found |
 
 
     Scenario: Valid UK mobile number is not available
 
         Given the Consent API is invoked
         When Valid UK mobile number is not found at Barclays
-        Then he Barclays Consent API provides the following response:
-            | Response Code        | 446                      |
-            | Response Description | Mobile Number is Invalid |
+        Then The Barclays Consent API provides the following response:
+            | Response Code        | 404           |
+            | Response Description | No Data Found |

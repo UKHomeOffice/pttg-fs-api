@@ -16,8 +16,8 @@ Feature: Outgoing API request to the Barclays Balances API and handling the inco
             | Date of birth  | 1987-03-25 |
             | User ID        | 12345      |
             | Minimum        | 1234       |
-            | From Date       | 2016-05-03 |
-            | To Date         | 2016-05-30 |
+            | From Date      | 2016-05-03 |
+            | To Date        | 2016-05-30 |
 
     Scenario: Balances API request and consent has not been granted
 
