@@ -51,7 +51,7 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
 
       consent match {
         case Some(result) => auditSearchResult(auditEventId, result.toString, userProfile)
-          new ResponseEntity(BankConsentResponse(sortCode, accountNumber, Option(consent.get.result.status), StatusResponse(HttpStatus.OK.value().toString, HttpStatus.OK.getReasonPhrase)), HttpStatus.OK)
+          new ResponseEntity(BankConsentResponse(Option(consent.get.result.status), StatusResponse(HttpStatus.OK.value().toString, HttpStatus.OK.getReasonPhrase)), HttpStatus.OK)
         case None => buildErrorResponse(headers, "400", "400", HttpStatus.BAD_REQUEST)
       }
     }
@@ -59,7 +59,7 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
       case Success(success) => success
       case Failure(exception: HttpClientErrorException) => buildErrorResponse(headers, serviceMessages.REST_API_CLIENT_ERROR,
         serviceMessages.NO_RECORDS_FOR_ACCOUNT(sortCode.getOrElse(""), accountNumber.getOrElse("")), HttpStatus.valueOf(exception.getRawStatusCode))
-      case Failure(exception) => buildErrorResponse(headers, serviceMessages.REST_INTERNAL_ERROR, exception.getMessage,HttpStatus.INTERNAL_SERVER_ERROR)
+      case Failure(exception) => buildErrorResponse(headers, serviceMessages.REST_INTERNAL_ERROR, exception.getMessage, HttpStatus.INTERNAL_SERVER_ERROR)
     }
   }
 
@@ -107,7 +107,7 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
     ))
   }
 
-  private def getUserProfile(token: Option[String]) : (Option[UserProfile], String) = {
+  private def getUserProfile(token: Option[String]): (Option[UserProfile], String) = {
     // Get the user's profile
     val userProfile = token match {
       case Some(token) => authenticator.getUserProfileFromToken(token)
@@ -122,6 +122,6 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
   }
 
   private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus) =
-    new ResponseEntity(BankConsentResponse(None, None, None, StatusResponse(statusCode, statusMessage)), headers, status)
+    new ResponseEntity(BankConsentResponse(None, StatusResponse(statusCode, statusMessage)), headers, status)
 
 }

@@ -67,8 +67,6 @@ class UserConsentServiceSpec extends Specification {
         def response = callApi(sortCode,accountNumber,dob)
         response.andExpect(status().is(200))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.sortCode == sortCode
-        jsonContent.accountNumber == accountNumber
         jsonContent.consent == "INITIATED"
 
     }
@@ -85,8 +83,6 @@ class UserConsentServiceSpec extends Specification {
         def response = callApi(sortCode,accountNumber,dob)
         response.andExpect(status().is(200))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.sortCode == sortCode
-        jsonContent.accountNumber == accountNumber
         jsonContent.consent == "PENDING"
 
     }
@@ -103,8 +99,6 @@ class UserConsentServiceSpec extends Specification {
         def response = callApi(sortCode,accountNumber,dob)
         response.andExpect(status().is(200))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.sortCode == sortCode
-        jsonContent.accountNumber == accountNumber
         jsonContent.consent == "SUCCESS"
 
     }
@@ -121,8 +115,6 @@ class UserConsentServiceSpec extends Specification {
         def response = callApi(sortCode,accountNumber,dob)
         response.andExpect(status().is(200))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.sortCode == sortCode
-        jsonContent.accountNumber == accountNumber
         jsonContent.consent == "FAILURE"
 
     }
@@ -139,8 +131,6 @@ class UserConsentServiceSpec extends Specification {
         def response = callApi(sortCode,accountNumber,dob)
         response.andExpect(status().is(200))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
-        jsonContent.sortCode == sortCode
-        jsonContent.accountNumber == accountNumber
         jsonContent.consent == "INVALID"
 
     }
