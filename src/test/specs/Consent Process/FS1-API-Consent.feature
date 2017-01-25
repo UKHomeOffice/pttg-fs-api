@@ -23,39 +23,59 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
         Given the test data for account 01078914
         When the Consent API is invoked
         And the default details are
-            | Sort code      | 111111   |
+            | Sort code      | 111111     |
             | Account number | 01078914   |
             | Date of birth  | 1987-03-25 |
         Then the Barclays Consent API provides the following response:
-            | Consent      | "INITIATED"                                            |
-            | description | "Consent request has been initiated to Account-Holder" |
+            | Consent     | INITIATED                                            |
+            | Description | Consent request has been initiated to Account-Holder |
+
 
     Scenario: 'Pending' status returned in the Barclays Consent API response
-
+        Given the test data for account 01078915
         When the Consent API is invoked
+        And the default details are
+            | Sort code      | 111111     |
+            | Account number | 01078915   |
+            | Date of birth  | 1987-03-25 |
         Then the Barclays Consent API provides the following response:
-            | Consent      | "PENDING"                               |
-            | description | "Awaiting response from Account-Holder" |
+            | Consent     | PENDING                               |
+            | Description | Awaiting response from Account-Holder |
 
     Scenario: 'Success' status returned in the Barclays Consent API response
 
+        Given the test data for account 01078916
         When the Consent API is invoked
-        Then the Barclays Consent API provides the following response::
-            | Consent      | "SUCCESS                               |
-            | description | "Consent received from Account-Holder" |
+        And the default details are
+            | Sort code      | 111111     |
+            | Account number | 01078916   |
+            | Date of birth  | 1987-03-25 |
+        Then the Barclays Consent API provides the following response:
+            | Consent     | SUCCESS                               |
+            | Description | Awaiting response from Account-Holder |
 
     Scenario: 'Failure' status returned in the Barclays Consent API response
 
+        Given the test data for account 01078917
         When the Consent API is invoked
-        Then The Barclays Consent API provides the following response:
-            | Consent      | "FAILURE"                        |
-            | description | "Account-Holder refused consent" |
+        And the default details are
+            | Sort code      | 111111     |
+            | Account number | 01078917   |
+            | Date of birth  | 1987-03-25 |
+        Then the Barclays Consent API provides the following response:
+            | Consent     | FAILURE                        |
+            | Description | Account-Holder refused consent |
 
     Scenario:  Account Number does not match the data held at Barclays for that applicant
 
+        Given the test data for account 01078918
         Given the Consent API is invoked
         When an account number not found at Barclays
-        Then The Barclays Consent API provides the following response:
+        And the default details are
+            | Sort code      | 111111     |
+            | Account number | 01078918   |
+            | Date of birth  | 1987-03-25 |
+        Then the Barclays Consent API provides the following response:
             | Response Code        | 455           |
             | Response Description | No Data Found |
 

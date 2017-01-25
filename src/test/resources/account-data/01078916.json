@@ -1,0 +1,9 @@
+{
+    "accountId": 11111101078916,
+    "sortCode": "111111",
+    "accountNumber": "01078916",
+    "result": {
+        "status": "SUCCESS",
+        "description": "Awaiting response from Account-Holder"
+    }
+}

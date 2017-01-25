@@ -462,11 +462,14 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     public void the_Consent_API_is_invoked() throws Throwable {
 
     }
+    @When("^an account number not found at Barclays\$")
+    public void an_account_number_not_found_at_Barclays() {
 
+    }
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
-        validateJsonResult(arg1)
-        // validateResult(arg1)
+        //validateJsonResult(arg1)
+         validateResult(arg1)
 
 
     }

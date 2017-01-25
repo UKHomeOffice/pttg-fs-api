@@ -1,0 +1,9 @@
+{
+    "accountId": 11111101078917,
+    "sortCode": "111111",
+    "accountNumber": "01078917",
+    "result": {
+        "status": "FAILURE",
+        "description": "Account-Holder refused consent"
+    }
+}

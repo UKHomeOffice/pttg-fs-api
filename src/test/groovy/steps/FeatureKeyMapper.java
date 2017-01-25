@@ -25,10 +25,13 @@ public class FeatureKeyMapper {
         KEY_MAP.put("Minimum", "minimum");
         KEY_MAP.put("Lowest Balance Value", "failureReason lowestBalanceValue");
         KEY_MAP.put("Failure reason", "categoryCheck failureReason");
-        KEY_MAP.put("From date", "fromDate");
-        KEY_MAP.put("To date", "toDate");
+        KEY_MAP.put("From Date", "fromDate");
+        KEY_MAP.put("To Date", "toDate");
         KEY_MAP.put("Account number", "account accountNumber");
         KEY_MAP.put("Account Holder Name", "accountHolderName");
+        KEY_MAP.put("Consent", "consent");
+        KEY_MAP.put("Description", "status message");
+        KEY_MAP.put("Record Count", "recordCount");
     }
 
     public static String buildJsonPath(final String key) {
