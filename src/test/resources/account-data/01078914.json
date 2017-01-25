@@ -1,7 +1,9 @@
 {
-    "consent": "SUCCESS",
-    "status": {
-        "code": "200",
-        "message": "OK"
+    "accountId": 11111101078914,
+    "sortCode": "111111",
+    "accountNumber": "01078914",
+    "result": {
+        "status": "INITIATED",
+        "description": "sample description"
     }
 }
