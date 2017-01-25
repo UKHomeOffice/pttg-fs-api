@@ -12,16 +12,20 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
     Background:
         Given A Service is consuming the FSPS Calculator API
         And the service is consuming the Barclays Balances API
-        And the default details are
-            | Sort code      | 111111   |
-            | Account number | 01078911   |
-            | Date of birth  | 1987-03-25 |
+#        And the default details are
+#            | Sort code      | 111111   |
+#            | Account number | 01078911   |
+#            | Date of birth  | 1987-03-25 |
 
 
     Scenario: 'Initiated' status returned in the Barclays Consent API response
 
-        Given the test data for account 01078911
+        Given the test data for account 01078914
         When the Consent API is invoked
+        And the default details are
+            | Sort code      | 111111   |
+            | Account number | 01078914   |
+            | Date of birth  | 1987-03-25 |
         Then the Barclays Consent API provides the following response:
             | status      | "INITIATED"                                            |
             | description | "Consent request has been initiated to Account-Holder" |

@@ -473,7 +473,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @Then("^the Barclays Consent API provides the following response:\$")
     public void the_Barclays_Consent_API_provides_the_following_response(DataTable arg1)  {
-
+        validateResult(arg1)
     }
 
     @Then("^The Tier_Two Financial Status API provides the following results:\$")
