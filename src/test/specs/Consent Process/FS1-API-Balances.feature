@@ -24,7 +24,7 @@ Feature: Outgoing API request to the Barclays Balances API and handling the inco
         Given the test data for account 00001001
         Given the applicant has not granted consent
         When the Financial Status API is invoked with the following:
-            | Sort code      | 111111   |
+            | Sort code      | 111111     |
             | Account number | 00001001   |
             | Date of birth  | 1987-03-25 |
             | User ID        | 12345      |
@@ -32,13 +32,13 @@ Feature: Outgoing API request to the Barclays Balances API and handling the inco
             | From Date      | 2016-05-03 |
             | To Date        | 2016-05-30 |
         Then the Barclays Consent API provides the following error response:
-            |Response Description| No user consent for sort code 222223 and account number 00001001 |
-        |     Response Code               |          403                                                        |
+            | Response Description | No user consent for sort code 222223 and account number 00001001 |
+            | Response Code        | 403                                                              |
 
     Scenario: Balances API request and consent has expired (e.g. greater than 24 hours)
 
         Given the consent request has expired
         When the Balances API is invoked
         Then The Barclays Consent API provides the following error response:
-            |Response Description| No user consent for sort code 222223 and account number 22222223 |
-            |     Response Code               |          403                                                        |
+            | Response Description | No user consent for sort code 222223 and account number 22222223 |
+            | Response Code        | 403                                                              |
