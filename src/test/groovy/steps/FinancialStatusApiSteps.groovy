@@ -310,7 +310,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         assert allJsonValue.containsAll(tableFieldValue)
     }
 
-
     public void validateResult(DataTable arg) {
 
         Map<String, String> entries = arg.asMap(String.class, String.class);
@@ -410,7 +409,10 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     }
 
+    @Given("^the consent request has expired\$")
+    public void the_consent_request_has_expired() {
 
+    }
     @When("^the Financial Status API is invoked\$")
     public void the_Financial_Status_API_is_invoked() {
 

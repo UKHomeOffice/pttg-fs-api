@@ -84,6 +84,13 @@ if(!fileName.contains("01078918")) {
                 .withHeader("Content-Type", "application/json")
                 .withStatus(404)));
         }
+        if(fileName.contains("00001001")) {
+            stubFor(get(urlPathMatching(url))
+                .willReturn(aResponse()
+                .withBody(json)
+                .withHeader("Content-Type", "application/json")
+                .withStatus(403)));
+        }
         println ''
         LOGGER.debug("Completed Stubbing Response data with $fileName")
     }
