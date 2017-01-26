@@ -547,7 +547,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @Then("^the Barclays Consent API provides the following error response:\$")
     public void the_Barclays_Consent_API_provides_the_following_error_response(DataTable arg1) {
-
+        validateResult(arg1)
     }
 
 }
