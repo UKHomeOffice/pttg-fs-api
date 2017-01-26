@@ -321,6 +321,9 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                 case "HTTP Status":
                     assert entries.get(key) == resp.getStatusCode().toString();
                     break;
+                case "Response Code":
+                    assert entries.get(key) == respCalc.getStatusCode().toString();
+                    break;
                 case "Minimum":
                     String jsonPath = fkm.buildJsonPath(key)
                     String value = entries.get(key)
@@ -481,11 +484,11 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @Then("^The Tier_Two Financial Status API provides the following results:\$")
     public void the_Tier_Two_Financial_Status_API_provides_the_following_results(DataTable arg1)  {
-        validateJsonResult(arg1)
+        validateResult(arg1)
     }
     @Then("^The Tier_five Financial Status API provides the following results:\$")
     public void the_Tier_five_Financial_Status_API_provides_the_following_results(DataTable arg1) throws Throwable {
-        validateJsonResult(arg1)
+        validateResult(arg1)
     }
 
     @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")

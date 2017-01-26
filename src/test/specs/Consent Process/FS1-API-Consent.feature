@@ -75,9 +75,10 @@ Feature: Outgoing API request to the Barclays Consent API and handling the incom
             | Sort code      | 111111     |
             | Account number | 01078918   |
             | Date of birth  | 1987-03-25 |
+       # And the barclays response has status 404
         Then the Barclays Consent API provides the following response:
             | Response Code        | 404           |
-            | Response Description | No Data Found |
+            | Response Description | No records for sort code 111111 and account number 01078918 |
 
     Scenario:  Sort Code does not match the data held at Barclays for that applicant
 

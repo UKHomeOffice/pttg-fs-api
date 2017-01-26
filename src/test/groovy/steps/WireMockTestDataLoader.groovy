@@ -36,8 +36,8 @@ class WireMockTestDataLoader {
         def json = jsonFromFile(fileName)
 
         if (json == null) {
-            assert false: "No test data file was loaded for $fileName from the resources/account-data directory - " +
-                "Please add it or check filename is correct"
+//            assert false: "No test data file was loaded for $fileName from the resources/account-data directory - " +
+  //              "Please add it or check filename is correct"
         }
 
         addStub(fileName, json, url)
@@ -63,12 +63,20 @@ class WireMockTestDataLoader {
         println ''
         LOGGER.debug("Stubbing Response data with $fileName")
 
-        stubFor(get(urlPathMatching(url))
-            .willReturn(aResponse()
-            .withBody(json)
-            .withHeader("Content-Type", "application/json")
-            .withStatus(200)));
-
+if(!fileName.contains("01078918")) {
+    stubFor(get(urlPathMatching(url))
+        .willReturn(aResponse()
+        .withBody(json)
+        .withHeader("Content-Type", "application/json")
+        .withStatus(200)));
+}
+        if(fileName.contains("01078918")) {
+            stubFor(get(urlPathMatching(url))
+                .willReturn(aResponse()
+                .withBody(json)
+                .withHeader("Content-Type", "application/json")
+                .withStatus(404)));
+        }
         println ''
         LOGGER.debug("Completed Stubbing Response data with $fileName")
     }

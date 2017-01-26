@@ -31,7 +31,12 @@ public class FeatureKeyMapper {
         KEY_MAP.put("Account Holder Name", "accountHolderName");
         KEY_MAP.put("Consent", "consent");
         KEY_MAP.put("Description", "status message");
-        KEY_MAP.put("Record Count", "recordCount");
+        KEY_MAP.put("Record Count", "failureReason recordCount");
+        KEY_MAP.put("Leave end date", "leaveEndDate");
+        KEY_MAP.put("Leave end date", "leaveEndDate");
+        KEY_MAP.put("Threshold", "threshold");
+        KEY_MAP.put("Course Length", "cappedValues courseLength");
+        KEY_MAP.put("Response Description", "status message");
     }
 
     public static String buildJsonPath(final String key) {
