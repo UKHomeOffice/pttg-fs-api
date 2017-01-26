@@ -1,7 +1,5 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
-import java.lang.{Boolean => JBoolean}
-import java.math.{BigDecimal => JBigDecimal}
 import java.time.LocalDate
 import java.util.{Optional, UUID}
 
@@ -41,13 +39,15 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
                   @CookieValue(value = "kc-access") kcToken: Optional[String]
                  ): ResponseEntity[BankConsentResponse] = {
 
+    val cleanSortCode: Option[String] = if (sortCode.isPresent) Option(sortCode.get.replace("-", "")) else None
+
     val (userProfile, userId) = getUserProfile(kcToken)
 
     val auditEventId = nextId
-    auditSearchParams(auditEventId, sortCode, accountNumber, userProfile)
+    auditSearchParams(auditEventId, cleanSortCode, accountNumber, userProfile)
 
     val response = Try {
-      val consent = checkConsent(sortCode, accountNumber, dob, userId)
+      val consent = checkConsent(cleanSortCode, accountNumber, dob, userId)
 
       consent match {
         case Some(result) => auditSearchResult(auditEventId, result.toString, userProfile)
@@ -63,7 +63,8 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
     }
   }
 
-  def checkConsent(sortCode: Option[String], accountNumber: Option[String], dob: Option[LocalDate], userId: String) = {
+  def checkConsent(sortCode: Option[String], accountNumber: Option[String],
+                   dob: Option[LocalDate], userId: String): Option[UserConsent] = {
 
     val consent = for {sCode <- sortCode
                        accountNo <- accountNumber
@@ -107,9 +108,9 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
     ))
   }
 
-  private def getUserProfile(token: Option[String]): (Option[UserProfile], String) = {
+  private def getUserProfile(userToken: Option[String]): (Option[UserProfile], String) = {
     // Get the user's profile
-    val userProfile = token match {
+    val userProfile = userToken match {
       case Some(token) => authenticator.getUserProfileFromToken(token)
       case None => None
     }
