@@ -51,6 +51,7 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
 
   def INVALID_APPLICANT_TYPE(params: String*): String = getMessage("invalid.applicant.type", params)
 
+  def USER_CONSENT_NOT_GIVEN(params: String*): String = getMessage("user.consent.not.given", params)
 
   def NO_RECORDS_FOR_ACCOUNT(params: String*): String = getMessage("no.records.for.account", params)
 

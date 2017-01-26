@@ -35,6 +35,8 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
   private val LOGGER = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
+  private val CONSENT_UNAVAILABLE = "consent unavailable"
+
   @RequestMapping(value = Array("{sortCode:[0-9]+|[0-9-]+}/{accountNumber:[0-9]+}/dailybalancestatus"),
     method = Array(RequestMethod.GET),
     produces = Array(MediaType.APPLICATION_JSON_VALUE))
@@ -132,6 +134,11 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
         case Failure(exception: HttpClientErrorException) =>
           exception.getStatusCode match {
+            case HttpStatus.BAD_REQUEST if exception.getResponseBodyAsString.toLowerCase.contains(CONSENT_UNAVAILABLE) =>
+              new ResponseEntity(AccountDailyBalanceStatusResponse(StatusResponse(serviceMessages.REST_API_CLIENT_ERROR,
+                serviceMessages.USER_CONSENT_NOT_GIVEN(sortCode, accountNumber))), HttpStatus.FORBIDDEN
+              )
+
             case HttpStatus.NOT_FOUND => new ResponseEntity(
               AccountDailyBalanceStatusResponse(StatusResponse(serviceMessages.REST_API_CLIENT_ERROR,
                 serviceMessages.NO_RECORDS_FOR_ACCOUNT(sortCode, accountNumber))), HttpStatus.NOT_FOUND

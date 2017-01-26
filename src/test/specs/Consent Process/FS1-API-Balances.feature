@@ -24,11 +24,11 @@ Feature: Outgoing API request to the Barclays Balances API and handling the inco
         Given the applicant has not granted consent
         When the Balances API is invoked
         Then the Barclays Consent API provides the following error response:
-            | Account-Holder consent unavailable |
+            | No user consent for sort code 222223 and account number 22222223 |
 
     Scenario: Balances API request and consent has expired (e.g. greater than 24 hours)
 
         Given the consent request has expired
         When the Balances API is invoked
         Then The Barclays Consent API provides the following error response:
-            | Account-Holder consent unavailable |
+            | No user consent for sort code 222223 and account number 22222223 |
