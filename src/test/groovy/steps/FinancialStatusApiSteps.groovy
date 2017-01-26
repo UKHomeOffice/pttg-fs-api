@@ -462,11 +462,23 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
     @When("^the Consent API is invoked\$")
-    public void the_Consent_API_is_invoked() throws Throwable {
+    public void the_Consent_API_is_invoked() {
 
     }
     @When("^an account number not found at Barclays\$")
     public void an_account_number_not_found_at_Barclays() {
+
+    }
+    @When("^a sort code not found at Barclays\$")
+    public void a_sort_code_not_found_at_Barclays() {
+
+    }
+    @When("^Date of birth is not found at Barclays\$")
+    public void date_of_birth_is_not_found_at_Barclays() {
+
+    }
+    @When("^Valid UK mobile number is not found at Barclays\$")
+    public void valid_UK_mobile_number_is_not_found_at_Barclays() {
 
     }
     @Then("^The Financial Status API provides the following results:\$")
