@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component
 
 import scala.collection.JavaConverters._
 
-@Component
+//@Component
 class JsonLoggingNonPersistentAuditEventRepository extends AuditEventRepository {
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[JsonLoggingNonPersistentAuditEventRepository])
