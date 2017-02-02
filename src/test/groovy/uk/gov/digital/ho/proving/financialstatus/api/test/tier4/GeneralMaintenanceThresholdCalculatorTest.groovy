@@ -10,15 +10,15 @@ import static uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils.build
 import static uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils.buildScalaOption
 
 
-class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
+class GeneralMaintenanceThresholdCalculatorTest extends Specification {
 
     MaintenanceThresholdCalculator maintenanceThresholdCalculator = TestUtilsTier4.maintenanceThresholdServiceBuilder()
 
 
-    def "Tier 4 Non Doctorate - Check 'Non Inner London Borough'"() {
+    def "Tier 4 General - Check 'Non Inner London Borough'"() {
 
         expect:
-        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
+        def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
             originalCourseStartDate != null, courseType == "pre-sessional")
 
@@ -53,10 +53,10 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
         LocalDate.of(2026, 7, 12)  | LocalDate.of(2027, 5, 27)  | null                       | false    | 6402.22     | 0.00            | 0.00                  | 4          | "pre-sessional" || 40017.22  || 0.00       || 9            || LocalDate.of(2027, 7, 27)
     }
 
-    def "Tier 4 Non Doctorate - Check 'Inner London Borough'"() {
+    def "Tier 4 General - Check 'Inner London Borough'"() {
 
         expect:
-        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
+        def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
             originalCourseStartDate != null, courseType == "pre-sessional")
 
@@ -91,10 +91,10 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
         LocalDate.of(1985, 8, 27)  | LocalDate.of(1985, 9, 29)  | null                       | true     | 8556.72     | 6983.59         | 0.00                  | 0          | "main"          || 4103.13   || 0.00       || 0            || LocalDate.of(1985, 10, 6)
     }
 
-    def "Tier 4 Non Doctorate - Check 'Tuition Fees paid'"() {
+    def "Tier 4 General - Check 'Tuition Fees paid'"() {
 
         expect:
-        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
+        def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
             originalCourseStartDate != null, courseType == "pre-sessional")
 
@@ -130,10 +130,10 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
         LocalDate.of(1973, 10, 29) | LocalDate.of(1974, 2, 25)  | null                       | false    | 3807.11     | 7595.73         | 1464.67               | 0          | "main"          || 2795.00   || 1265.00    || 0            || LocalDate.of(1974, 3, 4)
     }
 
-    def "Tier 4 Non Doctorate - Check 'Accommodation Fees paid'"() {
+    def "Tier 4 General - Check 'Accommodation Fees paid'"() {
 
         expect:
-        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
+        def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
             originalCourseStartDate != null, courseType == "pre-sessional")
 
@@ -168,10 +168,10 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
         LocalDate.of(2011, 6, 18)  | LocalDate.of(2011, 10, 22) | null                       | true     | 3959.37     | 7133.52         | 1123.53               | 0          | "main"          || 5201.47   || 0.00       || 0            || LocalDate.of(2011, 10, 29)
     }
 
-    def "Tier 4 Non Doctorate - Check 'continuations'"() {
+    def "Tier 4 General - Check 'continuations'"() {
 
         expect:
-        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
+        def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
             originalCourseStartDate != null, courseType == "pre-sessional")
 
@@ -214,9 +214,9 @@ class NonDoctorateMaintenanceThresholdCalculatorTest extends Specification {
     }
 
 
-    def "Tier 4 Non Doctorate - Check 'All variants'"() {
+    def "Tier 4 General - Check 'All variants'"() {
 
-        def response = maintenanceThresholdCalculator.calculateNonDoctorate(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
+        def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
             originalCourseStartDate != null, courseType == "pre-sessional")
         def thresholdValue = response._1

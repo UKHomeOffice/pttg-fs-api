@@ -1,6 +1,6 @@
 Feature: Validation of the API fields and data
 
-    Student Type - doctorate, nondoctorate, pgdd or sso (mandatory)
+    Student Type - des, general, pgdd or suso (mandatory)
     Course Type - pre-sessional or main (mandatory)
     In London - Yes or No options (mandatory)
     Course Length - 1-9 months
@@ -13,16 +13,16 @@ Feature: Validation of the API fields and data
     Background: The API is not provided with Student type field
         Given A Service is consuming the FSPS Calculator API
         And the default details are
-            | Student Type                    | nondoctorate |
-            | Course Type                     | main         |
-            | In London                       | Yes          |
-            | Course start date               | 2016-01-03   |
-            | Course end date                 | 2016-02-03   |
-            | Original course start date      | 2015-12-03   |
-            | Dependents                      | 1            |
-            | Total tuition fees              | 3500.50      |
-            | Tuition fees already paid       | 0            |
-            | Accommodation fees already paid | 0            |
+            | Student Type                    | general    |
+            | Course Type                     | main       |
+            | In London                       | Yes        |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-02-03 |
+            | Original course start date      | 2015-12-03 |
+            | Dependents                      | 1          |
+            | Total tuition fees              | 3500.50    |
+            | Tuition fees already paid       | 0          |
+            | Accommodation fees already paid | 0          |
 
 ######################### Validation on the Student type field #########################
 
@@ -31,9 +31,9 @@ Feature: Validation of the API fields and data
         When the FSPS Calculator API is invoked with the following
             | Student Type |  |
         Then the service displays the following result
-            | HTTP Status    | 400                                                                                    |
-            | Status code    | 0004                                                                                   |
-            | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso] |
+            | HTTP Status    | 400                                                                          |
+            | Status code    | 0004                                                                         |
+            | Status message | Parameter error: Invalid studentType, must be one of [des,general,pgdd,suso] |
 
 ######################### Validation on the In London field #########################
 

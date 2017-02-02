@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
  */
 @WebAppConfiguration
 @ContextConfiguration(classes = ServiceConfiguration.class)
-class DoctorateMaintenanceThresholdServiceSpec extends Specification {
+class DoctorateExtensionMaintenanceThresholdServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
@@ -61,7 +61,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
+        def response = callApi("des", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
@@ -75,7 +75,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
+        def response = callApi("des", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
@@ -89,7 +89,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Doctorate - Check 'Accommodation Fees paid'"() {
         expect:
-        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
+        def response = callApi("des", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
@@ -110,7 +110,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Doctorate - Check 'All variants'"() {
         expect:
-        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
+        def response = callApi("des", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.threshold == threshold
@@ -149,7 +149,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Doctorate - Check invalid accommodation fees parameters"() {
         expect:
-        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
+        def response = callApi("des", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid accommodationFeesPaid")))
@@ -162,7 +162,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Doctorate - Check invalid characters accommodation fees parameters"() {
         expect:
-        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
+        def response = callApi("des", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid accommodationFeesPaid")))
@@ -175,7 +175,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Doctorate - Check rounding accommodation fees parameters"() {
         expect:
-        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
+        def response = callApi("des", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
 
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
@@ -193,7 +193,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Doctorate - Check invalid dependants parameters"() {
         expect:
-        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
+        def response = callApi("des", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid dependants")))
@@ -206,7 +206,7 @@ class DoctorateMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Doctorate - Check invalid characters dependants parameters"() {
         expect:
-        def response = callApi("doctorate", inLondon, accommodationFeesPaid, dependants)
+        def response = callApi("des", inLondon, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid dependants")))

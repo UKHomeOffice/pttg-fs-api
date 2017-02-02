@@ -22,14 +22,14 @@ Student Type:: Meanings of the student type names accepted by the API
 |===
 |Student Type Name|Description
 
-|doctorate
+|general
+|General student
+|des
 |Doctorate Extension Scheme
-|nondoctorate
-|Non-doctorate student
 |pgdd
 |Post-graduate Doctor/Dentist
-|sso
-|Student Sabbatical Officer
+|suso
+|Student Union Sabbatical Officer
 
 |===
 

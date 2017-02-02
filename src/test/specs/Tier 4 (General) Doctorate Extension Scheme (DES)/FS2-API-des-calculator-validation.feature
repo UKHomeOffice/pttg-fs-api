@@ -1,6 +1,6 @@
 Feature: Validation of the API fields and data
 
-    Student type - doctorate, nondoctorate, pgdd or sso (mandatory)
+    Student Type - des, general, pgdd or suso (mandatory)
     In London - Yes or No options (mandatory)
     Accommodation fees already paid - Format should not contain commas or currency symbols
     To Date - Format should be yyyy-mm-dd
@@ -20,14 +20,14 @@ Feature: Validation of the API fields and data
         Then the service displays the following result
             | HTTP Status    | 400                                                                                    |
             | Status code    | 0004                                                                                   |
-            | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso] |
+            | Status message | Parameter error: Invalid studentType, must be one of [des,general,pgdd,suso] |
 
 ######################### Validation on the In London field #########################
 
     Scenario: The API is not provided with In London Yes or No field
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
+            | Student Type                    | des  |
             | In London                       |            |
             | Accommodation fees already paid | 0          |
             | dependants                      | 1          |
@@ -41,7 +41,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is not provided with Accommodation fees already paid
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
+            | Student Type                    | des  |
             | In London                       | Yes        |
             | Accommodation fees already paid |            |
             | dependants                      | 1          |
@@ -53,7 +53,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is provided with incorrect  Accommodation fees already paid - not numbers 1-2
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
+            | Student Type                    | des  |
             | In London                       | Yes        |
             | Accommodation fees already paid | %%         |
             | dependants                      | 1          |
@@ -65,7 +65,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is provided with incorrect Accommodation fees already paid - less than zero
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
+            | Student Type                    | des  |
             | In London                       | Yes        |
             | Accommodation fees already paid | -100       |
             | dependants                      | 1          |
@@ -79,7 +79,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is not provided with the Number of dependants
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
+            | Student Type                    | des  |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
             | dependants                      | -7         |
@@ -91,7 +91,7 @@ Feature: Validation of the API fields and data
     Scenario: The API is provided with incorrect Number of Dependants - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | doctorate  |
+            | Student Type                    | des  |
             | In London                       | Yes        |
             | Accommodation fees already paid | 0          |
             | dependants                      | @          |

@@ -23,15 +23,15 @@ class TestUtilsTier4 {
     public static def inLondonDependant = 845
     public static def notInLondonDependant = 680
 
-    public static def nonDoctorateCappedCourseLength = 9
+    public static def generalCappedCourseLength = 9
 
     public static def susoCappedCourseLength = 2
 
-    public static def pgddSsoCappedCourseLength = 2
-    public static def doctorateFixedCourseLength = 2
+    public static def pgddsusoCappedCourseLength = 2
+    public static def doctorateExtensionFixedCourseLength = 2
 
 
-    public static def getStudentTypeChecker() { new StudentTypeChecker("doctorate", "nondoctorate", "pgdd", "sso") }
+    public static def getStudentTypeChecker() { new StudentTypeChecker("des", "general", "pgdd", "suso") }
 
     public static def getCourseTypeChecker() { new CourseTypeChecker("main", "pre-sessional") }
 
@@ -42,11 +42,11 @@ class TestUtilsTier4 {
             maxMaintenanceAllowance,
             inLondonDependant,
             notInLondonDependant,
-            //nonDoctorateMinCourseLength,
-            nonDoctorateCappedCourseLength,
-            //pgddSsoMinCourseLength,
-            pgddSsoCappedCourseLength,
-            doctorateFixedCourseLength,
+            //generalMinCourseLength,
+            generalCappedCourseLength,
+            //pgddsusoMinCourseLength,
+            pgddsusoCappedCourseLength,
+            doctorateExtensionFixedCourseLength,
             //susoMinCourseLength,
             susoCappedCourseLength
         )

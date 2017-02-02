@@ -13,7 +13,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
     The concept of pre-sessional courses does not apply to the PGDD route
 
-    Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
+    Applicants Required Maintenance threshold general:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
     Accommodation fees already paid - The maximum amount paid can be £1265
@@ -27,7 +27,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
     #Required Maintenance threshold calculation to pass this feature file
 
-    #Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
+    #Maintenance threshold amount = (Required Maintenance threshold general * Course length) +
     #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) - (accommodation fees paid)
 
     #12 months: ((£1265 x 12) + (£845 x (12+1) x 1) - (£50)

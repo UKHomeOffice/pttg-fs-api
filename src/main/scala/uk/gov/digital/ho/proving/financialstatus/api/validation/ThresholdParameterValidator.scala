@@ -32,7 +32,7 @@ trait ThresholdParameterValidator {
 
     studentType match {
 
-      case NonDoctorateStudent =>
+      case GeneralStudent =>
         if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
         } else if (courseEndDate.isEmpty) {
@@ -50,7 +50,7 @@ trait ThresholdParameterValidator {
         } else if (validDependants.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
         }
-      case StudentSabbaticalOfficer| DoctorDentistStudent =>
+      case StudentUnionSabbaticalOfficerStudent | PostGraduateDoctorDentistStudent =>
         if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
         } else if (courseEndDate.isEmpty) {
@@ -64,7 +64,7 @@ trait ThresholdParameterValidator {
         } else if (validDependants.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
         }
-      case DoctorateStudent =>
+      case DoctorateExtensionStudent =>
       case UnknownStudent(unknownStudentType) => errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_STUDENT_TYPE(unknownStudentType), HttpStatus.BAD_REQUEST))
     }
 

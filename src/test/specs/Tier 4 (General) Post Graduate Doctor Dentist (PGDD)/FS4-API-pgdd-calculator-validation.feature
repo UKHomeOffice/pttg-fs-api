@@ -1,6 +1,6 @@
 Feature: Validation of the API fields and data
 
-    Student Type - doctorate, nondoctorate, pgdd or sso (mandatory)
+    Student Type - des, general, pgdd or suso (mandatory)
     In London - Yes or No options (mandatory)
     Course Length - 1-2 months
     Accommodation fees already paid - Format should not contain commas or currency symbols
@@ -21,9 +21,9 @@ Feature: Validation of the API fields and data
             | Accommodation fees already paid | 0          |
             | dependants                      | 1          |
         Then the service displays the following result
-            | HTTP Status    | 400                                                                                    |
-            | Status code    | 0004                                                                                   |
-            | Status message | Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso] |
+            | HTTP Status    | 400                                                                          |
+            | Status code    | 0004                                                                         |
+            | Status message | Parameter error: Invalid studentType, must be one of [des,general,pgdd,suso] |
 
 ######################### Validation on the In London field #########################
 

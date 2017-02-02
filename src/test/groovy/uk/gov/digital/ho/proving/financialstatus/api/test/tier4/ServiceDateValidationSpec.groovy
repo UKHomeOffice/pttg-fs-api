@@ -67,7 +67,7 @@ class ServiceDateValidationSpec extends Specification {
     def "Validate date fields"() {
 
         expect:
-        def response = callApi("nondoctorate", true, courseStartDate, courseEndDate, originalCourseStartDate, 0, 0, 0, 0)
+        def response = callApi("general", true, courseStartDate, courseEndDate, originalCourseStartDate, 0, 0, 0, 0)
         response.andExpect(status().is(httpStatus))
         response.andExpect(content().string(containsString(statusMessage)))
 

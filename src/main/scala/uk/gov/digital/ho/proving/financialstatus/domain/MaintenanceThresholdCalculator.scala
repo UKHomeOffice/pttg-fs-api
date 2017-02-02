@@ -12,7 +12,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                                   @Value("${maximum.accommodation.value}") val maxAccommodation: Int,
                                                   @Value("${inner.london.dependant.value}") val innerLondonDependants: Int,
                                                   @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int,
-                                                  @Value("${non.doctorate.capped.course.length}") val nonDoctorateCappedCourseLength: Int,
+                                                  @Value("${general.capped.course.length}") val generalCappedCourseLength: Int,
                                                   @Value("${pgdd.capped.course.length}") val pgddCappedCourseLength: Int,
                                                   @Value("${doctorate.fixed.course.length}") val doctorateFixedCourseLength: Int,
                                                   @Value("${suso.capped.course.length}") val susoCappedCourseLength: Int
@@ -35,24 +35,24 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     months
   }
 
-  def calculateNonDoctorate(innerLondon: Boolean,
-                            tuitionFees: BigDecimal, tuitionFeesPaid: BigDecimal,
-                            accommodationFeesPaid: BigDecimal,
-                            dependants: Int,
-                            courseStartDate: LocalDate,
-                            courseEndDate: LocalDate,
-                            originalCourseStartDate: Option[LocalDate],
-                            isContinuation: Boolean,
-                            isPreSessional: Boolean
-                           ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
+  def calculateGeneral(innerLondon: Boolean,
+                       tuitionFees: BigDecimal, tuitionFeesPaid: BigDecimal,
+                       accommodationFeesPaid: BigDecimal,
+                       dependants: Int,
+                       courseStartDate: LocalDate,
+                       courseEndDate: LocalDate,
+                       originalCourseStartDate: Option[LocalDate],
+                       isContinuation: Boolean,
+                       isPreSessional: Boolean
+                      ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
 
     val courseLengthInMonths = maintenancePeriod(courseStartDate, courseEndDate)
     val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(courseStartDate, courseEndDate, originalCourseStartDate, isPreSessional)
     val leaveToRemainInMonths = maintenancePeriod(courseStartDate, leaveToRemain)
 
-    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > nonDoctorateCappedCourseLength) {
-      (nonDoctorateCappedCourseLength, Some(nonDoctorateCappedCourseLength))
+    val (courseLength, courseLengthCapped) = if (courseLengthInMonths > generalCappedCourseLength) {
+      (generalCappedCourseLength, Some(generalCappedCourseLength))
     } else {
       (courseLengthInMonths, None)
     }
@@ -64,7 +64,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
 
     val amount = ((accommodationValue(innerLondon) * courseLength)
       + (tuitionFees - tuitionFeesPaid).max(0)
-      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(nonDoctorateCappedCourseLength) * dependants)
+      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(generalCappedCourseLength) * dependants)
       - accommodationFees).max(0)
 
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
@@ -75,14 +75,14 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   }
 
 
-  def calculateSUSO(innerLondon: Boolean,
-                    accommodationFeesPaid: BigDecimal,
-                    dependants: Int,
-                    courseStartDate: LocalDate,
-                    courseEndDate: LocalDate,
-                    originalCourseStartDate: Option[LocalDate],
-                    isContinuation: Boolean
-                   ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
+  def calculateStudentUnionSabbaticalOfficer(innerLondon: Boolean,
+                                             accommodationFeesPaid: BigDecimal,
+                                             dependants: Int,
+                                             courseStartDate: LocalDate,
+                                             courseEndDate: LocalDate,
+                                             originalCourseStartDate: Option[LocalDate],
+                                             isContinuation: Boolean
+                                            ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
 
     val courseLengthInMonths = maintenancePeriod(courseStartDate, courseEndDate)
@@ -112,14 +112,14 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   }
 
 
-  def calculatePGGD(innerLondon: Boolean,
-                    accommodationFeesPaid: BigDecimal,
-                    dependants: Int,
-                    courseStartDate: LocalDate,
-                    courseEndDate: LocalDate,
-                    originalCourseStartDate: Option[LocalDate],
-                    isContinuation: Boolean
-                   ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
+  def calculatePostGraduateDoctorDentist(innerLondon: Boolean,
+                                         accommodationFeesPaid: BigDecimal,
+                                         dependants: Int,
+                                         courseStartDate: LocalDate,
+                                         courseEndDate: LocalDate,
+                                         originalCourseStartDate: Option[LocalDate],
+                                         isContinuation: Boolean
+                                        ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
 
     val courseLengthInMonths = maintenancePeriod(courseStartDate, courseEndDate)
@@ -148,8 +148,8 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
     }
   }
 
-  def calculateDES(innerLondon: Boolean, accommodationFeesPaid: BigDecimal,
-                         dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
+  def calculateDoctorateExtensionScheme(innerLondon: Boolean, accommodationFeesPaid: BigDecimal,
+                                        dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
     val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) {
       (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION))
@@ -161,11 +161,11 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
       + (dependantsValue(innerLondon) * doctorateFixedCourseLength * dependants)
       - accommodationFees).max(0)
 
-        if (accommodationFeesCapped.isDefined) {
-          (amount, Some(CappedValues(accommodationFeesCapped)), None)
-        } else {
-          (amount, None, None)
-        }
+    if (accommodationFeesCapped.isDefined) {
+      (amount, Some(CappedValues(accommodationFeesCapped)), None)
+    } else {
+      (amount, None, None)
+    }
 
   }
 

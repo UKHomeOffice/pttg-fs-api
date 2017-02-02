@@ -12,7 +12,7 @@ Course length - course start date to course end date (Main Course)
 Wrap up period calculated from original course start date to course end date
 Wrap up period - 1 month in all instances regardless of course length
 
-Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
+Applicants Required Maintenance threshold general:  In London - £1265, Out London - £1015
 Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
     Background:
@@ -24,7 +24,7 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
 #Required Maintenance threshold calculation to pass this feature file
 
-#Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
+#Maintenance threshold amount = (Required Maintenance threshold general * Course length) +
 #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) - (accommodation fees paid)
 
 #12 months: ((£1265 x 12) + (845 x (12+1) x 1) - (£100)

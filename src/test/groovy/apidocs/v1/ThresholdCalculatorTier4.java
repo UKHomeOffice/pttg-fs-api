@@ -111,7 +111,7 @@ public class ThresholdCalculatorTier4 {
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
-            .param("studentType", "nondoctorate")
+            .param("studentType", "general")
             .param("dependants", "0")
             .param("courseType", "main")
             .filter(document.snippets(
@@ -139,7 +139,7 @@ public class ThresholdCalculatorTier4 {
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
-            .param("studentType", "nondoctorate")
+            .param("studentType", "general")
             .param("dependants", "1")
             .param("courseType", "main")
              .filter(document.snippets(
@@ -168,7 +168,7 @@ public class ThresholdCalculatorTier4 {
                         .description("Accommodation fees already paid")
                         .attributes(key("optional").value(true)),
                     parameterWithName("studentType")
-                        .description("Type of student. Allowed values are 'doctorate', 'nondoctorate', 'pgdd' and 'sso'. See <<Glossary>>")
+                        .description("Type of student. Allowed values are 'des', 'general', 'pgdd' and 'suso'. See <<Glossary>>")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
                         .description("The number of dependants to take in to account when calculating the minimum balance")
