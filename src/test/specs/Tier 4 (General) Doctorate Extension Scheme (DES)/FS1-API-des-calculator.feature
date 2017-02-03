@@ -41,8 +41,8 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
             | Student Type      | des        |
             | Dependants        | 0          |
         Then The Financial Status API provides the following results:
-            | HTTP Status    | 200        |
-            | Threshold      | 2030.00    |
+            | HTTP Status | 200     |
+            | Threshold   | 2030.00 |
 
     Scenario: Ann is on a 3 month DES continuation course and has 2 dependants. Ann's Threshold calculated
 
@@ -72,6 +72,39 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
             | Student Type      | des        |
             | Dependants        | 1          |
         Then The Financial Status API provides the following results:
-            | HTTP Status    | 200        |
-            | Threshold      | 3720.00    |
+            | HTTP Status | 200     |
+            | Threshold   | 3720.00 |
 
+    # DES course - Dependants Only #
+    # fixed at 2 months ##
+
+    Scenario: 2 dependants only application (main applicant is on a 3 month DES continuation course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Student Type | doctorate |
+            | In London    | No        |
+            | Dependants   | 2         |
+        Then The Financial Status API provides the following results:
+            | HTTP Status | 200  |
+            | Threshold   | 3380 |
+
+    Scenario: 4 dependants only application (main applicant is on a 5 month DES continuation course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Student Type | doctorate |
+            | Dependants   | 4         |
+        Then The Financial Status API provides the following results:
+            | HTTP Status | 200     |
+            | Threshold   | 6760.00 |
+
+    Scenario: 1 dependant only application (main applicant is on 1 month DES continuation course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Student Type | doctorate |
+            | Dependants   | 1         |
+        Then The Financial Status API provides the following results:
+            | HTTP Status | 200     |
+            | Threshold   | 1690.00 |

@@ -129,3 +129,56 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
             | Course Length  | 2          |
             | Leave end date | 2019-01-03 |
 
+# SUSO course - dependants only  #
+# Capped at 2 months #
+
+    Scenario: 2 dependant only application (main applicant is on a 1 month SUSO course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Dependants        | 2          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-02 |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 3380.00    |
+            | Leave end date | 2016-02-09 |
+
+    Scenario: 2 dependant only application (main applicant is on a 2 month SUSO course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Dependants        | 2          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-28 |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 3380.00    |
+            | Leave end date | 2016-03-06 |
+
+    Scenario: 1 dependant only application (main applicant is on a 7 month SUSO course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Dependants        | 1          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-07-28 |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 1690.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2016-09-28 |
+
+    Scenario: 3 dependant only application (main applicant is on a 33 month SUSO course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | In London         | No         |
+            | Dependants        | 3          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2018-09-03 |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 5070.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2019-01-03 |
