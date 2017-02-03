@@ -6,7 +6,7 @@ import java.time.LocalDate
 import java.util.{Optional, UUID}
 
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.{Autowired, Value}
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.PropertySource
 import org.springframework.format.annotation.DateTimeFormat
@@ -29,7 +29,7 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
                                          val serviceMessages: ServiceMessages,
                                          val auditor: ApplicationEventPublisher,
                                          val authenticator: Authentication
-                                   ) extends FinancialStatusBaseController with ThresholdParameterValidator {
+                                        ) extends FinancialStatusBaseController with ThresholdParameterValidator {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdServiceTier4])
 
@@ -137,7 +137,7 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
         val validatedInputs = validateInputs(DoctorateExtensionStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
         calculateThreshold(validatedInputs, calculateDoctorateExtension)
 
-      case PostGraduateDoctorDentistStudent  =>
+      case PostGraduateDoctorDentistStudent =>
         val validatedInputs = validateInputs(PostGraduateDoctorDentistStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
         calculateThreshold(validatedInputs, calculatePGDD)
 

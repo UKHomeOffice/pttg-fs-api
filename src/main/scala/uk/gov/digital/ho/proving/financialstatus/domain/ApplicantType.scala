@@ -23,6 +23,9 @@ class ApplicantTypeChecker @Autowired()(@Value("${t2t5.applicant.type.main}") va
 }
 
 sealed trait ApplicantType
+
 case class UnknownApplicant(value: String) extends ApplicantType
+
 case object MainApplicant extends ApplicantType
+
 case object DependantApplicant extends ApplicantType

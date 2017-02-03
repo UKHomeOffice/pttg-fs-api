@@ -23,6 +23,9 @@ class CourseTypeChecker @Autowired()(@Value("${course.type.main}") val main: Str
 }
 
 sealed trait CourseType
+
 case class UnknownCourse(value: String) extends CourseType
+
 case object MainCourse extends CourseType
+
 case object PreSessionalCourse extends CourseType

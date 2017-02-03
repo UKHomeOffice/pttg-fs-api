@@ -29,8 +29,13 @@ class StudentTypeChecker @Autowired()(@Value("${student.type.doctorate.extension
 }
 
 sealed trait StudentType
+
 case class UnknownStudent(value: String) extends StudentType
+
 case object DoctorateExtensionStudent extends StudentType
+
 case object GeneralStudent extends StudentType
+
 case object PostGraduateDoctorDentistStudent extends StudentType
+
 case object StudentUnionSabbaticalOfficerStudent extends StudentType
