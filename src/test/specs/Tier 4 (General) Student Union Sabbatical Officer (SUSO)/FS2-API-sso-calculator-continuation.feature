@@ -116,3 +116,49 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | HTTP Status    | 200        |
             | Threshold      | 1610.00    |
             | Leave end date | 2016-06-08 |
+
+        # SSO continuation course - dependants only #
+        # capped at 2 months #
+
+    Scenario: 2 dependant only application (main applicant is on a 3 month SUSO continuation course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | In London                  | No         |
+            | Original course start date | 2015-09-15 |
+            | Course start date          | 2016-01-01 |
+            | Course end date            | 2016-04-09 |
+            | Dependants                 | 2          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 3380.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2016-06-09 |
+
+    Scenario: 4 dependant only application (main applicant is on a 5 month SUSO continuation course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Original course start date | 2015-08-15 |
+            | Course start date          | 2016-05-01 |
+            | Course end date            | 2016-10-09 |
+            | Dependants                 | 4          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 6760.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2017-02-09 |
+
+    Scenario: Kira is on a 1 month PGDD continuation course and has 1 dependants. Kira's Threshold calculated
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Original course start date | 2016-04-15 |
+            | Course start date          | 2016-05-11 |
+            | Course end date            | 2016-06-01 |
+            | Dependants                 | 1          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 1690.00    |
+            | Leave end date | 2016-06-08 |
+

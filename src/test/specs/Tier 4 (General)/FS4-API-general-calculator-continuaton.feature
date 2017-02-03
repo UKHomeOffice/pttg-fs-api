@@ -93,7 +93,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Original course start date | 2015-09-18 |
             | Course start date          | 2016-02-06 |
             | Course end date            | 2017-04-01 |
-            | Dependants                 |    2       |
+            | Dependants                 | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 28295.50   |
@@ -144,13 +144,13 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main |
-            | Original course start date | 2015-09-18    |
-            | Course start date          | 2016-02-06    |
-            | Course end date            | 2016-04-07    |
+            | Course type                | Main       |
+            | Original course start date | 2015-09-18 |
+            | Course start date          | 2016-02-06 |
+            | Course end date            | 2016-04-07 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 5495.50   |
+            | Threshold      | 5495.50    |
             | Leave end date | 2016-06-07 |
 
     ###### Continuation Pre-sessional ########
@@ -247,6 +247,100 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course end date            | 2016-05-01    |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 5495.50   |
+            | Threshold      | 5495.50    |
             | Leave end date | 2016-07-01 |
+
+###### Continuation Main course - dependants only ########
+
+        # Capped at 9 months for dependants #
+        # round up to the nearest month #
+        # Calculate threshold period using Course Start Date to Leave End Date #
+
+    Scenario: Isaac is on a dependant (x1) only application (main applicant is on a 5 month continuation main course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type                | Main       |
+            | Original course start date | 2015-02-15 |
+            | Course start date          | 2016-01-05 |
+            | Course end date            | 2016-05-10 |
+            | Dependants                 | 1          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 7605.00    |
+            | Leave end date | 2016-09-10 |
+
+    Scenario: Mel, Geri, Victoria are on a dependant (x3) only application (main applicant is on a 2 month continuation main course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type                | Main       |
+            | Original course start date | 2016-01-10 |
+            | Course start date          | 2016-03-06 |
+            | Course end date            | 2016-05-01 |
+            | Dependants                 | 3          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 10140.00   |
+            | Leave end date | 2016-05-08 |
+
+    Scenario: Ander and Juan are on a dependant (x2) only application (main applicant is on a 14 month continuation main course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type                | Main       |
+            | Original course start date | 2015-09-18 |
+            | Course start date          | 2016-02-06 |
+            | Course end date            | 2017-04-01 |
+            | Dependants                 | 2          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 15120      |
+            | Course Length  | 9          |
+            | Leave end date | 2017-08-01 |
+
+###### Continuation Pre-sessional - dependants only ########
+
+    Scenario: 2 dependants only application (main applicant is on a 5 month continuation pre-sessional course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type                | Pre-sessional |
+            | Original course start date | 2016-08-08    |
+            | Course start date          | 2017-01-05    |
+            | Course end date            | 2017-05-10    |
+            | Dependants                 | 2             |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 15120.00   |
+            | Leave end date | 2017-07-10 |
+
+    Scenario: 3 dependants only application (main applicant is on a 6 month continuation pre-sessional course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type                | Pre-sessional |
+            | Original course start date | 2013-10-15    |
+            | Course start date          | 2016-02-06    |
+            | Course end date            | 2016-08-01    |
+            | Dependants                 | 3             |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 22815.00   |
+            | Leave end date | 2016-12-01 |
+
+    Scenario: 5 dependants only application (main applicant is on a 14 month continuation pre-sessional course.
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type                | Pre-sessional |
+            | Original course start date | 2014-01-01    |
+            | Course start date          | 2015-02-06    |
+            | Course end date            | 2016-03-10    |
+            | Dependants                 | 5             |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 38025.00   |
+            | Leave end date | 2016-07-10 |
+
 

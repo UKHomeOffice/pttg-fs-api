@@ -1,26 +1,26 @@
 Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Post Graduate Doctor Dentist In and Out of London (single current account and no dependants)
 
-Pre-sessional courses do not apply to the Post Graduate Doctor Dentist route
-Main applicants Required Maintenance period: Months between course start date and course end date (rounded up & capped to 2 months)
-Main applicant Required Maintenance period is rounded up to the full month (E.g course length of 1month and 4days is rounded up to 2months)
+    Pre-sessional courses do not apply to the Post Graduate Doctor Dentist route
+    Main applicants Required Maintenance period: Months between course start date and course end date (rounded up & capped to 2 months)
+    Main applicant Required Maintenance period is rounded up to the full month (E.g course length of 1month and 4days is rounded up to 2months)
 
-Dependants Required Maintenance period - Months between main applicants course start date & course end date + wrap up period (rounded up & capped to 2 months)
-Dependants Required Maintenance period is only rounded up to the full month after the wrap up is applied then rounded up to 2 months
+    Dependants Required Maintenance period - Months between main applicants course start date & course end date + wrap up period (rounded up & capped to 2 months)
+    Dependants Required Maintenance period is only rounded up to the full month after the wrap up is applied then rounded up to 2 months
 
-Main applicants leave - Entire course length + wrap up period
-Course length - course start date to course end date (Main Course)
-Wrap up period calculated from original course start date to course end date
-Wrap up period - 1 month in all instances regardless of course length
+    Main applicants leave - Entire course length + wrap up period
+    Course length - course start date to course end date (Main Course)
+    Wrap up period calculated from original course start date to course end date
+    Wrap up period - 1 month in all instances regardless of course length
 
-Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
-Dependants Required Maintenance threshold: In London - £845, Out London - £680
+    Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
+    Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
     Background:
         Given A Service is consuming the FSPS Calculator API
         And the default details are
-            | Student Type                    | pgdd    |
-            | In London                       | Yes     |
-            | Accommodation fees already paid | 0       |
+            | Student Type                    | pgdd |
+            | In London                       | Yes  |
+            | Accommodation fees already paid | 0    |
 
 #Required Maintenance threshold calculation to pass this feature file
 
@@ -43,9 +43,9 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type                    | pgdd       |
-            | Course start date               | 2016-01-03 |
-            | Course end date                 | 2016-02-03 |
+            | Student Type      | pgdd       |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-03 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2530.00    |
@@ -68,9 +68,9 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date               | 2016-01-03 |
-            | Course end date                 | 2016-01-31 |
-            | dependants                      | 1          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-01-31 |
+            | dependants        | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2955.00    |
@@ -97,9 +97,9 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | In London                       | No         |
-            | Course start date               | 2016-01-03 |
-            | Course end date                 | 2016-02-03 |
+            | In London         | No         |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-03 |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
@@ -112,7 +112,7 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
             | In London                       | No         |
             | Course start date               | 2016-01-03 |
             | Course end date                 | 2016-05-03 |
-            | Accommodation fees already paid | 250.00        |
+            | Accommodation fees already paid | 250.00     |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 1780.00    |
@@ -123,10 +123,10 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | In London                       | No         |
-            | Course start date               | 2016-01-03 |
-            | Course end date                 | 2016-02-03 |
-            | dependants                      | 3          |
+            | In London         | No         |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-03 |
+            | dependants        | 3          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 6110.00    |
@@ -144,5 +144,66 @@ Dependants Required Maintenance threshold: In London - £845, Out London - £680
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 3290.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2016-09-03 |
+
+    # In London - dependants only #
+    # Capped at 2 months #
+
+    Scenario: 1 dependant only application (main applicant is on a 1 month pgdd course) and in London
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-01-31 |
+            | dependants        | 1          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 1690.00    |
+            | Leave end date | 2016-02-29 |
+
+
+    Scenario: 3 dependant only application (main applicant is on a 3 month pgdd course) and in London
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-03-03 |
+            | Accommodation fees already paid | 250.50     |
+            | dependants                      | 3          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 5070.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2016-04-03 |
+
+        # Out of London - dependants only #
+        # Capped at 2 months #
+
+    Scenario: 2 dependant only application (main applicant is on a 3 month pgdd course) and out of London
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | In London         | No         |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-03 |
+            | dependants        | 3          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 3380.00    |
+            | Leave end date | 2016-03-03 |
+
+    Scenario: 1 dependant only application (main applicant is on a 9 month pgdd course) and out of London
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | In London                       | No         |
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-08-03 |
+            | Accommodation fees already paid | 100.00     |
+            | dependants                      | 1          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 1690.00    |
             | Course Length  | 2          |
             | Leave end date | 2016-09-03 |
