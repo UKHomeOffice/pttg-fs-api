@@ -70,26 +70,33 @@ class DoctorateExtensionMaintenanceThresholdCalculatorTest extends Specification
         assert DataUtils.compareAccommodationFees(bd(feesCapped), cappedAccommodation)
 
         where:
-        // Dues to groovy not liking Scala's 'None' object we represent this as the value zero
+        // Due to groovy not liking Scala's 'None' object we represent this as the value zero
         inLondon | accommodationFeesPaid | dependants || threshold || feesCapped
-        false    | 1627.00               | 15         || 21165.00  || 1265.00
-        false    | 270.00                | 10         || 15360.00  || 0
-        true     | 22.00                 | 1          || 4198.00   || 0
-        true     | 636.00                | 9          || 17104.00  || 0
-        false    | 1018.00               | 3          || 5092.00   || 0
-        true     | 446.00                | 6          || 12224.00  || 0
-        false    | 372.00                | 6          || 9818.00   || 0
-        true     | 657.00                | 13         || 23843.00  || 0
-        true     | 953.00                | 6          || 11717.00  || 0
-        true     | 229.00                | 12         || 22581.00  || 0
-        true     | 23.00                 | 12         || 22787.00  || 0
-        false    | 182.00                | 14         || 20888.00  || 0
-        false    | 738.00                | 12         || 17612.00  || 0
-        true     | 73.00                 | 9          || 17667.00  || 0
-        false    | 970.00                | 6          || 9220.00   || 0
-        true     | 1934.00               | 5          || 9715.00   || 1265.00
-        true     | 223.00                | 4          || 9067.00   || 0
-        true     | 1078.00               | 14         || 25112.00  || 0
+        true     | 887.96                | 2          || 5022.04   || 0.00
+        false    | 1561.61               | 8          || 11645.00  || 1265.00
+        false    | 313.14                | 9          || 13956.86  || 0.00
+        false    | 839.30                | 5          || 7990.70   || 0.00
+        false    | 1999.65               | 3          || 4845.00   || 1265.00
+        false    | 1807.86               | 3          || 4845.00   || 1265.00
+        false    | 731.08                | 11         || 16258.92  || 0.00
+        false    | 1697.75               | 5          || 7565.00   || 1265.00
+        true     | 1238.75               | 5          || 9741.25   || 0.00
+        true     | 1539.94               | 14         || 24925.00  || 1265.00
+        true     | 108.92                | 13         || 24391.08  || 0.00
+        true     | 1245.11               | 6          || 11424.89  || 0.00
+        false    | 544.57                | 0          || 1485.43   || 0.00
+        true     | 1921.41               | 0          || 1265.00   || 1265.00
+        false    | 358.24                | 1          || 3031.76   || 0.00
+        true     | 888.37                | 6          || 11781.63  || 0.00
+        false    | 1235.56               | 7          || 10314.44  || 0.00
+        true     | 137.34                | 4          || 9152.66   || 0.00
+        false    | 775.94                | 0          || 1254.06   || 0.00
+        false    | 1214.73               | 0          || 815.27    || 0.00
+        false    | 1779.54               | 5          || 7565.00   || 1265.00
+        true     | 1675.86               | 12         || 21545.00  || 1265.00
+        true     | 542.20                | 0          || 1987.80   || 0.00
+        true     | 974.76                | 9          || 16765.24  || 0.00
+        true     | 1179.37               | 7          || 13180.63  || 0.00
 
     }
 
