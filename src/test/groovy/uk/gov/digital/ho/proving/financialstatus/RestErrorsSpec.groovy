@@ -15,6 +15,7 @@ import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.Account
@@ -59,7 +60,7 @@ class RestErrorsSpec extends Specification {
 
     BankService mockBankService = Mock(BankService)
 
-    ApplicationEventPublisher auditor = Mock()
+    AuditEventPublisher auditor = Mock()
     Authentication authenticator = Mock()
 
     def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages, auditor, authenticator)

@@ -12,6 +12,7 @@ import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation._
 import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages, ThresholdParameterValidator}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain._
@@ -24,7 +25,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculatorT2AndT5,
                                              val applicantTypeChecker: ApplicantTypeChecker,
                                              val serviceMessages: ServiceMessages,
-                                             val auditor: ApplicationEventPublisher,
+                                             val auditor: AuditEventPublisher,
                                              val authenticator: Authentication
                                             ) extends FinancialStatusBaseController {
 

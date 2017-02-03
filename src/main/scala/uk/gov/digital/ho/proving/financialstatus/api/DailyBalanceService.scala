@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{HttpClientErrorException, ResourceAccessException}
 import uk.gov.digital.ho.proving.financialstatus.api.validation.{DailyBalanceParameterValidator, ServiceMessages}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions._
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker, UserProfile}
@@ -29,7 +30,7 @@ import scala.util._
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
                                        val serviceMessages: ServiceMessages,
-                                       val auditor: ApplicationEventPublisher,
+                                       val auditor: AuditEventPublisher,
                                        val authenticator: Authentication
                                       ) extends FinancialStatusBaseController with DailyBalanceParameterValidator {
 

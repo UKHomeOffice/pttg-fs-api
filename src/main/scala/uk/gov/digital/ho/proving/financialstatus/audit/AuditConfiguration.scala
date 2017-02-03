@@ -1,6 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.audit
 
 import com.mongodb.MongoClient
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.audit.AuditEventRepository
 import org.springframework.context.annotation.Bean
@@ -15,22 +16,20 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories
 class AuditConfiguration {
 
-  @Value("${auditing.service}") private val auditingService: String = null
   @Value("${auditing.databaseName}") private val auditingDatabaseName: String = null
   @Value("${auditing.collectionName}") private val auditingCollectionName: String = null
 
+  @Autowired
   @Bean
-  def mongoOperations(): MongoOperations = new MongoTemplate(mongoDbFactory())
+  def mongoDbFactory(mongoClient: MongoClient): MongoDbFactory = new SimpleMongoDbFactory(mongoClient, auditingDatabaseName)
 
+  @Autowired
   @Bean
-  def mongoDbFactory(): MongoDbFactory = new SimpleMongoDbFactory(mongoClient(), auditingDatabaseName)
+  def mongoOperations(mongoDbFactory: MongoDbFactory): MongoOperations = new MongoTemplate(mongoDbFactory)
 
-  // TODO: Production configuration for Mongo client
-
-  def mongoClient(): MongoClient = new MongoClient(auditingService)
-
+  @Autowired
   @Bean
-  def auditEventRepository(): AuditEventRepository =
-    new MongoAuditEventRepository(mongoOperations(), auditingCollectionName)
+  def auditEventRepository(mongoOperations: MongoOperations): AuditEventRepository =
+    new MongoAuditEventRepository(mongoOperations, auditingCollectionName)
 
 }

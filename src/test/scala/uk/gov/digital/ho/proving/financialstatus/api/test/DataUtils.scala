@@ -9,6 +9,7 @@ import scala.util.Random.{nextBoolean, nextFloat, nextInt}
 import java.math.{BigDecimal => JBigDecimal}
 
 import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventBsonMapper
 
 object DataUtils {
 
@@ -79,4 +80,6 @@ object DataUtils {
   def buildScalaBigDecimal(value: java.math.BigDecimal): BigDecimal =  new scala.math.BigDecimal(value)
 
   def buildUserProfile(id: String) = UserProfile(id, "Fred", "Flintstone", "fred@bedrock.com")
+
+  def createAuditEventBsonMapper(): AuditEventBsonMapper = new AuditEventBsonMapper {}
 }

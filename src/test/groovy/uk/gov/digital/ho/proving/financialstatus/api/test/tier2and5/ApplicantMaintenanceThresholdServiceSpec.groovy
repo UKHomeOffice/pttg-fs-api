@@ -14,6 +14,7 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionH
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 
 import static org.hamcrest.core.StringContains.containsString
@@ -28,7 +29,7 @@ class ApplicantMaintenanceThresholdServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
-    ApplicationEventPublisher auditor = Mock()
+    AuditEventPublisher auditor = Mock()
     Authentication authenticator = Mock()
 
     def thresholdService = new ThresholdServiceTier2And5(
