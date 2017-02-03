@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.financialstatus.audit
+package uk.gov.digital.ho.proving.financialstatus.audit.configuration
 
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientOptions

@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.proving.financialstatus.audit
+package uk.gov.digital.ho.proving.financialstatus.audit.configuration
 
 import com.mongodb.MongoClient
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.MongoOperations
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
+import uk.gov.digital.ho.proving.financialstatus.audit.MongoAuditEventRepository
 
 @Configuration
 @EnableMongoRepositories

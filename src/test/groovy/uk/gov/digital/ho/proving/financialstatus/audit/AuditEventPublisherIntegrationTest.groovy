@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.api.ServiceRunner
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.AuditConfiguration
 
 import java.time.LocalDate
 import java.time.ZoneOffset
