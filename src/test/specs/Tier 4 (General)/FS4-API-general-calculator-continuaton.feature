@@ -250,11 +250,17 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 5495.50    |
             | Leave end date | 2016-07-01 |
 
-###### Continuation Main course - dependants only ########
+###### Continuation Main course - Dependant Only ########
 
         # Capped at 9 months for dependants #
         # round up to the nearest month #
-        # Calculate threshold period using Course Start Date to Leave End Date #
+        # Calculate the threshold period using Course Start Date to Leave End Date #
+
+    Background:
+        Given A Service is consuming the FSPS Calculator API
+        And the default details are
+            | Student Type                    | nondoctorate |
+            | In London                       | Yes          |
 
     Scenario: Isaac is on a dependant (x1) only application (main applicant is on a 5 month continuation main course)
 

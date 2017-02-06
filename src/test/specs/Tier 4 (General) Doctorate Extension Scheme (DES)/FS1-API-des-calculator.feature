@@ -78,7 +78,12 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
     # DES course - Dependants Only #
     # fixed at 2 months ##
 
-    Scenario: 2 dependants only application (main applicant is on a 3 month DES continuation course)
+    Background:
+        Given A Service is consuming the FSPS Calculator API
+        And the default details are
+            | Student Type                    | des |
+
+    Scenario: 2 dependants only application (main applicant is on a 3 month DES continuation course) - Out of London
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -89,21 +94,23 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
             | HTTP Status | 200  |
             | Threshold   | 3380 |
 
-    Scenario: 4 dependants only application (main applicant is on a 5 month DES continuation course)
+    Scenario: 4 dependants only application (main applicant is on a 5 month DES continuation course) - In London
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type | doctorate |
+            | In London    | Yes       |
             | Dependants   | 4         |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |
             | Threshold   | 6760.00 |
 
-    Scenario: 1 dependant only application (main applicant is on 1 month DES continuation course)
+    Scenario: 1 dependant only application (main applicant is on 1 month DES continuation course) - In London
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type | doctorate |
+            | In London    | Yes        |
             | Dependants   | 1         |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |

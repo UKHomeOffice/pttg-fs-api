@@ -112,7 +112,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
             | Threshold      | 2455.00    |
             | Leave end date | 2016-07-01 |
 
-        #### PGDD continuation course - dependants Only ####
+        #### PGDD continuation course - Dependants Only ####
         # Capped at 2 months #
 
     Scenario: 2 dependant only application (main applicant is on a 3 month pgdd continuation course)
@@ -134,6 +134,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
+            | In London                  | Yes        |
             | Original course start date | 2015-08-15 |
             | Course start date          | 2016-05-01 |
             | Course end date            | 2016-10-09 |
@@ -148,6 +149,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
+            | In London                  | Yes        |
             | Original course start date | 2016-04-15 |
             | Course start date          | 2016-05-11 |
             | Course end date            | 2016-06-01 |
