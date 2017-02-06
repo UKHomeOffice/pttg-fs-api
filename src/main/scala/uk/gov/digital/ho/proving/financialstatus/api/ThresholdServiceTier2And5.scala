@@ -2,18 +2,22 @@ package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.lang.{Boolean => JBoolean}
 import java.math.{BigDecimal => JBigDecimal}
-import java.util.{Optional, UUID}
+import java.util.Optional
+import java.util.UUID
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.PropertySource
-import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation._
-import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages, ThresholdParameterValidator}
-import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
+import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.auditEvent
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.nextId
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
@@ -26,7 +30,8 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
                                              val applicantTypeChecker: ApplicantTypeChecker,
                                              val serviceMessages: ServiceMessages,
                                              val auditor: AuditEventPublisher,
-                                             val authenticator: Authentication
+                                             val authenticator: Authentication,
+                                             val deploymentConfig: DeploymentDetails
                                             ) extends FinancialStatusBaseController {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdServiceTier2And5])
@@ -95,11 +100,11 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
       case Some(user) => user.id
       case None => "anonymous"
     }
-    auditor.publishEvent(auditEvent(principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
+    auditor.publishEvent(auditEvent(deploymentConfig, principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
   def auditSearchResult(auditEventId: UUID, thresholdResponse: ThresholdResponse, userProfile: Option[UserProfile]): Unit = {
-    auditor.publishEvent(auditEvent(userProfile match {
+    auditor.publishEvent(auditEvent(deploymentConfig, userProfile match {
       case Some(user) => user.id
       case None => "anonymous"
     }, SEARCH_RESULT, auditEventId,

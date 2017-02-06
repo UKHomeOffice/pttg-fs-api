@@ -7,9 +7,15 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import org.bson.Document
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.boot.actuate.audit.AuditEvent
 
-trait AuditEventBsonMapper {
+trait LoggingAuditEventBsonMapper {
+
+  private val LOGGER: Logger = LoggerFactory.getLogger(classOf[LoggingAuditEventBsonMapper])
+
+  val AUDIT_EVENT_LOG_MARKER: String = "AUDIT"
 
   private val mapper: ObjectMapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
@@ -22,6 +28,7 @@ trait AuditEventBsonMapper {
 
   def bsonOf(event: AuditEvent): Document = {
     val json = jsonOf(event)
+    LOGGER.info(s"$AUDIT_EVENT_LOG_MARKER: $json")
     Document.parse(json)
   }
 }

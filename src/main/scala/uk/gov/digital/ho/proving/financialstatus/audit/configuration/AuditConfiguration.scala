@@ -19,6 +19,11 @@ class AuditConfiguration {
 
   @Value("${auditing.mongodb.databaseName}") private val auditingDatabaseName: String = null
   @Value("${auditing.mongodb.collectionName}") private val auditingCollectionName: String = null
+  @Value("${auditing.deployment.name}") val deploymentName: String = null
+  @Value("${auditing.deployment.namespace}") val deploymentNamespace: String = null
+
+  @Bean
+  def deploymentConfig(): DeploymentDetails = DeploymentDetails(deploymentName, deploymentNamespace)
 
   @Autowired
   @Bean
@@ -34,3 +39,4 @@ class AuditConfiguration {
     new MongoAuditEventRepository(mongoOperations, auditingCollectionName)
 
 }
+case class DeploymentDetails(deploymentName: String, deploymentNamespace: String)

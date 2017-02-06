@@ -13,6 +13,8 @@ import uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils
 import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
+import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
@@ -26,7 +28,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
  * @Author Home Office Digital
  */
 @WebAppConfiguration
-@ContextConfiguration(classes = ServiceConfiguration.class)
+@ContextConfiguration(classes = [ ServiceConfiguration.class, EmbeddedMongoClientConfiguration.class ])
 class DailyBalanceServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
@@ -36,7 +38,8 @@ class DailyBalanceServiceSpec extends Specification {
     AuditEventPublisher auditor = Mock()
     Authentication authenticator = Mock()
 
-    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages, auditor, authenticator)
+    def dailyBalanceService = new DailyBalanceService(new AccountStatusChecker(mockBankService, 28), serviceMessages,
+        auditor, authenticator, new DeploymentDetails("localhost", "local"))
     MockMvc mockMvc = standaloneSetup(dailyBalanceService).setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter()).build()
 
     def "daily balance threshold check pass"() {

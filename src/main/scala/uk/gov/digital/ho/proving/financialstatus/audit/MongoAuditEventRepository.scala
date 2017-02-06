@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.MongoOperations
 import scala.collection.JavaConverters._
 
 class MongoAuditEventRepository (mongoOperations: MongoOperations,
-                                 auditCollectionName: String) extends AuditEventRepository with AuditEventBsonMapper {
+                                 auditCollectionName: String) extends AuditEventRepository with LoggingAuditEventBsonMapper {
 
   // find methods are not required
   override def find(after: Date): util.List[AuditEvent] = List.empty.asJava

@@ -12,6 +12,8 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfig
 import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
+import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -19,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 
 @WebAppConfiguration
-@ContextConfiguration(classes = ServiceConfiguration.class)
+@ContextConfiguration(classes = [ ServiceConfiguration.class, EmbeddedMongoClientConfiguration.class ])
 class InputValidationServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
@@ -30,7 +32,8 @@ class InputValidationServiceSpec extends Specification {
     def thresholdService = new ThresholdServiceTier2And5(
         TestUtilsTier2And5.maintenanceThresholdServiceBuilder(),
         TestUtilsTier2And5.getApplicantTypeChecker(),
-        serviceMessages, auditor, authenticator
+        serviceMessages, auditor, authenticator,
+        new DeploymentDetails("localhost", "local")
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
