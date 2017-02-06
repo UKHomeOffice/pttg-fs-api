@@ -4,6 +4,7 @@ import java.time.LocalDate
 
 import com.fasterxml.jackson.annotation.{JsonIgnoreProperties, JsonInclude}
 import com.fasterxml.jackson.annotation.JsonInclude.Include
+import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
 
 case class Account(sortCode: String, accountNumber: String)
 
@@ -16,3 +17,5 @@ case class BalanceCheckFailure(@JsonInclude(Include.NON_EMPTY) lowestBalanceDate
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 case class UserProfile(id: String, firstName: String, lastName: String, email: String)
+
+case class ThresholdResult(threshold: BigDecimal, cappedValues: Option[CappedValues], leaveEndDate: Option[LocalDate])

@@ -7,16 +7,16 @@ import org.springframework.stereotype.Service
 import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
 
 @Service
-class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommodation.value}") val innerLondon: Int,
-                                                  @Value("${non.inner.london.accommodation.value}") val nonInnerLondon: Int,
-                                                  @Value("${maximum.accommodation.value}") val maxAccommodation: Int,
-                                                  @Value("${inner.london.dependant.value}") val innerLondonDependants: Int,
-                                                  @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int,
-                                                  @Value("${general.capped.course.length}") val generalCappedCourseLength: Int,
-                                                  @Value("${pgdd.capped.course.length}") val pgddCappedCourseLength: Int,
-                                                  @Value("${doctorate.fixed.course.length}") val doctorateFixedCourseLength: Int,
-                                                  @Value("${suso.capped.course.length}") val susoCappedCourseLength: Int
-                                                 ) {
+class MaintenanceThresholdCalculatorT4 @Autowired()(@Value("${inner.london.accommodation.value}") val innerLondon: Int,
+                                                    @Value("${non.inner.london.accommodation.value}") val nonInnerLondon: Int,
+                                                    @Value("${maximum.accommodation.value}") val maxAccommodation: Int,
+                                                    @Value("${inner.london.dependant.value}") val innerLondonDependants: Int,
+                                                    @Value("${non.inner.london.dependant.value}") val nonInnerLondonDependants: Int,
+                                                    @Value("${general.capped.course.length}") val generalCappedCourseLength: Int,
+                                                    @Value("${pgdd.capped.course.length}") val pgddCappedCourseLength: Int,
+                                                    @Value("${doctorate.fixed.course.length}") val doctorateFixedCourseLength: Int,
+                                                    @Value("${suso.capped.course.length}") val susoCappedCourseLength: Int
+                                                   ) {
 
   private val INNER_LONDON_ACCOMMODATION = BigDecimal(innerLondon).setScale(2, BigDecimal.RoundingMode.HALF_UP)
   private val NON_INNER_LONDON_ACCOMMODATION = BigDecimal(nonInnerLondon).setScale(2, BigDecimal.RoundingMode.HALF_UP)
@@ -43,7 +43,8 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                        courseEndDate: LocalDate,
                        originalCourseStartDate: Option[LocalDate],
                        isContinuation: Boolean,
-                       isPreSessional: Boolean
+                       isPreSessional: Boolean,
+                       dependantsOnly: Boolean
                       ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
 
@@ -62,11 +63,16 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
       (accommodationFeesPaid, None)
     }
 
-    val amount = ((accommodationValue(innerLondon) * courseLength)
-      + (tuitionFees - tuitionFeesPaid).max(0)
-      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(generalCappedCourseLength) * dependants)
-      - accommodationFees).max(0)
+    val dependantsAmount = dependantsValue(innerLondon) * leaveToRemainInMonths.min(generalCappedCourseLength) * dependants
 
+    val amount = if (dependantsOnly) {
+      dependantsAmount
+    } else {
+      ((accommodationValue(innerLondon) * courseLength)
+        + (tuitionFees - tuitionFeesPaid).max(0)
+        + dependantsAmount
+        - accommodationFees).max(0)
+    }
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
       (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)), Some(leaveToRemain))
     } else {
@@ -81,7 +87,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                              courseStartDate: LocalDate,
                                              courseEndDate: LocalDate,
                                              originalCourseStartDate: Option[LocalDate],
-                                             isContinuation: Boolean
+                                             dependantsOnly: Boolean
                                             ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
 
@@ -100,10 +106,15 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
       (accommodationFeesPaid, None)
     }
 
-    val amount = ((accommodationValue(innerLondon) * courseLength)
-      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(susoCappedCourseLength) * dependants)
-      - accommodationFees).max(0)
+    val dependantsAmount = dependantsValue(innerLondon) * leaveToRemainInMonths.min(susoCappedCourseLength) * dependants
 
+    val amount = if (dependantsOnly) {
+      dependantsAmount
+    } else {
+      ((accommodationValue(innerLondon) * courseLength)
+        + dependantsAmount
+        - accommodationFees).max(0)
+    }
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
       (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)), Some(leaveToRemain))
     } else {
@@ -118,7 +129,8 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
                                          courseStartDate: LocalDate,
                                          courseEndDate: LocalDate,
                                          originalCourseStartDate: Option[LocalDate],
-                                         isContinuation: Boolean
+//                                         isContinuation: Boolean,
+                                         dependantsOnly: Boolean
                                         ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
 
@@ -137,10 +149,15 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
       (accommodationFeesPaid, None)
     }
 
-    val amount = ((accommodationValue(innerLondon) * courseLength)
-      + (dependantsValue(innerLondon) * (leaveToRemainInMonths).min(susoCappedCourseLength) * dependants)
-      - accommodationFees).max(0)
+    val dependantsAmount = dependantsValue(innerLondon) * leaveToRemainInMonths.min(susoCappedCourseLength) * dependants
 
+    val amount = if (dependantsOnly) {
+      dependantsAmount
+    } else {
+      ((accommodationValue(innerLondon) * courseLength)
+        + dependantsAmount
+        - accommodationFees).max(0)
+    }
     if (courseLengthCapped.isDefined || accommodationFeesCapped.isDefined) {
       (amount, Some(CappedValues(accommodationFeesCapped, courseLengthCapped)), Some(leaveToRemain))
     } else {
@@ -149,7 +166,7 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
   }
 
   def calculateDoctorateExtensionScheme(innerLondon: Boolean, accommodationFeesPaid: BigDecimal,
-                                        dependants: Int): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
+                                        dependants: Int, dependantsOnly: Boolean): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {
 
     val (accommodationFees, accommodationFeesCapped) = if (accommodationFeesPaid > MAXIMUM_ACCOMMODATION) {
       (MAXIMUM_ACCOMMODATION, Some(MAXIMUM_ACCOMMODATION))
@@ -157,9 +174,15 @@ class MaintenanceThresholdCalculator @Autowired()(@Value("${inner.london.accommo
       (accommodationFeesPaid, None)
     }
 
-    val amount = ((accommodationValue(innerLondon) * doctorateFixedCourseLength)
-      + (dependantsValue(innerLondon) * doctorateFixedCourseLength * dependants)
-      - accommodationFees).max(0)
+    val dependantsAmount = dependantsValue(innerLondon) * doctorateFixedCourseLength * dependants
+
+    val amount = if (dependantsOnly) {
+      dependantsAmount
+    } else {
+      ((accommodationValue(innerLondon) * doctorateFixedCourseLength)
+        + dependantsAmount
+        - accommodationFees).max(0)
+    }
 
     if (accommodationFeesCapped.isDefined) {
       (amount, Some(CappedValues(accommodationFeesCapped)), None)

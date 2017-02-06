@@ -2,36 +2,50 @@ package uk.gov.digital.ho.proving.financialstatus.api.test.tier4
 
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils
-import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
+import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculatorT4
 
 class DoctorateExtensionMaintenanceThresholdCalculatorTest extends Specification {
 
-    MaintenanceThresholdCalculator maintenanceThresholdCalculator = TestUtilsTier4.maintenanceThresholdServiceBuilder()
+    MaintenanceThresholdCalculatorT4 maintenanceThresholdCalculator = TestUtilsTier4.maintenanceThresholdServiceBuilder()
 
     def bd(a) { new scala.math.BigDecimal(a) }
 
     def "Tier 4 Doctorate - Check 'Non Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inLondon, bd(accommodationFeesPaid), dependants, dependantsOnly)._1 == bd(threshold)
 
         where:
-        inLondon | accommodationFeesPaid | dependants || threshold
-        false    | 0.00                  | 5          || 8830.00
-        false    | 0.00                  | 7          || 11550.00
-
-
+        inLondon | accommodationFeesPaid | dependants | dependantsOnly || threshold || feesCapped
+        false    | 0.00                  | 2          | false          || 4750.00   || 0.00
+        false    | 0.00                  | 6          | false          || 10190.00  || 0.00
+        false    | 1575.72               | 8          | false          || 11645.00  || 1265.00
+        false    | 396.97                | 6          | false          || 9793.03   || 0.00
+        false    | 1699.15               | 2          | false          || 3485.00   || 1265.00
+        false    | 1950.28               | 1          | false          || 2125.00   || 1265.00
+        false    | 672.51                | 13         | false          || 19037.49  || 0.00
+        false    | 931.38                | 0          | true           || 0.00      || 0.00
+        false    | 1551.77               | 0          | true           || 0.00      || 1265.00
+        false    | 580.69                | 1          | false          || 2809.31   || 0.00
     }
 
     def "Tier 4 Doctorate - Check 'Inner London Borough'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inLondon, bd(accommodationFeesPaid), dependants, dependantsOnly)._1 == bd(threshold)
 
         where:
-        inLondon | accommodationFeesPaid | dependants || threshold
-        true     | 0.00                  | 4          || 9290.00
-        true     | 0.00                  | 15         || 27880.00
+        inLondon | accommodationFeesPaid | dependants | dependantsOnly || threshold || feesCapped
+        true     | 0.00                  | 0          | true           || 0.00      || 0.00
+        true     | 1036.43               | 6          | false          || 11633.57  || 0.00
+        true     | 266.29                | 2          | false          || 5643.71   || 0.00
+        true     | 0.00                  | 2          | false          || 5910.00   || 0.00
+        true     | 722.09                | 4          | false          || 8567.91   || 0.00
+        true     | 0.00                  | 14         | false          || 26190.00  || 0.00
+        true     | 0.00                  | 12         | false          || 22810.00  || 0.00
+        true     | 0.00                  | 11         | false          || 21120.00  || 0.00
+        true     | 1466.35               | 0          | false          || 1265.00   || 1265.00
+        true     | 931.99                | 0          | true           || 0.00      || 0.00
 
 
     }
@@ -39,29 +53,72 @@ class DoctorateExtensionMaintenanceThresholdCalculatorTest extends Specification
     def "Tier 4 Doctorate - Check 'Accommodation Fees paid'"() {
 
         expect:
-        maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inLondon, bd(accommodationFeesPaid), dependants)._1 == bd(threshold)
+        maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inLondon, bd(accommodationFeesPaid), dependants, dependantsOnly)._1 == bd(threshold)
 
         where:
-        inLondon | accommodationFeesPaid | dependants || threshold
-        true     | 1039.00               | 14         || 25151.00
-        true     | 692.00                | 11         || 20428.00
-        true     | 622.00                | 3          || 6978.00
-        true     | 154.00                | 9          || 17586.00
-        true     | 869.00                | 10         || 18561.00
-        false    | 860.00                | 12         || 17490.00
-        false    | 206.00                | 9          || 14064.00
-        false    | 106.00                | 11         || 16884.00
-        false    | 1245.00               | 0          || 785.00
-        false    | 2106.00               | 11         || 15725.00
-        false    | 1845.00               | 0          || 765.00
+        inLondon | accommodationFeesPaid | dependants | dependantsOnly || threshold || feesCapped
+        false    | 1871.32               | 8          | false          || 11645.00  || 1265.00
+        false    | 1560.76               | 1          | false          || 2125.00   || 1265.00
+        false    | 1511.78               | 11         | false          || 15725.00  || 1265.00
+        false    | 1597.18               | 14         | false          || 19805.00  || 1265.00
+        true     | 555.16                | 12         | false          || 22254.84  || 0.00
+        false    | 1927.50               | 0          | true           || 0.00      || 1265.00
+        false    | 837.79                | 12         | false          || 17512.21  || 0.00
+        false    | 1659.91               | 3          | false          || 4845.00   || 1265.00
+        true     | 1506.09               | 0          | false          || 1265.00   || 1265.00
+        false    | 139.26                | 0          | false          || 1890.74   || 0.00
 
     }
 
+    // Dependants only
+
+    def "Tier 4 Doctorate - Check 'Non Inner London Borough' dependants only"() {
+
+        expect:
+        maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inLondon, bd(accommodationFeesPaid), dependants, dependantsOnly)._1 == bd(threshold)
+
+        where:
+        inLondon | accommodationFeesPaid | dependants | dependantsOnly || threshold || feesCapped
+        false    | 0.00                  | 12         | true           || 16320.00  || 0.00
+        false    | 0.00                  | 5          | true           || 6800.00   || 0.00
+        false    | 0.00                  | 11         | true           || 14960.00  || 0.00
+        false    | 0.00                  | 7          | true           || 9520.00   || 0.00
+        false    | 0.00                  | 12         | true           || 16320.00  || 0.00
+        false    | 0.00                  | 12         | true           || 16320.00  || 0.00
+        false    | 0.00                  | 10         | true           || 13600.00  || 0.00
+        false    | 0.00                  | 14         | true           || 19040.00  || 0.00
+        false    | 0.00                  | 1          | true           || 1360.00   || 0.00
+        false    | 0.00                  | 7          | true           || 9520.00   || 0.00
+
+
+    }
+
+    def "Tier 4 Doctorate - Check 'Inner London Borough' dependants only"() {
+
+        expect:
+        maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inLondon, bd(accommodationFeesPaid), dependants, dependantsOnly)._1 == bd(threshold)
+
+        where:
+        inLondon | accommodationFeesPaid | dependants | dependantsOnly || threshold || feesCapped
+        true     | 0.00                  | 10         | true           || 16900.00  || 0.00
+        true     | 0.00                  | 13         | true           || 21970.00  || 0.00
+        true     | 0.00                  | 1          | true           || 1690.00   || 0.00
+        true     | 0.00                  | 8          | true           || 13520.00  || 0.00
+        true     | 0.00                  | 2          | true           || 3380.00   || 0.00
+        true     | 0.00                  | 10         | true           || 16900.00  || 0.00
+        true     | 0.00                  | 8          | true           || 13520.00  || 0.00
+        true     | 0.00                  | 1          | true           || 1690.00   || 0.00
+        true     | 0.00                  | 12         | true           || 20280.00  || 0.00
+        true     | 0.00                  | 14         | true           || 23660.00  || 0.00
+
+    }
+
+    // All variants
 
     def "Tier 4 Doctorate - Check 'All variants'"() {
 
         expect:
-        def response = maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inLondon, bd(accommodationFeesPaid), dependants)
+        def response = maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inLondon, bd(accommodationFeesPaid), dependants, dependantsOnly)
         def thresholdValue = response._1
         def cappedValues = DataUtils.getCappedValues(response._2)
         def cappedAccommodation = cappedValues.accommodationFeesPaid()
@@ -71,33 +128,33 @@ class DoctorateExtensionMaintenanceThresholdCalculatorTest extends Specification
 
         where:
         // Due to groovy not liking Scala's 'None' object we represent this as the value zero
-        inLondon | accommodationFeesPaid | dependants || threshold || feesCapped
-        true     | 887.96                | 2          || 5022.04   || 0.00
-        false    | 1561.61               | 8          || 11645.00  || 1265.00
-        false    | 313.14                | 9          || 13956.86  || 0.00
-        false    | 839.30                | 5          || 7990.70   || 0.00
-        false    | 1999.65               | 3          || 4845.00   || 1265.00
-        false    | 1807.86               | 3          || 4845.00   || 1265.00
-        false    | 731.08                | 11         || 16258.92  || 0.00
-        false    | 1697.75               | 5          || 7565.00   || 1265.00
-        true     | 1238.75               | 5          || 9741.25   || 0.00
-        true     | 1539.94               | 14         || 24925.00  || 1265.00
-        true     | 108.92                | 13         || 24391.08  || 0.00
-        true     | 1245.11               | 6          || 11424.89  || 0.00
-        false    | 544.57                | 0          || 1485.43   || 0.00
-        true     | 1921.41               | 0          || 1265.00   || 1265.00
-        false    | 358.24                | 1          || 3031.76   || 0.00
-        true     | 888.37                | 6          || 11781.63  || 0.00
-        false    | 1235.56               | 7          || 10314.44  || 0.00
-        true     | 137.34                | 4          || 9152.66   || 0.00
-        false    | 775.94                | 0          || 1254.06   || 0.00
-        false    | 1214.73               | 0          || 815.27    || 0.00
-        false    | 1779.54               | 5          || 7565.00   || 1265.00
-        true     | 1675.86               | 12         || 21545.00  || 1265.00
-        true     | 542.20                | 0          || 1987.80   || 0.00
-        true     | 974.76                | 9          || 16765.24  || 0.00
-        true     | 1179.37               | 7          || 13180.63  || 0.00
-
+        inLondon | accommodationFeesPaid | dependants | dependantsOnly || threshold || feesCapped
+        true     | 0.00                  | 5          | false          || 10980.00  || 0.00
+        true     | 643.74                | 13         | true           || 21970.00  || 0.00
+        true     | 0.00                  | 9          | false          || 17740.00  || 0.00
+        false    | 1063.28               | 6          | true           || 8160.00   || 0.00
+        false    | 1496.29               | 0          | true           || 0.00      || 1265.00
+        false    | 0.00                  | 8          | true           || 10880.00  || 0.00
+        true     | 500.84                | 5          | true           || 8450.00   || 0.00
+        false    | 0.00                  | 6          | false          || 10190.00  || 0.00
+        false    | 1905.71               | 3          | false          || 4845.00   || 1265.00
+        false    | 617.84                | 0          | false          || 1412.16   || 0.00
+        true     | 1858.25               | 10         | true           || 16900.00  || 1265.00
+        false    | 0.00                  | 0          | false          || 2030.00   || 0.00
+        true     | 266.14                | 0          | false          || 2263.86   || 0.00
+        true     | 0.00                  | 13         | false          || 24500.00  || 0.00
+        true     | 0.00                  | 12         | true           || 20280.00  || 0.00
+        false    | 0.00                  | 7          | true           || 9520.00   || 0.00
+        true     | 0.00                  | 5          | false          || 10980.00  || 0.00
+        false    | 0.00                  | 2          | true           || 2720.00   || 0.00
+        true     | 602.21                | 8          | true           || 13520.00  || 0.00
+        false    | 359.22                | 12         | false          || 17990.78  || 0.00
+        false    | 0.00                  | 0          | true           || 0.00      || 0.00
+        true     | 1059.60               | 12         | false          || 21750.40  || 0.00
+        false    | 0.00                  | 5          | false          || 8830.00   || 0.00
+        true     | 585.44                | 13         | true           || 21970.00  || 0.00
+        false    | 0.00                  | 6          | false          || 10190.00  || 0.00
     }
+
 
 }

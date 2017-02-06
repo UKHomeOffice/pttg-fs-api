@@ -1,10 +1,8 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test.tier4
 
 import org.springframework.context.support.ResourceBundleMessageSource
-import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
-import uk.gov.digital.ho.proving.financialstatus.domain.ApplicantTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.CourseTypeChecker
-import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
+import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculatorT4
 import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 
 class TestUtilsTier4 {
@@ -36,7 +34,7 @@ class TestUtilsTier4 {
     public static def getCourseTypeChecker() { new CourseTypeChecker("main", "pre-sessional") }
 
     public static def maintenanceThresholdServiceBuilder() {
-        new MaintenanceThresholdCalculator(
+        new MaintenanceThresholdCalculatorT4(
             inLondonMaintenance,
             notInLondonMaintenance,
             maxMaintenanceAllowance,

@@ -23,7 +23,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(value = Array("/pttg/financialstatus/v1/t4/maintenance"))
 @ControllerAdvice
-class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
+class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculatorT4,
                                          val studentTypeChecker: StudentTypeChecker,
                                          val courseTypeChecker: CourseTypeChecker,
                                          val serviceMessages: ServiceMessages,
@@ -169,7 +169,7 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
          aFeesPaid <- inputs.accommodationFeesPaid
          deps <- inputs.dependants
     } yield {
-      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inner, aFeesPaid, deps)
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inner, aFeesPaid, deps, false) //TODO remove hard coded bool
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
@@ -181,7 +181,7 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
          startDate <- inputs.courseStartDate
          endDate <- inputs.courseEndDate
     } yield {
-      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculatePostGraduateDoctorDentist(inner, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isContinuation)
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculatePostGraduateDoctorDentist(inner, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, false) // TODO
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
@@ -193,7 +193,7 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
          startDate <- inputs.courseStartDate
          endDate <- inputs.courseEndDate
     } yield {
-      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateStudentUnionSabbaticalOfficer(inner, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isContinuation)
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateStudentUnionSabbaticalOfficer(inner, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, false)
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
@@ -207,7 +207,7 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
          startDate <- inputs.courseStartDate
          endDate <- inputs.courseEndDate
     } yield {
-      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateGeneral(inner, tFees, tFeesPaid, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isContinuation, inputs.isPreSessional)
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateGeneral(inner, tFees, tFeesPaid, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isContinuation, inputs.isPreSessional, false) //TODO remove hard coded bool
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
