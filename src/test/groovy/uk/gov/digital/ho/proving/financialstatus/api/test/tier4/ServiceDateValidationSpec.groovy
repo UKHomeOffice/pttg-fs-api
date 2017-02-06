@@ -1,6 +1,5 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test.tier4
 
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc

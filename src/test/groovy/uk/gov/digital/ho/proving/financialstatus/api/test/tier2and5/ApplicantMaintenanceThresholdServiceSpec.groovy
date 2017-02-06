@@ -1,7 +1,6 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test.tier2and5
 
 import groovy.json.JsonSlurper
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -9,7 +8,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import spock.lang.Specification
 import spock.lang.Unroll
 import uk.gov.digital.ho.proving.financialstatus.api.ThresholdServiceTier2And5
-import uk.gov.digital.ho.proving.financialstatus.api.ThresholdServiceTier4
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
@@ -17,9 +15,7 @@ import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 
-import static org.hamcrest.core.StringContains.containsString
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 

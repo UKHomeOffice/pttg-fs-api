@@ -5,9 +5,12 @@ import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 
+trait AuditEventPublisher {
+  def publishEvent(event: ApplicationEvent): Unit
+}
 @Service
-class AuditEventPublisher @Autowired()(applicationEventPublisher: ApplicationEventPublisher) {
+class RepositoryAuditEventPublisher @Autowired()(applicationEventPublisher: ApplicationEventPublisher) extends AuditEventPublisher {
 
-  def publishEvent(event: ApplicationEvent): Unit = applicationEventPublisher.publishEvent(event)
+  override def publishEvent(event: ApplicationEvent): Unit = applicationEventPublisher.publishEvent(event)
 
 }

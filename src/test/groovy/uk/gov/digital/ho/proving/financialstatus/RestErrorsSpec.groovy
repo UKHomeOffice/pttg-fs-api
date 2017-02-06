@@ -1,7 +1,6 @@
 package uk.gov.digital.ho.proving.financialstatus
 
 import groovy.json.JsonSlurper
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
