@@ -156,6 +156,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
         When the FSPS Calculator API is invoked with the following
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-01-31 |
+            | In London         | Yes        |
             | dependants        | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
@@ -167,10 +168,10 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course start date               | 2016-01-03 |
-            | Course end date                 | 2016-03-03 |
-            | Accommodation fees already paid | 250.50     |
-            | dependants                      | 3          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-03-03 |
+            | In London         | Yes        |
+            | dependants        | 3          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 5070.00    |
@@ -187,6 +188,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
             | In London         | No         |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-02-03 |
+            | In London         | No         |
             | dependants        | 3          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
@@ -197,11 +199,11 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | In London                       | No         |
-            | Course start date               | 2016-01-03 |
-            | Course end date                 | 2016-08-03 |
-            | Accommodation fees already paid | 100.00     |
-            | dependants                      | 1          |
+            | In London         | No         |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-08-03 |
+            | In London         | No         |
+            | dependants        | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 1690.00    |

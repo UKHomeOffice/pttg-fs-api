@@ -223,11 +223,18 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
             | Course Length  | 9          |
             | Leave end date | 2018-01-15 |
 
-        ####### Dependant only route #######
+        ####### Dependant Only Route #######
 
         # Capped at 9 months for dependants #
         # round up to the nearest month #
-        # Calculate threshold period using Course Start Date to Leave End Date
+        # Calculate threshold period using Course Start Date to Leave End Date #
+        ## Required Maintenance threshold calculation to pass this feature file for the dependants only route ##
+
+    Background:
+        Given A Service is consuming the FSPS Calculator API
+        And the default details are
+            | Student Type                    | nondoctorate |
+            | In London                       | Yes          |
 
          ################# Initial Main course - dependant only #######################
 
