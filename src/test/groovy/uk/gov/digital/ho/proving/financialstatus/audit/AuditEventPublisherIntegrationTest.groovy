@@ -30,8 +30,8 @@ class AuditEventPublisherIntegrationTest extends Specification {
     @Autowired
     AuditEventPublisher underTest
 
-    @Value('${auditing.databaseName}') String databaseName
-    @Value('${auditing.collectionName}') String collectionName
+    @Value('${auditing.mongodb.databaseName}') String databaseName
+    @Value('${auditing.mongodb.collectionName}') String collectionName
 
     def 'published events are written to Mongo'() {
         given:

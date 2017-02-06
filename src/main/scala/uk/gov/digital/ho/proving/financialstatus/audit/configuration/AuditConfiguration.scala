@@ -17,8 +17,8 @@ import uk.gov.digital.ho.proving.financialstatus.audit.MongoAuditEventRepository
 @EnableMongoRepositories
 class AuditConfiguration {
 
-  @Value("${auditing.databaseName}") private val auditingDatabaseName: String = null
-  @Value("${auditing.collectionName}") private val auditingCollectionName: String = null
+  @Value("${auditing.mongodb.databaseName}") private val auditingDatabaseName: String = null
+  @Value("${auditing.mongodb.collectionName}") private val auditingCollectionName: String = null
 
   @Autowired
   @Bean

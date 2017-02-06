@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class MongoClientConfiguration {
 
-  @Value("${auditing.host}") private val auditingHost: String = "localhost"
-  @Value("${auditing.port}") private val auditingPort: Int = 27017
-  @Value("${auditing.mongo.timeout.ms}") private val auditingMongoTimeoutMs: Int = 30000
+  @Value("${auditing.mongodb.host}") private val auditingHost: String = "localhost"
+  @Value("${auditing.mongodb.port}") private val auditingPort: Int = 27017
+  @Value("${auditing.mongodb.timeout.ms}") private val auditingMongoTimeoutMs: Int = 30000
 
   @Bean
   def mongoClient(): MongoClient =
