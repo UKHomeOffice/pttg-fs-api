@@ -16,6 +16,7 @@ import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
@@ -29,7 +30,8 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
                                          val courseTypeChecker: CourseTypeChecker,
                                          val serviceMessages: ServiceMessages,
                                          val auditor: AuditEventPublisher,
-                                         val authenticator: Authentication
+                                         val authenticator: Authentication,
+                                         val deploymentConfig: DeploymentDetails
                                    ) extends FinancialStatusBaseController with ThresholdParameterValidator {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdServiceTier4])
@@ -99,11 +101,11 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
       case Some(user) => user.id
       case None => "anonymous"
     }
-    auditor.publishEvent(auditEvent(principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
+    auditor.publishEvent(auditEvent(deploymentConfig, principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
   def auditSearchResult(auditEventId: UUID, thresholdResponse: ThresholdResponse, userProfile: Option[UserProfile]): Unit = {
-    auditor.publishEvent(auditEvent(userProfile match {
+    auditor.publishEvent(auditEvent(deploymentConfig, userProfile match {
       case Some(user) => user.id
       case None => "anonymous"
     }, SEARCH_RESULT, auditEventId,

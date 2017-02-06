@@ -11,6 +11,8 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionH
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
+import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -23,7 +25,7 @@ import java.time.LocalDate
  * @Author Home Office Digital
  */
 @WebAppConfiguration
-@ContextConfiguration(classes = ServiceConfiguration.class)
+@ContextConfiguration(classes = [ ServiceConfiguration.class, EmbeddedMongoClientConfiguration.class ])
 class StudentTypeCheckerServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
@@ -33,7 +35,8 @@ class StudentTypeCheckerServiceSpec extends Specification {
 
     def thresholdService = new ThresholdServiceTier4(
         TestUtilsTier4.maintenanceThresholdServiceBuilder(), TestUtilsTier4.getStudentTypeChecker(),
-        TestUtilsTier4.getCourseTypeChecker(), serviceMessages, auditor, authenticator
+        TestUtilsTier4.getCourseTypeChecker(), serviceMessages, auditor, authenticator,
+        new DeploymentDetails("localhost", "local")
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
