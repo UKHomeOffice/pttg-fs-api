@@ -9,7 +9,7 @@ trait AuditEventPublisher {
   def publishEvent(event: ApplicationEvent): Unit
 }
 @Service
-class RepositoryAuditEventPublisher @Autowired()(applicationEventPublisher: ApplicationEventPublisher) extends AuditEventPublisher {
+class AuditEventPublisherImpl @Autowired()(applicationEventPublisher: ApplicationEventPublisher) extends AuditEventPublisher {
 
   override def publishEvent(event: ApplicationEvent): Unit = applicationEventPublisher.publishEvent(event)
 

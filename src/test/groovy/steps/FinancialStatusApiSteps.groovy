@@ -1,6 +1,7 @@
 package steps
 
 import com.jayway.restassured.response.Response
+import com.mongodb.MongoClient
 import cucumber.api.DataTable
 import cucumber.api.Scenario
 import cucumber.api.java.After
@@ -18,11 +19,15 @@ import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.web.servlet.DispatcherServlet
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.MongoClientConfiguration
 
 import java.text.DateFormat
 import java.text.DecimalFormat
@@ -40,7 +45,11 @@ import static com.jayway.restassured.RestAssured.given
  *            - This will use the application-endtoend.properties
  *
  */
-@SpringApplicationConfiguration(classes = [ServiceConfiguration.class, ApiExceptionHandler.class])
+@SpringApplicationConfiguration(classes = [
+    ServiceConfiguration.class,
+    ApiExceptionHandler.class,
+    EmbeddedMongoClientConfiguration.class
+])
 @WebAppConfiguration
 @IntegrationTest()
 @ActiveProfiles("test")
