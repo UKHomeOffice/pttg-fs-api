@@ -81,7 +81,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
     Background:
         Given A Service is consuming the FSPS Calculator API
         And the default details are
-            | Student Type                    | des |
+            | Student Type | des |
 
     Scenario: 2 dependants only application (main applicant is on a 3 month DES continuation course) - Out of London
 
@@ -110,7 +110,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Student Type | doctorate |
-            | In London    | Yes        |
+            | In London    | Yes       |
             | Dependants   | 1         |
         Then The Financial Status API provides the following results:
             | HTTP Status | 200     |

@@ -250,7 +250,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 5495.50    |
             | Leave end date | 2016-07-01 |
 
-###### Continuation Main course - Dependant Only ########
+###### Continuation Main course - Dependants Only ########
 
         # Capped at 9 months for dependants #
         # round up to the nearest month #
@@ -305,7 +305,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course Length  | 9          |
             | Leave end date | 2017-08-01 |
 
-###### Continuation Pre-sessional - dependants only ########
+###### Continuation Pre-sessional - Dependants Only ########
 
     Scenario: 2 dependants only application (main applicant is on a 5 month continuation pre-sessional course)
 

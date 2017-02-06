@@ -319,7 +319,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
             | Threshold      | 2535.00    |
             | Leave end date | 2016-12-28 |
 
-    Scenario: 4 dependants only application (main applicant is on an initial 21 months pre-sessional)
+    Scenario: 4 dependant only application (main applicant is on an initial 21 months pre-sessional)
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
