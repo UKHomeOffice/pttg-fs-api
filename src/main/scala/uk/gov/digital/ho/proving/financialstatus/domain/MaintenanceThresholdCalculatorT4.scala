@@ -42,7 +42,7 @@ class MaintenanceThresholdCalculatorT4 @Autowired()(@Value("${inner.london.accom
                        courseStartDate: LocalDate,
                        courseEndDate: LocalDate,
                        originalCourseStartDate: Option[LocalDate],
-                       isContinuation: Boolean,
+                      // isContinuation: Boolean,
                        isPreSessional: Boolean,
                        dependantsOnly: Boolean
                       ): (BigDecimal, Option[CappedValues], Option[LocalDate]) = {

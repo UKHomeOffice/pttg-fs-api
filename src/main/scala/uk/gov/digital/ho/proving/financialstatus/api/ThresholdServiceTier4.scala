@@ -44,6 +44,8 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
                          @RequestParam(value = "accommodationFeesPaid") accommodationFeesPaid: Optional[JBigDecimal],
                          @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer],
                          @RequestParam(value = "courseType", required = false) courseType: Optional[String],
+                         @RequestParam(value = "dependantsOnly", required = false) dependantsOnly: Optional[JBoolean],
+
                          @CookieValue(value = "kc-access") kcToken: Optional[String]
                         ): ResponseEntity[ThresholdResponse] = {
 
@@ -62,8 +64,9 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
     val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
     val validatedCourseType = courseTypeChecker.getCourseType(courseType.getOrElse("Unknown"))
 
+
     def threshold = calculateThresholdForStudentType(validatedStudentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate,
-      tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, validatedCourseType)
+      tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, validatedCourseType, dependantsOnly)
 
     auditSearchResult(auditEventId, threshold.getBody, userProfile)
 
@@ -120,7 +123,8 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
                                                tuitionFeesPaid: Option[BigDecimal],
                                                accommodationFeesPaid: Option[BigDecimal],
                                                dependants: Option[Int],
-                                               courseType: CourseType
+                                               courseType: CourseType,
+                                               dependantsOnly: Option[Boolean]
                                               ): ResponseEntity[ThresholdResponse] = {
 
     studentType match {
@@ -129,20 +133,20 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
 
         courseType match {
           case UnknownCourse(course) => buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_TYPE(courseTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
-          case _ => val validatedInputs = validateInputs(GeneralStudent, inLondon, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
+          case _ => val validatedInputs = validateInputs(GeneralStudent, inLondon, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType, dependantsOnly)
             calculateThreshold(validatedInputs, calculateGeneral)
         }
 
       case DoctorateExtensionStudent =>
-        val validatedInputs = validateInputs(DoctorateExtensionStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
+        val validatedInputs = validateInputs(DoctorateExtensionStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType, dependantsOnly)
         calculateThreshold(validatedInputs, calculateDoctorateExtension)
 
       case PostGraduateDoctorDentistStudent =>
-        val validatedInputs = validateInputs(PostGraduateDoctorDentistStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
+        val validatedInputs = validateInputs(PostGraduateDoctorDentistStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType, dependantsOnly)
         calculateThreshold(validatedInputs, calculatePGDD)
 
       case StudentUnionSabbaticalOfficerStudent =>
-        val validatedInputs = validateInputs(StudentUnionSabbaticalOfficerStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType)
+        val validatedInputs = validateInputs(StudentUnionSabbaticalOfficerStudent, inLondon, None, None, accommodationFeesPaid, dependants, courseStartDate, courseEndDate, originalCourseStartDate, courseType, dependantsOnly)
         calculateThreshold(validatedInputs, calculateSUSO)
 
       case UnknownStudent(unknownType) =>
@@ -169,7 +173,7 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
          aFeesPaid <- inputs.accommodationFeesPaid
          deps <- inputs.dependants
     } yield {
-      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inner, aFeesPaid, deps, false) //TODO remove hard coded bool
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateDoctorateExtensionScheme(inner, aFeesPaid, deps, inputs.dependantsOnly)
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
@@ -181,7 +185,7 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
          startDate <- inputs.courseStartDate
          endDate <- inputs.courseEndDate
     } yield {
-      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculatePostGraduateDoctorDentist(inner, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, false) // TODO
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculatePostGraduateDoctorDentist(inner, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.dependantsOnly)
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
@@ -193,7 +197,7 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
          startDate <- inputs.courseStartDate
          endDate <- inputs.courseEndDate
     } yield {
-      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateStudentUnionSabbaticalOfficer(inner, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, false)
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateStudentUnionSabbaticalOfficer(inner, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.dependantsOnly)
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }
@@ -207,7 +211,7 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
          startDate <- inputs.courseStartDate
          endDate <- inputs.courseEndDate
     } yield {
-      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateGeneral(inner, tFees, tFeesPaid, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isContinuation, inputs.isPreSessional, false) //TODO remove hard coded bool
+      val (threshold, cappedValues, leaveToRemain) = maintenanceThresholdCalculator.calculateGeneral(inner, tFees, tFeesPaid, aFeesPaid, deps, startDate, endDate, inputs.originalCourseStartDate, inputs.isPreSessional, inputs.dependantsOnly)
       new ThresholdResponse(Some(threshold), leaveToRemain, cappedValues, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK))
     }
   }

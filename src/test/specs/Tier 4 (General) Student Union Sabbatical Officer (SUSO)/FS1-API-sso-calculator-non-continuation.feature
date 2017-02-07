@@ -139,6 +139,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
             | Dependants        | 2          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-02-02 |
+            | Dependants only   | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 3380.00    |
@@ -151,6 +152,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
             | Dependants        | 2          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-02-28 |
+            | Dependants only   | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 3380.00    |
@@ -163,6 +165,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
             | Dependants        | 1          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-07-28 |
+            | Dependants only   | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 1690.00    |
@@ -177,8 +180,9 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
             | Dependants        | 3          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2018-09-03 |
+            | Dependants only   | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 5070.00    |
+            | Threshold      | 4080.00    |
             | Course Length  | 2          |
             | Leave end date | 2019-01-03 |

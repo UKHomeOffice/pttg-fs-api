@@ -20,7 +20,7 @@ class GeneralMaintenanceThresholdCalculatorTest extends Specification {
         expect:
         def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
-            originalCourseStartDate != null, courseType == "pre-sessional", dependantsOnly)
+            courseType == "pre-sessional", dependantsOnly)
 
         assert (response._1 == buildScalaBigDecimal(threshold))
 
@@ -53,7 +53,7 @@ class GeneralMaintenanceThresholdCalculatorTest extends Specification {
         expect:
         def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
-            originalCourseStartDate != null, courseType == "pre-sessional", dependantsOnly)
+            courseType == "pre-sessional", dependantsOnly)
 
         assert (response._1 == buildScalaBigDecimal(threshold))
 
@@ -87,7 +87,7 @@ class GeneralMaintenanceThresholdCalculatorTest extends Specification {
         expect:
         def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
-            originalCourseStartDate != null, courseType == "pre-sessional", dependantsOnly)
+            courseType == "pre-sessional", dependantsOnly)
 
         assert (response._1 == buildScalaBigDecimal(threshold))
 
@@ -120,7 +120,7 @@ class GeneralMaintenanceThresholdCalculatorTest extends Specification {
         expect:
         def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
-            originalCourseStartDate != null, courseType == "pre-sessional", dependantsOnly)
+            courseType == "pre-sessional", dependantsOnly)
 
         assert (response._1 == buildScalaBigDecimal(threshold))
 
@@ -153,7 +153,7 @@ class GeneralMaintenanceThresholdCalculatorTest extends Specification {
         expect:
         def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
-            originalCourseStartDate != null, courseType == "pre-sessional", dependantsOnly)
+            courseType == "pre-sessional", dependantsOnly)
 
         def thresholdValue = response._1
         def cappedValues = DataUtils.getCappedValues(response._2)
@@ -195,7 +195,7 @@ class GeneralMaintenanceThresholdCalculatorTest extends Specification {
         expect:
         def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
-            originalCourseStartDate != null, courseType == "pre-sessional", dependantsOnly)
+            courseType == "pre-sessional", dependantsOnly)
 
         assert (response._1 == buildScalaBigDecimal(threshold))
 
@@ -228,7 +228,7 @@ class GeneralMaintenanceThresholdCalculatorTest extends Specification {
         expect:
         def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
-            originalCourseStartDate != null, courseType == "pre-sessional", dependantsOnly)
+            courseType == "pre-sessional", dependantsOnly)
 
         assert (response._1 == buildScalaBigDecimal(threshold))
 
@@ -261,7 +261,7 @@ class GeneralMaintenanceThresholdCalculatorTest extends Specification {
         expect:
         def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
-            originalCourseStartDate != null, courseType == "pre-sessional", dependantsOnly)
+            courseType == "pre-sessional", dependantsOnly)
 
         def thresholdValue = response._1
         def cappedValues = DataUtils.getCappedValues(response._2)
@@ -302,7 +302,7 @@ class GeneralMaintenanceThresholdCalculatorTest extends Specification {
 
         def response = maintenanceThresholdCalculator.calculateGeneral(inLondon, buildScalaBigDecimal(tuitionFees), buildScalaBigDecimal(tuitionFeesPaid),
             buildScalaBigDecimal(accommodationFeesPaid), dependants, courseStartDate, courseEndDate, buildScalaOption(originalCourseStartDate),
-            originalCourseStartDate != null, courseType == "pre-sessional", dependantsOnly)
+            courseType == "pre-sessional", dependantsOnly)
         def thresholdValue = response._1
         def cappedValues = DataUtils.getCappedValues(response._2)
         def cappedAccommodation = cappedValues.accommodationFeesPaid()
