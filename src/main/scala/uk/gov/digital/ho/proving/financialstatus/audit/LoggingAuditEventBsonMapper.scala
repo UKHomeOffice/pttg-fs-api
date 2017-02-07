@@ -11,7 +11,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.actuate.audit.AuditEvent
 
-trait LoggingAuditEventBsonMapper {
+trait LoggingAuditEventBsonMapper extends NewLineRemover {
 
   private val LOGGER: Logger = LoggerFactory.getLogger(classOf[LoggingAuditEventBsonMapper])
 
@@ -28,7 +28,12 @@ trait LoggingAuditEventBsonMapper {
 
   def bsonOf(event: AuditEvent): Document = {
     val json = jsonOf(event)
-    LOGGER.info(s"$AUDIT_EVENT_LOG_MARKER: $json")
+    val jsonOnOneLine = removeNewlines(json)
+    LOGGER.info(s"$AUDIT_EVENT_LOG_MARKER: $jsonOnOneLine")
     Document.parse(json)
   }
+
+}
+trait NewLineRemover {
+  def removeNewlines(originalString: String): String = originalString.replaceAll("\\r\\n|\\r|\\n", " ")
 }

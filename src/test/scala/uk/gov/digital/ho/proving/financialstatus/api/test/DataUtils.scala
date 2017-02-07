@@ -10,6 +10,7 @@ import java.math.{BigDecimal => JBigDecimal}
 
 import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
 import uk.gov.digital.ho.proving.financialstatus.audit.LoggingAuditEventBsonMapper
+import uk.gov.digital.ho.proving.financialstatus.audit.NewLineRemover
 
 object DataUtils {
 
@@ -82,4 +83,6 @@ object DataUtils {
   def buildUserProfile(id: String) = UserProfile(id, "Fred", "Flintstone", "fred@bedrock.com")
 
   def createAuditEventBsonMapper(): LoggingAuditEventBsonMapper = new LoggingAuditEventBsonMapper {}
+
+  def createNewLineRemover(): NewLineRemover = new NewLineRemover {}
 }
