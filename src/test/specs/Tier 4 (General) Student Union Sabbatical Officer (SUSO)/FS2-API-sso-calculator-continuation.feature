@@ -28,6 +28,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Student Type                    | suso |
             | In London                       | Yes  |
             | Accommodation fees already paid | 500  |
+            | Dependants only   | No          |
 
     #Required Maintenance threshold calculation to pass this feature file
 
@@ -62,7 +63,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 2030.00    |
             | Leave end date | 2016-02-17 |
 
-    Scenario: Mike is on a 2 month PGDD continuation course. Mike's Threshold calculated
+    Scenario: Mike is on a 2 month SUSO continuation course. Mike's Threshold calculated
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -75,7 +76,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 2030.00    |
             | Leave end date | 2016-06-10 |
 
-    Scenario: Ann is on a 3 month PGDD continuation course and has 2 dependants. Ann's Threshold calculated
+    Scenario: Ann is on a 3 month SUSO continuation course and has 2 dependants. Ann's Threshold calculated
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -90,7 +91,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course Length  | 2          |
             | Leave end date | 2016-06-09 |
 
-    Scenario: Alvin is on a 5 month PGDD continuation course and has 4 dependants. Alvin's Threshold calculated
+    Scenario: Alvin is on a 5 month SUSO continuation course and has 4 dependants. Alvin's Threshold calculated
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -104,7 +105,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course Length  | 2          |
             | Leave end date | 2017-02-09 |
 
-    Scenario: Kira is on a 1 month PGDD continuation course and has 1 dependants. Kira's Threshold calculated
+    Scenario: Kira is on a 1 month SUSO continuation course and has 1 dependants. Kira's Threshold calculated
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -117,7 +118,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Threshold      | 1610.00    |
             | Leave end date | 2016-06-08 |
 
-        # SSO continuation course - dependants only #
+        # SUSO continuation course - dependants only #
         # capped at 2 months #
 
     Scenario: 2 dependant only application (main applicant is on a 3 month SUSO continuation course)

@@ -24,6 +24,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
             | Student Type                    | pgdd |
             | In London                       | Yes  |
             | Accommodation fees already paid | 500  |
+            | Dependants only                 | No   |
 
     #Required Maintenance threshold calculation to pass this feature file
 

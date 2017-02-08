@@ -24,8 +24,6 @@ class DoctorateExtensionMaintenanceThresholdCalculatorTest extends Specification
         false    | 1699.15               | 2          | false          || 3485.00   || 1265.00
         false    | 1950.28               | 1          | false          || 2125.00   || 1265.00
         false    | 672.51                | 13         | false          || 19037.49  || 0.00
-        false    | 931.38                | 0          | true           || 0.00      || 0.00
-        false    | 1551.77               | 0          | true           || 0.00      || 1265.00
         false    | 580.69                | 1          | false          || 2809.31   || 0.00
     }
 
@@ -36,7 +34,6 @@ class DoctorateExtensionMaintenanceThresholdCalculatorTest extends Specification
 
         where:
         inLondon | accommodationFeesPaid | dependants | dependantsOnly || threshold || feesCapped
-        true     | 0.00                  | 0          | true           || 0.00      || 0.00
         true     | 1036.43               | 6          | false          || 11633.57  || 0.00
         true     | 266.29                | 2          | false          || 5643.71   || 0.00
         true     | 0.00                  | 2          | false          || 5910.00   || 0.00
@@ -45,7 +42,6 @@ class DoctorateExtensionMaintenanceThresholdCalculatorTest extends Specification
         true     | 0.00                  | 12         | false          || 22810.00  || 0.00
         true     | 0.00                  | 11         | false          || 21120.00  || 0.00
         true     | 1466.35               | 0          | false          || 1265.00   || 1265.00
-        true     | 931.99                | 0          | true           || 0.00      || 0.00
 
 
     }
@@ -62,7 +58,6 @@ class DoctorateExtensionMaintenanceThresholdCalculatorTest extends Specification
         false    | 1511.78               | 11         | false          || 15725.00  || 1265.00
         false    | 1597.18               | 14         | false          || 19805.00  || 1265.00
         true     | 555.16                | 12         | false          || 22254.84  || 0.00
-        false    | 1927.50               | 0          | true           || 0.00      || 1265.00
         false    | 837.79                | 12         | false          || 17512.21  || 0.00
         false    | 1659.91               | 3          | false          || 4845.00   || 1265.00
         true     | 1506.09               | 0          | false          || 1265.00   || 1265.00

@@ -76,6 +76,8 @@ trait ThresholdParameterValidator {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
     } else if (validInLondon.isEmpty) {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_IN_LONDON, HttpStatus.BAD_REQUEST))
+    } else if (validDependantsOnly.isEmpty) {
+      errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_IN_DEPENDANTS_ONLY, HttpStatus.BAD_REQUEST))
     }
 
     if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validTuitionFees, validTuitionFeesPaid,
@@ -93,7 +95,7 @@ trait ThresholdParameterValidator {
 
   private def validateInnerLondon(inLondon: Option[Boolean]) = inLondon
 
-  private def validateDependantsOnly(dependantsOnly: Option[Boolean]) = dependantsOnly.isDefined
+  private def validateDependantsOnly(dependantsOnly: Option[Boolean]) = dependantsOnly
 
   private def validateDates(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], originalCourseStartDate: Option[LocalDate]): (Boolean, Boolean, Boolean) = {
 
@@ -122,6 +124,6 @@ trait ThresholdParameterValidator {
                              originalCourseStartDate: Option[LocalDate],
                              isContinuation: Boolean,
                              isPreSessional: Boolean,
-                             dependantsOnly: Boolean)
+                             dependantsOnly: Option[Boolean])
 
 }

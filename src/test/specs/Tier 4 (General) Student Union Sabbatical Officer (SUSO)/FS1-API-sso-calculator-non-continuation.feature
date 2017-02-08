@@ -32,6 +32,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
             | Student Type                    | suso |
             | In London                       | Yes  |
             | Accommodation fees already paid | 100  |
+            | Dependants only                 | No   |
 
     #Required Maintenance threshold calculation to pass this feature file
 

@@ -33,6 +33,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Total tuition fees              | 2000.50 |
             | Tuition fees already paid       | 200     |
             | Accommodation fees already paid | 100     |
+            | Dependants only                 | No      |
 
     #Required Maintenance threshold calculation to pass this feature file
 

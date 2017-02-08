@@ -15,6 +15,7 @@ Feature: Total Funds Required Calculation - Tier 4 (General) Doctorate Extension
             | Student Type                    | des |
             | In London                       | Yes |
             | Accommodation fees already paid | 500 |
+            | Dependants only                 | No  |
 
     #Required Maintenance threshold calculation to pass this feature file
 
