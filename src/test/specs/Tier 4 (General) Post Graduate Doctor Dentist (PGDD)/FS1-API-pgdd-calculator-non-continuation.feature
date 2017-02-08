@@ -21,6 +21,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
             | Student Type                    | pgdd    |
             | In London                       | Yes     |
             | Accommodation fees already paid | 0       |
+            | Dependants only                 | No   |
 
 #Required Maintenance threshold calculation to pass this feature file
 

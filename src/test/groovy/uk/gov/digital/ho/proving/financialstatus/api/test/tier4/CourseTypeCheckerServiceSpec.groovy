@@ -44,7 +44,7 @@ class CourseTypeCheckerServiceSpec extends Specification {
 
     def url = TestUtilsTier4.thresholdUrl
 
-    def callApi(studentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid, courseType) {
+    def callApi(studentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid, courseTyped, dependantsOnly) {
 
 
         def response = mockMvc.perform(
@@ -55,6 +55,7 @@ class CourseTypeCheckerServiceSpec extends Specification {
                 .param("courseEndDate", courseEndDate.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())
+                .param("dependantsOnly", dependantsOnly.toString())
                 .param("tuitionFees", tuitionFees.toString())
                 .param("tuitionFeesPaid", tuitionFeesPaid.toString())
                 .param("courseType", courseType)

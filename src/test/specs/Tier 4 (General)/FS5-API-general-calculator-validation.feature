@@ -23,6 +23,7 @@ Feature: Validation of the API fields and data
             | Total tuition fees              | 3500.50    |
             | Tuition fees already paid       | 0          |
             | Accommodation fees already paid | 0          |
+            | Dependants only                 | No         |
 
 ######################### Validation on the Student type field #########################
 

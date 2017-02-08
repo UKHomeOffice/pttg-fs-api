@@ -33,6 +33,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Total tuition fees              | 2000.50 |
             | Tuition fees already paid       | 200     |
             | Accommodation fees already paid | 100     |
+            | Dependants only                 | No      |
 
     #Required Maintenance threshold calculation to pass this feature file
 
@@ -242,13 +243,13 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | general |
-            | In London         | Yes          |
-            | Course type       | Main         |
-            | Dependants        | 2            |
-            | Course start date | 2016-01-03   |
-            | Course end date   | 2016-02-03   |
-            | Dependants only   | Yes          |
+            | Student Type      | general    |
+            | In London         | Yes        |
+            | Course type       | Main       |
+            | Dependants        | 2          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-03 |
+            | Dependants only   | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 3380.00    |
@@ -258,13 +259,13 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | general |
-            | In London         | Yes          |
-            | Course type       | Main         |
-            | Dependants        | 2            |
-            | Course start date | 2016-01-03   |
-            | Course end date   | 2016-02-28   |
-            | Dependants only   | Yes          |
+            | Student Type      | general    |
+            | In London         | Yes        |
+            | Course type       | Main       |
+            | Dependants        | 2          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-28 |
+            | Dependants only   | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 5070.00    |
@@ -274,13 +275,13 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | general |
-            | In London         | Yes          |
-            | Course type       | Main         |
-            | Dependants        | 1            |
-            | Course start date | 2016-01-03   |
-            | Course end date   | 2016-02-19   |
-            | Dependants only   | Yes          |
+            | Student Type      | general    |
+            | In London         | Yes        |
+            | Course type       | Main       |
+            | Dependants        | 1          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-19 |
+            | Dependants only   | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 1690       |
@@ -290,13 +291,13 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | general |
-            | In London         | Yes          |
-            | Course type       | Main         |
-            | Dependants        | 3            |
-            | Course start date | 2016-01-03   |
-            | Course end date   | 2018-09-03   |
-            | Dependants only   | Yes          |
+            | Student Type      | general    |
+            | In London         | Yes        |
+            | Course type       | Main       |
+            | Dependants        | 3          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2018-09-03 |
+            | Dependants only   | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 22815.00   |
@@ -309,13 +310,13 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | general  |
+            | Student Type      | general       |
             | In London         | Yes           |
             | Course type       | Pre-sessional |
             | Dependants        | 2             |
             | Course start date | 2016-09-03    |
             | Course end date   | 2016-10-03    |
-            | Dependants only   | Yes          |
+            | Dependants only   | Yes           |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 5070.00    |
@@ -325,13 +326,13 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | general  |
+            | Student Type      | general       |
             | In London         | Yes           |
             | Course type       | Pre-sessional |
             | Dependants        | 1             |
             | Course start date | 2016-03-10    |
             | Course end date   | 2016-10-28    |
-            | Dependants only   | Yes          |
+            | Dependants only   | Yes           |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 7605.00    |
@@ -341,13 +342,13 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Student Type      | general  |
+            | Student Type      | general       |
             | In London         | Yes           |
             | Course type       | Pre-sessional |
             | Dependants        | 4             |
             | Course start date | 2016-01-03    |
             | Course end date   | 2017-09-15    |
-            | Dependants only   | Yes          |
+            | Dependants only   | Yes           |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 30420.00   |
