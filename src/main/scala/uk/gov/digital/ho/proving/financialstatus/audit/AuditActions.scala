@@ -12,7 +12,7 @@ object AuditActions {
     UUID.randomUUID
   }
 
-  def auditEvent(principal: String ,auditEventType: AuditEventType.Value, id: UUID, data: Map[String, AnyRef]): AuditApplicationEvent = {
+  def auditEvent(principal: String, auditEventType: AuditEventType.Value, id: UUID, data: Map[String, AnyRef]): AuditApplicationEvent = {
 
     val auditData: Map[String, AnyRef] = data match {
       case null =>

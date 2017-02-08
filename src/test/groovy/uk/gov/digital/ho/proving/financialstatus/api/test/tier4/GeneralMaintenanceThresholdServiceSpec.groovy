@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
  */
 @WebAppConfiguration
 @ContextConfiguration(classes = ServiceConfiguration.class)
-class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
+class GeneralMaintenanceThresholdServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
@@ -66,10 +66,10 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check 'Non Inner London Borough'"() {
+    def "Tier 4 General - Check 'Non Inner London Borough'"() {
 
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
@@ -105,10 +105,10 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check 'Inner London Borough'"() {
+    def "Tier 4 General - Check 'Inner London Borough'"() {
 
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
@@ -144,9 +144,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check 'Tuition Fees paid'"() {
+    def "Tier 4 General - Check 'Tuition Fees paid'"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
@@ -182,9 +182,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check 'Accommodation Fees paid'"() {
+    def "Tier 4 General - Check 'Accommodation Fees paid'"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
@@ -220,9 +220,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check 'All variants'"() {
+    def "Tier 4 General - Check 'All variants'"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
 
@@ -277,9 +277,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check invalid tuition fees parameters"() {
+    def "Tier 4 General - Check invalid tuition fees parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid tuitionFees")))
@@ -291,9 +291,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check invalid characters intuition fees parameters"() {
+    def "Tier 4 General - Check invalid characters intuition fees parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid tuitionFees")))
@@ -305,9 +305,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check invalid tuition fees paid parameters"() {
+    def "Tier 4 General - Check invalid tuition fees paid parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid tuitionFeesPaid")))
@@ -319,9 +319,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check invalid characters in tuition fees paid parameters"() {
+    def "Tier 4 General - Check invalid characters in tuition fees paid parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid tuitionFeesPaid")))
@@ -333,9 +333,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check invalid accommodation fees paid parameters"() {
+    def "Tier 4 General - Check invalid accommodation fees paid parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid accommodationFeesPaid")))
@@ -347,9 +347,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check invalid characters accommodation fees paid parameters"() {
+    def "Tier 4 General - Check invalid characters accommodation fees paid parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid accommodationFeesPaid")))
@@ -361,9 +361,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check invalid dependants parameters"() {
+    def "Tier 4 General - Check invalid dependants parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid dependants")))
@@ -375,9 +375,9 @@ class NonDoctorateMaintenanceThresholdServiceSpec extends Specification {
     }
 
     @Unroll
-    def "Tier 4 Non Doctorate - Check invalid characters dependants parameters"() {
+    def "Tier 4 General - Check invalid characters dependants parameters"() {
         expect:
-        def response = callApi("nondoctorate", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
+        def response = callApi("general", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, "MAIN")
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid dependants")))

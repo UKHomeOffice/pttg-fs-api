@@ -1,6 +1,5 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
-import java.lang.{Boolean => JBoolean}
 import java.math.{BigDecimal => JBigDecimal}
 import java.net.SocketTimeoutException
 import java.time.LocalDate
@@ -130,7 +129,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
       dailyAccountBalanceCheck match {
         case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck),
-          StatusResponse("200", serviceMessages.OK)), HttpStatus.OK)
+          StatusResponse(HttpStatus.OK.getReasonPhrase, serviceMessages.OK)), HttpStatus.OK)
 
         case Failure(exception: HttpClientErrorException) =>
           exception.getStatusCode match {

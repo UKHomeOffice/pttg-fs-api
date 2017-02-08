@@ -44,11 +44,11 @@ trait DailyBalanceParameterValidator {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_TO_DATE, HttpStatus.BAD_REQUEST))
     } else if (validDob.isEmpty) {
       errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DOB_DATE, HttpStatus.BAD_REQUEST))
-    }  else {
+    } else {
       for {from <- fromDate
            to <- toDate
       } yield {
-        if (!from.isBefore(to) ) {
+        if (!from.isBefore(to)) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DATES, HttpStatus.BAD_REQUEST))
         }
       }

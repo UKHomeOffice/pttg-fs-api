@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.PropertySource
 import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation._
-import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages, ThresholdParameterValidator}
+import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication

@@ -1,4 +1,4 @@
-Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non Doctorate with and without dependants (single current account)
+Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student general with and without dependants (single current account)
 
     Main applicants Required Maintenance period: Months between course start date and course end date (rounded up & capped to 9 months)
     Main applicant Required Maintenance period is rounded up to the full month (E.g course length of 5month and 5days is rounded up to 6months)
@@ -18,7 +18,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
     Pre-sessional course length 6 months or more but less than months = 2 months
     Pre-sessional course length <6 months = 1 months
 
-    Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
+    Applicants Required Maintenance threshold general:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
     Total tuition fees - total amount of the tuition fees for the course
@@ -28,15 +28,15 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
     Background:
         Given A Service is consuming the FSPS Calculator API
         And the default details are
-            | Student Type                    | nondoctorate |
-            | In London                       | Yes          |
-            | Total tuition fees              | 2000.50      |
-            | Tuition fees already paid       | 200          |
-            | Accommodation fees already paid | 100          |
+            | Student Type                    | general |
+            | In London                       | Yes     |
+            | Total tuition fees              | 2000.50 |
+            | Tuition fees already paid       | 200     |
+            | Accommodation fees already paid | 100     |
 
     #Required Maintenance threshold calculation to pass this feature file
 
-    #Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
+    #Maintenance threshold amount = (Required Maintenance threshold general * Course length) +
     #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
 
     #Main course:
@@ -46,14 +46,14 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
 
     #Main course worked examples:
 
-    #12 months or more: Tier 4 (General) Student - non doctorate - In London, with dependents In Country - (£1265 x 3) + (£845 x (3+4) x 1) + (£10,000 - £0 - £0) = £19,710
-    #6 months or more but less than 12 months: Tier 4 (General) Student - non doctorate - In London, with dependents In Country - (£1265 x 8) + (£845 x (8+2) x 2) + (£7,000 - £300 - £500.50) = £31,529.50 (dependant require maintenance period capped at 9 months)
-    #< 6 months: Tier 4 (General) Student - non doctorate - In London, with dependents In Country - (£1265 x 4) + (£845 x (4+7 days) x 1) + (£10,000 - £0 - £0) = (£18440)
+    #12 months or more: Tier 4 (General) Student - general - In London, with dependents In Country - (£1265 x 3) + (£845 x (3+4) x 1) + (£10,000 - £0 - £0) = £19,710
+    #6 months or more but less than 12 months: Tier 4 (General) Student - general - In London, with dependents In Country - (£1265 x 8) + (£845 x (8+2) x 2) + (£7,000 - £300 - £500.50) = £31,529.50 (dependant require maintenance period capped at 9 months)
+    #< 6 months: Tier 4 (General) Student - general - In London, with dependents In Country - (£1265 x 4) + (£845 x (4+7 days) x 1) + (£10,000 - £0 - £0) = (£18440)
 
     #Pre-sessional:
     #12 months or more: Same as Main course above
     #6 months or more but less than 12 months: Same as main course above
-    #< 6 months: Tier 4 (General) Student - non doctorate - In London, with dependents In Country - (£1265 x 4) + (£845 x (4+1) x 1) + (£10,000 - £0 - £0) = (£19,285)
+    #< 6 months: Tier 4 (General) Student - general - In London, with dependents In Country - (£1265 x 4) + (£845 x (4+1) x 1) + (£10,000 - £0 - £0) = (£19,285)
 
     ################# Initial Main course #######################
 
@@ -230,11 +230,11 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
         # Calculate threshold period using Course Start Date to Leave End Date #
         ## Required Maintenance threshold calculation to pass this feature file for the dependants only route ##
 
-    Background:
-        Given A Service is consuming the FSPS Calculator API
-        And the default details are
-            | Student Type                    | nondoctorate |
-            | In London                       | Yes          |
+#    Background:
+#        Given A Service is consuming the FSPS Calculator API
+#        And the default details are
+#            | Student Type | nondoctorate |
+#            | In London    | Yes          |
 
          ################# Initial Main course - dependant only #######################
 
@@ -242,10 +242,13 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
-            | Dependants        | 2          |
-            | Course start date | 2016-01-03 |
-            | Course end date   | 2016-02-03 |
+            | Student Type      | general |
+            | In London         | Yes          |
+            | Course type       | Main         |
+            | Dependants        | 2            |
+            | Course start date | 2016-01-03   |
+            | Course end date   | 2016-02-03   |
+            | Dependants only   | Yes          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 3380.00    |
@@ -255,10 +258,13 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
-            | Dependants        | 2          |
-            | Course start date | 2016-01-03 |
-            | Course end date   | 2016-02-28 |
+            | Student Type      | general |
+            | In London         | Yes          |
+            | Course type       | Main         |
+            | Dependants        | 2            |
+            | Course start date | 2016-01-03   |
+            | Course end date   | 2016-02-28   |
+            | Dependants only   | Yes          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 5070.00    |
@@ -268,23 +274,29 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
-            | Dependants        | 1          |
-            | Course start date | 2016-01-03 |
-            | Course end date   | 2016-07-28 |
+            | Student Type      | general |
+            | In London         | Yes          |
+            | Course type       | Main         |
+            | Dependants        | 1            |
+            | Course start date | 2016-01-03   |
+            | Course end date   | 2016-02-19   |
+            | Dependants only   | Yes          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 1690       |
-            | Leave end date | 2016-09-28 |
+            | Leave end date | 2016-02-26 |
 
     Scenario: Jackie, Marlon and Tito are using an a dependant only (x3) application (main applicant is on an initial 32 months main course)
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
-            | Dependants        | 3          |
-            | Course start date | 2016-01-03 |
-            | Course end date   | 2018-09-03 |
+            | Student Type      | general |
+            | In London         | Yes          |
+            | Course type       | Main         |
+            | Dependants        | 3            |
+            | Course start date | 2016-01-03   |
+            | Course end date   | 2018-09-03   |
+            | Dependants only   | Yes          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 22815.00   |
@@ -297,36 +309,45 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
+            | Student Type      | general  |
+            | In London         | Yes           |
             | Course type       | Pre-sessional |
             | Dependants        | 2             |
             | Course start date | 2016-09-03    |
             | Course end date   | 2016-10-03    |
+            | Dependants only   | Yes          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 3380.00    |
+            | Threshold      | 5070.00    |
             | Leave end date | 2016-11-03 |
 
     Scenario: Rhiannon is on an a dependant only (x1) application (main applicant is on an initial 8 months pre-sessional)
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
+            | Student Type      | general  |
+            | In London         | Yes           |
             | Course type       | Pre-sessional |
             | Dependants        | 1             |
             | Course start date | 2016-03-10    |
             | Course end date   | 2016-10-28    |
+            | Dependants only   | Yes          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 2535.00    |
+            | Threshold      | 7605.00    |
             | Leave end date | 2016-12-28 |
 
     Scenario: 4 dependant only application (main applicant is on an initial 21 months pre-sessional)
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
+            | Student Type      | general  |
+            | In London         | Yes           |
             | Course type       | Pre-sessional |
             | Dependants        | 4             |
             | Course start date | 2016-01-03    |
             | Course end date   | 2017-09-15    |
+            | Dependants only   | Yes          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 30420.00   |

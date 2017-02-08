@@ -7,6 +7,7 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import spock.lang.Specification
+import spock.lang.Unroll
 import uk.gov.digital.ho.proving.financialstatus.api.ThresholdServiceTier4
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
@@ -52,7 +53,7 @@ class StudentTypeCheckerServiceSpec extends Specification {
                 .param("studentType", studentType)
                 .param("inLondon", inLondon.toString())
                 .param("courseStartDate", courseStartDate.toString())
-                .param("courseEndDate",  courseEndDate.toString())
+                .param("courseEndDate", courseEndDate.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())
                 .param("tuitionFees", tuitionFees.toString())
@@ -64,22 +65,23 @@ class StudentTypeCheckerServiceSpec extends Specification {
         response
     }
 
+    @Unroll
     def "Tier 4 Student types"() {
 
         expect:
-        def response = callApi(studentType, true, LocalDate.of(2000,1,1), LocalDate.of(2000,5,31), LocalDate.of(1999,9,3), 0, 0, 0, 0)
+        def response = callApi(studentType, true, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 5, 31), LocalDate.of(1999, 9, 3), 0, 0, 0, 0)
         response.andExpect(status().is(httpStatus))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.message == statusMessage
 
         where:
-        studentType    || httpStatus || statusMessage
-        "doctorate"    || 200        || "OK"
-        "nondoctorate" || 200        || "OK"
-        "pgdd"         || 200        || "OK"
-        "sso"          || 200        || "OK"
-        "rubbish"      || 400        || "Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso]"
-        ""             || 400        || "Parameter error: Invalid studentType, must be one of [doctorate,nondoctorate,pgdd,sso]"
+        studentType || httpStatus || statusMessage
+        "general"   || 200        || "OK"
+        "des"       || 200        || "OK"
+        "pgdd"      || 200        || "OK"
+        "suso"      || 200        || "OK"
+        "rubbish"   || 400        || "Parameter error: Invalid studentType, must be one of [des,general,pgdd,suso]"
+        ""          || 400        || "Parameter error: Invalid studentType, must be one of [des,general,pgdd,suso]"
 
     }
 

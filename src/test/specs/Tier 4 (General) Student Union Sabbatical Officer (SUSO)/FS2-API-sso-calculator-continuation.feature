@@ -17,7 +17,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
     The concept of pre-sessional courses does not apply to the SUSO route
 
-    Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
+    Applicants Required Maintenance threshold general:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
     Accommodation fees already paid - The maximum amount paid can be £1265
@@ -25,13 +25,13 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
     Background:
         Given A Service is consuming the FSPS Calculator API
         And the default details are
-            | Student Type                    | sso |
-            | In London                       | Yes |
-            | Accommodation fees already paid | 500 |
+            | Student Type                    | suso |
+            | In London                       | Yes  |
+            | Accommodation fees already paid | 500  |
 
     #Required Maintenance threshold calculation to pass this feature file
 
-    #Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
+    #Maintenance threshold amount = (Required Maintenance threshold general * Course length) +
     #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) - (accommodation fees paid)
 
     #SUSO course:
@@ -41,12 +41,12 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
     #SUSO course worked examples:
 
-    #12 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 1) - (£50) = £4,170
-    #7 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 2) - (£100) = £5,810
-    #2 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 3) - (£100) = £7500
+    #12 months: Tier 4 (General) Student - suso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 1) - (£50) = £4,170
+    #7 months: Tier 4 (General) Student - suso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 2) - (£100) = £5,810
+    #2 months: Tier 4 (General) Student - suso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 3) - (£100) = £7500
 
 
-    #### SSO continuation course ####
+    #### suso continuation course ####
 
     Scenario: John is on a 2 month SUSO continuation course. John's Threshold calculated
 
@@ -129,9 +129,10 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course start date          | 2016-01-01 |
             | Course end date            | 2016-04-09 |
             | Dependants                 | 2          |
+            | Dependants only            | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 3380.00    |
+            | Threshold      | 2720.00    |
             | Course Length  | 2          |
             | Leave end date | 2016-06-09 |
 
@@ -143,13 +144,14 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course start date          | 2016-05-01 |
             | Course end date            | 2016-10-09 |
             | Dependants                 | 4          |
+            | Dependants only            | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 6760.00    |
             | Course Length  | 2          |
             | Leave end date | 2017-02-09 |
 
-    Scenario: Kira is on a 1 month PGDD continuation course and has 1 dependants. Kira's Threshold calculated
+    Scenario: Kira is on a 1 month SUSO continuation course and has 1 dependants. Kira's Threshold calculated
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
@@ -157,8 +159,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course start date          | 2016-05-11 |
             | Course end date            | 2016-06-01 |
             | Dependants                 | 1          |
+            | Dependants only            | Yes        |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
-            | Threshold      | 1690.00    |
+            | Threshold      | 845.00     |
             | Leave end date | 2016-06-08 |
 

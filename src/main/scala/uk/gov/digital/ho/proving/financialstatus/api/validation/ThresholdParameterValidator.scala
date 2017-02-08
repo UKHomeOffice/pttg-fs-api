@@ -18,7 +18,8 @@ trait ThresholdParameterValidator {
                                courseStartDate: Option[LocalDate],
                                courseEndDate: Option[LocalDate],
                                originalCourseStartDate: Option[LocalDate],
-                               courseType: CourseType
+                               courseType: CourseType,
+                               dependantsOnly: Option[Boolean]
                               ): Either[Seq[(String, String, HttpStatus)], ValidatedInputs] = {
 
     var errorList = Vector.empty[(String, String, HttpStatus)]
@@ -29,10 +30,11 @@ trait ThresholdParameterValidator {
     val validTuitionFeesPaid = validateTuitionFeesPaid(tuitionFeesPaid)
     val validAccommodationFeesPaid = validateAccommodationFeesPaid(accommodationFeesPaid)
     val validInLondon = validateInnerLondon(inLondon)
+    val validDependantsOnly = validateDependantsOnly(dependantsOnly)
 
     studentType match {
 
-      case NonDoctorateStudent =>
+      case GeneralStudent =>
         if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
         } else if (courseEndDate.isEmpty) {
@@ -50,7 +52,7 @@ trait ThresholdParameterValidator {
         } else if (validDependants.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
         }
-      case StudentSabbaticalOfficer| DoctorDentistStudent =>
+      case StudentUnionSabbaticalOfficerStudent | PostGraduateDoctorDentistStudent =>
         if (courseStartDate.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_COURSE_START_DATE, HttpStatus.BAD_REQUEST))
         } else if (courseEndDate.isEmpty) {
@@ -64,7 +66,7 @@ trait ThresholdParameterValidator {
         } else if (validDependants.isEmpty) {
           errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST))
         }
-      case DoctorateStudent =>
+      case DoctorateExtensionStudent =>
       case UnknownStudent(unknownStudentType) => errorList = errorList :+ ((serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_STUDENT_TYPE(unknownStudentType), HttpStatus.BAD_REQUEST))
     }
 
@@ -77,7 +79,7 @@ trait ThresholdParameterValidator {
     }
 
     if (errorList.isEmpty) Right(ValidatedInputs(validDependants, validTuitionFees, validTuitionFeesPaid,
-      validAccommodationFeesPaid, validInLondon, courseStartDate, courseEndDate, originalCourseStartDate, isContinuation, courseType == PreSessionalCourse))
+      validAccommodationFeesPaid, validInLondon, courseStartDate, courseEndDate, originalCourseStartDate, isContinuation, courseType == PreSessionalCourse, validDependantsOnly))
     else Left(errorList)
   }
 
@@ -90,6 +92,8 @@ trait ThresholdParameterValidator {
   private def validateAccommodationFeesPaid(accommodationFeesPaid: Option[BigDecimal]) = accommodationFeesPaid.filter(_ >= 0)
 
   private def validateInnerLondon(inLondon: Option[Boolean]) = inLondon
+
+  private def validateDependantsOnly(dependantsOnly: Option[Boolean]) = dependantsOnly.isDefined
 
   private def validateDates(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate], originalCourseStartDate: Option[LocalDate]): (Boolean, Boolean, Boolean) = {
 
@@ -117,6 +121,7 @@ trait ThresholdParameterValidator {
                              courseEndDate: Option[LocalDate],
                              originalCourseStartDate: Option[LocalDate],
                              isContinuation: Boolean,
-                             isPreSessional: Boolean)
+                             isPreSessional: Boolean,
+                             dependantsOnly: Boolean)
 
 }

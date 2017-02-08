@@ -67,7 +67,7 @@ class CourseTypeCheckerServiceSpec extends Specification {
     def "Tier 4 Course types"() {
 
         expect:
-        def response = callApi("nondoctorate", true, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 5, 31), LocalDate.of(1999, 9, 3), 0, 0, 0, 0, courseType)
+        def response = callApi("general", true, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 5, 31), LocalDate.of(1999, 9, 3), 0, 0, 0, 0, courseType)
         response.andExpect(status().is(httpStatus))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.message == statusMessage

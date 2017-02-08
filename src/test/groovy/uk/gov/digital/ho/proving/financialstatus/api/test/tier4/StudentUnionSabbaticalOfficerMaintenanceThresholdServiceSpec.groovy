@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
  */
 @WebAppConfiguration
 @ContextConfiguration(classes = ServiceConfiguration.class)
-class SsoMaintenanceThresholdServiceSpec extends Specification {
+class StudentUnionSabbaticalOfficerMaintenanceThresholdServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
@@ -63,7 +63,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Student Sabbatical Office - Check 'Non Inner London Borough'"() {
 
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
+        def response = callApi("suso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
@@ -79,7 +79,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
     def "Tier 4 Student Sabbatical Office - Check 'Inner London Borough'"() {
 
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
+        def response = callApi("suso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
@@ -94,7 +94,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check 'Accommodation Fees paid'"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
+        def response = callApi("suso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
@@ -116,7 +116,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check 'All variants'"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
+        def response = callApi("suso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         assert jsonContent.threshold == threshold
@@ -166,7 +166,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check invalid accommodation fees parameters"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
+        def response = callApi("suso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid accommodationFeesPaid")))
@@ -179,7 +179,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check invalid characters accommodation fees parameters"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
+        def response = callApi("suso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid accommodationFeesPaid")))
@@ -192,7 +192,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check rounding accommodation fees parameters"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
+        def response = callApi("suso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isOk())
 
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
@@ -212,7 +212,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check invalid dependants parameters"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
+        def response = callApi("suso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter error: Invalid dependants")))
@@ -226,7 +226,7 @@ class SsoMaintenanceThresholdServiceSpec extends Specification {
 
     def "Tier 4 Student Sabbatical Office - Check invalid characters dependants parameters"() {
         expect:
-        def response = callApi("sso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
+        def response = callApi("suso", inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants)
         response.andExpect(status().isBadRequest())
 
         response.andExpect(content().string(containsString("Parameter conversion error: Invalid dependants")))
