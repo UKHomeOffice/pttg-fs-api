@@ -13,17 +13,17 @@ Feature: Validation of the API fields and data
     Background: The API is not provided with Student type field
         Given A Service is consuming the FSPS Calculator API
         And the default details are
-            | Student Type                    | general    |
-            | Course Type                     | main       |
-            | In London                       | Yes        |
-            | Course start date               | 2016-01-03 |
-            | Course end date                 | 2016-02-03 |
-            | Original course start date      | 2015-12-03 |
-            | Dependents                      | 1          |
-            | Total tuition fees              | 3500.50    |
-            | Tuition fees already paid       | 0          |
-            | Accommodation fees already paid | 0          |
-            | Dependants only                 | No         |
+            | Student Type                    | general                      |
+            | Course Type                     | Main course degree or higher |
+            | In London                       | Yes                          |
+            | Course start date               | 2016-01-03                   |
+            | Course end date                 | 2016-02-03                   |
+            | Original course start date      | 2015-12-03                   |
+            | Dependents                      | 1                            |
+            | Total tuition fees              | 3500.50                      |
+            | Tuition fees already paid       | 0                            |
+            | Accommodation fees already paid | 0                            |
+            | Dependants only                 | No                           |
 
 ######################### Validation on the Student type field #########################
 
