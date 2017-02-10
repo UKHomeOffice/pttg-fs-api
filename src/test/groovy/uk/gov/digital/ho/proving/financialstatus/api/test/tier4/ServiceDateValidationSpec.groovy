@@ -58,6 +58,7 @@ class ServiceDateValidationSpec extends Specification {
                 .param("tuitionFees", tuitionFees.toString())
                 .param("tuitionFeesPaid", tuitionFeesPaid.toString())
                 .param("courseType", "main")
+                .param("dependantsOnly", "false")
 
         )
         response.andDo(MockMvcResultHandlers.print())
