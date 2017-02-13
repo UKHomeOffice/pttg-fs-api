@@ -14,6 +14,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
     Tier 2 & 5 applicant with dependant (£945 x 1) + (£630 x 1) = £1575
     Tier 2 & 5 applicant with dependant (£945 x 1) + (£630 x 2) = £2205
     Tier 2 & 5 dependant only (£945 x 0) + (£630 x 1) = £630
+    Tier 2 multiple dependant only (£945 x 3) = £1890
 
     ###### Tier 2 & 5 General Main Applicant with & without dependants ########
 
@@ -58,3 +59,16 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
         Then The Tier_Two Financial Status API provides the following results:
             | HTTP Status | 200    |
             | Threshold   | 630.00 |
+
+
+        ##### Tier 2 General without Main Applicant - multiple applicants (x3) #####
+
+    Scenario: Simon, Alvin and Theodore are multiple (x3) Tier 2 applicants.
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator Tier_Two API is invoked with the following
+            | Applicant type | Dependant |
+            | Dependants     | 0   |
+        Then The Tier_Two Financial Status API provides the following results:
+            | HTTP Status | 200    |
+            | Threshold   | 1890.00 |

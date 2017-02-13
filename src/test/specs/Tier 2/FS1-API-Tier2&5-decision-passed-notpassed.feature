@@ -88,7 +88,7 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | HTTP Status          | 200          |
             | Pass                 | false        |
             | Account Holder Name  | Shelly Jones |
-            | Minimum              | 2537.48       |
+            | Minimum              | 2537.48      |
             | From Date            | 2016-04-06   |
             | Lowest Balance Date  | 2016-03-08   |
             | Lowest Balance Value | 2537.47      |
@@ -177,3 +177,122 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | From Date            | 2016-04-06   |
             | Sort code            | 111111       |
             | Account number       | 23568494     |
+
+        ##### NOT PASS - Tier 2 - dependant only (2 applicants) #####
+
+    Scenario: Donald and Hilary are dependant only (x2) Tier 2 applicants and do not have sufficient funds
+
+    #Application Raised Date 1st of June
+    #He has < than the Total Fund Required of £630 for the previous 90 days
+
+        #Given a Service is consuming Financial Status API
+        Given the test data for account 23568498
+        When the Financial Status API is invoked with the following:
+            | Minimum                | 1260.00     |
+            | To Date                | 2016-06-01 |
+            | From Date              | 2016-03-04 |
+            | Sort code              | 111111     |
+            | Account number         | 23568498   |
+            | Date of Birth          | 1984-07-27 |
+            | Account Holder Consent | Yes        |
+            | User Id                | user12345  |
+            | Dependants             | 2          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status         | 200          |
+            | Pass                | false        |
+            | Account Holder Name | Shelly Smith |
+            | Minimum             | 1260.00       |
+            | From Date           | 2016-03-04   |
+            #| Lowest Balance Date  | 2016-05-30     |
+            #| Lowest Balance Value | 549.99         |
+            | To Date             | 2016-06-01   |
+            | Sort code           | 111111       |
+            | Account number      | 23568498     |
+
+        ##### NOT PASS - Tier 5 - dependant only (2 applicants) #####
+
+    Scenario: Vladimir, Mikael and Andrei are dependant only (x3) Tier 5 applicants and do not have sufficient funds
+
+        #Application Raised Date 4th of July
+    #He has < than the Total Funds Required of £1890 for the previous 90 days
+
+       # Given a Service is consuming Financial Status API
+        Given the test data for account 01078911
+        When the Financial Status API is invoked with the following:
+            | Minimum        | 1890.00    |
+            | To Date        | 2016-07-04 |
+            | From Date      | 2016-04-06 |
+            | Sort code      | 111111     |
+            | Account number | 12345678   |
+            | User Id        | user12345  |
+            | Date of Birth  | 1984-07-27 |
+            | Dependants     | 3          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status         | 200        |
+            | Pass                | false      |
+            | Account Holder Name | Brian Cox  |
+            | Minimum             | 1890.00    |
+            | From Date           | 2016-04-06 |
+            #| Lowest Balance Date  | 2016-06-05 |
+           # | Lowest Balance Value | -575.99   |
+            | To Date             | 2016-07-04 |
+            | Sort code           | 111111     |
+            | Account number      | 12345678   |
+
+        ##### PASS - Tier 5 - dependant only (2 applicants) #####
+
+    Scenario: Theresa and David are dependant only (x2) Tier 5 applicants and do not have sufficient funds
+
+        #Application Raised Date 1st of June
+        #She has >= than the threshold of £630 for the previous 90 days
+
+            #Given a Service is consuming Financial Status API
+        Given the test data for account 23568493
+        When the Financial Status API is invoked with the following:
+            | Minimum        | 1260.00     |
+            | To Date        | 2016-06-01 |
+            | From Date      | 2016-03-04 |
+            | User Id        | user12345  |
+            | Account number | 23568493   |
+            | Sort code      | 111111     |
+            | Date of Birth  | 1984-07-27 |
+            | Dependants     | 2          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status         | 200          |
+            | Pass                | true         |
+            | Account Holder Name | Shelly Smith |
+            | Minimum             | 1260.00       |
+           # | Unique Reference        | value      |
+            | To Date             | 2016-06-01   |
+            | From Date           | 2016-03-04   |
+            | Sort code           | 111111       |
+            | Account number      | 23568493     |
+
+        ##### PASS - Tier 2 - dependant only (2 applicants) #####
+
+    Scenario: Kim and Silvio are dependant only applicants (Tier 2) and have sufficient funds
+
+        #Application Raised Date 1st of June
+        #She has >= than the threshold of £630 for the previous 90 days
+
+            #Given a Service is consuming Financial Status API
+        Given the test data for account 23568493
+        When the Financial Status API is invoked with the following:
+            | Minimum        | 1260.00    |
+            | To Date        | 2016-06-01 |
+            | From Date      | 2016-03-04 |
+            | User Id        | user12345  |
+            | Account number | 23568493   |
+            | Sort code      | 111111     |
+            | Date of Birth  | 1984-07-27 |
+            | Dependants     | 2          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status         | 200          |
+            | Pass                | true         |
+            | Account Holder Name | Shelly Smith |
+            | Minimum             | 1260.00      |
+           # | Unique Reference        | value      |
+            | To Date             | 2016-06-01   |
+            | From Date           | 2016-03-04   |
+            | Sort code           | 111111       |
+            | Account number      | 23568493     |
