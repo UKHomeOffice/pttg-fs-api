@@ -83,10 +83,10 @@ pipeline:
       - KUBE_NAMESPACE=pt-i-preprod
       - ENVIRONMENT=preprod
       - VERSION=${DRONE_COMMIT_SHA}
-      - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
+      - KUBE_SERVER_PROD=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
-      - ./deploy.sh
+      - ./deploy-prod.sh
     when:
       event: deployment
       environment: preprod
