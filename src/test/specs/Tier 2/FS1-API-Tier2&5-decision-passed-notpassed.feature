@@ -195,7 +195,6 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | Account number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | Account Holder Consent | Yes        |
-            | User Id                | user12345  |
             | Dependants             | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200          |
@@ -224,7 +223,6 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | From Date      | 2016-04-06 |
             | Sort code      | 111111     |
             | Account number | 12345678   |
-            | User Id        | user12345  |
             | Date of Birth  | 1984-07-27 |
             | Dependants     | 3          |
         Then The Financial Status API provides the following results:
