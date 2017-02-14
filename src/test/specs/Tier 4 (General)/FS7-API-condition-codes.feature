@@ -224,4 +224,19 @@ Scenario: Joko is on a 7 month below degree course at a other institution and ha
     Then The Financial Status API provides the following result:
         | Condition Code     |    Applicant - 3              |
                              |    Partner - 3                |
-                             |    Child - 1                  |
+
+################# Main course degree or higher at HEI - Dependant only application - less than 12 months  #######################
+
+Scenario: Xavi is a dependant only application with the main applicant on an 7 month main course degree or higher at a higher education institute
+
+    Given A Service is consuming the FSPS Calculator API
+    When the FSPS Calculator API is invoked with the following
+        |  Course Institution | Recognised body or HEI         |
+        |  Course type        | Main course degree or higher   |
+        |  Dependants         | 1                              |
+        |  Course start date  | 2016-01-03                     |
+        |  Course end date    | 2016-07-03                     |
+        | Dependants only     | Yes                            |
+Then The Financial Status API provides the following results:
+        |  Condition Code     | Partner - 3                    |
+                              | Child - 1                      |
