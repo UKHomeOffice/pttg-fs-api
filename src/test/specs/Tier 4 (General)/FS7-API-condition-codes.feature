@@ -20,6 +20,7 @@ Scenario: Theresa is on an 7 month main course degree or higher at a higher educ
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4main                         |
         | Course Institution | Recognised body or HEI         |
         | Course type        | Main course degree or higher   |
         | Dependants         | 0                              |
@@ -32,6 +33,7 @@ Scenario: Donald is on an 7 month main course degree or higher at a higher educa
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        |  Student Type       | t4main                         |
         |  Course Institution | Recognised body or HEI         |
         |  Course type        | Main course degree or higher   |
         |  Dependants         | 2                              |
@@ -48,6 +50,7 @@ Scenario: Barack is on a 13 month main course degree or higher at a higher educa
 
 Given A Service is consuming the FSPS Calculator API
 When the FSPS Calculator API is invoked with the following
+        |  Student Type         | t4main                         |
         |  Course Institution   | Recognised body or HEI         |
         |  Course type          | Main course degree or higher   |
         |  Dependants           | 2                              |
@@ -64,6 +67,7 @@ Scenario: Vladimir is on a 7 month pre-sessional at a higher education institute
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4main                     |
         | Course Institution | Recognised body or HEI     |
         | Course type        | Pre-sessional              |
         | Dependants         | 0                          |
@@ -78,6 +82,7 @@ Scenario: Hilary is on a 7 month pre-sessional course and has 1 dependant.
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4main                    |
         | Course Institution | Recognised body or HEI    |
         | Course type        | Pre-sessional             |
         | Dependants         | 1                         |
@@ -94,6 +99,7 @@ Scenario: Margaret is on a 7 month below degree course at a higher education ins
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4main                    |
         | Course Institution | Recognised body or HEI    |
         | Course Type        | Main Course below degree  |
         | Dependants         | 0                         |
@@ -108,6 +114,7 @@ Scenario: Bernard is on a 7 month below degree course at a higher education inst
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4main                     |
         | Course Institution | Recognised body or HEI     |
         | Course Type        | Main Course below degree   |
         | Dependants         | 2                          |
@@ -124,6 +131,7 @@ Scenario: Angela is on a 7 month main course degree or higher at a other institu
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+            | Student Type       | t4main                         |
             | Course Institution | Other Institution              |
             | Course Type        | Main Course degree or higher   |
             | Dependants         | 0                              |
@@ -138,6 +146,7 @@ Scenario: Boris is on a  7 month main course degree or higher at a other institu
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+            | Student Type       | t4main                        |
             | Course Institution | Other Institution             |
             | Course Type        | Main Course degree or higher  |
             | Dependants         | 1                             |
@@ -154,6 +163,7 @@ Scenario: Bashar is on a 13 months main course degree or higher at a other insti
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+            | Student Type       | t4main                        |
             | Course Institution | Other Institution             |
             | Course Type        | Main Course degree or higher  |
             | Dependants         | 2                             |
@@ -170,6 +180,7 @@ Scenario: Winston is on a 7 month pre-sessional at a other institution and does 
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4main                        |
         | Course Institution | Other Institution             |
         | Course Type        | Pre-sessional                 |
         | Dependants         | 0                             |
@@ -185,6 +196,7 @@ Scenario: Ronald is on a 7 month pre-sessional at a other institution and has 1 
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4main                        |
         | Course Institution | Other Institution             |
         | Course Type        | Pre-sessional                 |
         | Dependants         | 1                             |
@@ -201,6 +213,7 @@ Scenario: Narendra is on a 7 month below degree course at a other institution an
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4main                         |
         | Course Institution | Other Institution              |
         | Course Type        | Main Course below degree       |
         | Dependants         | 0                              |
@@ -216,6 +229,7 @@ Scenario: Joko is on a 7 month below degree course at a other institution and ha
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4main                        |
         | Course Institution | Other Institution             |
         | Course Type        | Main Course below degree      |
         | Dependants         | 1                             |
@@ -225,18 +239,99 @@ Scenario: Joko is on a 7 month below degree course at a other institution and ha
         | Condition Code     |    Applicant - 3              |
                              |    Partner - 3                |
 
-################# Main course degree or higher at HEI - Dependant only application - less than 12 months  #######################
+################# Main course degree or higher at HEI - Dependant only - less than 12 months  #######################
 
-Scenario: Xavi is a dependant only application with the main applicant on an 7 month main course degree or higher at a higher education institute
+Scenario: Xavi is a dependant only application with the main applicant on a 7 month main course degree or higher at a higher education institute
 
     Given A Service is consuming the FSPS Calculator API
     When the FSPS Calculator API is invoked with the following
+        |  Student Type       | t4dependant                    |
         |  Course Institution | Recognised body or HEI         |
         |  Course type        | Main course degree or higher   |
         |  Dependants         | 1                              |
         |  Course start date  | 2016-01-03                     |
         |  Course end date    | 2016-07-03                     |
-        | Dependants only     | Yes                            |
-Then The Financial Status API provides the following results:
+    Then The Financial Status API provides the following results:
         |  Condition Code     | Partner - 3                    |
                               | Child - 1                      |
+
+################# Main course degree or higher at HEI - dependant only - greater than 12 months  #######################
+
+Scenario: Christiano and Lionel are a dependant only (x2) application with the main applicant on a 13 month main course degree or higher at a higher education institute
+
+    Given A Service is consuming the FSPS Calculator API
+    When the FSPS Calculator API is invoked with the following
+        |  Student Type       | t4dependant                    |
+        |  Course Institution | Recognised body or HEI         |
+        |  Course type        | Main course degree or higher   |
+        |  Dependants         | 2                              |
+        |  Course start date  | 2016-01-03                     |
+        |  Course end date    | 2017-01-03                     |
+    Then The Financial Status API provides the following results:
+        |  Condition Code     | Partner - 4B                   |
+                              | Child - 1                      |
+
+################# Pre Sessional course at HEI - dependant only #######################
+
+Scenario: Zlatan is a dependant only (x1) application with the main applicant on a 7 month pre-sessional course
+
+    Given A Service is consuming the FSPS Calculator API
+    When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4dependant               |
+        | Course Institution | Recognised body or HEI    |
+        | Course type        | Pre-sessional             |
+        | Dependants         | 1                         |
+        | Course start date  | 2016-01-03                |
+        | Course end date    | 2016-10-10                |
+    Then The Financial Status API provides the following result:
+        | Condition Code     | Partner - 3               |
+                             | Child - 1                 |
+
+################# Main course below degree at HEI - dependant only  #######################
+
+Scenario: Eric is a dependant only (x1) application with the main applicant on a 7 month below degree main course at a higher education institute
+
+    Given A Service is consuming the FSPS Calculator API
+    When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4dependant                |
+        | Course Institution | Recognised body or HEI     |
+        | Course Type        | Main Course below degree   |
+        | Dependants         | 1                          |
+        | Course start date  | 2016-01-03                 |
+        | Course end date    | 2016-10-10                 |
+    Then The Financial Status API provides the following result:
+        | Condition Code     | Partner - 3                |
+                             | Child - 1                  |
+
+################# Main course degree or higher at Other Institution - with dependants - less than 12 months #######################
+
+Scenario: Karel is a dependant only application with the main applicant on a 7 month main course degree or higher at a other institution
+
+    Given A Service is consuming the FSPS Calculator API
+    When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4dependant                 |
+        | Course Institution | Other Institution           |
+        | Course Type        | Main Course degree or higher|
+        | Dependants         | 1                           |
+        | Course start date  | 2016-01-03                  |
+        | Course end date    | 2016-10-10                  |
+    Then The Financial Status API provides the following result:
+        | Condition Code     | Partner - 4B                |
+                             | Child - 1                   |
+
+################ Main course degree or higher at Other Institution - with dependants - greater than 12 months #######################
+
+Scenario: Jaap and Sebastian are a dependant only application with the main applicant on a 13 month main course degree or higher at a other institution
+    Given A Service is consuming the FSPS Calculator API
+    When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4dependant                 |
+        | Course Institution | Other Institution           |
+        | Course Type        | Main Course degree or higher|
+        | Dependants         | 2                           |
+        | Course start date  | 2016-01-03                  |
+        | Course end date    | 2017-01-03                  |
+    Then The Financial Status API provides the following result:
+        | Condition Code     | Partner - 3                 |
+                             | Child - 1                   |
+
+################# Pre Sessional course at Other Institution - dependant only #######################
