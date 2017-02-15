@@ -1,0 +1,9 @@
+{
+    "accountId": 11111101078914,
+    "sortCode": "111111",
+    "accountNumber": "01078914",
+    "result": {
+        "status": "INITIATED",
+        "description": "Consent request has been initiated to Account-Holder"
+    }
+}

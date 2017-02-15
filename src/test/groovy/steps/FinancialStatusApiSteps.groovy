@@ -74,6 +74,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     @Managed
     public Response resp
+    public Response respCalc
     public Response resp2
     String jsonAsString
     String dependants = ""
@@ -318,7 +319,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         assert allJsonValue.containsAll(tableFieldValue)
     }
 
-
     public void validateResult(DataTable arg) {
 
         Map<String, String> entries = arg.asMap(String.class, String.class);
@@ -328,6 +328,9 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             switch (key) {
                 case "HTTP Status":
                     assert entries.get(key) == resp.getStatusCode().toString();
+                    break;
+                case "Response Code":
+                    assert entries.get(key) == respCalc.getStatusCode().toString();
                     break;
                 case "Minimum":
                     String jsonPath = fkm.buildJsonPath(key)
@@ -398,10 +401,27 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @Given("^the default details are\$")
     public void the_default_details_are(DataTable arg1) {
         getTableData(arg1)
+        respCalc = get("http://localhost:" + serverPort +"/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/consent?dob={dob}", sortCode, accountNumber,dob)
+        jsonAsString = respCalc.asString()
+
+        println("Family Case Worker API: " + jsonAsString)
+
+    }
+    @Given("^the service is consuming the Barclays Balances API\$")
+    public void the_service_is_consuming_the_Barclays_Balances_API() {
+      //resp = get("http://localhost:" + serverPort +"/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/consent?dob={dob}")
+      //  jsonAsString = resp.asString()
+    }
+
+    @Given("^the applicant has not granted consent\$")
+    public void the_applicant_has_not_granted_consent() {
 
     }
 
+    @Given("^the consent request has expired\$")
+    public void the_consent_request_has_expired() {
 
+    }
     @When("^the Financial Status API is invoked\$")
     public void the_Financial_Status_API_is_invoked() {
 
@@ -447,20 +467,51 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         println("FSPS API Calculator: " + jsonAsString)
     }
 
+    @When("^the Balances API is invoked\$")
+    public void the_Balances_API_is_invoked() throws Throwable {
+
+    }
+
+    @When("^the Consent API is invoked\$")
+    public void the_Consent_API_is_invoked() {
+
+    }
+    @When("^an account number not found at Barclays\$")
+    public void an_account_number_not_found_at_Barclays() {
+
+    }
+    @When("^a sort code not found at Barclays\$")
+    public void a_sort_code_not_found_at_Barclays() {
+
+    }
+    @When("^Date of birth is not found at Barclays\$")
+    public void date_of_birth_is_not_found_at_Barclays() {
+
+    }
+    @When("^Valid UK mobile number is not found at Barclays\$")
+    public void valid_UK_mobile_number_is_not_found_at_Barclays() {
+
+    }
     @Then("^The Financial Status API provides the following results:\$")
     public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
-        validateJsonResult(arg1)
-        // validateResult(arg1)
+        //validateJsonResult(arg1)
+         validateResult(arg1)
 
 
     }
+
+    @Then("^the Barclays Consent API provides the following response:\$")
+    public void the_Barclays_Consent_API_provides_the_following_response(DataTable arg1)  {
+        validateResult(arg1)
+    }
+
     @Then("^The Tier_Two Financial Status API provides the following results:\$")
     public void the_Tier_Two_Financial_Status_API_provides_the_following_results(DataTable arg1)  {
-        validateJsonResult(arg1)
+        validateResult(arg1)
     }
     @Then("^The Tier_five Financial Status API provides the following results:\$")
     public void the_Tier_five_Financial_Status_API_provides_the_following_results(DataTable arg1) throws Throwable {
-        validateJsonResult(arg1)
+        validateResult(arg1)
     }
 
     @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")
@@ -505,4 +556,10 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         responseStatusFor("http://localhost:" + serverPort + "/healthz")
     }
 
+    @Then("^the Barclays Consent API provides the following error response:\$")
+    public void the_Barclays_Consent_API_provides_the_following_error_response(DataTable arg1) {
+        validateResult(arg1)
+    }
+
 }
+

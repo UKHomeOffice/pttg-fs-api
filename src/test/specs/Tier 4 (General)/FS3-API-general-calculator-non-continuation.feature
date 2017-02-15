@@ -134,7 +134,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 35900.50   |
-            | Course length  | 9          |
+            | Course Length  | 9          |
             | Leave end date | 2019-01-03 |
 
         ############## Initial Pre-sessional ######################
@@ -220,5 +220,5 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Non
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 43505.50   |
-            | Course length  | 9          |
+            | Course Length  | 9          |
             | Leave end date | 2018-01-15 |

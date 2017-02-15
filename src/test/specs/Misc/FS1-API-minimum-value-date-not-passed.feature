@@ -23,7 +23,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | HTTP Status          | 200        |
             | Pass                 | false      |
             | Minimum              | 2530.00    |
-            | From date            | 2016-05-05 |
+            | From Date            | 2016-05-05 |
             | To date              | 2016-06-01 |
             | Lowest Balance Date  | 2016-05-30 |
             | Lowest Balance Value | 2429.99    |

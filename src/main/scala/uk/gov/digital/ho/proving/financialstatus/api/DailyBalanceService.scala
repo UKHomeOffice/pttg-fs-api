@@ -45,7 +45,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
   private val LOGGER = LoggerFactory.getLogger(classOf[DailyBalanceService])
 
-  logStartupInformation()
+  private val CONSENT_UNAVAILABLE = "consent unavailable"
 
   @RequestMapping(value = Array("{sortCode:[0-9]+|[0-9-]+}/{accountNumber:[0-9]+}/dailybalancestatus"),
     method = Array(RequestMethod.GET),
@@ -136,7 +136,7 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
     } yield {
       val bankAccount = Account(sortCode, accountNumber)
 
-      val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum, dob, userId, true) // Remove once Bank API finalised
+      val dailyAccountBalanceCheck = accountStatusChecker.checkDailyBalancesAreAboveMinimum(bankAccount, fromDate, toDate, minimum, dob, userId)
 
       dailyAccountBalanceCheck match {
         case Success(balanceCheck) => new ResponseEntity(AccountDailyBalanceStatusResponse(Some(bankAccount), Some(balanceCheck),
@@ -144,6 +144,11 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
 
         case Failure(exception: HttpClientErrorException) =>
           exception.getStatusCode match {
+            case HttpStatus.BAD_REQUEST if exception.getResponseBodyAsString.toLowerCase.contains(CONSENT_UNAVAILABLE) =>
+              new ResponseEntity(AccountDailyBalanceStatusResponse(StatusResponse(serviceMessages.REST_API_CLIENT_ERROR,
+                serviceMessages.USER_CONSENT_NOT_GIVEN(sortCode, accountNumber))), HttpStatus.FORBIDDEN
+              )
+
             case HttpStatus.NOT_FOUND => new ResponseEntity(
               AccountDailyBalanceStatusResponse(StatusResponse(serviceMessages.REST_API_CLIENT_ERROR,
                 serviceMessages.NO_RECORDS_FOR_ACCOUNT(sortCode, accountNumber))), HttpStatus.NOT_FOUND
@@ -176,10 +181,6 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
   def buildErrorResponse(headers: HttpHeaders, statusCode: String,
                          statusMessage: String, status: HttpStatus): ResponseEntity[AccountDailyBalanceStatusResponse] = {
     new ResponseEntity(AccountDailyBalanceStatusResponse(StatusResponse(statusCode, statusMessage)), headers, status)
-  }
-
-  override def logStartupInformation(): Unit = {
-    LOGGER.info(accountStatusChecker.parameters)
   }
 
 }

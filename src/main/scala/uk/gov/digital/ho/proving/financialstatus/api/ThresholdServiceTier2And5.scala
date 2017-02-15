@@ -36,8 +36,6 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdServiceTier2And5])
 
-  logStartupInformation()
-
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
   def calculateThreshold(@RequestParam(value = "applicantType") applicantType: Optional[String],
                          @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer],
@@ -114,8 +112,6 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
       )
     ))
   }
-
-  override def logStartupInformation(): Unit = LOGGER.info(maintenanceThresholdCalculator.parameters)
 
   private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] =
     new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)

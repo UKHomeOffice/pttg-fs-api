@@ -56,7 +56,7 @@ class DailyBalanceServiceSpec extends Specification {
         def lower = new BigDecimal(2560.23).setScale(2, BigDecimal.ROUND_HALF_UP)
         def upper = new BigDecimal(3500.00).setScale(2, BigDecimal.ROUND_HALF_UP)
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, lower, upper, true, false)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(fromDate, toDate, lower, upper, true, false)
 
         when:
         def response = mockMvc.perform(
@@ -101,7 +101,7 @@ class DailyBalanceServiceSpec extends Specification {
         def lowest = 1800.00
 
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateDailyBalancesForFail(fromDate, toDate, lower, upper, lowest, lowestIndex)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _) >> DataUtils.generateDailyBalancesForFail(fromDate, toDate, lower, upper, lowest, lowestIndex)
 
         when:
         def response = mockMvc.perform(
@@ -143,7 +143,7 @@ class DailyBalanceServiceSpec extends Specification {
         def lower = new BigDecimal(2660.23).setScale(2, BigDecimal.ROUND_HALF_UP)
         def upper = new BigDecimal(3500.00).setScale(2, BigDecimal.ROUND_HALF_UP)
 
-        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(mockFromDate, toDate, lower, upper, true, false)
+        1 * mockBankService.fetchAccountDailyBalances(_, _, _, _, _) >> DataUtils.generateRandomBankResponseOK(mockFromDate, toDate, lower, upper, true, false)
 
         when:
         def response = mockMvc.perform(

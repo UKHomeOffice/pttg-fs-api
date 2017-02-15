@@ -62,7 +62,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2430.00    |
-            | Course length  | 2          |
+            | Course Length  | 2          |
             | Leave end date | 2016-09-03 |
 
     Scenario: Stuart is on an initial 13 months SUSO course and does not have dependants. Stuart's maintenance threshold amount calculated.
@@ -126,6 +126,6 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 6010.00    |
-            | Course length  | 2          |
+            | Course Length  | 2          |
             | Leave end date | 2019-01-03 |
 

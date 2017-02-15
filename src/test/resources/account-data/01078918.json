@@ -1,0 +1,9 @@
+{
+    "accountId": 11111101078918,
+    "sortCode": "111111",
+    "accountNumber": "01078918",
+    "result": {
+        "status": "FAILURE",
+        "description": "No Data Found"
+    }
+}
