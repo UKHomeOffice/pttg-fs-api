@@ -108,6 +108,7 @@ class RestErrorsSpec extends Specification {
                 .param("dob", "2000-01-01")
         )
         then:
+        println("=====> Status returned: " + response.andReturn().getResponse().getStatus())
         response.andExpect(status().is(404))
         verify(1, getRequestedFor(urlMatching(verifyUrl)))
 
