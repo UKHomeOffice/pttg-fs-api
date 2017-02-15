@@ -1,11 +1,8 @@
 ## Condition Codes ##
 
-    # The API should calculate the condition code using the course type selected, the course institution selected and if the applicant has any dependants
+    # The API should calculate the condition code using the course type selected, course length, the course institution selected and if the applicant has any dependants
     # Course Type can be one of three options which are (1) Pre-sessional (2) Main course degree or higher or (3) Main course below degree
-    # Course institution can be one of two options - Recognised body or HEI (higher education institution) or Other institution
-    # Applicants (with no dependants) at recognised body or HEI and with a course type of Main course degree or higher or Main course below degree will always be 2
-    # Applicants (with no dependants) at a other institution and with a course type of Main course degree or higher or Main course below degree will always be 3
-    # Course length is taken into account when generating a code for an applicant with dependants at a Recognised body or HEI (higher education institution)
+    # Course institution can be one of two options - Recognised body or HEI (higher education institution) or Other institutio
     # Pre sessional and main course below degree level - course length is not taken in to account when generating the condition code
     # Dependant Only applications will need their own condition codes (e.g. Partner 3, Child 1)
     # DES, PGDD and SUSO have set codes regardless of the course type selected
@@ -238,6 +235,7 @@ Scenario: Joko is on a 7 month below degree course at a other institution and ha
     Then The Financial Status API provides the following result:
         | Condition Code     |    Applicant - 3              |
                              |    Partner - 3                |
+                             | Child - 1                     |
 
 ################# Main course degree or higher at HEI - Dependant only - less than 12 months  #######################
 
@@ -316,7 +314,7 @@ Scenario: Karel is a dependant only application with the main applicant on a 7 m
         | Course start date  | 2016-01-03                  |
         | Course end date    | 2016-10-10                  |
     Then The Financial Status API provides the following result:
-        | Condition Code     | Partner - 4B                |
+        | Condition Code     | Partner - 3                 |
                              | Child - 1                   |
 
 ################ Main course degree or higher at Other Institution - with dependants - greater than 12 months #######################
@@ -331,7 +329,37 @@ Scenario: Jaap and Sebastian are a dependant only application with the main appl
         | Course start date  | 2016-01-03                  |
         | Course end date    | 2017-01-03                  |
     Then The Financial Status API provides the following result:
-        | Condition Code     | Partner - 3                 |
+        | Condition Code     | Partner - 4B                |
                              | Child - 1                   |
 
 ################# Pre Sessional course at Other Institution - dependant only #######################
+
+Scenario: Matteo is on a 7 month pre-sessional at a other institution and does not have dependants
+
+    Given A Service is consuming the FSPS Calculator API
+    When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4dependant                 |
+        | Course Institution | Other Institution           |
+        | Course Type        | Pre-sessional               |
+        | Dependants         | 1                           |
+        | Course start date  | 2016-01-03                  |
+        | Course end date    | 2016-10-10                  |
+    Then The Financial Status API provides the following result:
+        | Condition Code     | Partner - 3                 |
+                             | Child - 1                   |
+
+################# Main course below degree at Other Institution - dependant only #######################
+
+Scenario: Daley is on Main Course below degree at a other institution and does not have dependants
+
+    Given A Service is consuming the FSPS Calculator API
+    When the FSPS Calculator API is invoked with the following
+        | Student Type       | t4dependant                 |
+        | Course Institution | Other Institution           |
+        | Course Type        | Main Course below degree    |
+        | Dependants         | 1                           |
+        | Course start date  | 2016-01-03                  |
+        | Course end date    | 2016-10-10                  |
+    Then The Financial Status API provides the following result:
+        | Condition Code     | Partner - 3                 |
+                             | Child - 1                   |
