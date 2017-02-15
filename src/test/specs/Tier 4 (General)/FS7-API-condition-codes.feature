@@ -5,11 +5,10 @@
     # Course institution can be one of two options - Recognised body or HEI (higher education institution) or Other institutio
     # Pre sessional and main course below degree level - course length is not taken in to account when generating the condition code
     # Dependant Only applications will need their own condition codes (e.g. Partner 3, Child 1)
-    # DES, PGDD and SUSO have set codes regardless of the course type selected
 
-SO THAT I can identify the condition codes for a visa applicant
+SO THAT I can identify the condition codes for a T4 general student applicant
 AS A Caseworker
-WOULD LIKE The Financial Status Tool to automatically generate a condition for an applicant
+WOULD LIKE The Financial Status Tool to automatically generate a condition code for a T4 general student applicant
 
 ################# Main course degree or higher at HEI - applicant only   #######################
 
@@ -22,7 +21,7 @@ Scenario: Theresa is on an 7 month main course degree or higher at a higher educ
         | Course type        | Main course degree or higher   |
         | Dependants         | 0                              |
     Then The Financial Status API provides the following result:
-        |Condition Code      | Applicant - 2                  |
+        | Condition Code     | Applicant - 2                  |
 
 ################# Main course degree or higher at HEI - with dependants - less than 12 months #######################
 
