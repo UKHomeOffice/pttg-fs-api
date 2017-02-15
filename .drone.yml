@@ -9,7 +9,6 @@ pipeline:
       - export ARTIFACTORY_USER=pttg-fs-robot
       - export ARTIFACTORY_PASS=${DOCKER_ARTIFACTORY_PASSWORD}
       - export PTTG_GH_TOKEN=${PTTG_GH_TOKEN}
-      - echo ${DOCKER_ARTIFACTORY_PASSWORD}
       - ./gradlew build
     when:
       event: push
