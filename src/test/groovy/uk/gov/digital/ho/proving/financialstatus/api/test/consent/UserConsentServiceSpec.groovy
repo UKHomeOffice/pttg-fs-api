@@ -13,6 +13,9 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionH
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
+import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain.UserConsent
 import uk.gov.digital.ho.proving.financialstatus.domain.UserConsentResult
@@ -25,18 +28,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup
 
 @WebAppConfiguration
-@ContextConfiguration(classes = ServiceConfiguration.class)
+@ContextConfiguration(classes = [ ServiceConfiguration.class, EmbeddedMongoClientConfiguration.class ])
 class UserConsentServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
     def mockBankService = Mock(BankService)
 
-    ApplicationEventPublisher auditor = Mock()
+    AuditEventPublisher auditor = Mock()
     Authentication authenticator = Mock()
 
     def userConsentService = new UserConsentService(new UserConsentStatusChecker(mockBankService),
-        serviceMessages, auditor, authenticator
+        serviceMessages, auditor, authenticator, new DeploymentDetails("localhost", "local")
     )
 
     MockMvc mockMvc = standaloneSetup(userConsentService)
