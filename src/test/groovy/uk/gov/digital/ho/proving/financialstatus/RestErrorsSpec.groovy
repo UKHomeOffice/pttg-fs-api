@@ -1,12 +1,12 @@
 package uk.gov.digital.ho.proving.financialstatus
 
 import groovy.json.JsonSlurper
-import org.junit.Ignore
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.web.client.RestTemplate
+import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import steps.WireMockTestDataLoader
@@ -90,7 +90,7 @@ class RestErrorsSpec extends Specification {
         testDataLoader?.stop()
     }
 
-    @Ignore // These currently don't work in drone
+    @Ignore("These currently don't work in drone")
     def "check for 0 retry on 3 second delay returning 404 status code"() {
         // Try once only when we get a 404 error before failing
         given:
@@ -118,7 +118,7 @@ class RestErrorsSpec extends Specification {
         jsonContent.status.message == "No records for sort code 123456 and account number 12345678"
     }
 
-    @Ignore // These currently don't work in drone
+    @Ignore("These currently don't work in drone")
     def "check for 3 retries on 4 second delay returning 500 status code"() {
         // Try 3 times when we get a 500 error before failing
         given:
@@ -146,7 +146,7 @@ class RestErrorsSpec extends Specification {
         jsonContent.status.message == "500 Internal Server Error"
     }
 
-    @Ignore // These currently don't work in drone
+    @Ignore("These currently don't work in drone")
     def "check for 3 retries on 7 second delay returning 200 status code"() {
         // Try the service 3 times but only wait for 5 seconds, the mock is set to return
         // a 200 after 7 seconds, but we should report a connection timeout as the service
