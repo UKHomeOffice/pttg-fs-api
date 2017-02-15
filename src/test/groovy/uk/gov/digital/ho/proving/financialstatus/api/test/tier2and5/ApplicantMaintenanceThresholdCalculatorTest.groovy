@@ -39,11 +39,11 @@ class ApplicantMaintenanceThresholdCalculatorTest extends Specification {
         "main"        | 18         || 12285
         "main"        | 19         || 12915
         "main"        | 20         || 13545
-        "dependant"   | 0          || 630
+        "dependant"   | 0          || 0
         "dependant"   | 1          || 630
-        "dependant"   | 2          || 630
-        "dependant"   | 3          || 630
-        "dependant"   | 4          || 630
+        "dependant"   | 2          || 1260
+        "dependant"   | 3          || 1890
+        "dependant"   | 4          || 2520
     }
 
 }

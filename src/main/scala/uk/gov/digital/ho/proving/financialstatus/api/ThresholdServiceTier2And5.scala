@@ -71,7 +71,8 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
             case None => buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
           }
         }
-      case DependantApplicant => val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType)
+      case DependantApplicant =>
+        val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType, dependants.getOrElse(0))
         new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
 
     }

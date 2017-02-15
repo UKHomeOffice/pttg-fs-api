@@ -108,7 +108,7 @@ class ApplicantMaintenanceThresholdServiceSpec extends Specification {
 
         where:
         applicantType || threshold
-        "dependant"   || 630
+        "dependant"   || 0
     }
 
 }

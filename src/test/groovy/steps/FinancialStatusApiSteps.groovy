@@ -83,8 +83,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String accommodationFeesPaid = ""
     String studentType = ""
     String dob = ""
-    String userId //= ""
-    String accountHolderConsent = ""
     def courseStartDate = " "
     String courseEndDate = ""
     String continuationEndDate = ""
@@ -96,8 +94,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     List<String> Todate = new ArrayList()
     List<String> Fromdate = new ArrayList()
     List<String> Minimums = new ArrayList()
-    List<String> Accountholderconsent = new ArrayList()
-    List<String> Userid = new ArrayList()
     List<String> Dateofbirth = new ArrayList()
     List<String> Sortcode = new ArrayList()
     List<String> Accountnumber = new ArrayList()
@@ -204,13 +200,6 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             if (s.equalsIgnoreCase("Date of Birth")) {
                 dob = entries.get(s)
             }
-            if (s.equalsIgnoreCase("user id")) {
-                userId = entries.get(s)
-            }
-            if (s.equalsIgnoreCase("Account Holder Consent")) {
-                accountHolderConsent = entries.get(s)
-            }
-
             if (s.equalsIgnoreCase("Course Type")) {
                 courseType = entries.get(s)
             }
@@ -434,7 +423,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the Financial Status API is invoked\$")
     public void the_Financial_Status_API_is_invoked() {
 
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}", sortCode, accountNumber, fromDate, toDate, minimum, dob)
         jsonAsString = resp.asString()
 
         println("Family Case Worker API: " + jsonAsString)
@@ -445,7 +434,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the Financial Status API is invoked with the following:\$")
     public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}&userId={userId}&accountHolderConsent={accountHolderConsent}", sortCode, accountNumber, fromDate, toDate, minimum, dob, userId, accountHolderConsent)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}", sortCode, accountNumber, fromDate, toDate, minimum, dob)
         jsonAsString = resp.asString()
 
         println("Family Case Worker API: " + jsonAsString)
@@ -463,7 +452,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the FSPS Calculator Tier_Two API is invoked with the following\$")
     public void the_FSPS_Calculator_Tier_Two_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t2/maintenance/threshold?applicantType={studentType}&dependants={dependants}", applicantType, dependants)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t2/maintenance/threshold?applicantType={applicantType}&dependants={dependants}", applicantType, dependants)
         jsonAsString = resp.asString()
         println("FSPS API Calculator: " + jsonAsString)
     }
@@ -471,7 +460,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the FSPS Calculator Tier_five API is invoked with the following\$")
     public void the_FSPS_Calculator_Tier_five_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t5/maintenance/threshold?applicantType={studentType}&dependants={dependants}", applicantType, dependants)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t5/maintenance/threshold?applicantType={applicantType}&dependants={dependants}", applicantType, dependants)
         jsonAsString = resp.asString()
         println("FSPS API Calculator: " + jsonAsString)
     }
