@@ -201,8 +201,8 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | Account Holder Name  | Shelly Smith |
             | Minimum              | 1260.00      |
             | From Date            | 2016-03-04   |
-            | Lowest Balance Date  | 2016-05-30   |
-            | Lowest Balance Value | 549.99       |
+#            | Lowest Balance Date  | 2016-05-30   |
+#            | Lowest Balance Value | 549.99       |
             | To Date              | 2016-06-01   |
             | Sort code            | 111111       |
             | Account number       | 23568498     |
@@ -229,8 +229,8 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | Account Holder Name  | Brian Cox  |
             | Minimum              | 1890.00    |
             | From Date            | 2016-04-06 |
-            | Lowest Balance Date  | 2016-06-05 |
-            | Lowest Balance Value | -575.99    |
+#            | Lowest Balance Date  | 2016-06-05 |
+#            | Lowest Balance Value | -575.99    |
             | To Date              | 2016-07-04 |
             | Sort code            | 111111     |
             | Account number       | 12345678   |

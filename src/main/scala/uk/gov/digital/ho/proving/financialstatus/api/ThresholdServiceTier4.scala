@@ -25,7 +25,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(value = Array("/pttg/financialstatus/v1/t4/maintenance"))
 @ControllerAdvice
-class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
+class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculatorT4,
                                          val studentTypeChecker: StudentTypeChecker,
                                          val courseTypeChecker: CourseTypeChecker,
                                          val serviceMessages: ServiceMessages,

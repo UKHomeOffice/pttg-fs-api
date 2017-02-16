@@ -3,31 +3,23 @@ package uk.gov.digital.ho.proving.financialstatus.api
 import java.math.{BigDecimal => JBigDecimal}
 import java.net.SocketTimeoutException
 import java.time.LocalDate
-import java.util.Optional
-import java.util.UUID
+import java.util.{Optional, UUID}
 
 import org.apache.http.conn.HttpHostConnectException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.PropertySource
 import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
+import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
 import org.springframework.web.bind.annotation._
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.ResourceAccessException
-import uk.gov.digital.ho.proving.financialstatus.api.validation.DailyBalanceParameterValidator
-import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
+import org.springframework.web.client.{HttpClientErrorException, ResourceAccessException}
+import uk.gov.digital.ho.proving.financialstatus.api.validation.{DailyBalanceParameterValidator, ServiceMessages}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions._
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
-import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
-import uk.gov.digital.ho.proving.financialstatus.domain.Account
-import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
-import uk.gov.digital.ho.proving.financialstatus.domain.UserProfile
+import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker, UserProfile}
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 
 import scala.util._
 
