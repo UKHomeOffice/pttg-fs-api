@@ -8,7 +8,6 @@ import java.util.{Optional, UUID}
 import org.apache.http.conn.HttpHostConnectException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.PropertySource
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.{HttpHeaders, HttpStatus, MediaType, ResponseEntity}
@@ -16,9 +15,11 @@ import org.springframework.web.bind.annotation._
 import org.springframework.web.client.{HttpClientErrorException, ResourceAccessException}
 import uk.gov.digital.ho.proving.financialstatus.api.validation.{DailyBalanceParameterValidator, ServiceMessages}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions._
-import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountStatusChecker, UserProfile}
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 
 import scala.util._
 
@@ -28,8 +29,9 @@ import scala.util._
 @ControllerAdvice
 class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusChecker,
                                        val serviceMessages: ServiceMessages,
-                                       val auditor: ApplicationEventPublisher,
-                                       val authenticator: Authentication
+                                       val auditor: AuditEventPublisher,
+                                       val authenticator: Authentication,
+                                       val deploymentConfig: DeploymentDetails
                                       ) extends FinancialStatusBaseController with DailyBalanceParameterValidator {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[DailyBalanceService])
@@ -96,11 +98,11 @@ class DailyBalanceService @Autowired()(val accountStatusChecker: AccountStatusCh
       case Some(user) => user.id
       case None => "anonymous"
     }
-    auditor.publishEvent(auditEvent(principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
+    auditor.publishEvent(auditEvent(deploymentConfig, principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
   def auditSearchResult(auditEventId: UUID, response: AccountDailyBalanceStatusResponse, userProfile: Option[UserProfile]): Unit = {
-    auditor.publishEvent(auditEvent(userProfile match {
+    auditor.publishEvent(auditEvent(deploymentConfig, userProfile match {
       case Some(user) => user.id
       case None => "anonymous"
     }, SEARCH_RESULT, auditEventId,

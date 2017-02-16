@@ -1,7 +1,6 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test.tier4
 
 import groovy.json.JsonSlurper
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -11,6 +10,9 @@ import uk.gov.digital.ho.proving.financialstatus.api.ThresholdServiceTier4
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
+import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 
 import java.time.LocalDate
@@ -23,17 +25,18 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
  * @Author Home Office Digital
  */
 @WebAppConfiguration
-@ContextConfiguration(classes = ServiceConfiguration.class)
+@ContextConfiguration(classes = [ ServiceConfiguration.class, EmbeddedMongoClientConfiguration.class ])
 class CourseTypeCheckerServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
-    ApplicationEventPublisher auditor = Mock()
+    AuditEventPublisher auditor = Mock()
     Authentication authenticator = Mock()
 
     def thresholdService = new ThresholdServiceTier4(
         TestUtilsTier4.maintenanceThresholdServiceBuilder(), TestUtilsTier4.getStudentTypeChecker(),
-        TestUtilsTier4.getCourseTypeChecker(), serviceMessages, auditor, authenticator
+        TestUtilsTier4.getCourseTypeChecker(), serviceMessages, auditor, authenticator,
+        new DeploymentDetails("localhost", "local")
     )
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
@@ -44,7 +47,7 @@ class CourseTypeCheckerServiceSpec extends Specification {
 
     def url = TestUtilsTier4.thresholdUrl
 
-    def callApi(studentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid, courseTyped, dependantsOnly) {
+    def callApi(studentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid, courseType, dependantsOnly) {
 
 
         def response = mockMvc.perform(
@@ -68,7 +71,7 @@ class CourseTypeCheckerServiceSpec extends Specification {
     def "Tier 4 Course types"() {
 
         expect:
-        def response = callApi("general", true, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 5, 31), LocalDate.of(1999, 9, 3), 0, 0, 0, 0, courseType)
+        def response = callApi("general", true, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 5, 31), LocalDate.of(1999, 9, 3), 0, 0, 0, 0, courseType, false)
         response.andExpect(status().is(httpStatus))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.message == statusMessage

@@ -9,8 +9,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -23,8 +21,13 @@ import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfig
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.restdocs.headers.HeaderDocumentation.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.removeHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -78,7 +81,7 @@ public class ThresholdCalculatorTier4 {
     };
 
     private FieldDescriptor[] bodyModelFields = new FieldDescriptor[]{
-        fieldWithPath("threshold").description("minimum daily balance"),
+        fieldWithPath("threshold").description("minimum daily balance threshold"),
         fieldWithPath("leaveEndDate").description("end date of leave granted")
     };
 
@@ -113,6 +116,7 @@ public class ThresholdCalculatorTier4 {
             .param("accommodationFeesPaid", "300")
             .param("studentType", "general")
             .param("dependants", "0")
+            .param("dependantsOnly", "false")
             .param("courseType", "main")
             .filter(document.snippets(
                 requestHeaders(
@@ -141,6 +145,7 @@ public class ThresholdCalculatorTier4 {
             .param("accommodationFeesPaid", "300")
             .param("studentType", "general")
             .param("dependants", "1")
+            .param("dependantsOnly", "false")
             .param("courseType", "main")
              .filter(document.snippets(
                 responseFields(bodyModelFields)
@@ -171,7 +176,10 @@ public class ThresholdCalculatorTier4 {
                         .description("Type of student. Allowed values are 'des', 'general', 'pgdd' and 'suso'. See <<Glossary>>")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
-                        .description("The number of dependants to take in to account when calculating the minimum balance")
+                        .description("The number of dependants to take in to account when calculating the threshold value")
+                        .attributes(key("optional").value(true)),
+                    parameterWithName("dependantsOnly")
+                        .description("Whether or not to calculate only the dependants threshold value")
                         .attributes(key("optional").value(true)),
                     parameterWithName("courseType")
                         .description("Type of course.  Allowed values are 'main' and 'pre-sessional'")

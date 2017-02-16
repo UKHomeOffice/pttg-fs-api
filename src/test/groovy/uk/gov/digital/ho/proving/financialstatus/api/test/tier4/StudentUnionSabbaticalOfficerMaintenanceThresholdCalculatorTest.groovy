@@ -10,7 +10,7 @@ import static uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils.build
 import static uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils.buildScalaOption
 
 
-class StudentUnionSabbaticalOfficerThresholdCalculatorTest extends Specification {
+class StudentUnionSabbaticalOfficerMaintenanceThresholdCalculatorTest extends Specification {
 
     MaintenanceThresholdCalculatorT4 maintenanceThresholdCalculator = TestUtilsTier4.maintenanceThresholdServiceBuilder()
 
