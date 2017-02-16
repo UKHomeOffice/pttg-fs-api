@@ -14,7 +14,9 @@ import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation._
 import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages, ThresholdParameterValidator}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
+import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain._
 
@@ -23,13 +25,14 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 @PropertySource(value = Array("classpath:application.properties"))
 @RequestMapping(value = Array("/pttg/financialstatus/v1/t4/maintenance"))
 @ControllerAdvice
-class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculatorT4,
+class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculator,
                                          val studentTypeChecker: StudentTypeChecker,
                                          val courseTypeChecker: CourseTypeChecker,
                                          val serviceMessages: ServiceMessages,
-                                         val auditor: ApplicationEventPublisher,
-                                         val authenticator: Authentication
-                                        ) extends FinancialStatusBaseController with ThresholdParameterValidator {
+                                         val auditor: AuditEventPublisher,
+                                         val authenticator: Authentication,
+                                         val deploymentConfig: DeploymentDetails
+                                   ) extends FinancialStatusBaseController with ThresholdParameterValidator {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdServiceTier4])
 
@@ -63,7 +66,6 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
 
     val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
     val validatedCourseType = courseTypeChecker.getCourseType(courseType.getOrElse("Unknown"))
-
 
     def threshold = calculateThresholdForStudentType(validatedStudentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate,
       tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, validatedCourseType, dependantsOnly)
@@ -99,11 +101,11 @@ class ThresholdServiceTier4 @Autowired()(val maintenanceThresholdCalculator: Mai
       case Some(user) => user.id
       case None => "anonymous"
     }
-    auditor.publishEvent(auditEvent(principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
+    auditor.publishEvent(auditEvent(deploymentConfig, principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
   def auditSearchResult(auditEventId: UUID, thresholdResponse: ThresholdResponse, userProfile: Option[UserProfile]): Unit = {
-    auditor.publishEvent(auditEvent(userProfile match {
+    auditor.publishEvent(auditEvent(deploymentConfig, userProfile match {
       case Some(user) => user.id
       case None => "anonymous"
     }, SEARCH_RESULT, auditEventId,

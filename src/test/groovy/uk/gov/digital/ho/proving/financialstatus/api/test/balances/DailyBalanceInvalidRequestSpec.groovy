@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
+import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
 
 import java.time.LocalDate
 
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
  */
 
 @WebAppConfiguration
-@ContextConfiguration(classes = ServiceConfiguration.class)
+@ContextConfiguration(classes = [ServiceConfiguration.class, EmbeddedMongoClientConfiguration.class])
 class DailyBalanceInvalidRequestSpec extends Specification {
 
     @Autowired
