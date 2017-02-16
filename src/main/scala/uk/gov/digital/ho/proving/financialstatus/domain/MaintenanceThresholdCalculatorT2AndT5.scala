@@ -15,7 +15,7 @@ class MaintenanceThresholdCalculatorT2AndT5 @Autowired()(@Value("${t2t5.main.app
   def calculateThresholdForT2AndT5(applicantType: ApplicantType, dependants: Int): Option[BigDecimal] = {
     applicantType match {
       case MainApplicant => Some(MAIN_APPLICANT_VALUE + (DEPENDANT_APPLICANT_VALUE * dependants.max(0)))
-      case DependantApplicant => Some(DEPENDANT_APPLICANT_VALUE)
+      case DependantApplicant => Option(DEPENDANT_APPLICANT_VALUE * dependants.max(0))
       case UnknownApplicant(_) => None
     }
   }

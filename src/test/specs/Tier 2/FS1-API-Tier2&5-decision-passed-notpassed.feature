@@ -195,7 +195,6 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | Account number         | 23568498   |
             | Date of Birth          | 1984-07-27 |
             | Account Holder Consent | Yes        |
-            | Dependants             | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200          |
             | Pass                 | false        |
@@ -224,7 +223,6 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | Sort code      | 111111     |
             | Account number | 12345678   |
             | Date of Birth  | 1984-07-27 |
-            | Dependants     | 3          |
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200        |
             | Pass                 | false      |
@@ -253,7 +251,6 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | Account number | 23568493   |
             | Sort code      | 111111     |
             | Date of Birth  | 1984-07-27 |
-            | Dependants     | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status         | 200          |
             | Pass                | true         |
@@ -280,7 +277,6 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 & 5 General
             | Account number | 23568493   |
             | Sort code      | 111111     |
             | Date of Birth  | 1984-07-27 |
-            | Dependants     | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status         | 200          |
             | Pass                | true         |
