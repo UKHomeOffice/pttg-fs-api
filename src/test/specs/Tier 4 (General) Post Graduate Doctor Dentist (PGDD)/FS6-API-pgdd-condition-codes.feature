@@ -3,9 +3,9 @@ Feature: Calculation of condition codes for T4 Post Graduate Doctor Dentist
 
     # DES, PGDD and SUSO have set codes regardless of the course type and course length selected
 
-    SO THAT I can identify the condition codes for a T4 Postgraduate Doctor or Dentist applicant
-    AS A Caseworker
-    WOULD LIKE The Financial Status Tool to automatically generate a condition code for a T4 Postgraduate Doctor or Dentist applicant
+#    SO THAT I can identify the condition codes for a T4 Postgraduate Doctor or Dentist applicant
+#    AS A Caseworker
+#    WOULD LIKE The Financial Status Tool to automatically generate a condition code for a T4 Postgraduate Doctor or Dentist applicant
 
 ################# applicant only   #######################
 

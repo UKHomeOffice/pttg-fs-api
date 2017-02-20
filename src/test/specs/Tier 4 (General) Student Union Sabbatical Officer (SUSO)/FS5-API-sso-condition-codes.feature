@@ -3,9 +3,9 @@ Feature: Calculation of condition codes for T4 Student Union Sabbatical Officer
 
     # DES, PGDD and SUSO have set codes regardless of the course type and course length selected
 
-    SO THAT I can identify the condition codes for a T4 Student union sabbatical officer applicant
-    AS A Caseworker
-    WOULD LIKE The Financial Status Tool to automatically generate a condition code for a T4 Student union sabbatical officer applicant
+#    SO THAT I can identify the condition codes for a T4 Student union sabbatical officer applicant
+#    AS A Caseworker
+#    WOULD LIKE The Financial Status Tool to automatically generate a condition code for a T4 Student union sabbatical officer applicant
 
 ################ applicant only   #######################
 
