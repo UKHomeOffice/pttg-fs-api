@@ -11,24 +11,24 @@ Feature: Calculation of condition codes for T4 Post Graduate Doctor Dentist
 
     Scenario: Ryan is a main DES applicant and does not have dependants.
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 Other API is invoked with the following
             | Student Type     | pgdd   |
             | Application Type | T4main |
             | Dependants       | 0      |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 2 |
 
 ################# applicant with dependants   #######################
 
     Scenario: Gary is a main DES applicant and has 5 dependants.
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 Other API is invoked with the following
             | Student Type     | pgdd   |
             | Application Type | T4main |
             | Dependants       | 5      |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 2  |
             | Partner Condition Code   | 4B |
             | Child Condition Code     | 1  |
@@ -37,11 +37,11 @@ Feature: Calculation of condition codes for T4 Post Graduate Doctor Dentist
 
     Scenario: Phil is a dependant only DES applicant
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 Other API is invoked with the following
             | Student Type     | pgdd        |
             | Application Type | t4dependant |
             | Dependants       | 1           |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Partner Condition Code | 4B |
             | Child Condition Code   | 1  |

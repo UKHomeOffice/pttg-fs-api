@@ -16,22 +16,22 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Theresa is on an 7 month main course degree or higher at a higher education institute and does not have dependants.
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                      |
             | Application Type   | t4main                       |
             | Course Institution | Recognised body or HEI       |
             | Course type        | Main course degree or higher |
             | Dependants         | 0                            |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 2 |
 
 ################# Main course degree or higher at HEI - with dependants - less than 12 months #######################
 
     Scenario: Donald is on an 7 month main course degree or higher at a higher education institute and has 2 dependants.
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                      |
             | Application Type   | t4main                       |
             | Course Institution | Recognised body or HEI       |
@@ -48,8 +48,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Barack is on a 13 month main course degree or higher at a higher education institute and has 2 dependants.
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                      |
             | Application Type   | t4main                       |
             | Course Institution | Recognised body or HEI       |
@@ -57,7 +57,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 2                            |
             | Course start date  | 2016-01-03                   |
             | Course end date    | 2017-01-03                   |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 2  |
             | Partner Condition Code   | 4B |
             | Child Condition Code     | 1  |
@@ -66,8 +66,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Vladimir is on a 7 month pre-sessional at a higher education institute and does not have dependants.
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                |
             | Application Type   | t4main                 |
             | Course Institution | Recognised body or HEI |
@@ -75,15 +75,15 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 0                      |
             | Course start date  | 2016-01-03             |
             | Course end date    | 2016-10-10             |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 2A |
 
 ################# Pre Sessional course at HEI with dependants #######################
 
     Scenario: Hilary is on a 7 month pre-sessional course and has 1 dependant.
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                |
             | Application Type   | t4main                 |
             | Course Institution | Recognised body or HEI |
@@ -91,7 +91,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 1                      |
             | Course start date  | 2016-01-03             |
             | Course end date    | 2016-10-10             |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 2A |
             | Partner Condition Code   | 3  |
             | Child Condition Code     | 1  |
@@ -100,8 +100,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Margaret is on a 7 month below degree course at a higher education institute and does not have dependants
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                  |
             | Application Type   | t4main                   |
             | Course Institution | Recognised body or HEI   |
@@ -109,15 +109,15 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 0                        |
             | Course start date  | 2016-01-03               |
             | Course end date    | 2016-10-10               |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 2A |
 
 ################# Main course below degree at HEI - with dependants  #######################
 
     Scenario: Bernard is on a 7 month below degree course at a higher education institute and has 2 dependants
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                  |
             | Application Type   | t4main                   |
             | Course Institution | Recognised body or HEI   |
@@ -125,7 +125,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 2                        |
             | Course start date  | 2016-01-03               |
             | Course end date    | 2016-10-10               |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 2A |
             | Partner Condition Code   | 3  |
             | Child Condition Code     | 1  |
@@ -134,8 +134,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Angela is on a 7 month main course degree or higher at a other institution and has no dependants
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                      |
             | Application Type   | t4main                       |
             | Course Institution | Other Institution            |
@@ -143,15 +143,15 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 0                            |
             | Course start date  | 2016-01-03                   |
             | Course end date    | 2016-10-10                   |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Condition Code | 3 |
 
 ################# Main course degree or higher at Other Institution - with dependants - less than 12 months #######################
 
     Scenario: Boris is on a  7 month main course degree or higher at a other institution and has 1 dependants
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                      |
             | Application Type   | t4main                       |
             | Course Institution | Other Institution            |
@@ -159,7 +159,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 1                            |
             | Course start date  | 2016-01-03                   |
             | Course end date    | 2016-10-10                   |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 3 |
             | Partner Condition Code   | 3 |
             | Child Condition Code     | 1 |
@@ -168,8 +168,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Bashar is on a 13 months main course degree or higher at a other institution and has 2 dependants
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                      |
             | Application Type   | t4main                       |
             | Course Institution | Other Institution            |
@@ -177,7 +177,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 2                            |
             | Course start date  | 2016-01-03                   |
             | Course end date    | 2017-01-03                   |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 3  |
             | Partner Condition Code   | 4B |
             | Child Condition Code     | 1  |
@@ -186,8 +186,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Winston is on a 7 month pre-sessional at a other institution and does not have dependants
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General           |
             | Application Type   | t4main            |
             | Course Institution | Other Institution |
@@ -195,7 +195,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 0                 |
             | Course start date  | 2016-01-03        |
             | Course end date    | 2016-10-10        |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 3 |
 
 
@@ -203,8 +203,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Ronald is on a 7 month pre-sessional at a other institution and has 1 dependant
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General           |
             | Application Type   | t4main            |
             | Course Institution | Other Institution |
@@ -212,7 +212,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 1                 |
             | Course start date  | 2016-01-03        |
             | Course end date    | 2016-10-10        |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 3 |
             | Partner Condition Code   | 3 |
             | Child Condition Code     | 1 |
@@ -221,8 +221,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Narendra is on a 7 month below degree course at a other institution and does not have dependants
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                  |
             | Application Type   | t4main                   |
             | Course Institution | Other Institution        |
@@ -230,7 +230,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 0                        |
             | Course start date  | 2016-01-03               |
             | Course end date    | 2016-10-10               |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 3 |
 
 
@@ -238,8 +238,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Joko is on a 7 month below degree course at a other institution and has 1 dependant
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                  |
             | Application Type   | t4main                   |
             | Course Institution | Other Institution        |
@@ -247,7 +247,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 1                        |
             | Course start date  | 2016-01-03               |
             | Course end date    | 2016-10-10               |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Applicant Condition Code | 3 |
             | Partner Condition Code   | 3 |
             | Child Condition Code     | 1 |
@@ -256,8 +256,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Xavi is a dependant only application with the main applicant on a 7 month main course degree or higher at a higher education institute
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                      |
             | Application Type   | t4main                       |
             | Course Institution | Recognised body or HEI       |
@@ -273,8 +273,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Christiano and Lionel are a dependant only (x2) application with the main applicant on a 13 month main course degree or higher at a higher education institute
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                      |
             | Application Type   | t4dependant                  |
             | Course Institution | Recognised body or HEI       |
@@ -290,8 +290,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Zlatan is a dependant only (x1) application with the main applicant on a 7 month pre-sessional course
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                |
             | Application Type   | t4dependant            |
             | Course Institution | Recognised body or HEI |
@@ -299,7 +299,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 1                      |
             | Course start date  | 2016-01-03             |
             | Course end date    | 2016-10-10             |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Partner Condition Code | 3 |
             | Child Condition Code   | 1 |
 
@@ -307,8 +307,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Eric is a dependant only (x1) application with the main applicant on a 7 month below degree main course at a higher education institute
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                  |
             | Application Type   | t4dependant              |
             | Course Institution | Recognised body or HEI   |
@@ -316,7 +316,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 1                        |
             | Course start date  | 2016-01-03               |
             | Course end date    | 2016-10-10               |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Partner Condition Code | 3 |
             | Child Condition Code   | 1 |
 
@@ -324,8 +324,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Karel is a dependant only application with the main applicant on a 7 month main course degree or higher at a other institution
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                      |
             | Application Type   | t4dependant                  |
             | Course Institution | Other Institution            |
@@ -333,15 +333,15 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 1                            |
             | Course start date  | 2016-01-03                   |
             | Course end date    | 2016-10-10                   |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Partner Condition Code | 3 |
             | Child Condition Code   | 1 |
 
 ################ Main course degree or higher at Other Institution - with dependants - greater than 12 months #######################
 
     Scenario: Jaap and Sebastian are a dependant only application with the main applicant on a 13 month main course degree or higher at a other institution
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                      |
             | Application Type   | t4dependant                  |
             | Course Institution | Other Institution            |
@@ -349,7 +349,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 2                            |
             | Course start date  | 2016-01-03                   |
             | Course end date    | 2017-01-03                   |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Partner Condition Code | 4B |
             | Child Condition Code   | 1  |
 
@@ -357,8 +357,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Matteo is on a 7 month pre-sessional at a other institution and does not have dependants
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General           |
             | Application Type   | t4dependant       |
             | Course Institution | Other Institution |
@@ -366,7 +366,7 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 1                 |
             | Course start date  | 2016-01-03        |
             | Course end date    | 2016-10-10        |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Partner Condition Code | 3 |
             | Child Condition Code   | 1 |
 
@@ -374,8 +374,8 @@ Feature: Calculation of condition codes for T4 General
 
     Scenario: Daley is on Main Course below degree at a other institution and does not have dependants
 
-        Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator API is invoked with the following
+        Given A Service is consuming the Condition Code API
+        When the Condition Code Tier 4 General API is invoked with the following
             | Student Type       | General                  |
             | Application Type   | t4dependant              |
             | Course Institution | Other Institution        |
@@ -383,6 +383,6 @@ Feature: Calculation of condition codes for T4 General
             | Dependants         | 1                        |
             | Course start date  | 2016-01-03               |
             | Course end date    | 2016-10-10               |
-        Then The Financial Status API provides the following result:
+        Then The Financial Status API provides the following results:
             | Partner Condition Code | 3 |
             | Child Condition Code   | 1 |
