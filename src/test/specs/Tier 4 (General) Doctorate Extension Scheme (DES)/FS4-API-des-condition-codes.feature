@@ -17,7 +17,7 @@ Feature: Calculation of condition codes for T4 Doctorate Extension Scheme
             | Application Type | T4main |
             | Dependants       | 0      |
         Then The Financial Status API provides the following results:
-            | Condition Code | 4E |
+            | Applicant Condition Code | 4E |
 
 ################# applicant with dependants   #######################
 

@@ -144,7 +144,7 @@ Feature: Calculation of condition codes for T4 General
             | Course start date  | 2016-01-03                   |
             | Course end date    | 2016-10-10                   |
         Then The Financial Status API provides the following results:
-            | Condition Code | 3 |
+            | Applicant Condition Code | 2 |
 
 ################# Main course degree or higher at Other Institution - with dependants - less than 12 months #######################
 

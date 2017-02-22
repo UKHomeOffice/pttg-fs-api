@@ -1,10 +1,13 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.time.LocalDate
+import java.util.Optional
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include
-import com.fasterxml.jackson.annotation.{JsonInclude, JsonUnwrapped}
-import uk.gov.digital.ho.proving.financialstatus.domain.{Account, AccountDailyBalanceCheck}
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonUnwrapped
+import uk.gov.digital.ho.proving.financialstatus.domain.Account
+import uk.gov.digital.ho.proving.financialstatus.domain.AccountDailyBalanceCheck
 
 case class StatusResponse(code: String, message: String)
 
@@ -37,3 +40,7 @@ case class ThresholdResponse(@JsonInclude(Include.NON_EMPTY) threshold: Option[B
 
 case class BankConsentResponse(@JsonInclude(Include.NON_EMPTY) consent: Option[String],
                                @JsonInclude(Include.NON_NULL) status: StatusResponse)
+
+case class ConditionCodesResponse(applicantConditionCode: Option[String],
+                                  partnerConditionCode: Option[String],
+                                  childConditionCode: Option[String])
