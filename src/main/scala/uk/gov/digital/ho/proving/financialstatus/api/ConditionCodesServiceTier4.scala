@@ -19,7 +19,8 @@ import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType
 import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
 import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculationResult
-import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculator
+import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculatorProvider
+import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.UserProfile
 
 @RestController
@@ -28,7 +29,9 @@ import uk.gov.digital.ho.proving.financialstatus.domain.UserProfile
 class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
                                                val authenticator: Authentication,
                                                val deploymentConfig: DeploymentDetails,
-                                               val conditionCodesCalculator: ConditionCodesCalculator) extends FinancialStatusBaseController {
+                                               val conditionCodesCalculatorProvider: ConditionCodesCalculatorProvider,
+                                               val studentTypeChecker: StudentTypeChecker
+                                              ) extends FinancialStatusBaseController {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ConditionCodesServiceTier4])
 
@@ -44,8 +47,10 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
 
     val userProfile: Option[UserProfile] = accessToken.flatMap(authenticator.getUserProfileFromToken)
 
+    val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
     val result: ConditionCodesCalculationResult = withAudit(userProfile) {
-      conditionCodesCalculator.calculateConditionCodes()
+      val calculator = conditionCodesCalculatorProvider.provide(validatedStudentType)
+      calculator.calculateConditionCodes()
     }
     val conditionCodesResponse = conditionCodesResultResponseConverter(result)
     new ResponseEntity[ConditionCodesResponse](conditionCodesResponse, HttpStatus.OK)

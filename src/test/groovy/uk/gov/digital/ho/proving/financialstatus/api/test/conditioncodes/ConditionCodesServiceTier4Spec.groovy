@@ -22,7 +22,9 @@ import uk.gov.digital.ho.proving.financialstatus.domain.ApplicantConditionCode
 import uk.gov.digital.ho.proving.financialstatus.domain.ChildConditionCode
 import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculationResult
 import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculator
+import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculatorProvider
 import uk.gov.digital.ho.proving.financialstatus.domain.PartnerConditionCode
+import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.UserProfile
 
 import javax.servlet.http.Cookie
@@ -39,13 +41,15 @@ class ConditionCodesServiceTier4Spec extends Specification {
 
     AuditEventPublisher auditorMock = Mock()
     Authentication authenticatorMock = Mock()
+    ConditionCodesCalculatorProvider conditionCodesCalculatorProviderMock = Mock()
     ConditionCodesCalculator conditionCodesCalculatorMock = Mock()
 
     def conditionCodesTier4Service = new ConditionCodesServiceTier4(
         auditorMock,
         authenticatorMock,
         new DeploymentDetails("localhost", "local"),
-        conditionCodesCalculatorMock
+        conditionCodesCalculatorProviderMock,
+        new StudentTypeChecker("des", "general", "pgdd", "suso")
     )
 
     MockMvc mockMvc = standaloneSetup(conditionCodesTier4Service)
@@ -165,6 +169,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
     }
 
     private void stubconditionCodesCalculatorResult() {
+        conditionCodesCalculatorProviderMock.provide(_) >> conditionCodesCalculatorMock
         conditionCodesCalculatorMock.calculateConditionCodes() >> new ConditionCodesCalculationResult(
             new Some<>(new ApplicantConditionCode("a")),
             new Some<>(new PartnerConditionCode("b")),
