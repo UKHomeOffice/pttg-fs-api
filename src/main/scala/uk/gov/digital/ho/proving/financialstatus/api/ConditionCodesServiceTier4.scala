@@ -1,9 +1,9 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.lang.{Boolean => JBoolean}
-
 import java.time.LocalDate
 import java.util.Optional
+import java.util.UUID
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,15 +52,37 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
                               @CookieValue(value = "kc-access") kcToken: Optional[String]
                              ): ResponseEntity[ConditionCodesResponse] = {
 
-    // TODO: Validation
     val accessToken: Option[String] = kcToken
 
     val userProfile: Option[UserProfile] = accessToken.flatMap(authenticator.getUserProfileFromToken)
 
+    def withAudit(calculateConditionCodes: => ConditionCodesCalculationResult): ConditionCodesCalculationResult = {
+      val auditRequestParamsData = Map[String, AnyRef](
+        "studentType" -> toOptionString(studentType),
+        "dependantsOnly" -> dependantsOnly.asInstanceOf[JBoolean],
+        "dependants" -> toOptionInt(dependants),
+        "courseStartDate" -> toOptionLocalDate(courseStartDate),
+        "courseEndDate" -> toOptionLocalDate(courseEndDate),
+        "courseType" -> toOptionString(courseType),
+        "auditRequestParamsData" -> toOptionBoolean(recognisedBodyOrHEI)
+      )
+      val correlationId = nextId
+      auditor.publishEvent(generateRequestAuditEvent(userProfile, correlationId, auditRequestParamsData))
+      val result: ConditionCodesCalculationResult = calculateConditionCodes
+      val auditResultParamsData = Map[String, AnyRef](
+        "applicantCode" -> result.applicant,
+        "partnerCode" -> result.partner,
+        "childCode" -> result.child
+      )
+      auditor.publishEvent(generateResultAuditEvent(userProfile, correlationId, auditRequestParamsData))
+      result
+    }
+
+    // TODO: Validation
     val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown").toLowerCase)
     val validatedCourseType = courseTypeChecker.getCourseType(courseType.getOrElse("Unknown").toLowerCase)
 
-    val result: ConditionCodesCalculationResult = withAudit(userProfile) {
+    val result: ConditionCodesCalculationResult = withAudit {
       val calculator = conditionCodesCalculatorProvider.provide(validatedStudentType)
       calculator.calculateConditionCodes(dependantsOnly, dependants, courseStartDate, courseEndDate, validatedCourseType, recognisedBodyOrHEI)
     }
@@ -68,32 +90,25 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
     new ResponseEntity[ConditionCodesResponse](conditionCodesResponse, HttpStatus.OK)
   }
 
-  def withAudit(userProfile: Option[UserProfile])(calculateConditionCodes: => ConditionCodesCalculationResult): ConditionCodesCalculationResult = {
-    auditor.publishEvent(generateRequestAuditEvent(userProfile))
-    val result = calculateConditionCodes
-    auditor.publishEvent(generateResultAuditEvent(userProfile))
-    result
-  }
 
-  private def generateRequestAuditEvent(userProfile: Option[UserProfile]) = {
-    val auditRequestParamsData = Map[String, AnyRef]()
+
+  private def generateRequestAuditEvent(userProfile: Option[UserProfile], correlationId: UUID, auditRequestParamsData: Map[String, AnyRef]) = {
     AuditActions.auditEvent(
       deploymentConfig = deploymentConfig,
       principal = userProfile.map(_.id).getOrElse("anonymous"),
       auditEventType = AuditEventType.CONDITION_CODES_REQUEST,
-      id = nextId,
+      id = correlationId,
       data = auditRequestParamsData
     )
   }
 
-  private def generateResultAuditEvent(userProfile: Option[UserProfile]) = {
-    val auditResponseParamsData = Map[String, AnyRef]()
+  private def generateResultAuditEvent(userProfile: Option[UserProfile], correlationId: UUID, auditResultParamsData: Map[String, AnyRef]) = {
     AuditActions.auditEvent(
       deploymentConfig = deploymentConfig,
       principal = userProfile.map(_.id).getOrElse("anonymous"),
       auditEventType = AuditEventType.CONDITION_CODES_RESULT,
-      id = nextId,
-      data = auditResponseParamsData
+      id = correlationId,
+      data = auditResultParamsData
     )
   }
 
