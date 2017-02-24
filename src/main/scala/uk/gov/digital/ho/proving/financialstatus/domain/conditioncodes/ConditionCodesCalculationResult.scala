@@ -1,5 +1,4 @@
-package uk.gov.digital.ho.proving.financialstatus.domain
-
+package uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes
 
 case class ConditionCodesCalculationResult(applicant: Option[ApplicantConditionCode],
                                            partner: Option[PartnerConditionCode],

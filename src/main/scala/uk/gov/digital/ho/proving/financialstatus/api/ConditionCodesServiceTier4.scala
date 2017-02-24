@@ -1,9 +1,13 @@
 package uk.gov.digital.ho.proving.financialstatus.api
 
+import java.lang.{Boolean => JBoolean}
+
+import java.time.LocalDate
 import java.util.Optional
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -18,10 +22,11 @@ import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType
 import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
-import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculationResult
-import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculatorProvider
+import uk.gov.digital.ho.proving.financialstatus.domain.CourseTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.UserProfile
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ConditionCodesCalculationResult
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ConditionCodesCalculatorProvider
 
 @RestController
 @ControllerAdvice
@@ -30,15 +35,20 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
                                                val authenticator: Authentication,
                                                val deploymentConfig: DeploymentDetails,
                                                val conditionCodesCalculatorProvider: ConditionCodesCalculatorProvider,
-                                               val studentTypeChecker: StudentTypeChecker
+                                               val studentTypeChecker: StudentTypeChecker,
+                                               val courseTypeChecker: CourseTypeChecker
                                               ) extends FinancialStatusBaseController {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ConditionCodesServiceTier4])
 
   @RequestMapping(method = Array(RequestMethod.GET))
   def calculateConditionCodes(@RequestParam(value = "studentType") studentType: Optional[String],
-                              @RequestParam(value = "applicationType") applicationType: Optional[String],
-                              @RequestParam(value = "dependants") dependants: Optional[Int],
+                              @RequestParam(value = "dependantsOnly") dependantsOnly: Boolean,
+                              @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer],
+                              @RequestParam(value = "courseStartDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) courseStartDate: Optional[LocalDate],
+                              @RequestParam(value = "courseEndDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) courseEndDate: Optional[LocalDate],
+                              @RequestParam(value = "courseType", required = false) courseType: Optional[String],
+                              @RequestParam(value = "recognisedBodyOrHEI", required = false) recognisedBodyOrHEI: Optional[JBoolean],
                               @CookieValue(value = "kc-access") kcToken: Optional[String]
                              ): ResponseEntity[ConditionCodesResponse] = {
 
@@ -47,10 +57,12 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
 
     val userProfile: Option[UserProfile] = accessToken.flatMap(authenticator.getUserProfileFromToken)
 
-    val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown"))
+    val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown").toLowerCase)
+    val validatedCourseType = courseTypeChecker.getCourseType(courseType.getOrElse("Unknown").toLowerCase)
+
     val result: ConditionCodesCalculationResult = withAudit(userProfile) {
       val calculator = conditionCodesCalculatorProvider.provide(validatedStudentType)
-      calculator.calculateConditionCodes()
+      calculator.calculateConditionCodes(dependantsOnly, dependants, courseStartDate, courseEndDate, validatedCourseType, recognisedBodyOrHEI)
     }
     val conditionCodesResponse = conditionCodesResultResponseConverter(result)
     new ResponseEntity[ConditionCodesResponse](conditionCodesResponse, HttpStatus.OK)

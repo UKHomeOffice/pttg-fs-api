@@ -1,6 +1,13 @@
-package uk.gov.digital.ho.proving.financialstatus.domain
+package uk.gov.digital.ho.proving.financialstatus.api.test.conditioncodes
 
 import spock.lang.Specification
+import uk.gov.digital.ho.proving.financialstatus.domain.DoctorateExtensionStudent$
+import uk.gov.digital.ho.proving.financialstatus.domain.GeneralStudent$
+import uk.gov.digital.ho.proving.financialstatus.domain.PostGraduateDoctorDentistStudent$
+import uk.gov.digital.ho.proving.financialstatus.domain.StudentUnionSabbaticalOfficerStudent$
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ConditionCodesCalculatorProvider
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.GeneralConditionCodesCalculator
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.OtherNonGeneralConditionCodesCalculator
 
 class ConditionCodesCalculatorProviderSpec extends Specification {
 

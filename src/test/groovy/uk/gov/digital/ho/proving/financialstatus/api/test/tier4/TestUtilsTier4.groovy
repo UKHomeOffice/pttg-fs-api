@@ -31,7 +31,7 @@ class TestUtilsTier4 {
 
     public static def getStudentTypeChecker() { new StudentTypeChecker("des", "general", "pgdd", "suso") }
 
-    public static def getCourseTypeChecker() { new CourseTypeChecker("main", "pre-sessional") }
+    public static def getCourseTypeChecker() { new CourseTypeChecker("main", "pre-sessional", "below-degree") }
 
     public static def maintenanceThresholdServiceBuilder() {
         new MaintenanceThresholdCalculatorT4(

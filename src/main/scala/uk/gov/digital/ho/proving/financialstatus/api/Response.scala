@@ -41,6 +41,6 @@ case class ThresholdResponse(@JsonInclude(Include.NON_EMPTY) threshold: Option[B
 case class BankConsentResponse(@JsonInclude(Include.NON_EMPTY) consent: Option[String],
                                @JsonInclude(Include.NON_NULL) status: StatusResponse)
 
-case class ConditionCodesResponse(applicantConditionCode: Option[String],
-                                  partnerConditionCode: Option[String],
-                                  childConditionCode: Option[String])
+case class ConditionCodesResponse(@JsonInclude(Include.NON_EMPTY) applicantConditionCode: Option[String],
+                                  @JsonInclude(Include.NON_EMPTY) partnerConditionCode: Option[String],
+                                  @JsonInclude(Include.NON_EMPTY) childConditionCode: Option[String])

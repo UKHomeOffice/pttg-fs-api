@@ -16,11 +16,11 @@ Feature: Calculation of condition codes for T4 Student Union Sabbatical Officer
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 Other API is invoked with the following
-            | Student Type     | suso   |
-            | Application Type | t4main |
-            | Dependants       | 0      |
+            | Student Type    | suso |
+            | Dependants only | No   |
+            | Dependants      | 0    |
         Then The Financial Status API provides the following results:
-            | Applicant Condition Code | 2 |
+            | applicantConditionCode | 2 |
 
 ################# applicant with dependants   #######################
 
@@ -28,13 +28,13 @@ Feature: Calculation of condition codes for T4 Student Union Sabbatical Officer
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 Other API is invoked with the following
-            | Student Type     | suso   |
-            | Application Type | t4main |
-            | Dependants       | 3      |
+            | Student Type    | suso |
+            | Dependants only | No   |
+            | Dependants      | 3    |
         Then The Financial Status API provides the following results:
-            | Applicant Condition Code | 2  |
-            | Partner Condition Code   | 4B |
-            | Child Condition Code     | 1  |
+            | applicantConditionCode | 2  |
+            | partnerConditionCode   | 4B |
+            | childConditionCode     | 1  |
 
 ################# dependant only   #######################
 
@@ -42,10 +42,10 @@ Feature: Calculation of condition codes for T4 Student Union Sabbatical Officer
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 Other API is invoked with the following
-            | Student Type     | suso        |
-            | Application Type | t4dependant |
-            | Dependants       | 1           |
+            | Student Type    | suso |
+            | Dependants only | Yes  |
+            | Dependants      | 1    |
         Then The Financial Status API provides the following results:
-            | Partner Condition Code | 4B |
-            | Child Condition Code   | 1  |
+            | partnerConditionCode | 4B |
+            | childConditionCode   | 1  |
 

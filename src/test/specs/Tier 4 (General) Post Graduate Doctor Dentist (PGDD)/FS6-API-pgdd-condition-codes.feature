@@ -9,39 +9,39 @@ Feature: Calculation of condition codes for T4 Post Graduate Doctor Dentist
 
 ################# applicant only   #######################
 
-    Scenario: Ryan is a main DES applicant and does not have dependants.
+    Scenario: Ryan is a main PGDD applicant and does not have dependants.
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 Other API is invoked with the following
-            | Student Type     | pgdd   |
-            | Application Type | T4main |
-            | Dependants       | 0      |
+            | Student Type    | pgdd |
+            | Dependants only | No   |
+            | Dependants      | 0    |
         Then The Financial Status API provides the following results:
-            | Applicant Condition Code | 2 |
+            | applicantConditionCode | 2 |
 
 ################# applicant with dependants   #######################
 
-    Scenario: Gary is a main DES applicant and has 5 dependants.
+    Scenario: Gary is a main PGDD applicant and has 5 dependants.
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 Other API is invoked with the following
-            | Student Type     | pgdd   |
-            | Application Type | T4main |
-            | Dependants       | 5      |
+            | Student Type    | pgdd |
+            | Dependants only | No   |
+            | Dependants      | 5    |
         Then The Financial Status API provides the following results:
-            | Applicant Condition Code | 2  |
-            | Partner Condition Code   | 4B |
-            | Child Condition Code     | 1  |
+            | applicantConditionCode | 2  |
+            | partnerConditionCode   | 4B |
+            | childConditionCode     | 1  |
 
 ################# dependant only   #######################
 
-    Scenario: Phil is a dependant only DES applicant
+    Scenario: Phil is a dependant only PGDD applicant
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 Other API is invoked with the following
-            | Student Type     | pgdd        |
-            | Application Type | t4dependant |
-            | Dependants       | 1           |
+            | Student Type    | pgdd |
+            | Dependants only | Yes  |
+            | Dependants      | 1    |
         Then The Financial Status API provides the following results:
-            | Partner Condition Code | 4B |
-            | Child Condition Code   | 1  |
+            | partnerConditionCode | 4B |
+            | childConditionCode   | 1  |

@@ -13,11 +13,11 @@ Feature: Calculation of condition codes for T4 Doctorate Extension Scheme
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 Other API is invoked with the following
-            | Student Type     | Des    |
-            | Application Type | T4main |
-            | Dependants       | 0      |
+            | Student Type    | des |
+            | Dependants only | No  |
+            | Dependants      | 0   |
         Then The Financial Status API provides the following results:
-            | Applicant Condition Code | 4E |
+            | applicantConditionCode | 4E |
 
 ################# applicant with dependants   #######################
 
@@ -25,13 +25,13 @@ Feature: Calculation of condition codes for T4 Doctorate Extension Scheme
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 Other API is invoked with the following
-            | Student Type     | Des    |
-            | Application Type | T4main |
-            | Dependants       | 2      |
+            | Student Type    | des |
+            | Dependants only | No  |
+            | Dependants      | 2   |
         Then The Financial Status API provides the following results:
-            | Applicant Condition Code | 4E |
-            | Partner Condition Code   | 4B |
-            | Child Condition Code     | 1  |
+            | applicantConditionCode | 4E |
+            | partnerConditionCode   | 4B |
+            | childConditionCode     | 1  |
 
 ################# dependants only   #######################
 
@@ -39,9 +39,9 @@ Feature: Calculation of condition codes for T4 Doctorate Extension Scheme
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 Other API is invoked with the following
-            | Student Type     | Des         |
-            | Application Type | t4dependant |
-            | Dependants       | 1           |
+            | Student Type    | des |
+            | Dependants only | Yes |
+            | Dependants      | 1   |
         Then The Financial Status API provides the following results:
-            | Partner Condition Code | 4B |
-            | Child Condition Code   | 1  |
+            | partnerConditionCode | 4B |
+            | childConditionCode   | 1  |

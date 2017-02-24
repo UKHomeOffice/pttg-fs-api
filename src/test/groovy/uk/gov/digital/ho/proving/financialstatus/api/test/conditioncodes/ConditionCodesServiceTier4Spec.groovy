@@ -18,12 +18,13 @@ import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
 import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
-import uk.gov.digital.ho.proving.financialstatus.domain.ApplicantConditionCode
-import uk.gov.digital.ho.proving.financialstatus.domain.ChildConditionCode
-import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculationResult
-import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculator
-import uk.gov.digital.ho.proving.financialstatus.domain.ConditionCodesCalculatorProvider
-import uk.gov.digital.ho.proving.financialstatus.domain.PartnerConditionCode
+import uk.gov.digital.ho.proving.financialstatus.domain.CourseTypeChecker
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ApplicantConditionCode
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ChildConditionCode
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ConditionCodesCalculationResult
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ConditionCodesCalculator
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ConditionCodesCalculatorProvider
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.PartnerConditionCode
 import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.UserProfile
 
@@ -49,7 +50,8 @@ class ConditionCodesServiceTier4Spec extends Specification {
         authenticatorMock,
         new DeploymentDetails("localhost", "local"),
         conditionCodesCalculatorProviderMock,
-        new StudentTypeChecker("des", "general", "pgdd", "suso")
+        new StudentTypeChecker("des", "general", "pgdd", "suso"),
+        new CourseTypeChecker("main", "pre-sessional", "below-degree")
     )
 
     MockMvc mockMvc = standaloneSetup(conditionCodesTier4Service)
@@ -66,7 +68,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
         given:
 
         def studentType = 'Des'
-        def applicationtype = 'T4main'
+        def dependantsOnly = 'false'
         def dependants = 2
         stubconditionCodesCalculatorResult()
 
@@ -74,7 +76,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
 
         def request = get(conditionCodeApiUrl())
             .param('studentType', studentType)
-            .param('applicationtype', applicationtype)
+            .param('dependantsOnly', dependantsOnly)
             .param('dependants', dependants.toString())
         def response = mockMvc.perform(request)
 
@@ -92,7 +94,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
         def expectedChildConditionCode = 'c'
 
         def studentType = 'Des'
-        def applicationtype = 'T4main'
+        def dependantsOnly = 'false'
         def dependants = 2
         stubconditionCodesCalculatorResult()
 
@@ -100,7 +102,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
 
         def request = get(conditionCodeApiUrl())
             .param('studentType', studentType)
-            .param('applicationtype', applicationtype)
+            .param('dependantsOnly', dependantsOnly)
             .param('dependants', dependants.toString())
         def response = mockMvc.perform(request)
 
@@ -120,7 +122,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
         given:
 
         def studentType = 'Des'
-        def applicationtype = 'T4main'
+        def dependantsOnly = 'false'
         def dependants = 2
         def keyCloakCookieToken = '1234567890'
         stubconditionCodesCalculatorResult()
@@ -130,7 +132,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
         def request = get(conditionCodeApiUrl())
             .cookie(new Cookie('kc-access', keyCloakCookieToken))
             .param('studentType', studentType)
-            .param('applicationtype', applicationtype)
+            .param('dependantsOnly', dependantsOnly)
             .param('dependants', dependants.toString())
         mockMvc.perform(request)
 
@@ -143,7 +145,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
         given:
 
         def studentType = 'Des'
-        def applicationtype = 'T4main'
+        def dependantsOnly = 'true'
         def dependants = 2
         def keyCloakCookieToken = "1234567890"
         stubAuthenticationArbitraryUserProfile()
@@ -154,7 +156,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
         def request = get(conditionCodeApiUrl())
             .cookie(new Cookie('kc-access', keyCloakCookieToken))
             .param('studentType', studentType)
-            .param('applicationtype', applicationtype)
+            .param('dependantsOnly', dependantsOnly)
             .param('dependants', dependants.toString())
         def response = mockMvc.perform(request)
 
@@ -170,7 +172,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
 
     private void stubconditionCodesCalculatorResult() {
         conditionCodesCalculatorProviderMock.provide(_) >> conditionCodesCalculatorMock
-        conditionCodesCalculatorMock.calculateConditionCodes() >> new ConditionCodesCalculationResult(
+        conditionCodesCalculatorMock.calculateConditionCodes(_, _, _, _, _, _) >> new ConditionCodesCalculationResult(
             new Some<>(new ApplicantConditionCode("a")),
             new Some<>(new PartnerConditionCode("b")),
             new Some<>(new ChildConditionCode("c")))
