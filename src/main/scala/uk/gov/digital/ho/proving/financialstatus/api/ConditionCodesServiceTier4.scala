@@ -69,7 +69,6 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
   }
 
   def withAudit(userProfile: Option[UserProfile])(calculateConditionCodes: => ConditionCodesCalculationResult): ConditionCodesCalculationResult = {
-    // TODO: Unit test this
     auditor.publishEvent(generateRequestAuditEvent(userProfile))
     val result = calculateConditionCodes
     auditor.publishEvent(generateResultAuditEvent(userProfile))
@@ -77,7 +76,7 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
   }
 
   private def generateRequestAuditEvent(userProfile: Option[UserProfile]) = {
-    val auditRequestParamsData = Map[String, AnyRef]() // TODO: Real params
+    val auditRequestParamsData = Map[String, AnyRef]()
     AuditActions.auditEvent(
       deploymentConfig = deploymentConfig,
       principal = userProfile.map(_.id).getOrElse("anonymous"),
@@ -88,7 +87,7 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
   }
 
   private def generateResultAuditEvent(userProfile: Option[UserProfile]) = {
-    val auditResponseParamsData = Map[String, AnyRef]() // TODO: Real params
+    val auditResponseParamsData = Map[String, AnyRef]()
     AuditActions.auditEvent(
       deploymentConfig = deploymentConfig,
       principal = userProfile.map(_.id).getOrElse("anonymous"),
@@ -103,5 +102,5 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
 
 }
 object ConditionCodesServiceTier4 {
-  final val ConditionCodeTier4Url = "/pttg/financialstatus/v1/t4/maintenance/conditionCode"
+  final val ConditionCodeTier4Url = "/pttg/financialstatus/v1/t4/conditioncodes"
 }
