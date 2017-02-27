@@ -495,7 +495,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the Condition Code Tier 4 Other API is invoked with the following\$")
     public void the_Condition_Code_Tier_Four_Other_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t4/maintenance/conditionCode?studentType={studentType}&dependantsOnly={dependantsOnly}&dependants={dependants}", studentType, dependanstOnly, dependants)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t4/conditioncodes?studentType={studentType}&dependantsOnly={dependantsOnly}&dependants={dependants}", studentType, dependanstOnly, dependants)
         jsonAsString = resp.asString()
 
         println("Condition Code Tier 4 API: " + jsonAsString)
@@ -504,7 +504,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @When("^the Condition Code Tier 4 General API is invoked with the following\$")
     public void the_Condition_Code_Tier_Four_General_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t4/maintenance/conditionCode?studentType={studentType}&dependantsOnly={dependantsOnly}&dependants={dependants}&courseType={courseType}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&courseInstitution={courseInstitution}&recognisedBodyOrHEI={recognisedBodyOrHEI}", studentType, dependanstOnly, dependants, courseType, courseStartDate, courseEndDate, courseInstitution, recognisedBodyOrHEI)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t4/conditioncodes?studentType={studentType}&dependantsOnly={dependantsOnly}&dependants={dependants}&courseType={courseType}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&courseInstitution={courseInstitution}&recognisedBodyOrHEI={recognisedBodyOrHEI}", studentType, dependanstOnly, dependants, courseType, courseStartDate, courseEndDate, courseInstitution, recognisedBodyOrHEI)
         jsonAsString = resp.asString()
 
         println("Condition Code Tier 4 API: " + jsonAsString)
