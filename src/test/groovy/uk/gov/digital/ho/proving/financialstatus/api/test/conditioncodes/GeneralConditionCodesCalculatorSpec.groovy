@@ -1,7 +1,6 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test.conditioncodes
 
 import cats.data.Validated
-import cats.data.Validated$
 import scala.None$
 import scala.Some
 import spock.lang.Specification
@@ -13,6 +12,69 @@ import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.*
 import java.time.LocalDate
 
 class GeneralConditionCodesCalculatorSpec extends Specification {
+
+    def 'Missing course start date should give invalid'() {
+        given:
+
+        def dependantsOnly = true
+        def dependants = new Some(2)
+        def recognisedBodyOrHEI = new Some(true)
+        def startDate = None$.MODULE$
+        def endDate = new Some(LocalDate.of(2016, 6, 01))
+
+        def calculator = new GeneralConditionCodesCalculator()
+
+        when:
+
+        def result = calculator.calculateConditionCodes(dependantsOnly, dependants, startDate, endDate,
+            MainCourse$.MODULE$, recognisedBodyOrHEI)
+
+        then:
+
+        assert result.invalid
+    }
+
+    def 'Missing course end date should give invalid'() {
+        given:
+
+        def dependantsOnly = true
+        def dependants = new Some(2)
+        def recognisedBodyOrHEI = new Some(true)
+        def startDate = new Some(LocalDate.of(2016, 6, 01))
+        def endDate = None$.MODULE$
+
+        def calculator = new GeneralConditionCodesCalculator()
+
+        when:
+
+        def result = calculator.calculateConditionCodes(dependantsOnly, dependants, startDate, endDate,
+            MainCourse$.MODULE$, recognisedBodyOrHEI)
+
+        then:
+
+        assert result.invalid
+    }
+
+    def 'Missing course start and end dates should give invalid'() {
+        given:
+
+        def dependantsOnly = true
+        def dependants = new Some(2)
+        def recognisedBodyOrHEI = new Some(true)
+        def startDate = None$.MODULE$
+        def endDate = None$.MODULE$
+
+        def calculator = new GeneralConditionCodesCalculator()
+
+        when:
+
+        def result = calculator.calculateConditionCodes(dependantsOnly, dependants, startDate, endDate,
+            MainCourse$.MODULE$, recognisedBodyOrHEI)
+
+        then:
+
+        assert result.invalid
+    }
 
     def 'Dependants only should return values only for partner and child'() {
         given:

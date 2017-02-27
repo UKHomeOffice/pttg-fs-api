@@ -5,6 +5,7 @@ import java.time.LocalDate
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.data.Validated.Valid
+import cats.syntax.apply._
 import org.springframework.stereotype.Service
 import uk.gov.digital.ho.proving.financialstatus.domain.BelowDegreeCourse
 import uk.gov.digital.ho.proving.financialstatus.domain.CourseLengthCalculator
@@ -65,21 +66,23 @@ class GeneralConditionCodesCalculator extends ConditionCodesCalculator {
         case _ => Invalid(ConditionCodesParameterError(s"Course type parameter: $courseType is unrecognised for this calculation"))
       }
 
-    def calculatePartnerConditionCode(): Option[PartnerConditionCode] = dependants match {
-      case None => None
-      case Some(noOfDeps) if noOfDeps == 0 => None
+    def calculatePartnerConditionCode(): Validated[ConditionCodesParameterError, Option[PartnerConditionCode]] = dependants match {
+      case None => Valid(None)
+      case Some(noOfDeps) if noOfDeps == 0 => Valid(None)
       case _ =>
 
         if (courseType == MainCourse) {
           (courseStartDate, courseEndDate) match {
             case (Some(start), Some(end)) =>
               val courseLengthInMonths = CourseLengthCalculator.differenceInMonths(start, end)
-              if (courseLengthInMonths >= 12) Some(PartnerConditionCode("4B"))
-              else Some(PartnerConditionCode("3"))
+              if (courseLengthInMonths >= 12) Valid(Some(PartnerConditionCode("4B")))
+              else Valid(Some(PartnerConditionCode("3")))
+            case (None, None) => Invalid(ConditionCodesParameterError("Missing course start and end date"))
+            case (None, _) => Invalid(ConditionCodesParameterError("Missing course start date"))
+            case (_, None) => Invalid(ConditionCodesParameterError("Missing course end date"))
           }
-          // TODO: Bad date case
         } else {
-          Some(PartnerConditionCode("3"))
+          Valid(Some(PartnerConditionCode("3")))
       }
 
     }
@@ -90,33 +93,20 @@ class GeneralConditionCodesCalculator extends ConditionCodesCalculator {
       case _ => Some(ChildConditionCode("1"))
     }
 
-    calculateApplicantConditionCode().map { validated =>
-      ConditionCodesCalculationResult(
-        validated,
-        calculatePartnerConditionCode(),
-        calculateChildConditionCode()
-      )
+    val applicantResult: Validated[ConditionCodesParameterError, Option[ApplicantConditionCode]] = calculateApplicantConditionCode()
+    val partnerResult: Validated[ConditionCodesParameterError, Option[PartnerConditionCode]] = calculatePartnerConditionCode()
+
+    (applicantResult, partnerResult) match {
+      case (Valid(app), Valid(part)) =>
+        Valid(ConditionCodesCalculationResult(
+          app,
+          part,
+          calculateChildConditionCode()
+        ))
+      case (Invalid(inv), Valid(_)) => Invalid(inv)
+      case (Valid(_), Invalid(inv)) => Invalid(inv)
+      case (Invalid(inv1), Invalid(inv2)) => Invalid(ConditionCodesParameterError(inv1.message + " ; " + inv2.message))
     }
-
-//    calculateApplicantConditionCode().fold(
-//      invalid => Invalid(invalid),
-//      validated => Valid(ConditionCodesCalculationResult(
-//        validated,
-//        calculatePartnerConditionCode(),
-//        calculateChildConditionCode()
-//      ))
-//    )
-
-//    calculateApplicantConditionCode() match {
-//      case Valid(validated) =>
-//        Valid(ConditionCodesCalculationResult(
-//          validated,
-//          calculatePartnerConditionCode(),
-//          calculateChildConditionCode()
-//        ))
-//      case withProblems@Invalid(_) =>
-//        withProblems
-//    }
   }
 }
 
