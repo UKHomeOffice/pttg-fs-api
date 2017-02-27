@@ -13,7 +13,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
     The concept of pre-sessional courses does not apply to the PGDD route
 
-    Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
+    Applicants Required Maintenance threshold general:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
     Accommodation fees already paid - The maximum amount paid can be £1265
@@ -24,10 +24,11 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
             | Student Type                    | pgdd |
             | In London                       | Yes  |
             | Accommodation fees already paid | 500  |
+            | Dependants only                 | No   |
 
     #Required Maintenance threshold calculation to pass this feature file
 
-    #Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
+    #Maintenance threshold amount = (Required Maintenance threshold general * Course length) +
     #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) - (accommodation fees paid)
 
     #12 months: ((£1265 x 12) + (£845 x (12+1) x 1) - (£50)
@@ -48,10 +49,10 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Original course start date      | 2015-12-15 |
-            | Course start date               | 2016-01-03 |
-            | Course end date                 | 2016-02-10 |
-            | Dependants                      | 0          |
+            | Original course start date | 2015-12-15 |
+            | Course start date          | 2016-01-03 |
+            | Course end date            | 2016-02-10 |
+            | Dependants                 | 0          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
@@ -61,10 +62,10 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Original course start date      | 2014-10-15 |
-            | Course start date               | 2016-01-03 |
-            | Course end date                 | 2016-02-10 |
-            | Dependants                      | 0          |
+            | Original course start date | 2014-10-15 |
+            | Course start date          | 2016-01-03 |
+            | Course end date            | 2016-02-10 |
+            | Dependants                 | 0          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2030.00    |
@@ -74,11 +75,11 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | In London                       | No         |
-            | Original course start date      | 2015-09-15 |
-            | Course start date               | 2016-01-01 |
-            | Course end date                 | 2016-04-09 |
-            | Dependants                      | 2          |
+            | In London                  | No         |
+            | Original course start date | 2015-09-15 |
+            | Course start date          | 2016-01-01 |
+            | Course end date            | 2016-04-09 |
+            | Dependants                 | 2          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 4250.00    |
@@ -89,10 +90,10 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Original course start date      | 2015-08-15 |
-            | Course start date               | 2016-05-01 |
-            | Course end date                 | 2016-10-09 |
-            | Dependants                      | 4          |
+            | Original course start date | 2015-08-15 |
+            | Course start date          | 2016-05-01 |
+            | Course end date            | 2016-10-09 |
+            | Dependants                 | 4          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 8790.00    |
@@ -103,11 +104,61 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Original course start date      | 2016-04-15 |
-            | Course start date               | 2016-05-11 |
-            | Course end date                 | 2016-06-01 |
-            | Dependants                      | 1          |
+            | Original course start date | 2016-04-15 |
+            | Course start date          | 2016-05-11 |
+            | Course end date            | 2016-06-01 |
+            | Dependants                 | 1          |
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 2455.00    |
+            | Leave end date | 2016-07-01 |
+
+        #### PGDD continuation course - Dependants Only ####
+        # Capped at 2 months #
+
+    Scenario: 2 dependant only application (main applicant is on a 3 month pgdd continuation course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | In London                  | No         |
+            | Original course start date | 2015-09-15 |
+            | Course start date          | 2016-01-01 |
+            | Course end date            | 2016-04-09 |
+            | Dependants                 | 2          |
+            | Dependants only            | Yes        |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 2720.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2016-05-09 |
+
+    Scenario: 4 dependant only application (main applicant is on a 5 month pgdd continuation course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | In London                  | Yes        |
+            | Original course start date | 2015-08-15 |
+            | Course start date          | 2016-05-01 |
+            | Course end date            | 2016-10-09 |
+            | Dependants                 | 4          |
+            | Dependants only            | Yes        |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 6760.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2016-11-09 |
+
+    Scenario: 1 dependant only application (main applicant is on a 1 month pgdd continuation course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | In London                  | Yes        |
+            | Original course start date | 2016-04-15 |
+            | Course start date          | 2016-05-11 |
+            | Course end date            | 2016-06-01 |
+            | Dependants                 | 1          |
+            | Dependants only            | Yes        |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 1690.00    |
             | Leave end date | 2016-07-01 |

@@ -131,7 +131,7 @@ public class ThresholdCalculatorTier2 {
                         .description("Type of applicant. Allowed values are 'main', 'dependant'. See <<Glossary>>")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
-                        .description("The number of dependants to take in to account when calculating the minimum balance")
+                        .description("The number of dependants to take in to account when calculating the threshold value")
                         .attributes(key("optional").value(true))
                 )
 

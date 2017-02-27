@@ -1,10 +1,8 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test.tier4
 
 import org.springframework.context.support.ResourceBundleMessageSource
-import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
-import uk.gov.digital.ho.proving.financialstatus.domain.ApplicantTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.CourseTypeChecker
-import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculator
+import uk.gov.digital.ho.proving.financialstatus.domain.MaintenanceThresholdCalculatorT4
 import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 
 class TestUtilsTier4 {
@@ -23,30 +21,30 @@ class TestUtilsTier4 {
     public static def inLondonDependant = 845
     public static def notInLondonDependant = 680
 
-    public static def nonDoctorateCappedCourseLength = 9
+    public static def generalCappedCourseLength = 9
 
     public static def susoCappedCourseLength = 2
 
-    public static def pgddSsoCappedCourseLength = 2
-    public static def doctorateFixedCourseLength = 2
+    public static def pgddsusoCappedCourseLength = 2
+    public static def doctorateExtensionFixedCourseLength = 2
 
 
-    public static def getStudentTypeChecker() { new StudentTypeChecker("doctorate", "nondoctorate", "pgdd", "sso") }
+    public static def getStudentTypeChecker() { new StudentTypeChecker("des", "general", "pgdd", "suso") }
 
     public static def getCourseTypeChecker() { new CourseTypeChecker("main", "pre-sessional") }
 
     public static def maintenanceThresholdServiceBuilder() {
-        new MaintenanceThresholdCalculator(
+        new MaintenanceThresholdCalculatorT4(
             inLondonMaintenance,
             notInLondonMaintenance,
             maxMaintenanceAllowance,
             inLondonDependant,
             notInLondonDependant,
-            //nonDoctorateMinCourseLength,
-            nonDoctorateCappedCourseLength,
-            //pgddSsoMinCourseLength,
-            pgddSsoCappedCourseLength,
-            doctorateFixedCourseLength,
+            //generalMinCourseLength,
+            generalCappedCourseLength,
+            //pgddsusoMinCourseLength,
+            pgddsusoCappedCourseLength,
+            doctorateExtensionFixedCourseLength,
             //susoMinCourseLength,
             susoCappedCourseLength
         )

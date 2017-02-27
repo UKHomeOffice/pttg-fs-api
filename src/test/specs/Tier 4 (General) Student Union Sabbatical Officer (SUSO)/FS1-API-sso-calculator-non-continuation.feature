@@ -19,7 +19,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
 
     The concept of pre-sessional courses does not apply to the SUSO route
 
-    Applicants Required Maintenance threshold non doctorate:  In London - £1265, Out London - £1015
+    Applicants Required Maintenance threshold general:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
 
     Total tuition fees - total amount of the tuition fees for the course
@@ -29,13 +29,14 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
     Background:
         Given A Service is consuming the FSPS Calculator API
         And the default details are
-            | Student Type                    | sso |
-            | In London                       | Yes |
-            | Accommodation fees already paid | 100 |
+            | Student Type                    | suso |
+            | In London                       | Yes  |
+            | Accommodation fees already paid | 100  |
+            | Dependants only                 | No   |
 
     #Required Maintenance threshold calculation to pass this feature file
 
-    #Maintenance threshold amount = (Required Maintenance threshold non doctorate * Course length) +
+    #Maintenance threshold amount = (Required Maintenance threshold general * Course length) +
     #((Dependants Required Maintenance threshold * Dependants Required Maintenance period)  * number of dependants) + (total tuition fees - tuition fees paid - accommodation fees paid)
 
     #SUSO course:
@@ -45,9 +46,9 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
 
     #SUSO course worked examples:
 
-    #12 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 1) + (£10,000 - £0 - £0) = £14,220
-    #7 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 2) + (£7,000 - £300 - £500.50) = £12,109.50
-    #2 months: Tier 4 (General) Student - sso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 3) + (£10,000 - £0 - £0) = (£17,600)
+    #12 months: Tier 4 (General) Student - suso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 1) + (£10,000 - £0 - £0) = £14,220
+    #7 months: Tier 4 (General) Student - suso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 2) + (£7,000 - £300 - £500.50) = £12,109.50
+    #2 months: Tier 4 (General) Student - suso - In London, with dependents In Country - (£1265 x 2) + (£845 x 2 x 3) + (£10,000 - £0 - £0) = (£17,600)
 
 
     ################# SUSO course #######################
@@ -129,3 +130,60 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Uni
             | Course Length  | 2          |
             | Leave end date | 2019-01-03 |
 
+# SUSO course - dependants only  #
+# Capped at 2 months #
+
+    Scenario: 2 dependant only application (main applicant is on a 1 month SUSO course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Dependants        | 2          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-02 |
+            | Dependants only   | Yes        |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 3380.00    |
+            | Leave end date | 2016-02-09 |
+
+    Scenario: 2 dependant only application (main applicant is on a 2 month SUSO course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Dependants        | 2          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-28 |
+            | Dependants only   | Yes        |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 3380.00    |
+            | Leave end date | 2016-03-06 |
+
+    Scenario: 1 dependant only application (main applicant is on a 7 month SUSO course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Dependants        | 1          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-07-28 |
+            | Dependants only   | Yes        |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 1690.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2016-09-28 |
+
+    Scenario: 3 dependant only application (main applicant is on a 33 month SUSO course)
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | In London         | No         |
+            | Dependants        | 3          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2018-09-03 |
+            | Dependants only   | Yes        |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 4080.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2019-01-03 |

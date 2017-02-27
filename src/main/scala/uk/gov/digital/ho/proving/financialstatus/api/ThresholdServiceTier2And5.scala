@@ -12,9 +12,8 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation._
-import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
-import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.auditEvent
-import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.nextId
+import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages, ThresholdParameterValidator}
+import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
 import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
@@ -77,7 +76,8 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
             case None => buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
           }
         }
-      case DependantApplicant => val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType)
+      case DependantApplicant =>
+        val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType, dependants.getOrElse(0))
         new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
 
     }

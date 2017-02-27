@@ -47,7 +47,7 @@ class CourseTypeCheckerServiceSpec extends Specification {
 
     def url = TestUtilsTier4.thresholdUrl
 
-    def callApi(studentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid, courseType) {
+    def callApi(studentType, inLondon, courseStartDate, courseEndDate, originalCourseStartDate, accommodationFeesPaid, dependants, tuitionFees, tuitionFeesPaid, courseType, dependantsOnly) {
 
 
         def response = mockMvc.perform(
@@ -58,6 +58,7 @@ class CourseTypeCheckerServiceSpec extends Specification {
                 .param("courseEndDate", courseEndDate.toString())
                 .param("accommodationFeesPaid", accommodationFeesPaid.toString())
                 .param("dependants", dependants.toString())
+                .param("dependantsOnly", dependantsOnly.toString())
                 .param("tuitionFees", tuitionFees.toString())
                 .param("tuitionFeesPaid", tuitionFeesPaid.toString())
                 .param("courseType", courseType)
@@ -70,7 +71,7 @@ class CourseTypeCheckerServiceSpec extends Specification {
     def "Tier 4 Course types"() {
 
         expect:
-        def response = callApi("nondoctorate", true, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 5, 31), LocalDate.of(1999, 9, 3), 0, 0, 0, 0, courseType)
+        def response = callApi("general", true, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 5, 31), LocalDate.of(1999, 9, 3), 0, 0, 0, 0, courseType, false)
         response.andExpect(status().is(httpStatus))
         def jsonContent = new JsonSlurper().parseText(response.andReturn().response.getContentAsString())
         jsonContent.status.message == statusMessage

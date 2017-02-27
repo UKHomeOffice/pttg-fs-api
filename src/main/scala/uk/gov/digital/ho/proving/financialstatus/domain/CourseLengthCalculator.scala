@@ -11,7 +11,7 @@ object CourseLengthCalculator {
     // Add 1 day to end date as we must include the end date
     val period = Period.between(startDate, endDate.plusDays(1))
     val months = period.getMonths + (MONTHS_IN_YEAR * period.getYears)
-    if (period.getDays > 0 ) months + 1 else months
+    if (period.getDays > 0) months + 1 else months
   }
 
 }

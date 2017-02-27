@@ -81,7 +81,7 @@ public class ThresholdCalculatorTier4 {
     };
 
     private FieldDescriptor[] bodyModelFields = new FieldDescriptor[]{
-        fieldWithPath("threshold").description("minimum daily balance"),
+        fieldWithPath("threshold").description("minimum daily balance threshold"),
         fieldWithPath("leaveEndDate").description("end date of leave granted")
     };
 
@@ -114,8 +114,9 @@ public class ThresholdCalculatorTier4 {
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
-            .param("studentType", "nondoctorate")
+            .param("studentType", "general")
             .param("dependants", "0")
+            .param("dependantsOnly", "false")
             .param("courseType", "main")
             .filter(document.snippets(
                 requestHeaders(
@@ -142,8 +143,9 @@ public class ThresholdCalculatorTier4 {
             .param("tuitionFees", "12500")
             .param("tuitionFeesPaid", "250.50")
             .param("accommodationFeesPaid", "300")
-            .param("studentType", "nondoctorate")
+            .param("studentType", "general")
             .param("dependants", "1")
+            .param("dependantsOnly", "false")
             .param("courseType", "main")
              .filter(document.snippets(
                 responseFields(bodyModelFields)
@@ -171,10 +173,13 @@ public class ThresholdCalculatorTier4 {
                         .description("Accommodation fees already paid")
                         .attributes(key("optional").value(true)),
                     parameterWithName("studentType")
-                        .description("Type of student. Allowed values are 'doctorate', 'nondoctorate', 'pgdd' and 'sso'. See <<Glossary>>")
+                        .description("Type of student. Allowed values are 'des', 'general', 'pgdd' and 'suso'. See <<Glossary>>")
                         .attributes(key("optional").value(false)),
                     parameterWithName("dependants")
-                        .description("The number of dependants to take in to account when calculating the minimum balance")
+                        .description("The number of dependants to take in to account when calculating the threshold value")
+                        .attributes(key("optional").value(true)),
+                    parameterWithName("dependantsOnly")
+                        .description("Whether or not to calculate only the dependants threshold value")
                         .attributes(key("optional").value(true)),
                     parameterWithName("courseType")
                         .description("Type of course.  Allowed values are 'main' and 'pre-sessional'")
