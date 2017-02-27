@@ -5,7 +5,6 @@ import java.time.LocalDate
 import cats.data.Validated
 import cats.data.Validated.Invalid
 import cats.data.Validated.Valid
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import uk.gov.digital.ho.proving.financialstatus.domain.BelowDegreeCourse
 import uk.gov.digital.ho.proving.financialstatus.domain.CourseLengthCalculator
@@ -17,15 +16,15 @@ import uk.gov.digital.ho.proving.financialstatus.domain.PostGraduateDoctorDentis
 import uk.gov.digital.ho.proving.financialstatus.domain.PreSessionalCourse
 import uk.gov.digital.ho.proving.financialstatus.domain.StudentType
 import uk.gov.digital.ho.proving.financialstatus.domain.StudentUnionSabbaticalOfficerStudent
-import uk.gov.digital.ho.proving.financialstatus.domain.UnknownStudent
 
 @Service
 class ConditionCodesCalculatorProvider() {
 
-  def provide(studentType: StudentType = UnknownStudent("")): ConditionCodesCalculator = studentType match {
-    case GeneralStudent => new GeneralConditionCodesCalculator
+  def provide(studentType: StudentType): Validated[ConditionCodesParameterError, ConditionCodesCalculator] = studentType match {
+    case GeneralStudent => Valid(new GeneralConditionCodesCalculator)
     case DoctorateExtensionStudent | PostGraduateDoctorDentistStudent | StudentUnionSabbaticalOfficerStudent =>
-      new OtherNonGeneralConditionCodesCalculator(studentType)
+      Valid(new OtherNonGeneralConditionCodesCalculator(studentType))
+    case _ => Invalid(ConditionCodesParameterError(s"student type $studentType is not valid"))
   }
 
 }
@@ -78,7 +77,8 @@ class GeneralConditionCodesCalculator extends ConditionCodesCalculator {
               if (courseLengthInMonths >= 12) Some(PartnerConditionCode("4B"))
               else Some(PartnerConditionCode("3"))
           }
-      } else {
+          // TODO: Bad date case
+        } else {
           Some(PartnerConditionCode("3"))
       }
 
@@ -90,16 +90,33 @@ class GeneralConditionCodesCalculator extends ConditionCodesCalculator {
       case _ => Some(ChildConditionCode("1"))
     }
 
-    calculateApplicantConditionCode() match {
-      case Valid(validated) =>
-        Valid(ConditionCodesCalculationResult(
-          validated,
-          calculatePartnerConditionCode(),
-          calculateChildConditionCode()
-        ))
-      case withProblems@Invalid(_) =>
-        withProblems
+    calculateApplicantConditionCode().map { validated =>
+      ConditionCodesCalculationResult(
+        validated,
+        calculatePartnerConditionCode(),
+        calculateChildConditionCode()
+      )
     }
+
+//    calculateApplicantConditionCode().fold(
+//      invalid => Invalid(invalid),
+//      validated => Valid(ConditionCodesCalculationResult(
+//        validated,
+//        calculatePartnerConditionCode(),
+//        calculateChildConditionCode()
+//      ))
+//    )
+
+//    calculateApplicantConditionCode() match {
+//      case Valid(validated) =>
+//        Valid(ConditionCodesCalculationResult(
+//          validated,
+//          calculatePartnerConditionCode(),
+//          calculateChildConditionCode()
+//        ))
+//      case withProblems@Invalid(_) =>
+//        withProblems
+//    }
   }
 }
 

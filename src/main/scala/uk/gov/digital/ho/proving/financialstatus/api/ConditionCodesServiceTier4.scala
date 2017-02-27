@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.nextId
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
@@ -40,7 +41,8 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
                                                val deploymentConfig: DeploymentDetails,
                                                val conditionCodesCalculatorProvider: ConditionCodesCalculatorProvider,
                                                val studentTypeChecker: StudentTypeChecker,
-                                               val courseTypeChecker: CourseTypeChecker
+                                               val courseTypeChecker: CourseTypeChecker,
+                                               val serviceMessages: ServiceMessages
                                               ) extends FinancialStatusBaseController {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ConditionCodesServiceTier4])
@@ -91,19 +93,31 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
     val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown").toLowerCase)
     val validatedCourseType = courseTypeChecker.getCourseType(courseType.getOrElse("Unknown").toLowerCase)
 
-    val result: Validated[ConditionCodesParameterError, ConditionCodesCalculationResult] = withAudit {
-      val calculator = conditionCodesCalculatorProvider.provide(validatedStudentType)
-      calculator.calculateConditionCodes(dependantsOnly, dependants, courseStartDate, courseEndDate, validatedCourseType, recognisedBodyOrHEI)
+    val result = withAudit {
+      val maybeCalculator = conditionCodesCalculatorProvider.provide(validatedStudentType)
+      maybeCalculator.fold(
+        Invalid(_),
+        _.calculateConditionCodes(dependantsOnly, dependants, courseStartDate, courseEndDate, validatedCourseType, recognisedBodyOrHEI)
+      )
     }
-    result match {
-      case Valid(x) =>
-        val conditionCodesResponse = conditionCodesResultResponseConverter(x)
-        new ResponseEntity(conditionCodesResponse, HttpStatus.OK)
-      case Invalid(y) => ??? // FIXME: Implement error case response
-    }
+    result.fold(
+      invalidResult => buildErrorResponse("400", invalidResult.message, HttpStatus.BAD_REQUEST),
+      buildSuccessfulResponse
+    )
   }
 
+  private def buildSuccessfulResponse(result: ConditionCodesCalculationResult): ResponseEntity[ConditionCodesResponse] = {
+    val responseBody = ConditionCodesResponse(result.applicant.map(_.value), result.partner.map(_.value), result.child.map(_.value),
+      StatusResponse(HttpStatus.OK.getReasonPhrase, serviceMessages.OK))
+    new ResponseEntity(responseBody, headers, HttpStatus.OK)
+  }
 
+  private def buildErrorResponse(statusCode: String, statusMessage: String, status: HttpStatus):
+  ResponseEntity[ConditionCodesResponse] = {
+
+    val responseBody = ConditionCodesResponse(None, None, None, StatusResponse(statusCode, statusMessage))
+    new ResponseEntity(responseBody, headers, status)
+  }
 
   private def generateRequestAuditEvent(userProfile: Option[UserProfile], correlationId: UUID, auditRequestParamsData: Map[String, AnyRef]) = {
     AuditActions.auditEvent(
@@ -124,10 +138,6 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
       data = auditResultParamsData
     )
   }
-
-  def conditionCodesResultResponseConverter(result: ConditionCodesCalculationResult): ConditionCodesResponse =
-    ConditionCodesResponse(result.applicant.map(_.value), result.partner.map(_.value),result.child.map(_.value))
-
 }
 object ConditionCodesServiceTier4 {
   final val ConditionCodeTier4Url = "/pttg/financialstatus/v1/t4/conditioncodes"

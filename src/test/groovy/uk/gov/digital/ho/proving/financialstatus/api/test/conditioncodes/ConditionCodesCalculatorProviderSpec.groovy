@@ -20,7 +20,9 @@ class ConditionCodesCalculatorProviderSpec extends Specification {
         def calculator = underTest.provide(GeneralStudent$.MODULE$)
 
         then:
-        assert calculator instanceof GeneralConditionCodesCalculator
+
+        assert calculator.valid
+        assert calculator.toOption().get() instanceof GeneralConditionCodesCalculator
 
     }
 
@@ -33,7 +35,8 @@ class ConditionCodesCalculatorProviderSpec extends Specification {
         def calculator = underTest.provide(DoctorateExtensionStudent$.MODULE$)
 
         then:
-        assert calculator instanceof OtherNonGeneralConditionCodesCalculator
+        assert calculator.valid
+        assert calculator.toOption().get() instanceof OtherNonGeneralConditionCodesCalculator
     }
 
     def 'provides OtherNonGeneralConditionCodesCalculator for a Post Graduate Doctor Dentist student'() {
@@ -45,7 +48,8 @@ class ConditionCodesCalculatorProviderSpec extends Specification {
         def calculator = underTest.provide(PostGraduateDoctorDentistStudent$.MODULE$)
 
         then:
-        assert calculator instanceof OtherNonGeneralConditionCodesCalculator
+        assert calculator.valid
+        assert calculator.toOption().get() instanceof OtherNonGeneralConditionCodesCalculator
     }
 
     def 'provides OtherNonGeneralConditionCodesCalculator for a Student Union Sabbatical Officer student'() {
@@ -57,6 +61,7 @@ class ConditionCodesCalculatorProviderSpec extends Specification {
         def calculator = underTest.provide(StudentUnionSabbaticalOfficerStudent$.MODULE$)
 
         then:
-        assert calculator instanceof OtherNonGeneralConditionCodesCalculator
+        assert calculator.valid
+        assert calculator.toOption().get() instanceof OtherNonGeneralConditionCodesCalculator
     }
 }

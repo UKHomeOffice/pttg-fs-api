@@ -1,5 +1,6 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test.conditioncodes
 
+import cats.data.Validated
 import groovy.json.JsonSlurper
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
@@ -51,7 +52,8 @@ class ConditionCodesServiceTier4Spec extends Specification {
         new DeploymentDetails("localhost", "local"),
         conditionCodesCalculatorProviderMock,
         new StudentTypeChecker("des", "general", "pgdd", "suso"),
-        new CourseTypeChecker("main", "pre-sessional", "below-degree")
+        new CourseTypeChecker("main", "pre-sessional", "below-degree"),
+        serviceMessages
     )
 
     MockMvc mockMvc = standaloneSetup(conditionCodesTier4Service)
@@ -171,11 +173,12 @@ class ConditionCodesServiceTier4Spec extends Specification {
     }
 
     private void stubconditionCodesCalculatorResult() {
-        conditionCodesCalculatorProviderMock.provide(_) >> conditionCodesCalculatorMock
-        conditionCodesCalculatorMock.calculateConditionCodes(_, _, _, _, _, _) >> new ConditionCodesCalculationResult(
+        conditionCodesCalculatorProviderMock.provide(_) >> new Validated.Valid(conditionCodesCalculatorMock)
+        conditionCodesCalculatorMock.calculateConditionCodes(_, _, _, _, _, _) >> new Validated.Valid(new ConditionCodesCalculationResult(
             new Some<>(new ApplicantConditionCode("a")),
             new Some<>(new PartnerConditionCode("b")),
-            new Some<>(new ChildConditionCode("c")))
+            new Some<>(new ChildConditionCode("c"))
+        ))
     }
 
 }

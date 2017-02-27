@@ -43,4 +43,5 @@ case class BankConsentResponse(@JsonInclude(Include.NON_EMPTY) consent: Option[S
 
 case class ConditionCodesResponse(@JsonInclude(Include.NON_EMPTY) applicantConditionCode: Option[String],
                                   @JsonInclude(Include.NON_EMPTY) partnerConditionCode: Option[String],
-                                  @JsonInclude(Include.NON_EMPTY) childConditionCode: Option[String])
+                                  @JsonInclude(Include.NON_EMPTY) childConditionCode: Option[String],
+                                  @JsonInclude(Include.NON_NULL) status: StatusResponse)
