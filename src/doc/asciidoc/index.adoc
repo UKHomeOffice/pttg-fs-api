@@ -200,6 +200,55 @@ include::{snippets}/threshold-calculation-tier5/http-response.adoc[]
 
 include::{snippets}/threshold-calculation-tier5/response-fields.adoc[]
 
+== Condition Codes Tier 4 (general student type)
+
+Calculates the condition codes for applicants, partner and dependants based on student type, possible dependants,
+course dates, course type and whether the institution is a recognised body / Higher Education Institute or not.
+
+=== Example request
+
+include::{snippets}/condition-codes/tier4-general-student-type/http-request.adoc[]
+
+include::{snippets}/condition-codes/tier4-general-student-type/curl-request.adoc[]
+
+=== Request Parameters
+
+include::{snippets}/condition-codes/tier4-general-student-type/request-parameters.adoc[]
+
+
+=== Example of a successful response
+
+include::{snippets}/condition-codes/tier4-general-student-type/http-response.adoc[]
+
+=== Response content
+
+include::{snippets}/condition-codes/tier4-general-student-type/response-fields.adoc[]
+
+== Condition Codes Tier 4 (non-general student type)
+
+Non-general student-type covers those on Doctorate Extension Schemes, Post Graduate Doctor Dentist and Student Union Sabbatical Officer.
+
+Calculates the condition codes for applicants, partner and dependants based on student type, possible dependants,
+course dates, course type and whether the institution is a recognised body / Higher Education Institute or not.
+
+=== Example request
+
+include::{snippets}/condition-codes/tier4-non-general-student-type/http-request.adoc[]
+
+include::{snippets}/condition-codes/tier4-non-general-student-type/curl-request.adoc[]
+
+=== Request Parameters
+
+include::{snippets}/condition-codes/tier4-non-general-student-type/request-parameters.adoc[]
+
+
+=== Example of a successful response
+
+include::{snippets}/condition-codes/tier4-non-general-student-type/http-response.adoc[]
+
+=== Response content
+
+include::{snippets}/condition-codes/tier4-non-general-student-type/response-fields.adoc[]
 
 
 <<<

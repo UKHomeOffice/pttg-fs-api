@@ -164,7 +164,7 @@ tasks.withType(GroovyCompile) {
 tasks.withType(ScalaCompile) {
     scalaCompileOptions.with {
         force = true
-        additionalParameters = ["-Xmax-classfile-name", "127"]
+        additionalParameters = ["-Xmax-classfile-name", "127", "-feature", "-language:implicitConversions"]
         forkOptions.setMemoryMaximumSize("256m")
     }
 }
