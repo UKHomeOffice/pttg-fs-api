@@ -60,3 +60,18 @@ Course Type:: Meanings of the course type names accepted by the API
 |A main course, below degree level
 
 |===
+
+Condition Codes::
+[caption=]
+.Course Types
+|===
+|Course Type Name|Description
+
+|Applicant condition code
+|The condition code for the applicant
+|Partner condition code
+|The condition code for the applicant's partner, idf they have a partner
+|Children condition code
+|The condition code for the applicant's children, if they have any
+
+|===
