@@ -5,6 +5,9 @@ import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
 
+import cats.data.Validated
+import cats.data.Validated.Invalid
+import cats.data.Validated.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
@@ -27,6 +30,7 @@ import uk.gov.digital.ho.proving.financialstatus.domain.StudentTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.UserProfile
 import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ConditionCodesCalculationResult
 import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ConditionCodesCalculatorProvider
+import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ConditionCodesParameterError
 
 @RestController
 @ControllerAdvice
@@ -56,7 +60,7 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
 
     val userProfile: Option[UserProfile] = accessToken.flatMap(authenticator.getUserProfileFromToken)
 
-    def withAudit(calculateConditionCodes: => ConditionCodesCalculationResult): ConditionCodesCalculationResult = {
+    def withAudit(calculateConditionCodes: => Validated[ConditionCodesParameterError, ConditionCodesCalculationResult]): Validated[ConditionCodesParameterError, ConditionCodesCalculationResult] = {
       val auditRequestParamsData = Map[String, AnyRef](
         "studentType" -> toOptionString(studentType),
         "dependantsOnly" -> dependantsOnly.asInstanceOf[JBoolean],
@@ -68,26 +72,35 @@ class ConditionCodesServiceTier4  @Autowired()(val auditor: AuditEventPublisher,
       )
       val correlationId = nextId
       auditor.publishEvent(generateRequestAuditEvent(userProfile, correlationId, auditRequestParamsData))
-      val result: ConditionCodesCalculationResult = calculateConditionCodes
-      val auditResultParamsData = Map[String, AnyRef](
-        "applicantCode" -> result.applicant,
-        "partnerCode" -> result.partner,
-        "childCode" -> result.child
-      )
+      val result = calculateConditionCodes
+      val auditResultParamsData = result match {
+        case Valid(validatedResult) =>
+          Map[String, AnyRef](
+            "applicantCode" -> validatedResult.applicant,
+            "partnerCode" -> validatedResult.partner,
+            "childCode" -> validatedResult.child
+          )
+        case Invalid(invalidResult) =>
+          Map[String, AnyRef]("invalidResult" -> invalidResult)
+      }
+
       auditor.publishEvent(generateResultAuditEvent(userProfile, correlationId, auditRequestParamsData))
       result
     }
 
-    // TODO: Validation
     val validatedStudentType = studentTypeChecker.getStudentType(studentType.getOrElse("Unknown").toLowerCase)
     val validatedCourseType = courseTypeChecker.getCourseType(courseType.getOrElse("Unknown").toLowerCase)
 
-    val result: ConditionCodesCalculationResult = withAudit {
+    val result: Validated[ConditionCodesParameterError, ConditionCodesCalculationResult] = withAudit {
       val calculator = conditionCodesCalculatorProvider.provide(validatedStudentType)
       calculator.calculateConditionCodes(dependantsOnly, dependants, courseStartDate, courseEndDate, validatedCourseType, recognisedBodyOrHEI)
     }
-    val conditionCodesResponse = conditionCodesResultResponseConverter(result)
-    new ResponseEntity[ConditionCodesResponse](conditionCodesResponse, HttpStatus.OK)
+    result match {
+      case Valid(x) =>
+        val conditionCodesResponse = conditionCodesResultResponseConverter(x)
+        new ResponseEntity(conditionCodesResponse, HttpStatus.OK)
+      case Invalid(y) => ??? // FIXME: Implement error case response
+    }
   }
 
 

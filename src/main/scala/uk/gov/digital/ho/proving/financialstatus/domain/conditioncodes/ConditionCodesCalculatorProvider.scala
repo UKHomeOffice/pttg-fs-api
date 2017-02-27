@@ -2,6 +2,10 @@ package uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes
 
 import java.time.LocalDate
 
+import cats.data.Validated
+import cats.data.Validated.Invalid
+import cats.data.Validated.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import uk.gov.digital.ho.proving.financialstatus.domain.BelowDegreeCourse
 import uk.gov.digital.ho.proving.financialstatus.domain.CourseLengthCalculator
@@ -35,7 +39,7 @@ trait ConditionCodesCalculator {
                               courseStartDate: Option[LocalDate],
                               courseEndDate: Option[LocalDate],
                               courseType: CourseType,
-                              recognisedBodyOrHEI: Option[Boolean]): ConditionCodesCalculationResult
+                              recognisedBodyOrHEI: Option[Boolean]): Validated[ConditionCodesParameterError, ConditionCodesCalculationResult]
 }
 
 class GeneralConditionCodesCalculator extends ConditionCodesCalculator {
@@ -44,20 +48,23 @@ class GeneralConditionCodesCalculator extends ConditionCodesCalculator {
                                        courseStartDate: Option[LocalDate],
                                        courseEndDate: Option[LocalDate],
                                        courseType: CourseType,
-                                       recognisedBodyOrHEI: Option[Boolean]): ConditionCodesCalculationResult = {
+                                       recognisedBodyOrHEI: Option[Boolean]): Validated[ConditionCodesParameterError, ConditionCodesCalculationResult] = {
 
-    def calculateApplicantConditionCode(): Option[ApplicantConditionCode] =
-      if (dependanstOnly) None
+    def calculateApplicantConditionCode(): Validated[ConditionCodesParameterError, Option[ApplicantConditionCode]] =
+      if (dependanstOnly) Valid(None)
       else courseType match {
         case MainCourse => recognisedBodyOrHEI match {
-          case Some(true) => Some(ApplicantConditionCode ("2"))
-          case Some(false) => Some(ApplicantConditionCode ("3"))
+          case Some(true) => Valid(Some(ApplicantConditionCode ("2")))
+          case Some(false) => Valid(Some(ApplicantConditionCode ("3")))
+          case _ => Invalid(ConditionCodesParameterError("Could not determine whether this is a recognised body or HEI"))
         }
         case PreSessionalCourse | BelowDegreeCourse => recognisedBodyOrHEI match {
-          case Some(true) => Some(ApplicantConditionCode("2A"))
-          case Some(false) => Some(ApplicantConditionCode("3"))
+          case Some(true) => Valid(Some(ApplicantConditionCode("2A")))
+          case Some(false) => Valid(Some(ApplicantConditionCode("3")))
+          case _ => Invalid(ConditionCodesParameterError("Could not determine whether this is a recognised body or HEI"))
         }
-    }
+        case _ => Invalid(ConditionCodesParameterError(s"Course type parameter: $courseType is unrecognised for this calculation"))
+      }
 
     def calculatePartnerConditionCode(): Option[PartnerConditionCode] = dependants match {
       case None => None
@@ -83,11 +90,16 @@ class GeneralConditionCodesCalculator extends ConditionCodesCalculator {
       case _ => Some(ChildConditionCode("1"))
     }
 
-    ConditionCodesCalculationResult(
-      calculateApplicantConditionCode(),
-      calculatePartnerConditionCode(),
-      calculateChildConditionCode()
-    )
+    calculateApplicantConditionCode() match {
+      case Valid(validated) =>
+        Valid(ConditionCodesCalculationResult(
+          validated,
+          calculatePartnerConditionCode(),
+          calculateChildConditionCode()
+        ))
+      case withProblems@Invalid(_) =>
+        withProblems
+    }
   }
 }
 
@@ -98,13 +110,13 @@ class OtherNonGeneralConditionCodesCalculator(studentType: StudentType) extends 
                                        courseStartDate: Option[LocalDate],
                                        courseEndDate: Option[LocalDate],
                                        courseType: CourseType,
-                                       recognisedBodyOrHEI: Option[Boolean]): ConditionCodesCalculationResult = {
+                                       recognisedBodyOrHEI: Option[Boolean]): Validated[ConditionCodesParameterError, ConditionCodesCalculationResult] = {
 
-    def calculateApplicantConditionCode(): Option[ApplicantConditionCode] = studentType match {
-      case _ if dependanstOnly => None
-      case DoctorateExtensionStudent => Some(ApplicantConditionCode("4E"))
-      case PostGraduateDoctorDentistStudent | StudentUnionSabbaticalOfficerStudent => Some(ApplicantConditionCode("2"))
-      case _ => None
+    def calculateApplicantConditionCode(): Validated[ConditionCodesParameterError, Option[ApplicantConditionCode]] = studentType match {
+      case _ if dependanstOnly => Valid(None)
+      case DoctorateExtensionStudent => Valid(Some(ApplicantConditionCode("4E")))
+      case PostGraduateDoctorDentistStudent | StudentUnionSabbaticalOfficerStudent => Valid(Some(ApplicantConditionCode("2")))
+      case _ => Invalid(ConditionCodesParameterError(s"Student Type: $studentType is not a valid type for this calculation"))
     }
 
     def calculatePartnerConditionCode(): Option[PartnerConditionCode] = dependants match {
@@ -118,10 +130,17 @@ class OtherNonGeneralConditionCodesCalculator(studentType: StudentType) extends 
       case _ => Some(ChildConditionCode("1"))
     }
 
-    ConditionCodesCalculationResult(
-      calculateApplicantConditionCode(),
-      calculatePartnerConditionCode(),
-      calculateChildConditionCode()
-    )
+    calculateApplicantConditionCode() match {
+      case Valid(validated) =>
+        Valid(ConditionCodesCalculationResult(
+          validated,
+          calculatePartnerConditionCode(),
+          calculateChildConditionCode()
+        ))
+      case withProblems@Invalid(_) =>
+        withProblems
+    }
   }
 }
+
+case class ConditionCodesParameterError(message: String)

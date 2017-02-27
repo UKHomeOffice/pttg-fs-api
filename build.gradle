@@ -82,6 +82,9 @@ dependencies {
 
     compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
+    compile group: 'org.typelevel', name: 'cats_2.11', version: '0.9.0'
+
+
     testCompile 'org.hamcrest:hamcrest-core:1.3'
     testCompile 'com.jayway.jsonpath:json-path:2.2.0'
     testCompile "junit:junit:4.12"
