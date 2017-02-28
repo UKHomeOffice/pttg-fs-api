@@ -62,7 +62,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | main       |
             | Dependants        | 0          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-07-03 |
@@ -75,7 +75,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | main       |
             | Dependants        | 0          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2017-01-03 |
@@ -89,7 +89,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | main       |
             | Dependants        | 2          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-02-03 |
@@ -102,7 +102,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | main       |
             | Dependants        | 2          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-02-28 |
@@ -115,7 +115,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | main       |
             | Dependants        | 1          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-07-28 |
@@ -128,7 +128,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type       | Main       |
+            | Course type       | main       |
             | Dependants        | 3          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2018-09-03 |
@@ -245,7 +245,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
         When the FSPS Calculator API is invoked with the following
             | Student Type      | general    |
             | In London         | Yes        |
-            | Course type       | Main       |
+            | Course type       | main       |
             | Dependants        | 2          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-02-03 |
@@ -261,7 +261,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
         When the FSPS Calculator API is invoked with the following
             | Student Type      | general    |
             | In London         | Yes        |
-            | Course type       | Main       |
+            | Course type       | main       |
             | Dependants        | 2          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-02-28 |
@@ -277,7 +277,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
         When the FSPS Calculator API is invoked with the following
             | Student Type      | general    |
             | In London         | Yes        |
-            | Course type       | Main       |
+            | Course type       | main       |
             | Dependants        | 1          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2016-02-19 |
@@ -293,7 +293,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
         When the FSPS Calculator API is invoked with the following
             | Student Type      | general    |
             | In London         | Yes        |
-            | Course type       | Main       |
+            | Course type       | main       |
             | Dependants        | 3          |
             | Course start date | 2016-01-03 |
             | Course end date   | 2018-09-03 |

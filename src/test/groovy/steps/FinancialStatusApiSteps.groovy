@@ -97,8 +97,10 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String continuationEndDate = ""
     String numberOfDependants = ""
     String courseType = ""
+    String courseInstitution = ""
     String originalCourseStartDate = ""
     String dependanstOnly = ""
+    String recognisedBodyOrHEI = ""
 
     List<String> Todate = new ArrayList()
     List<String> Fromdate = new ArrayList()
@@ -212,6 +214,9 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             if (s.equalsIgnoreCase("Course Type")) {
                 courseType = entries.get(s)
             }
+            if (s.equalsIgnoreCase("Course Institution")) {
+                courseInstitution = entries.get(s)
+            }
             if (s.equalsIgnoreCase("Original course start date")) {
                 originalCourseStartDate = entries.get(s)
             }
@@ -222,6 +227,14 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
                 dependanstOnly = "false"
             } else if (s.equalsIgnoreCase("Dependants only")) {
                 dependanstOnly = ""
+            }
+
+            if (s.equalsIgnoreCase("Recognised body or HEI") && entries.get(s).equalsIgnoreCase("Yes")) {
+                recognisedBodyOrHEI = "true"
+            } else if (s.equalsIgnoreCase("Recognised body or HEI") && entries.get(s).equalsIgnoreCase("No")) {
+                recognisedBodyOrHEI = "false"
+            } else if (s.equalsIgnoreCase("Recognised body or HEI")) {
+                recognisedBodyOrHEI = ""
             }
         }
     }
@@ -395,6 +408,11 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     }
 
+    @Given("^A Service is consuming the Condition Code API\$")
+    public void a_Service_is_consuming_the_Condition_Code_API() {
+
+    }
+
     @Given("^the barclays response has status (\\d+)\$")
     public void the_barclays_response_has_status(int status) {
         testDataLoader.withResponseStatus(balancesUrlRegex, status)
@@ -472,6 +490,24 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t5/maintenance/threshold?applicantType={applicantType}&dependants={dependants}", applicantType, dependants)
         jsonAsString = resp.asString()
         println("FSPS API Calculator: " + jsonAsString)
+    }
+
+    @When("^the Condition Code Tier 4 Other API is invoked with the following\$")
+    public void the_Condition_Code_Tier_Four_Other_API_is_invoked_with_the_following(DataTable arg1) {
+        getTableData(arg1)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t4/conditioncodes?studentType={studentType}&dependantsOnly={dependantsOnly}&dependants={dependants}", studentType, dependanstOnly, dependants)
+        jsonAsString = resp.asString()
+
+        println("Condition Code Tier 4 API: " + jsonAsString)
+    }
+
+    @When("^the Condition Code Tier 4 General API is invoked with the following\$")
+    public void the_Condition_Code_Tier_Four_General_API_is_invoked_with_the_following(DataTable arg1) {
+        getTableData(arg1)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t4/conditioncodes?studentType={studentType}&dependantsOnly={dependantsOnly}&dependants={dependants}&courseType={courseType}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&courseInstitution={courseInstitution}&recognisedBodyOrHEI={recognisedBodyOrHEI}", studentType, dependanstOnly, dependants, courseType, courseStartDate, courseEndDate, courseInstitution, recognisedBodyOrHEI)
+        jsonAsString = resp.asString()
+
+        println("Condition Code Tier 4 API: " + jsonAsString)
     }
 
     @When("^the Balances API is invoked\$")

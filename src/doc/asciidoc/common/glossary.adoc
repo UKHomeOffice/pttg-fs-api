@@ -45,3 +45,33 @@ Applicant Type:: Meanings of the applicant type names accepted by the API
 |The dependant of a main applicant
 
 |===
+
+Course Type:: Meanings of the course type names accepted by the API
+[caption=]
+.Course Types
+|===
+|Course Type Name|Description
+
+|main
+|A main course at degree level or above
+|pre-sessional
+|A course to prepare a student for another course
+|below-degree
+|A main course, below degree level
+
+|===
+
+Condition Codes::
+[caption=]
+.Course Types
+|===
+|Course Type Name|Description
+
+|Applicant condition code
+|The condition code for the applicant
+|Partner condition code
+|The condition code for the applicant's partner, idf they have a partner
+|Children condition code
+|The condition code for the applicant's children, if they have any
+
+|===

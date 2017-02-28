@@ -144,6 +144,9 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
 
 
+    compile group: 'org.typelevel', name: 'cats_2.11', version: '0.9.0'
+
+
     testCompile 'org.hamcrest:hamcrest-core:1.3'
     testCompile 'com.jayway.jsonpath:json-path:2.2.0'
     testCompile "junit:junit:4.12"
@@ -226,7 +229,7 @@ tasks.withType(GroovyCompile) {
 tasks.withType(ScalaCompile) {
     scalaCompileOptions.with {
         force = true
-        additionalParameters = ["-Xmax-classfile-name", "127"]
+        additionalParameters = ["-Xmax-classfile-name", "127", "-feature", "-language:implicitConversions"]
         forkOptions.setMemoryMaximumSize("256m")
     }
 }

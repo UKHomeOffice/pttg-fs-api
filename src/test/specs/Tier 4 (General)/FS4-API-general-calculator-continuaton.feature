@@ -62,7 +62,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main       |
+            | Course type                | main       |
             | Original course start date | 2015-02-15 |
             | Course start date          | 2016-01-05 |
             | Course end date            | 2016-05-10 |
@@ -76,7 +76,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main       |
+            | Course type                | main       |
             | Original course start date | 2016-01-10 |
             | Course start date          | 2016-03-06 |
             | Course end date            | 2016-05-01 |
@@ -90,7 +90,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main       |
+            | Course type                | main       |
             | Original course start date | 2015-09-18 |
             | Course start date          | 2016-02-06 |
             | Course end date            | 2017-04-01 |
@@ -105,7 +105,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main       |
+            | Course type                | main       |
             | Original course start date | 2015-12-15 |
             | Course start date          | 2016-01-05 |
             | Course end date            | 2016-02-10 |
@@ -118,7 +118,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main       |
+            | Course type                | main       |
             | Original course start date | 2016-01-10 |
             | Course start date          | 2016-03-06 |
             | Course end date            | 2016-10-01 |
@@ -131,7 +131,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main       |
+            | Course type                | main       |
             | Original course start date | 2015-09-18 |
             | Course start date          | 2016-02-06 |
             | Course end date            | 2017-01-01 |
@@ -145,7 +145,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main       |
+            | Course type                | main       |
             | Original course start date | 2015-09-18 |
             | Course start date          | 2016-02-06 |
             | Course end date            | 2016-04-07 |
@@ -267,7 +267,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main       |
+            | Course type                | main       |
             | Original course start date | 2015-02-15 |
             | Course start date          | 2016-01-05 |
             | Course end date            | 2016-05-10 |
@@ -284,7 +284,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main       |
+            | Course type                | main       |
             | Original course start date | 2016-01-10 |
             | Course start date          | 2016-03-06 |
             | Course end date            | 2016-05-01 |
@@ -301,7 +301,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
-            | Course type                | Main       |
+            | Course type                | main       |
             | Original course start date | 2015-09-18 |
             | Course start date          | 2016-02-06 |
             | Course end date            | 2017-04-01 |
