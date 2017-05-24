@@ -33,7 +33,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_five API is invoked with the following
             | Applicant type | Main |
-            | Variant        | youthmobility |
+            | Variant        | Temporary |
             | Dependants     | 1   |
         Then The Tier_five Financial Status API provides the following results:
             | HTTP Status | 200     |
