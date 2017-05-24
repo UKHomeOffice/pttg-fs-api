@@ -8,6 +8,18 @@ Feature: Validation of the API fields and data
             | Applicant type | Main |
             | Dependants     | 0    |
 
+
+
+
+     Background: The API is not provided with Dependent type field for the youth mobility form only #
+         Given A service is consuming the financial status check #
+         And the default detail are #
+            | DOB | #
+            | Sort Code | #
+            | Account Number | #
+            | Application raised date | #
+            | 90 day period check     | #
+
 ######################### Validation on the Dependants field #########################
 
     Scenario: The API is not provided with the Number of dependants
