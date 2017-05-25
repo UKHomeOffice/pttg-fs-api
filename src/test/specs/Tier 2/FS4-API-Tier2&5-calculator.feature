@@ -1,7 +1,8 @@
 Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General applicant with and without dependants (single current account)
 
-    Main applicants Required Maintenance - £945
-    Dependants Required Maintenance - £630 (per dependant)
+    Main applicants Required Maintenance (where applicant is either Tier 2 or Tier 5 'temporary') - £945 #
+    Main applicants Required Maintenance (where applicant is Tier 5 'Youth Mobility Scheme') - £1890 #
+    Dependants Required Maintenance - £630 (per dependant where applicant is either Tier 2 or Tier 5 'temporary')
     Dependants can apply without the main dependant
 
     Required Maintenance threshold calculation to pass this feature file:
@@ -10,7 +11,8 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
 
     Worked examples:
 
-    Tier 2 & 5 applicant without dependent (£945 x 1) + (£630 x 0) = £956
+    Tier 2 & 5 temporary workers applicant without dependent (£945 x 1) + (£630 x 0) = £956
+    Tier 5 youth mobility scheme without depandant (£1890 x 1) = £1890 #
     Tier 2 & 5 applicant with dependant (£945 x 1) + (£630 x 1) = £1575
     Tier 2 & 5 applicant with dependant (£945 x 1) + (£630 x 2) = £2205
     Tier 2 & 5 dependant only (£945 x 0) + (£630 x 1) = £630
@@ -48,6 +50,18 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
         Then The Tier_Two Financial Status API provides the following results:
             | HTTP Status | 200     |
             | Threshold   | 2205.00 |
+
+        ###### Tier 5 Main Applicant Youth Mobility Scheme without dependants ########
+
+    Scenario: John Terry is Tier 5 youth mobility applicant. John's maintenance threshold amount calculated. #
+
+        Given A Service is consuming the FSPS Calculator API #
+        When the FSPS Calculator Tier_Five API is invoked with the following #
+            | Applicant type | Main | #
+            | Applicant Variant | Youth Mobility Scheme | #
+        Then The Tier_Five Financial Status API provides the following results: #
+            | HTTP Status | 200    | #
+            | Threshold   | 1890.00 | #
 
     ##### Tier 2 & 5 General without Main Applicant #####
 
