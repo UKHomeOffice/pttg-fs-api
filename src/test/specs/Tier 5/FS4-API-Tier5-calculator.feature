@@ -30,7 +30,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
             | HTTP Status | 200    |
             | Threshold   | 945.00 |
 
-    Scenario: Fran is Tier 5 applicant. Fran's maintenance threshold amount calculated.
+    Scenario: Fran is Tier 5 Temporary worker applicant. Fran's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_five API is invoked with the following
@@ -51,19 +51,19 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 & 5 General appl
             | HTTP Status | 200     |
             | Threshold   | 2205.00 |
 
-        ###### Tier 5 Main Applicant Youth Mobility Scheme without dependants ########
+        ###### Tier 5 Main Applicant Youth Mobility Scheme ########
 
-    Scenario: John Terry is Tier 5 youth mobility applicant. John's maintenance threshold amount calculated. #
+    Scenario: John Terry is Tier 5 youth mobility scheme applicant. John's maintenance threshold amount calculated. #
 
         Given A Service is consuming the FSPS Calculator API #
         When the FSPS Calculator Tier_Five API is invoked with the following #
-            | Applicant type | Main | #
             | Applicant Variant | Youth Mobility Scheme | #
+            | Applicant Type | Main | #
         Then The Tier_Five Financial Status API provides the following results: #
             | HTTP Status | 200    | #
             | Threshold   | 1890.00 | #
 
-    ##### Tier 2 & 5 General without Main Applicant #####
+    ##### Tier 2 & 5 Temporary Worker without Main Applicant #####
 
     Scenario: Stu is Tier 2 applicant. Stu's maintenance threshold amount calculated.
 
