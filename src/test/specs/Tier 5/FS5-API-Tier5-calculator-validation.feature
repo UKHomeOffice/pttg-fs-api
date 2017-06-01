@@ -1,4 +1,4 @@
-#Tiers 2 & 5 validation
+Tiers 5 validation
 
 Feature: Validation of the API fields and data
 
