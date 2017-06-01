@@ -9,8 +9,6 @@ Feature: Validation of the API fields and data
             | Dependants     | 0    |
 
 
-
-
      Background: The API is not provided with Dependent type field for the youth mobility form only (for Tier 5 only) #
          Given A service is consuming the financial status check #
          And the default detail are #
@@ -24,7 +22,7 @@ Feature: Validation of the API fields and data
 
     Scenario: The API is not provided with the Number of dependants
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator Tier_Two API is invoked with the following
+        When the FSPS Calculator Tier_five API is invoked with the following
             | Dependants | -4 |
         Then The Tier_Two Financial Status API provides the following validation results:
             | HTTP Status    | 400                                                          |
@@ -44,7 +42,7 @@ Feature: Validation of the API fields and data
 
     Scenario: The API is not provided with details as to whether there is a main dependant
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator Tier_Two API is invoked with the following
+        When the FSPS Calculator Tier_five API is invoked with the following
             | Applicant type |  |
         Then The Tier_Two Financial Status API provides the following validation results:
             | HTTP Status    | 400                                                         |
