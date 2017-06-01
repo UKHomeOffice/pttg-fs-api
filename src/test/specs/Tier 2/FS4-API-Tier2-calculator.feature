@@ -28,7 +28,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 General applican
             | HTTP Status | 200    |
             | Threshold   | 945.00 |
 
-    Scenario: Fran is Tier 2 General applicant. Fran's maintenance threshold amount calculated.
+    Scenario: Fran is Tier 2 General applicant with a dependant. Fran's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_five API is invoked with the following
@@ -38,7 +38,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 General applican
             | HTTP Status | 200     |
             | Threshold   | 1575.00 |
 
-    Scenario: Karen is Tier 2 applicant. Karen's maintenance threshold amount calculated.
+    Scenario: Karen is Tier 2 applicant with 2 dependants. Karen's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_Two API is invoked with the following
@@ -49,9 +49,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 General applican
             | Threshold   | 2205.00 |
 
 
-    ##### Tier 2 without Main Applicant #####
+    ######################## Tier 2 without Main Applicant ###################################
 
-    Scenario: Stu is Tier 2 applicant. Stu's maintenance threshold amount calculated.
+    Scenario: Stu is Tier 2 dependant only applicant. Stu's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_Two API is invoked with the following
@@ -62,9 +62,9 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 General applican
             | Threshold   | 630.00 |
 
 
-        ##### Tier 2 General without Main Applicant - multiple applicants (x3) #####
+        ############# Tier 2 General without Main Applicant - multiple applicants (x3) #####
 
-    Scenario: Simon, Alvin and Theodore are multiple (x3) Tier 2 applicants.
+    Scenario: Simon, Alvin and Theodore are multiple (x3) Tier 2 dependant applicants.
 
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_Two API is invoked with the following
