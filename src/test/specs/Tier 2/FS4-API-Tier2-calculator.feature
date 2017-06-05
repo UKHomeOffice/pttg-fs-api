@@ -10,7 +10,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 General applican
 
     Worked examples:
 
-    Tier 2 applicant without dependent (£945 x 1) + (£630 x 0) = £956
+    Tier 2 applicant without dependent (£945 x 1) + (£630 x 0) = £945
     Tier 2 applicant with dependant (£945 x 1) + (£630 x 1) = £1575
     Tier 2 applicant with dependant (£945 x 1) + (£630 x 2) = £2205
     Tier 2 dependant only (£945 x 0) + (£630 x 1) = £630

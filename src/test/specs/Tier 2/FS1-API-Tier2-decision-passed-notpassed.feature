@@ -17,7 +17,7 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 applicants 
     Scenario: Shelly is a Tier 2 applicant and does not have sufficient funds.
 
     #Application Raised Date 1st of June
-    #She has < than the Total Fund Required of £945 for the previous 90 days
+    She has < than the Total Fund Required of £945 for the previous 90 days
 
         #Given a Service is consuming Financial Status API
         Given the test data for account 23568498
@@ -92,41 +92,10 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 2 applicants 
             | Pass                | true         |
             | Account Holder Name | Shelly Smith |
             | Minimum             | 1575.00      |
-           # | Unique Reference        | value      |
             | To Date             | 2016-06-01   |
             | From Date           | 2016-03-04   |
             | Sort code           | 111111       |
             | Account number      | 23568493     |
-
-
-
-    Scenario: Brian is Tier 2 applicant and has insufficient financial funds - amount for one month falls below the threshold
- Is this a duplicate from above?
-    #Application Raised Date 4th of July
-    #He has >= than the threshold of £945 for the previous 90 days
-
-       # Given a Service is consuming Financial Status API
-        Given the test data for account 23568494
-        When the Financial Status API is invoked with the following:
-            | Minimum        | 945.00     |
-            | To Date        | 2016-07-04 |
-            | From Date      | 2016-04-06 |
-            | User Id        | user12345  |
-            | Account number | 23568494   |
-            | Sort code      | 111111     |
-            | Date of Birth  | 1984-07-27 |
-        Then The Financial Status API provides the following results:
-            | HTTP Status          | 200          |
-            | Pass                 | false        |
-            | Account Holder Name  | Shelly Smith |
-            | Minimum              | 945.00       |
-            | Lowest Balance Date  | 2016-03-10   |
-            | Lowest Balance Value | 944.99       | Is this a duplicate from above scenario
-           # | Unique Reference        | value      |
-            | To Date              | 2016-07-04   |
-            | From Date            | 2016-04-06   |
-            | Sort code            | 111111       |
-            | Account number       | 23568494     |
 
 
         ##### NOT PASS - Tier 2 - dependant only (2 applicants) #####

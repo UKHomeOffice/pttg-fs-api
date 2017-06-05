@@ -34,7 +34,6 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 5 temporary a
             | Pass                | true         |
             | Account Holder Name | Shelly Smith |
             | Minimum             | 1575.00      |
-           # | Unique Reference        | value      |
             | To Date             | 2016-06-01   |
             | From Date           | 2016-03-04   |
             | Sort code           | 111111       |
@@ -96,8 +95,6 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 5 temporary a
             | Account Holder Name  | Jacques Jones |
             | Minimum              | 1575.00      |
             | From Date            | 2016-04-06   |
-            | Lowest Balance Date  | 2016-03-08   |
-            | Lowest Balance Value | 2537.47      |
             | To Date              | 2016-07-04   |
             | Sort code            | 111111       |
             | Account number       | 23568495     |
@@ -156,39 +153,7 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 5 temporary a
             | Minimum              | 1890.00       |
             | Lowest Balance Date  | 2016-03-10   |
             | Lowest Balance Value | 944.99       |
-           # | Unique Reference        | value      |
             | To Date              | 2016-07-04   |
             | From Date            | 2016-04-06   |
             | Sort code            | 111111       |
             | Account number       | 23568494     |
-
-
-
-        ################################################ Pass tier 5 Youth Mobilty Scheme#######################################
-
-    Scenario: Emily is a Tier 5 youth mobilty scheme worker and has sufficient financial funds
-
-    #Application Raised Date 1st of June
-    #She has >= than the threshold of £1890 for the previous 90 days
-
-        #Given a Service is consuming Financial Status API
-        Given the test data for account 23568493
-        When the Financial Status API is invoked with the following:
-            | Minimum        | 1890.00    |
-            | To Date        | 2016-06-01 |
-            | From Date      | 2016-03-04 |
-            | User Id        | user12345  |
-            | Account number | 23568493   |
-            | Sort code      | 111111     |
-            | Date of Birth  | 1984-07-27 |
-        Then The Financial Status API provides the following results:
-            | HTTP Status         | 200          |
-            | Pass                | true         |
-            | Account Holder Name | Emily Smith |
-            | Minimum             | 1890.00      |
-           # | Unique Reference        | value      |
-            | To Date             | 2016-06-01   |
-            | From Date           | 2016-03-04   |
-            | Sort code           | 111111       |
-            | Account number      | 23568493     |
-

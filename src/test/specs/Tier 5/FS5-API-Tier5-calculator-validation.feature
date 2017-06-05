@@ -2,21 +2,12 @@ Tiers 5 validation
 
 Feature: Validation of the API fields and data
 
-    Background: The API is not provided with Student type field
+    Background:
         Given A Service is consuming the FSPS Calculator API
         And the default details are
             | Applicant type | Main |
             | Dependants     | 0    |
 
-
-     Background: The API is not provided with Dependent type field for the youth mobility form only (for Tier 5 only) #
-         Given A service is consuming the financial status check #
-         And the default detail are #
-            | DOB | #
-            | Sort Code | #
-            | Account Number | #
-            | Application raised date | #
-            | 90 day period check     | #
 
 ######################### Validation on the Dependants field #########################
 
@@ -37,7 +28,16 @@ Feature: Validation of the API fields and data
             | HTTP Status    | 400                                            |
             | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |
-
+####################################################
+    Scenario: The API is provided with dependants for a tier 5 youth mobility
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator Tier_five API is invoked with the following
+            | Dependants | 2 |
+            |variant     |Youth|
+        Then The Tier_five Financial Status API provides the following validation results:
+            | HTTP Status    | 400                                            |
+            | Status code    | 0002                                           |
+            | Status message | Parameter error: No dependants allowed on youth mobility |
 ######################### Validation on the Main applicant field #########################
 
     Scenario: The API is not provided with details as to whether there is a main dependant

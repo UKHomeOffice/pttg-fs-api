@@ -87,7 +87,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 5 General applican
         Given A Service is consuming the FSPS Calculator API #
         When the FSPS Calculator Tier_Five API is invoked with the following #
             | Applicant Variant | Youth Mobility Scheme | #
-            | Applicant Type | Main | # (do we need the applicant type because this will default as main) #########
+            | Applicant Type | Main | #
         Then The Tier_Five Financial Status API provides the following results: #
             | HTTP Status | 200    | #
             | Threshold   | 1890.00 | #
