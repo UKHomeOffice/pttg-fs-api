@@ -17,6 +17,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
     Pre-sessional course length 12 month or more = 4 month
     Pre-sessional course length 6 months or more but less than months = 2 months
     Pre-sessional course length <6 months = 1 months
+    If course has ended when assessing case, then wrap up period will be added from case assessing/ processing date ##
 
     Applicants Required Maintenance threshold general:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
@@ -354,3 +355,17 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Threshold      | 30420.00   |
             | Course Length  | 9          |
             | Leave end date | 2018-01-15 |
+
+
+    Scenario: Martin is on an initial 7 months main course and does not have dependants. Martin's maintenance threshold amount calculated.
+
+        Given A Service is consuming the FSPS Calculator API#######
+        When the FSPS Calculator API is invoked with the following
+            | Course type       | main       |
+            | Dependants        | 0          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-07-03 |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 10555.50   |
+            | Leave end date | + 2 months | #####
