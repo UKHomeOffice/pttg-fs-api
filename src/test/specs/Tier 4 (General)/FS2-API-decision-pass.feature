@@ -71,6 +71,7 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
     She has >= than the threshold of £2350 for the previous 28 days
 
         Given a Service is consuming Financial Status API
+        And the consideration date is 2016-04-10
         Given the test data for account 01010312
         When the Financial Status API is invoked with the following:
             | Account number         | 01010312   |
