@@ -11,6 +11,8 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
     Course length - course start date to course end date (Main Course)
     Wrap up period calculated from original course start date to course end date
     Wrap up period - 1 month in all instances regardless of course length
+    If course has ended when assessing case, then wrap up period will be added from case consideration/ processing date ##
+
 
     Applicants Required Maintenance threshold general:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
@@ -212,3 +214,35 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
             | Threshold      | 1360.00    |
             | Course Length  | 2          |
             | Leave end date | 2016-09-03 |
+
+       ######### new scenario########
+    Scenario: The consideration date is taking place on 2016-04-15 after the course has ended. + 1 month and 13 Days
+                Shelly's maintenance threshold amount calculated. She is on a 3 month pgdd course
+
+        Given A Service is consuming the FSPS Calculator API
+        And the consideration date is 2016-04-15
+        When the FSPS Calculator API is invoked with the following
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-03-03 |
+            | Accommodation fees already paid | 0          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 2530.00    |
+            | Course Length  | 2          |
+            | Leave end date | 2016-05-15 |
+
+        #### new scenario#############
+    Scenario: The consideration date is taking place on "Current date" after the course has ended. + 1 month and 13 Days
+    Shelly's maintenance threshold amount calculated. She is on a 3 month pgdd course
+
+        Given A Service is consuming the FSPS Calculator API
+        And the consideration date is Current date
+        When the FSPS Calculator API is invoked with the following
+            | Course start date               | 2016-01-03 |
+            | Course end date                 | 2016-03-03 |
+            | Accommodation fees already paid | 0          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 2530.00    |
+            | Course Length  | 2          |
+            | Leave end date | + 1 month from current date |
