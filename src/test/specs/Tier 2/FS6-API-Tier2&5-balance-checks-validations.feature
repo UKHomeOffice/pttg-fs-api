@@ -39,8 +39,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2017-08-30 |
-            | From Date      | 2017-04-06 |
+            | To Date        | 2027-08-30 |
+            | From Date      | 2027-04-06 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |

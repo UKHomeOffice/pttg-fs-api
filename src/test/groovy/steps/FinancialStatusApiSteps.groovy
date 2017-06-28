@@ -413,7 +413,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
     }
 
-    @Given("^the barclays response has status (\\d+)\$")
+    @Given("^the barclays response has status ([0-9]+)\$")
     public void the_barclays_response_has_status(int status) {
         testDataLoader.withResponseStatus(balancesUrlRegex, status)
     }
@@ -579,7 +579,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
 
-    @Then("^the health check response status should be (\\d+)\$")
+    @Then("^the health check response status should be ([0-9]+)\$")
     def the_response_status_should_be(int expected) {
 
         def result = getHealthCheckStatus()
