@@ -18,13 +18,13 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General |
-            | Dependants only        | No      |
-            | Recognised body or HEI | Yes     |
-            | Course type            | main    |
-            | Dependants             | 0       |
+            | Student Type       | General                      |
+            | Application Type   | t4main                       |
+            | Course Institution | Recognised body or HEI       |
+            | Course type        | Main course degree or higher |
+            | Dependants         | 0                            |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 2 |
+            | Applicant Condition Code | 2 |
 
 ################# Main course degree or higher at HEI - with dependants - less than 12 months #######################
 
@@ -32,17 +32,17 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General    |
-            | Dependants only        | No         |
-            | Recognised body or HEI | Yes        |
-            | Course type            | main       |
-            | Dependants             | 2          |
-            | Course start date      | 2016-01-03 |
-            | Course end date        | 2016-07-03 |
+            | Student Type       | General                      |
+            | Application Type   | t4main                       |
+            | Course Institution | Recognised body or HEI       |
+            | Course type        | Main course degree or higher |
+            | Dependants         | 2                            |
+            | Course start date  | 2016-01-03                   |
+            | Course end date    | 2016-07-03                   |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 2 |
-            | partnerConditionCode   | 4B | #
-            | childConditionCode     | 1 |
+            | Applicant Condition Code | 2 |
+            | Partner Condition Code   | 3 |
+            | Child Condition Code     | 1 |
 
 ################# Main course degree or higher at HEI - with dependants - 12 months or greater #######################
 
@@ -50,17 +50,17 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General    |
-            | Dependants only        | No         |
-            | Recognised body or HEI | Yes        |
-            | Course type            | main       |
-            | Dependants             | 2          |
-            | Course start date      | 2016-01-03 |
-            | Course end date        | 2017-01-03 |
+            | Student Type       | General                      |
+            | Application Type   | t4main                       |
+            | Course Institution | Recognised body or HEI       |
+            | Course type        | Main course degree or higher |
+            | Dependants         | 2                            |
+            | Course start date  | 2016-01-03                   |
+            | Course end date    | 2017-01-03                   |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 2  |
-            | partnerConditionCode   | 4B | #
-            | childConditionCode     | 1  |
+            | Applicant Condition Code | 2  |
+            | Partner Condition Code   | 4B |
+            | Child Condition Code     | 1  |
 
 ################# Pre Sessional course at HEI - applicant only  #######################
 
@@ -68,15 +68,15 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General       |
-            | Dependants only        | No            |
-            | Recognised body or HEI | Yes           |
-            | Course type            | Pre-sessional |
-            | Dependants             | 0             |
-            | Course start date      | 2016-01-03    |
-            | Course end date        | 2016-10-10    |
+            | Student Type       | General                |
+            | Application Type   | t4main                 |
+            | Course Institution | Recognised body or HEI |
+            | Course type        | Pre-sessional          |
+            | Dependants         | 0                      |
+            | Course start date  | 2016-01-03             |
+            | Course end date    | 2016-10-10             |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 2A |
+            | Applicant Condition Code | 2A |
 
 ################# Pre Sessional course at HEI with dependants #######################
 
@@ -84,17 +84,17 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General       |
-            | Dependants only        | No            |
-            | Recognised body or HEI | Yes           |
-            | Course type            | Pre-sessional |
-            | Dependants             | 1             |
-            | Course start date      | 2016-01-03    |
-            | Course end date        | 2016-10-10    |
+            | Student Type       | General                |
+            | Application Type   | t4main                 |
+            | Course Institution | Recognised body or HEI |
+            | Course type        | Pre-sessional          |
+            | Dependants         | 1                      |
+            | Course start date  | 2016-01-03             |
+            | Course end date    | 2016-10-10             |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 2A |
-            | partnerConditionCode   | 4B  | #
-            | childConditionCode     | 1  |
+            | Applicant Condition Code | 2A |
+            | Partner Condition Code   | 3  |
+            | Child Condition Code     | 1  |
 
 ################# Main course below degree at HEI - applicant only  #######################
 
@@ -102,15 +102,15 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General      |
-            | Dependants only        | No           |
-            | Recognised body or HEI | Yes          |
-            | Course Type            | below-degree |
-            | Dependants             | 0            |
-            | Course start date      | 2016-01-03   |
-            | Course end date        | 2016-10-10   |
+            | Student Type       | General                  |
+            | Application Type   | t4main                   |
+            | Course Institution | Recognised body or HEI   |
+            | Course Type        | Main Course below degree |
+            | Dependants         | 0                        |
+            | Course start date  | 2016-01-03               |
+            | Course end date    | 2016-10-10               |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 2A |
+            | Applicant Condition Code | 2A |
 
 ################# Main course below degree at HEI - with dependants  #######################
 
@@ -118,17 +118,17 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General      |
-            | Dependants only        | No           |
-            | Recognised body or HEI | Yes          |
-            | Course Type            | below-degree |
-            | Dependants             | 2            |
-            | Course start date      | 2016-01-03   |
-            | Course end date        | 2016-10-10   |
+            | Student Type       | General                  |
+            | Application Type   | t4main                   |
+            | Course Institution | Recognised body or HEI   |
+            | Course Type        | Main Course below degree |
+            | Dependants         | 2                        |
+            | Course start date  | 2016-01-03               |
+            | Course end date    | 2016-10-10               |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 2A |
-            | partnerConditionCode   | 4B  | #
-            | childConditionCode     | 1  |
+            | Applicant Condition Code | 2A |
+            | Partner Condition Code   | 3  |
+            | Child Condition Code     | 1  |
 
 ################# Main course degree or higher at Other Institution - applicant only #######################
 
@@ -136,15 +136,15 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General    |
-            | Dependants only        | No         |
-            | Recognised body or HEI | No         |
-            | Course Type            | main       |
-            | Dependants             | 0          |
-            | Course start date      | 2016-01-03 |
-            | Course end date        | 2016-10-10 |
+            | Student Type       | General                      |
+            | Application Type   | t4main                       |
+            | Course Institution | Other Institution            |
+            | Course Type        | Main Course degree or higher |
+            | Dependants         | 0                            |
+            | Course start date  | 2016-01-03                   |
+            | Course end date    | 2016-10-10                   |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 3 |
+            | Applicant Condition Code | 2 |
 
 ################# Main course degree or higher at Other Institution - with dependants - less than 12 months #######################
 
@@ -152,17 +152,17 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General    |
-            | Dependants only        | No         |
-            | Recognised body or HEI | No         |
-            | Course Type            | main       |
-            | Dependants             | 1          |
-            | Course start date      | 2016-01-03 |
-            | Course end date        | 2016-10-10 |
+            | Student Type       | General                      |
+            | Application Type   | t4main                       |
+            | Course Institution | Other Institution            |
+            | Course Type        | Main Course degree or higher |
+            | Dependants         | 1                            |
+            | Course start date  | 2016-01-03                   |
+            | Course end date    | 2016-10-10                   |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 3 |
-            | partnerConditionCode   | 4B | #
-            | childConditionCode     | 1 |
+            | Applicant Condition Code | 3 |
+            | Partner Condition Code   | 3 |
+            | Child Condition Code     | 1 |
 
 ################# Main course degree or higher at Other Institution - with dependants - greater than 12 months #######################
 
@@ -170,17 +170,17 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General    |
-            | Dependants only        | No         |
-            | Recognised body or HEI | No         |
-            | Course Type            | main       |
-            | Dependants             | 2          |
-            | Course start date      | 2016-01-03 |
-            | Course end date        | 2017-01-03 |
+            | Student Type       | General                      |
+            | Application Type   | t4main                       |
+            | Course Institution | Other Institution            |
+            | Course Type        | Main Course degree or higher |
+            | Dependants         | 2                            |
+            | Course start date  | 2016-01-03                   |
+            | Course end date    | 2017-01-03                   |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 3  |
-            | partnerConditionCode   | 4B | #
-            | childConditionCode     | 1  |
+            | Applicant Condition Code | 3  |
+            | Partner Condition Code   | 4B |
+            | Child Condition Code     | 1  |
 
 ################# Pre Sessional course at Other Institution - applicant only  #######################
 
@@ -188,15 +188,15 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General       |
-            | Dependants only        | No            |
-            | Recognised body or HEI | No            |
-            | Course Type            | Pre-sessional |
-            | Dependants             | 0             |
-            | Course start date      | 2016-01-03    |
-            | Course end date        | 2016-10-10    |
+            | Student Type       | General           |
+            | Application Type   | t4main            |
+            | Course Institution | Other Institution |
+            | Course Type        | Pre-sessional     |
+            | Dependants         | 0                 |
+            | Course start date  | 2016-01-03        |
+            | Course end date    | 2016-10-10        |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 3 |
+            | Applicant Condition Code | 3 |
 
 
  ################# Pre Sessional course at Other Institution - with dependants #######################
@@ -205,17 +205,17 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General       |
-            | Dependants only        | No            |
-            | Recognised body or HEI | No            |
-            | Course Type            | Pre-sessional |
-            | Dependants             | 1             |
-            | Course start date      | 2016-01-03    |
-            | Course end date        | 2016-10-10    |
+            | Student Type       | General           |
+            | Application Type   | t4main            |
+            | Course Institution | Other Institution |
+            | Course Type        | Pre-sessional     |
+            | Dependants         | 1                 |
+            | Course start date  | 2016-01-03        |
+            | Course end date    | 2016-10-10        |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 3 |
-            | partnerConditionCode   | 4B | #
-            | childConditionCode     | 1 |
+            | Applicant Condition Code | 3 |
+            | Partner Condition Code   | 3 |
+            | Child Condition Code     | 1 |
 
 ################# Main course below degree at Other Institution - applicant only  #######################
 
@@ -223,15 +223,15 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General      |
-            | Dependants only        | No           |
-            | Recognised body or HEI | No           |
-            | Course Type            | below-degree |
-            | Dependants             | 0            |
-            | Course start date      | 2016-01-03   |
-            | Course end date        | 2016-10-10   |
+            | Student Type       | General                  |
+            | Application Type   | t4main                   |
+            | Course Institution | Other Institution        |
+            | Course Type        | Main Course below degree |
+            | Dependants         | 0                        |
+            | Course start date  | 2016-01-03               |
+            | Course end date    | 2016-10-10               |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 3 |
+            | Applicant Condition Code | 3 |
 
 
 ################# Main course below degree at Other Institution - with dependants  #######################
@@ -240,17 +240,17 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General      |
-            | Dependants only        | No           |
-            | Recognised body or HEI | No           |
-            | Course Type            | below-degree |
-            | Dependants             | 1            |
-            | Course start date      | 2016-01-03   |
-            | Course end date        | 2016-10-10   |
+            | Student Type       | General                  |
+            | Application Type   | t4main                   |
+            | Course Institution | Other Institution        |
+            | Course Type        | Main Course below degree |
+            | Dependants         | 1                        |
+            | Course start date  | 2016-01-03               |
+            | Course end date    | 2016-10-10               |
         Then The Financial Status API provides the following results:
-            | applicantConditionCode | 3 |
-            | partnerConditionCode   | 4B | #
-            | childConditionCode     | 1 |
+            | Applicant Condition Code | 3 |
+            | Partner Condition Code   | 3 |
+            | Child Condition Code     | 1 |
 
 ################# Main course degree or higher at HEI - Dependant only - less than 12 months  #######################
 
@@ -258,16 +258,16 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General    |
-            | Dependants only        | Yes        |
-            | Recognised body or HEI | Yes        |
-            | Course type            | main       |
-            | Dependants             | 1          |
-            | Course start date      | 2016-01-03 |
-            | Course end date        | 2016-07-03 |
+            | Student Type       | General                      |
+            | Application Type   | t4main                       |
+            | Course Institution | Recognised body or HEI       |
+            | Course type        | Main course degree or higher |
+            | Dependants         | 1                            |
+            | Course start date  | 2016-01-03                   |
+            | Course end date    | 2016-07-03                   |
         Then The Financial Status API provides the following results:
-            | partnerConditionCode | 4B | #
-            | childConditionCode   | 1 |
+            | Applicant Condition Code | 3 |
+            | Child Condition Code     | 1 |
 
 ################# Main course degree or higher at HEI - dependant only - greater than 12 months  #######################
 
@@ -275,16 +275,16 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General    |
-            | Dependants only        | Yes        |
-            | Recognised body or HEI | Yes        |
-            | Course type            | main       |
-            | Dependants             | 2          |
-            | Course start date      | 2016-01-03 |
-            | Course end date        | 2017-01-03 |
+            | Student Type       | General                      |
+            | Application Type   | t4dependant                  |
+            | Course Institution | Recognised body or HEI       |
+            | Course type        | Main course degree or higher |
+            | Dependants         | 2                            |
+            | Course start date  | 2016-01-03                   |
+            | Course end date    | 2017-01-03                   |
         Then The Financial Status API provides the following results:
-            | partnerConditionCode | 4B | #
-            | childConditionCode   | 1  |
+            | Partner Condition Code | 4B |
+            | Child Condition Code   | 1  |
 
 ################# Pre Sessional course at HEI - dependant only #######################
 
@@ -292,16 +292,16 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General       |
-            | Dependants only        | Yes           |
-            | Recognised body or HEI | Yes           |
-            | Course type            | Pre-sessional |
-            | Dependants             | 1             |
-            | Course start date      | 2016-01-03    |
-            | Course end date        | 2016-10-10    |
+            | Student Type       | General                |
+            | Application Type   | t4dependant            |
+            | Course Institution | Recognised body or HEI |
+            | Course type        | Pre-sessional          |
+            | Dependants         | 1                      |
+            | Course start date  | 2016-01-03             |
+            | Course end date    | 2016-10-10             |
         Then The Financial Status API provides the following results:
-            | partnerConditionCode | 4B | #
-            | childConditionCode   | 1 |
+            | Partner Condition Code | 3 |
+            | Child Condition Code   | 1 |
 
 ################# Main course below degree at HEI - dependant only  #######################
 
@@ -309,16 +309,16 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General      |
-            | Dependants only        | Yes          |
-            | Recognised body or HEI | Yes          |
-            | Course Type            | below-degree |
-            | Dependants             | 1            |
-            | Course start date      | 2016-01-03   |
-            | Course end date        | 2016-10-10   |
+            | Student Type       | General                  |
+            | Application Type   | t4dependant              |
+            | Course Institution | Recognised body or HEI   |
+            | Course Type        | Main Course below degree |
+            | Dependants         | 1                        |
+            | Course start date  | 2016-01-03               |
+            | Course end date    | 2016-10-10               |
         Then The Financial Status API provides the following results:
-            | partnerConditionCode | 4B | #
-            | childConditionCode   | 1 |
+            | Partner Condition Code | 3 |
+            | Child Condition Code   | 1 |
 
 ################# Main course degree or higher at Other Institution - with dependants - less than 12 months #######################
 
@@ -326,32 +326,32 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General    |
-            | Dependants only        | Yes        |
-            | Recognised body or HEI | No         |
-            | Course Type            | main       |
-            | Dependants             | 1          |
-            | Course start date      | 2016-01-03 |
-            | Course end date        | 2016-10-10 |
+            | Student Type       | General                      |
+            | Application Type   | t4dependant                  |
+            | Course Institution | Other Institution            |
+            | Course Type        | Main Course degree or higher |
+            | Dependants         | 1                            |
+            | Course start date  | 2016-01-03                   |
+            | Course end date    | 2016-10-10                   |
         Then The Financial Status API provides the following results:
-            | partnerConditionCode | 4B | #
-            | childConditionCode   | 1 |
+            | Partner Condition Code | 3 |
+            | Child Condition Code   | 1 |
 
 ################ Main course degree or higher at Other Institution - with dependants - greater than 12 months #######################
 
     Scenario: Jaap and Sebastian are a dependant only application with the main applicant on a 13 month main course degree or higher at a other institution
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General    |
-            | Dependants only        | Yes        |
-            | Recognised body or HEI | No         |
-            | Course Type            | main       |
-            | Dependants             | 2          |
-            | Course start date      | 2016-01-03 |
-            | Course end date        | 2017-01-03 |
+            | Student Type       | General                      |
+            | Application Type   | t4dependant                  |
+            | Course Institution | Other Institution            |
+            | Course Type        | Main Course degree or higher |
+            | Dependants         | 2                            |
+            | Course start date  | 2016-01-03                   |
+            | Course end date    | 2017-01-03                   |
         Then The Financial Status API provides the following results:
-            | partnerConditionCode | 4B | #
-            | childConditionCode   | 1  |
+            | Partner Condition Code | 4B |
+            | Child Condition Code   | 1  |
 
 ################# Pre Sessional course at Other Institution - dependant only #######################
 
@@ -359,16 +359,16 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General       |
-            | Dependants only        | Yes           |
-            | Recognised body or HEI | No            |
-            | Course Type            | Pre-sessional |
-            | Dependants             | 1             |
-            | Course start date      | 2016-01-03    |
-            | Course end date        | 2016-10-10    |
+            | Student Type       | General           |
+            | Application Type   | t4dependant       |
+            | Course Institution | Other Institution |
+            | Course Type        | Pre-sessional     |
+            | Dependants         | 1                 |
+            | Course start date  | 2016-01-03        |
+            | Course end date    | 2016-10-10        |
         Then The Financial Status API provides the following results:
-            | partnerConditionCode | 4B | #
-            | childConditionCode   | 1 |
+            | Partner Condition Code | 3 |
+            | Child Condition Code   | 1 |
 
 ################# Main course below degree at Other Institution - dependant only #######################
 
@@ -376,13 +376,13 @@ Feature: Calculation of condition codes for T4 General
 
         Given A Service is consuming the Condition Code API
         When the Condition Code Tier 4 General API is invoked with the following
-            | Student Type           | General      |
-            | Dependants only        | Yes          |
-            | Recognised body or HEI | No           |
-            | Course Type            | below-degree |
-            | Dependants             | 1            |
-            | Course start date      | 2016-01-03   |
-            | Course end date        | 2016-10-10   |
+            | Student Type       | General                  |
+            | Application Type   | t4dependant              |
+            | Course Institution | Other Institution        |
+            | Course Type        | Main Course below degree |
+            | Dependants         | 1                        |
+            | Course start date  | 2016-01-03               |
+            | Course end date    | 2016-10-10               |
         Then The Financial Status API provides the following results:
-            | partnerConditionCode | 4B | #
-            | childConditionCode   | 1 |
+            | Partner Condition Code | 3 |
+            | Child Condition Code   | 1 |
