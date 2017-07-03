@@ -36,7 +36,9 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
   private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdServiceTier2And5])
 
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
-  def calculateThreshold(@RequestParam(value = "applicantType") applicantType: Optional[String],
+  def calculateThreshold(@PathVariable(value = "tier") tier: String,
+                         @RequestParam(value = "applicantType") applicantType: Optional[String],
+                         @RequestParam(value = "variantType", defaultValue = "Temporary") variantType: Optional[String],
                          @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer],
                          @CookieValue(value = "kc-access") kcToken: Optional[String]
                         ): ResponseEntity[ThresholdResponse] = {
@@ -53,14 +55,17 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
     auditSearchParams(auditEventId, applicantType, dependants, userProfile)
     val validatedApplicantType = applicantTypeChecker.getApplicantType(applicantType.getOrElse("Unknown"))
 
-    def threshold = calculateThresholdForApplicantType(validatedApplicantType, dependants)
+    def threshold = calculateThresholdForApplicantType(tier, variantType, validatedApplicantType, dependants)
 
     auditSearchResult(auditEventId, threshold.getBody, userProfile)
     threshold
   }
 
+  private val YOUTHMOBILITY_APPLICANT_TYPE = Option("youth")
 
-  private def calculateThresholdForApplicantType(validatedApplicantType: ApplicantType, dependants: Option[Int]): ResponseEntity[ThresholdResponse] = {
+
+  private def calculateThresholdForApplicantType(tier: String, variantType: Option[String], validatedApplicantType: ApplicantType, dependants: Option[Int]): ResponseEntity[ThresholdResponse] = {
+    LOGGER.error("\ncalculateThresholdForApplicantType\n" + tier + "\n" + variantType + "\n" + validatedApplicantType + "\n" + dependants + "\n")
     validatedApplicantType match {
       case UnknownApplicant(_) => buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_APPLICANT_TYPE(applicantTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
       case MainApplicant =>
@@ -68,8 +73,17 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
           case _ => dependants match {
             case Some(validDependants) =>
               if (validDependants >= 0) {
-                val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType, validDependants)
-                new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
+                if (validDependants > 0) {
+                  variantType match {
+                    case YOUTHMOBILITY_APPLICANT_TYPE => buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.iNVALID_DEPENDANTS_NOTALLOWED, HttpStatus.BAD_REQUEST)
+                    case _ =>
+                      val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(tier, validatedApplicantType, variantType, validDependants)
+                      new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
+                  }
+                } else {
+                  val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(tier, validatedApplicantType, variantType, validDependants)
+                  new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
+                }
               } else {
                 buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
               }
@@ -77,7 +91,7 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
           }
         }
       case DependantApplicant =>
-        val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType, dependants.getOrElse(0))
+        val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(tier, validatedApplicantType, variantType, dependants.getOrElse(0))
         new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
 
     }

@@ -31,7 +31,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 2 General applican
     Scenario: Fran is Tier 2 General applicant with a dependant. Fran's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator Tier_five API is invoked with the following
+        When the FSPS Calculator Tier_Two API is invoked with the following
             | Applicant type | Main |
             | Dependants     | 1   |
         Then The Tier_five Financial Status API provides the following results:

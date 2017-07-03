@@ -28,8 +28,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        |            |
-            | From Date      |            |
+            | To Date   |  |
+            | From Date |  |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -39,8 +39,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2017-08-30 |
-            | From Date      | 2017-04-06 |
+            | To Date   | 2027-08-30 |
+            | From Date | 2027-04-06 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -50,8 +50,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | To Date        | 2016-06-28 |
-            | From Date      | 201@-06-01 |
+            | To Date   | 2016-06-28 |
+            | From Date | 201@-06-01 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                           |
             | Status code    | 0002                                          |
@@ -63,7 +63,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Minimum        |            |
+            | Minimum |  |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                        |
             | Status code    | 0004                                       |
@@ -73,8 +73,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Minimum        | 0          |
-            | Sort Code      | 13-56-09   |
+            | Minimum   | 0        |
+            | Sort Code | 13-56-09 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                        |
             | Status code    | 0004                                       |
@@ -84,7 +84,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Minimum        | A          |
+            | Minimum | A |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                                   |
             | Status code    | 0002                                                  |
@@ -94,8 +94,8 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Minimum        | -2345.00   |
-            | Sort Code      | 13-56-09   |
+            | Minimum   | -2345.00 |
+            | Sort Code | 13-56-09 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                        |
             | Status code    | 0004                                       |
@@ -107,7 +107,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Sort Code      |            |
+            | Sort Code |  |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -117,7 +117,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Sort Code      | 13-56-0    |
+            | Sort Code | 13-56-0 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -127,7 +127,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Sort Code      | 00-00-00   |
+            | Sort Code | 00-00-00 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                |
             | Status code    | 0004                               |
@@ -137,7 +137,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Sort Code      | 13-56-0q   |
+            | Sort Code | 13-56-0q |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -149,7 +149,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Account Number |            |
+            | Account Number |  |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -160,7 +160,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Account Number | 2356849    |
+            | Account Number | 2356849 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0004                                    |
@@ -170,7 +170,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Account Number | 235684988  |
+            | Account Number | 235684988 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0004                                    |
@@ -180,7 +180,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Account Number | 00000000   |
+            | Account Number | 00000000 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0004                                    |
@@ -190,7 +190,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Account Number | 23568a98   |
+            | Account Number | 23568a98 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                           |
             | Status code    | 0001                                                          |
@@ -200,7 +200,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Account Number | 21568198   |
+            | Account Number | 21568198 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 404                                                         |
             | Status code    | 0007                                                        |
@@ -212,7 +212,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Date of Birth  |            |
+            | Date of Birth |  |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                    |
             | Status code    | 0004                                   |
@@ -222,7 +222,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Date of Birth  | 2019-01-15 |
+            | Date of Birth | 2019-01-15 |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                    |
             | Status code    | 0004                                   |
@@ -232,7 +232,7 @@ Feature: Validation of the API fields and data
 
         Given a Service is consuming Financial Status API
         When the Financial Status API is invoked with the following:
-            | Date of Birth  | 1984-01-1@ |
+            | Date of Birth | 1984-01-1@ |
         Then FSPS Tier four general Case Worker tool API provides the following result
             | HTTP Status    | 400                                     |
             | Status code    | 0002                                    |

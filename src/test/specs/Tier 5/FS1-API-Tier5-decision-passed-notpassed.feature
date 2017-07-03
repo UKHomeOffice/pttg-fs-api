@@ -51,9 +51,9 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 5 temporary a
     #He has < than the Total Funds Required of £945 for the previous 90 days
 
        # Given a Service is consuming Financial Status API
-        Given the test data for account 01078911
+        Given the test data for account 23568496
         When the Financial Status API is invoked with the following:
-            | Minimum        | 945.00    | #
+            | Minimum        | 1890.00    |
             | To Date        | 2016-07-04 |
             | From Date      | 2016-04-06 |
             | Sort code      | 111111     |
@@ -61,23 +61,23 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 5 temporary a
             | User Id        | user12345  |
             | Date of Birth  | 1984-07-27 |
         Then The Financial Status API provides the following results:
-            | HTTP Status         | 200        |
-            | Pass                | false      |
-            | Account Holder Name | Ashwin Chux  |
-            | Minimum             | 945.00    | #
-            | From Date           | 2016-04-06 |
-            | Lowest Balance Date  | 2016-06-05 |
-            | Lowest Balance Value | 740.00   |
-            | To Date             | 2016-07-04 |
-            | Sort code           | 111111     |
-            | Account number      | 12345678   |
+            | HTTP Status          | 200          |
+            | Pass                 | false        |
+            | Account Holder Name  | Shelly Jones |
+            | Minimum              | 1890.00      |
+            | From Date            | 2016-04-06   |
+            | Lowest Balance Date  | 2016-05-31   |
+            | Lowest Balance Value | 740.00       |
+            | To Date              | 2016-07-04   |
+            | Sort code            | 111111       |
+            | Account number       | 12345678     |
 
 
     ####################pass tier 5 temporary worker with dependant#############################################
     Scenario: Jacques is a Tier 5 Temporary Worker applicant with a dependant and has sufficient financial funds
 
     #Application Raised Date 4th of July
-    He has > than the Total Funds Required of £1575.00 for the previous 90 days
+    #He has > than the Total Funds Required of £1575.00 for the previous 90 days
 
        # Given a Service is consuming Financial Status API
         Given the test data for account 23568495
@@ -90,14 +90,14 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 5 temporary a
             | Account number | 23568495   |
             | Date of Birth  | 1984-07-27 |
         Then The Financial Status API provides the following results:
-            | HTTP Status          | 200          |
-            | Pass                 | true        |
-            | Account Holder Name  | Jacques Jones |
-            | Minimum              | 1575.00      |
-            | From Date            | 2016-04-06   |
-            | To Date              | 2016-07-04   |
-            | Sort code            | 111111       |
-            | Account number       | 23568495     |
+            | HTTP Status         | 200          |
+            | Pass                | true         |
+            | Account Holder Name | Shelly Jones |
+            | Minimum             | 1575.00      |
+            | From Date           | 2016-04-06   |
+            | To Date             | 2016-07-04   |
+            | Sort code           | 111111       |
+            | Account number      | 23568495     |
 
 
 
@@ -106,7 +106,7 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 5 temporary a
     Scenario: Theresa and David are dependant only (x2) Tier 5 applicants and have sufficient funds
 
         #Application Raised Date 1st of June
-        She has >= than the threshold of £1260 for the previous 90 days
+        #She has >= than the threshold of £1260 for the previous 90 days
 
             #Given a Service is consuming Financial Status API
         Given the test data for account 23568493
@@ -139,7 +139,7 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 5 temporary a
        # Given a Service is consuming Financial Status API
         Given the test data for account 23568494
         When the Financial Status API is invoked with the following:
-            | Minimum        | 1890.00     |
+            | Minimum        | 1890.00    |
             | To Date        | 2016-07-04 |
             | From Date      | 2016-04-06 |
             | User Id        | user12345  |
@@ -149,8 +149,8 @@ Feature: Pass & Not Pass - Total Funds Required Calculation - Tier 5 temporary a
         Then The Financial Status API provides the following results:
             | HTTP Status          | 200          |
             | Pass                 | false        |
-            | Account Holder Name  | Ashwin Chux |
-            | Minimum              | 1890.00       |
+            | Account Holder Name  | Shelly Smith |
+            | Minimum              | 1890.00      |
             | Lowest Balance Date  | 2016-03-10   |
             | Lowest Balance Value | 944.99       |
             | To Date              | 2016-07-04   |

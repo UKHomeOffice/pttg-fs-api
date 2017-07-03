@@ -79,6 +79,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String jsonAsString
     String dependants = ""
     String applicantType = ""
+    String variantType = ""
     String fromDate = ""
     String toDate = ""
     String accountNumber = ""
@@ -160,6 +161,10 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             }
             if (s.equalsIgnoreCase("applicant type")) {
                 applicantType = entries.get(s)
+            }
+
+            if (s.equalsIgnoreCase("variant type")) {
+                variantType = entries.get(s)
             }
 
             if (s.equalsIgnoreCase("Student Type")) {
@@ -484,13 +489,21 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         println("FSPS API Calculator: " + jsonAsString)
     }
 
-    @When("^the FSPS Calculator Tier_five API is invoked with the following\$")
-    public void the_FSPS_Calculator_Tier_five_API_is_invoked_with_the_following(DataTable arg1) {
+    @When("^the FSPS Calculator Tier_Five API is invoked with the following\$")
+    public void the_FSPS_Calculator_Tier_Five_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t5/maintenance/threshold?applicantType={applicantType}&dependants={dependants}", applicantType, dependants)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t5/maintenance/threshold?applicantType={applicantType}&variantType={variantType}&dependants={dependants}", applicantType, variantType, dependants)
         jsonAsString = resp.asString()
         println("FSPS API Calculator: " + jsonAsString)
     }
+
+//    @When("^the FSPS Calculator Tier_five API is invoked with the following\$")
+//    public void the_FSPS_Calculator_Tier_five_API_is_invoked_with_the_following(DataTable arg1) {
+//        getTableData(arg1)
+//        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t5/maintenance/threshold?applicantType={applicantType}&dependants={dependants}", applicantType, dependants)
+//        jsonAsString = resp.asString()
+//        println("FSPS API Calculator: " + jsonAsString)
+//    }
 
     @When("^the Condition Code Tier 4 Other API is invoked with the following\$")
     public void the_Condition_Code_Tier_Four_Other_API_is_invoked_with_the_following(DataTable arg1) {

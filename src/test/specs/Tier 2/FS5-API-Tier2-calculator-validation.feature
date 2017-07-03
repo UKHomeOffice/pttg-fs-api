@@ -1,4 +1,4 @@
-Tiers 2 validation
+# Tiers 2 validation
 
 Feature: Validation of the API fields and data
 
@@ -23,7 +23,7 @@ Feature: Validation of the API fields and data
 
     Scenario: The API is provided with incorrect Number of dependants - not numbers 0-9
         Given A Service is consuming the FSPS Calculator API
-        When the FSPS Calculator Tier_two API is invoked with the following
+        When the FSPS Calculator Tier_Two API is invoked with the following
             | Dependants | ^ |
         Then The Tier_five Financial Status API provides the following validation results:
             | HTTP Status    | 400                                            |

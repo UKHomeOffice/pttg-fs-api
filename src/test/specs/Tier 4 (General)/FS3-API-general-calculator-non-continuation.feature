@@ -437,4 +437,4 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 10555.50   |
-            | Leave end date | + 2 months | #####
+            | Leave end date | + 2 months |
