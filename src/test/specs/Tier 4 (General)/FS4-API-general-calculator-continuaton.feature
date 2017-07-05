@@ -118,6 +118,24 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Course Length  | 9          |
             | Leave end date | 2017-08-01 |
 
+###New scenario 05/07/2017 with rounding dates######
+    Scenario: Zlatan is on an 8 month 1 day continuation main course and has 7 dependants.
+    Zlatan's maintenance threshold amount and course end date calculated.
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type                | main       |
+            | Original course start date | 2013-01-01 |
+            | Course start date          | 2017-04-30 |
+            | Course end date            | 2017-12-31 |
+            | Dependants                 | 7          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 51975.00   |
+            | Course Length  | 9          |
+            | Leave end date | 2018-04-30 |
+
+
     Scenario: Paul is on an 2 month continuation main course and does not have dependants. Paul's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API

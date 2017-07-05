@@ -73,8 +73,10 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Leave end date | 2016-09-03 |
 
 
+
     ## NEW SCENARIO ADDED ON 26/06/2017
-    Scenario: Martin is on an initial 7 months main course and does not have dependants. The consideration date is taking place on 2016-10-03 after the course has ended. Martin's maintenance threshold amount calculated.
+    Scenario: Martin is on an initial 7 months main course and does not have dependants.
+    The consideration date is taking place on 2016-10-03 after the course has ended. Martin's maintenance threshold amount calculated.
 
             Given A Service is consuming the FSPS Calculator API
             And the consideration date is 2016-10-03
@@ -88,6 +90,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
                 | Threshold      | 10555.50   |
                 | Leave end date | 2016-12-03 |
 
+
     Scenario: Stuart is on an initial 13 months main course and does not have dependants. Stuart's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
@@ -99,7 +102,23 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 13085.50   |
-            | Course Length  | 9          |
+            | Course Length  | 09         |### (Why is this 9 months, this should show the full duration)
+            | Leave end date | 2017-05-03 |
+
+        ####New Scenario 05/07/2017 - rounding dates
+    Scenario: Zlatan is on an initial 7 months ( 6 months 3 days) main course and does not have dependants.
+    Stuart's maintenance threshold,end date and course duration calculated.
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type       | main       |
+            | Dependants        | 0          |
+            | Course start date | 2017-01-01 | ###
+            | Course end date   | 2017-07-03 | ####
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 13085.50   |
+            | Course Length  | 7          |
             | Leave end date | 2017-05-03 |
 
     Scenario: Andy is on an initial 2 months main course and has 2 dependants. Andy's maintenance threshold amount calculated.
