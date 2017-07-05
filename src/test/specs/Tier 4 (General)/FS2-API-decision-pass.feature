@@ -7,8 +7,8 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
 #Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Shelly is a general student and has sufficient financial funds
 
-    Application Raised Date 1st of June
-    She has >= than the threshold of £2350 for the previous 28 days
+    #Application Raised Date 1st of June
+    #She has >= than the threshold of £2350 for the previous 28 days
 
         Given a Service is consuming Financial Status API
         Given the test data for account 01010312
@@ -35,8 +35,8 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
 #Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Brian is general student and has sufficient financial funds
 
-    Application Raised Date 4th of July
-    He has >= than the threshold of £2530 for the previous 28 days
+    #Application Raised Date 4th of July
+    #He has >= than the threshold of £2530 for the previous 28 days
 
 
         Given a Service is consuming Financial Status API
@@ -62,13 +62,13 @@ Feature: Pass Threshold Calculation - Tier 4 (General) student (single current a
             | Sort code      | 235368     |
 
 
-        New scenario #######################################
+
 
     Scenario: Shelly is a general student with sufficient financial funds and her application is being considered (defined as the day of UI form submission)  after the course end date.
 
-    Application Raised Date 1st of June
-        Course end date - 15th of  May
-    She has >= than the threshold of £2350 for the previous 28 days
+    #Application Raised Date 1st of June
+    #    Course end date - 15th of  May
+    #She has >= than the threshold of £2350 for the previous 28 days
 
         Given a Service is consuming Financial Status API
         And the consideration date is 2016-04-10

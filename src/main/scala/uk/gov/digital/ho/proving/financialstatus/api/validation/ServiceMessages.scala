@@ -24,6 +24,7 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
   val INVALID_TUITION_FEES_PAID: String = getMessage("invalid.tuition.fees.paid")
   val INVALID_ACCOMMODATION_FEES_PAID: String = getMessage("invalid.accommodation.fees.paid")
   val INVALID_DEPENDANTS: String = getMessage("invalid.dependants.value")
+  val iNVALID_DEPENDANTS_NOTALLOWED: String = getMessage("invalid.dependants.notallowed")
   val INVALID_IN_LONDON: String = getMessage("invalid.in.london.value")
   val INVALID_IN_DEPENDANTS_ONLY: String = getMessage("invalid.dependants.only.value")
 
