@@ -24,7 +24,7 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
   val INVALID_TUITION_FEES_PAID: String = getMessage("invalid.tuition.fees.paid")
   val INVALID_ACCOMMODATION_FEES_PAID: String = getMessage("invalid.accommodation.fees.paid")
   val INVALID_DEPENDANTS: String = getMessage("invalid.dependants.value")
-  val iNVALID_DEPENDANTS_NOTALLOWED: String = getMessage("invalid.dependants.notallowed")
+  val INVALID_DEPENDANTS_NOTALLOWED: String = getMessage("invalid.dependants.notallowed")
   val INVALID_IN_LONDON: String = getMessage("invalid.in.london.value")
   val INVALID_IN_DEPENDANTS_ONLY: String = getMessage("invalid.dependants.only.value")
 
@@ -52,6 +52,10 @@ class ServiceMessages @Autowired()(val messageSource: ResourceBundleMessageSourc
   def INVALID_COURSE_TYPE(params: String*): String = getMessage("invalid.course.type", params)
 
   def INVALID_APPLICANT_TYPE(params: String*): String = getMessage("invalid.applicant.type", params)
+  def INVALID_VARIANT_TYPE(params: String*): String = getMessage("invalid.variant.type", params)
+  def INVALID_TIER_TYPE(params: String*): String = getMessage("invalid.tier.type", params)
+  def INVALID_NUM_OF_DEPENDANTS(params: String*): String = getMessage("invalid.num.of_dependants", params)
+  def INVALID_ARGUMENT(params: String*): String = getMessage("invalid.argument", params)
 
   def USER_CONSENT_NOT_GIVEN(params: String*): String = getMessage("user.consent.not.given", params)
 

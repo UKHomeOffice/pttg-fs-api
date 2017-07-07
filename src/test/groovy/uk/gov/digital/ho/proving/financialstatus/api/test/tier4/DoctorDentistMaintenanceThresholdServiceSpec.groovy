@@ -14,6 +14,9 @@ import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
 import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
+import uk.gov.digital.ho.proving.financialstatus.domain.ApplicantTypeChecker
+import uk.gov.digital.ho.proving.financialstatus.domain.TierChecker
+import uk.gov.digital.ho.proving.financialstatus.domain.VariantTypeChecker
 
 import java.time.LocalDate
 
@@ -32,19 +35,26 @@ class DoctorDentistMaintenanceThresholdServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
-    AuditEventPublisher auditor = Mock()
-    Authentication authenticator = Mock()
+    AuditEventPublisher mockAuditor = Mock()
+    Authentication mockAuthenticator = Mock()
+    TierChecker mockTierChecker = Mock()
+    ApplicantTypeChecker mockApplicantTypeChecker = Mock()
+    VariantTypeChecker mockVariantTypeChecker = Mock()
 
     def thresholdService = new ThresholdServiceTier4(
         TestUtilsTier4.maintenanceThresholdServiceBuilder(), TestUtilsTier4.getStudentTypeChecker(),
-        TestUtilsTier4.getCourseTypeChecker(), serviceMessages, auditor, authenticator,
+        TestUtilsTier4.getCourseTypeChecker(), serviceMessages, mockAuditor, mockAuthenticator,
         new DeploymentDetails("localhost", "local")
     )
 
 
     MockMvc mockMvc = standaloneSetup(thresholdService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
-        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper(), serviceMessages))
+        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper(),
+                                                        mockTierChecker,
+                                                        mockApplicantTypeChecker,
+                                                        mockVariantTypeChecker,
+                                                        serviceMessages))
         .build()
 
     def url = TestUtilsTier4.thresholdUrl

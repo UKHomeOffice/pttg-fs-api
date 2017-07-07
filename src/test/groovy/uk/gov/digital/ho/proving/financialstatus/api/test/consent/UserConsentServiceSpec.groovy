@@ -1,7 +1,6 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test.consent
 
 import groovy.json.JsonSlurper
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
@@ -17,9 +16,12 @@ import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
 import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
+import uk.gov.digital.ho.proving.financialstatus.domain.ApplicantTypeChecker
+import uk.gov.digital.ho.proving.financialstatus.domain.TierChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.UserConsent
 import uk.gov.digital.ho.proving.financialstatus.domain.UserConsentResult
 import uk.gov.digital.ho.proving.financialstatus.domain.UserConsentStatusChecker
+import uk.gov.digital.ho.proving.financialstatus.domain.VariantTypeChecker
 
 import java.time.LocalDate
 
@@ -35,16 +37,23 @@ class UserConsentServiceSpec extends Specification {
 
     def mockBankService = Mock(BankService)
 
-    AuditEventPublisher auditor = Mock()
-    Authentication authenticator = Mock()
+    AuditEventPublisher mockAuditor = Mock()
+    Authentication mockAuthenticator = Mock()
+    TierChecker mockTierChecker = Mock()
+    ApplicantTypeChecker mockApplicantTypeChecker = Mock()
+    VariantTypeChecker mockVariantTypeChecker = Mock()
 
     def userConsentService = new UserConsentService(new UserConsentStatusChecker(mockBankService),
-        serviceMessages, auditor, authenticator, new DeploymentDetails("localhost", "local")
+        serviceMessages, mockAuditor, mockAuthenticator, new DeploymentDetails("localhost", "local")
     )
 
     MockMvc mockMvc = standaloneSetup(userConsentService)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
-        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper(), serviceMessages))
+        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper(),
+                                                        mockTierChecker,
+                                                        mockApplicantTypeChecker,
+                                                        mockVariantTypeChecker,
+                                                        serviceMessages))
         .build()
 
     def url = ConsentUtils.consentUrl
