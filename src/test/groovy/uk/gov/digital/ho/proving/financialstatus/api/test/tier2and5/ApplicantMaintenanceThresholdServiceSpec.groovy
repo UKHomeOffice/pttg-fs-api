@@ -65,7 +65,7 @@ class ApplicantMaintenanceThresholdServiceSpec extends Specification {
 
 
     @Unroll
-    def "Tier 2/5 Doctorate - Check main applicants with and without dependants"() {
+    def "Tier 2/5 Doctorate - Check #applicantType applicants with #dependants dependants then threshold is #threshold"() {
         expect:
         def response = callApi(applicantType, dependants)
         response.andExpect(status().isOk())

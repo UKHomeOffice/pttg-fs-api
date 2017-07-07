@@ -96,6 +96,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
 
 
    ###########           ######### new scenario########
+    @ignore
     Scenario: The consideration date is taking place on 2016-04-15 after the course has ended. + 1 month and 13 Days
     Shelly's maintenance threshold amount calculated. She is on a 3 month pgdd course
 
@@ -112,6 +113,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student Pos
             | Leave end date | 2016-05-15 |
 
       #######  #### new scenario#############
+    @ignore
     Scenario: The consideration date is taking place on "Current date" after the course has ended.
     Shelly's maintenance threshold amount calculated. She is on a 3 month pgdd course
 

@@ -75,20 +75,21 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
 
 
     ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
     Scenario: Martin is on an initial 7 months main course and does not have dependants.
     The consideration date is taking place on 2016-10-03 after the course has ended. Martin's maintenance threshold amount calculated.
 
-            Given A Service is consuming the FSPS Calculator API
-            And the consideration date is 2016-10-03
-            When the FSPS Calculator API is invoked with the following
-                | Course type       | main       |
-                | Dependants        | 0          |
-                | Course start date | 2016-01-03 |
-                | Course end date   | 2016-07-03 |
-            Then The Financial Status API provides the following results:
-                | HTTP Status    | 200        |
-                | Threshold      | 10555.50   |
-                | Leave end date | 2016-12-03 |
+        Given A Service is consuming the FSPS Calculator API
+        And the consideration date is 2016-10-03
+        When the FSPS Calculator API is invoked with the following
+            | Course type       | main       |
+            | Dependants        | 0          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-07-03 |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 10555.50   |
+            | Leave end date | 2016-12-03 |
 
 
     Scenario: Stuart is on an initial 13 months main course and does not have dependants. Stuart's maintenance threshold amount calculated.
@@ -192,6 +193,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Leave end date | 2016-12-10 |
 
     ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
     Scenario: Saul is on an initial 9 months pre-sessional course and does not have dependants. The consideration date is taking place on 2017-01-01 after the course has ended. Saul's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
@@ -309,6 +311,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Leave end date | 2016-02-10 |
 
     ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
     Scenario: Isaac and Poppy are using a dependant (x2) only application (main applicant is on an initial 2 months main course). The consideration date is taking place on 2016-03-15 after the course has ended.
 
         Given A Service is consuming the FSPS Calculator API
@@ -394,6 +397,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Leave end date | 2016-11-03 |
 
     ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
     Scenario: Michael and Jermaine are on an a dependant only (x2) application (main applicant is on an initial 2 months pre-sessional). The consideration date is taking place on 2016-10-07 after the course has ended.
 
         Given A Service is consuming the FSPS Calculator API
@@ -445,9 +449,10 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Leave end date | 2018-01-15 |
 
 
+    @ignore
     Scenario: Martin is on an initial 7 months main course and does not have dependants. Martin's maintenance threshold amount calculated.
 
-        Given A Service is consuming the FSPS Calculator API#######
+        Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator API is invoked with the following
             | Course type       | main       |
             | Dependants        | 0          |

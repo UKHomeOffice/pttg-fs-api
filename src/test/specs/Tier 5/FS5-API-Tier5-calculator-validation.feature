@@ -27,6 +27,7 @@ Feature: Validation of the API fields and data
             | Status code    | 0002                                           |
             | Status message | Parameter conversion error: Invalid dependants |
 ####################################################
+    @ignore
     Scenario: The API is provided with dependants for a tier 5 youth mobility
         Given A Service is consuming the FSPS Calculator API
         When the FSPS Calculator Tier_Five API is invoked with the following

@@ -61,6 +61,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
 
         #####new scenario##############
 
+    @ignore
     Scenario: Mikel is on a 2 month PGDD continuation course. Mikel's Threshold calculated
                 when consideration date is passed the course end date.
 

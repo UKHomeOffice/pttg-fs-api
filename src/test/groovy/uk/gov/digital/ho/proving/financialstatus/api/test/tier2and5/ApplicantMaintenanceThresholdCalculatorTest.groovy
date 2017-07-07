@@ -13,7 +13,7 @@ class ApplicantMaintenanceThresholdCalculatorTest extends Specification {
     def "Tier 2/5 Applicant threshold calculation"() {
 
         expect:
-        def response = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(new ApplicantTypeChecker("main", "dependant").getApplicantType(applicantType), dependants)
+        def response = maintenanceThresholdCalculator.calculateThresholdForT2AndT5("a",new ApplicantTypeChecker("main", "dependant").getApplicantType(applicantType), null, dependants)
         assert (response.get() == buildScalaBigDecimal(threshold))
 
         where:

@@ -1,3 +1,4 @@
+@ignore
 Feature: Calculation of condition codes for T4 General
 
 # Condition Codes ##

@@ -74,6 +74,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Leave end date | 2016-09-10 |
 
     ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
     Scenario: Chris is on an 5 month continuation main course and has 1 dependants. The consideration date is taking place on 2016-07-01 after the course has ended. Chris's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
@@ -206,6 +207,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Leave end date | 2017-07-10 |
 
    ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
    Scenario: Jane is on an 5 month continuation pre-sessional course and has 2 dependants. The consideration date is taking place on 2016-06-23 after the course has ended. Jane's maintenance threshold amount calculated.
 
            Given A Service is consuming the FSPS Calculator API
@@ -332,6 +334,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Leave end date | 2016-09-10 |
 
     ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
     Scenario: Isaac is on a dependant (x1) only application (main applicant is on a 5 month continuation main course). The consideration date is taking place on 2016-06-15 after the course has ended.
 
             Given A Service is consuming the FSPS Calculator API
@@ -405,6 +408,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Studen
             | Leave end date | 2017-07-10 |
 
     ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
     Scenario: 2 dependants only application (main applicant is on a 5 month continuation pre-sessional course). The consideration date is taking place on 2016-09-12 after the course has ended.
 
             Given A Service is consuming the FSPS Calculator API

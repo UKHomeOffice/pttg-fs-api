@@ -82,6 +82,7 @@ Feature: Total Funds Required Calculation - Continuation Tier 5 General applican
 
         ##################### Tier 5 Main Applicant Youth Mobility Scheme #############################
 
+    @ignore
     Scenario: John Terry is Tier 5 youth mobility scheme applicant. John's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
