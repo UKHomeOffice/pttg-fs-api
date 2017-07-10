@@ -11,7 +11,7 @@ ARG VERSION
 WORKDIR /app
 
 RUN groupadd -r ${GROUP} && \
-    useradd -r -g ${USER} ${GROUP} -d /app && \
+    useradd -r ${USER} -g ${GROUP} -d /app && \
     mkdir -p /app && \
     chown -R ${USER}:${GROUP} /app
 

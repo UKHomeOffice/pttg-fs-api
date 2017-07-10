@@ -17,6 +17,7 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
     Pre-sessional course length 12 month or more = 4 month
     Pre-sessional course length 6 months or more but less than months = 2 months
     Pre-sessional course length <6 months = 1 months
+    If course has ended when considering the case, then wrap up period will be added from case consideration date/processing date ##
 
     Applicants Required Maintenance threshold general:  In London - £1265, Out London - £1015
     Dependants Required Maintenance threshold: In London - £845, Out London - £680
@@ -71,6 +72,26 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Threshold      | 10555.50   |
             | Leave end date | 2016-09-03 |
 
+
+
+    ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
+    Scenario: Martin is on an initial 7 months main course and does not have dependants.
+    The consideration date is taking place on 2016-10-03 after the course has ended. Martin's maintenance threshold amount calculated.
+
+        Given A Service is consuming the FSPS Calculator API
+        And the consideration date is 2016-10-03
+        When the FSPS Calculator API is invoked with the following
+            | Course type       | main       |
+            | Dependants        | 0          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-07-03 |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 10555.50   |
+            | Leave end date | 2016-12-03 |
+
+
     Scenario: Stuart is on an initial 13 months main course and does not have dependants. Stuart's maintenance threshold amount calculated.
 
         Given A Service is consuming the FSPS Calculator API
@@ -82,7 +103,23 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
         Then The Financial Status API provides the following results:
             | HTTP Status    | 200        |
             | Threshold      | 13085.50   |
-            | Course Length  | 9          |
+            | Course Length  | 09         |### (Why is this 9 months, this should show the full duration)
+            | Leave end date | 2017-05-03 |
+
+        ####New Scenario 05/07/2017 - rounding dates
+    Scenario: Zlatan is on an initial 7 months ( 6 months 3 days) main course and does not have dependants.
+    Stuart's maintenance threshold,end date and course duration calculated.
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type       | main       |
+            | Dependants        | 0          |
+            | Course start date | 2017-01-01 | ###
+            | Course end date   | 2017-07-03 | ####
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 13085.50   |
+            | Course Length  | 7          |
             | Leave end date | 2017-05-03 |
 
     Scenario: Andy is on an initial 2 months main course and has 2 dependants. Andy's maintenance threshold amount calculated.
@@ -154,6 +191,24 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Threshold      | 10835.50   |
             | Course Length  | 9          |
             | Leave end date | 2016-12-10 |
+
+    ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
+    Scenario: Saul is on an initial 9 months pre-sessional course and does not have dependants. The consideration date is taking place on 2017-01-01 after the course has ended. Saul's maintenance threshold amount calculated.
+
+        Given A Service is consuming the FSPS Calculator API
+        And the consideration date is 2017-01-01
+        When the FSPS Calculator API is invoked with the following
+            | In London         | No            |
+            | Dependants        | 0             |
+            | Course type       | Pre-sessional |
+            | Course start date | 2016-01-03    |
+            | Course end date   | 2016-10-10    |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 10835.50   |
+            | Course Length  | 9          |
+            | Leave end date | 2017-03-01 |
 
     Scenario: Greg is on an initial 5 months pre-sessional course and does not have dependants. Greg's maintenance threshold amount calculated.
 
@@ -255,6 +310,25 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Threshold      | 3380.00    |
             | Leave end date | 2016-02-10 |
 
+    ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
+    Scenario: Isaac and Poppy are using a dependant (x2) only application (main applicant is on an initial 2 months main course). The consideration date is taking place on 2016-03-15 after the course has ended.
+
+        Given A Service is consuming the FSPS Calculator API
+        And the consideration date is 2016-03-15
+        When the FSPS Calculator API is invoked with the following
+            | Student Type      | general    |
+            | In London         | Yes        |
+            | Course type       | main       |
+            | Dependants        | 2          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-02-03 |
+            | Dependants only   | Yes        |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 3380.00    |
+            | Leave end date | 2016-03-22 |
+
     Scenario: Phillippe and Jessica are using a dependant only (x2) application (main applicant is on an initial 2 months main course)
 
         Given A Service is consuming the FSPS Calculator API
@@ -322,6 +396,25 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Threshold      | 5070.00    |
             | Leave end date | 2016-11-03 |
 
+    ## NEW SCENARIO ADDED ON 26/06/2017
+    @ignore
+    Scenario: Michael and Jermaine are on an a dependant only (x2) application (main applicant is on an initial 2 months pre-sessional). The consideration date is taking place on 2016-10-07 after the course has ended.
+
+        Given A Service is consuming the FSPS Calculator API
+        And the consideration date is 2016-10-07
+        When the FSPS Calculator API is invoked with the following
+            | Student Type      | general       |
+            | In London         | Yes           |
+            | Course type       | Pre-sessional |
+            | Dependants        | 2             |
+            | Course start date | 2016-09-03    |
+            | Course end date   | 2016-10-03    |
+            | Dependants only   | Yes           |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 5070.00    |
+            | Leave end date | 2016-11-07 |
+
     Scenario: Rhiannon is on an a dependant only (x1) application (main applicant is on an initial 8 months pre-sessional)
 
         Given A Service is consuming the FSPS Calculator API
@@ -354,3 +447,18 @@ Feature: Total Funds Required Calculation - Initial Tier 4 (General) Student gen
             | Threshold      | 30420.00   |
             | Course Length  | 9          |
             | Leave end date | 2018-01-15 |
+
+
+    @ignore
+    Scenario: Martin is on an initial 7 months main course and does not have dependants. Martin's maintenance threshold amount calculated.
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Course type       | main       |
+            | Dependants        | 0          |
+            | Course start date | 2016-01-03 |
+            | Course end date   | 2016-07-03 |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 10555.50   |
+            | Leave end date | + 2 months |

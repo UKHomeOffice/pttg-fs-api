@@ -3,9 +3,11 @@ package steps
 import com.jayway.restassured.response.Response
 import com.mongodb.MongoClient
 import cucumber.api.DataTable
+import cucumber.api.PendingException
 import cucumber.api.Scenario
 import cucumber.api.java.After
 import cucumber.api.java.Before
+import cucumber.api.java.en.And
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
@@ -59,18 +61,18 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @Override
     void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         //required for @controllerAdvice to work
-        DispatcherServlet ds = applicationContext.getBean("dispatcherServlet");
+        DispatcherServlet ds = applicationContext.getBean("dispatcherServlet")
         ds.setThrowExceptionIfNoHandlerFound(true)
     }
 
     @Value('${local.server.port}')
-    private String serverPort;
+    private String serverPort
 
     @Value('${barclays.stub.service}')
-    private String barclaysService;
+    private String barclaysService
 
     @Value('${wiremock}')
-    private Boolean wiremock;
+    private Boolean wiremock
 
     @Managed
     public Response resp
@@ -79,6 +81,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     String jsonAsString
     String dependants = ""
     String applicantType = ""
+    String variantType = ""
     String fromDate = ""
     String toDate = ""
     String accountNumber = ""
@@ -133,7 +136,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         camelCase
     }
 
-    public String verifyDateFormat(String featureDate) {
+    String verifyDateFormat(String featureDate) {
         String initialDate = featureDate
         String transformedDate
         DateFormat df = new SimpleDateFormat("yyyy-mm-dd")
@@ -160,6 +163,10 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
             }
             if (s.equalsIgnoreCase("applicant type")) {
                 applicantType = entries.get(s)
+            }
+
+            if (s.equalsIgnoreCase("variant type")) {
+                variantType = entries.get(s)
             }
 
             if (s.equalsIgnoreCase("Student Type")) {
@@ -239,7 +246,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         }
     }
 
-    public String tocamelcase(String g) {
+    String tocamelcase(String g) {
         StringBuilder sbl = new StringBuilder()
 
         String firstString
@@ -269,14 +276,14 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
 
-    public void validateJsonResult(DataTable arg) {
-        Map<String, String> entries = arg.asMap(String.class, String.class);
+    void validateJsonResult(DataTable arg) {
+        Map<String, String> entries = arg.asMap(String.class, String.class)
         String[] tableKey = entries.keySet()
         List<String> allKeys = new ArrayList()
         List<String> allJsonValue = new ArrayList()
         List<String> tableFieldValue = new ArrayList()
         List<String> tableFieldCamelCase = new ArrayList()
-        JSONObject json = new JSONObject(jsonAsString);
+        JSONObject json = new JSONObject(jsonAsString)
         DecimalFormat df = new DecimalFormat("#.00")
         double value
         String innerJsonValue
@@ -285,7 +292,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         Iterator<String> jasonKey = json.keys()
 
         while (jasonKey.hasNext()) {
-            String key = (String) jasonKey.next();
+            String key = (String) jasonKey.next()
 
             if (json.get(key) instanceof JSONObject) {
 
@@ -296,7 +303,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
                 while (feild.hasNext()) {
                     String key2 = (String) feild.next()
-                    if((key2 != "code")&&(key2 != "message")) {
+                    if ((key2 != "code") && (key2 != "message")) {
                         allKeys.add(key2)
 
                         println "BBBBBBBBB" + key2
@@ -337,45 +344,45 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
         assert allJsonValue.containsAll(tableFieldValue)
     }
 
-    public void validateResult(DataTable arg) {
+    void validateResult(DataTable arg) {
 
-        Map<String, String> entries = arg.asMap(String.class, String.class);
-        String[] tableKey = entries.keySet();
-         DecimalFormat df2 = new DecimalFormat(".##");
+        Map<String, String> entries = arg.asMap(String.class, String.class)
+        String[] tableKey = entries.keySet()
+        DecimalFormat df2 = new DecimalFormat(".##")
         for (String key : tableKey) {
             switch (key) {
                 case "HTTP Status":
-                    assert entries.get(key) == resp.getStatusCode().toString();
-                    break;
+                    assert entries.get(key) == resp.getStatusCode().toString()
+                    break
 
                 case "Response Code":
-                    assert entries.get(key) == respCalc.getStatusCode().toString();
-                    break;
+                    assert entries.get(key) == respCalc.getStatusCode().toString()
+                    break
 
                 case "Minimum":
                     String jsonPath = fkm.buildJsonPath(key)
                     String value = entries.get(key)
-                    String jsonValue = read(jsonAsString, jsonPath).toString();
-                    assert compareNumericValues(value,jsonValue)
-                    break;
+                    String jsonValue = read(jsonAsString, jsonPath).toString()
+                    assert compareNumericValues(value, jsonValue)
+                    break
 
                 case "Lowest Balance Value":
                     String jsonPath = fkm.buildJsonPath(key)
                     String value = entries.get(key)
-                    String jsonValue = read(jsonAsString, jsonPath).toString();
-                    assert compareNumericValues(value,jsonValue)
-                    break;
+                    String jsonValue = read(jsonAsString, jsonPath).toString()
+                    assert compareNumericValues(value, jsonValue)
+                    break
 
                 case "Threshold":
                     String jsonPath = fkm.buildJsonPath(key)
                     String value = entries.get(key)
                     String jsonValue = read(jsonAsString, jsonPath).toString()
-                    assert compareNumericValues(value,jsonValue)
+                    assert compareNumericValues(value, jsonValue)
                     break
 
                 default:
                     String jsonPath = fkm.buildJsonPath(key)
-                    assert entries.get(key) == read(jsonAsString, jsonPath).toString();
+                    assert entries.get(key) == read(jsonAsString, jsonPath).toString()
             }
         }
     }
@@ -383,14 +390,14 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     def responseStatusFor(String url) {
         Response response = given()
             .get(url)
-            .then().extract().response();
+            .then().extract().response()
 
-        return response.getStatusCode();
+        return response.getStatusCode()
     }
 
 
     @Given("^the test data for account (.+)\$")
-    public void the_test_data_for_account_number(String accountNumber) {
+    void the_test_data_for_account_number(String accountNumber) {
         if (wiremock) {
             testDataLoader.stubTestData(accountNumber, balancesUrlRegex)
         } else {
@@ -399,56 +406,58 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
     @Given("^a Service is consuming Financial Status API\$")
-    public void a_Service_is_consuming_Financial_Status_API() {
+    void a_Service_is_consuming_Financial_Status_API() {
 
     }
 
     @Given("^A Service is consuming the FSPS Calculator API\$")
-    public void a_Service_is_consuming_the_FSPS_Calculator_API() {
+    void a_Service_is_consuming_the_FSPS_Calculator_API() {
 
     }
 
     @Given("^A Service is consuming the Condition Code API\$")
-    public void a_Service_is_consuming_the_Condition_Code_API() {
+    void a_Service_is_consuming_the_Condition_Code_API() {
 
     }
 
     @Given("^the barclays response has status ([0-9]+)\$")
-    public void the_barclays_response_has_status(int status) {
+    void the_barclays_response_has_status(int status) {
         testDataLoader.withResponseStatus(balancesUrlRegex, status)
     }
 
     @Given("^the barclays api is unreachable\$")
-    public void the_barclays_api_is_unreachable() {
+    void the_barclays_api_is_unreachable() {
         testDataLoader.withServiceDown()
     }
 
     @Given("^the default details are\$")
-    public void the_default_details_are(DataTable arg1) {
+    void the_default_details_are(DataTable arg1) {
         getTableData(arg1)
-        respCalc = get("http://localhost:" + serverPort +"/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/consent?dob={dob}", sortCode, accountNumber,dob)
+        respCalc = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/consent?dob={dob}", sortCode, accountNumber, dob)
         jsonAsString = respCalc.asString()
 
         println("Family Case Worker API: " + jsonAsString)
 
     }
+
     @Given("^the service is consuming the Barclays Balances API\$")
-    public void the_service_is_consuming_the_Barclays_Balances_API() {
-      //resp = get("http://localhost:" + serverPort +"/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/consent?dob={dob}")
-      //  jsonAsString = resp.asString()
+    void the_service_is_consuming_the_Barclays_Balances_API() {
+        //resp = get("http://localhost:" + serverPort +"/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/consent?dob={dob}")
+        //  jsonAsString = resp.asString()
     }
 
     @Given("^the applicant has not granted consent\$")
-    public void the_applicant_has_not_granted_consent() {
+    void the_applicant_has_not_granted_consent() {
 
     }
 
     @Given("^the consent request has expired\$")
-    public void the_consent_request_has_expired() {
+    void the_consent_request_has_expired() {
 
     }
+
     @When("^the Financial Status API is invoked\$")
-    public void the_Financial_Status_API_is_invoked() {
+    void the_Financial_Status_API_is_invoked() {
 
         resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}", sortCode, accountNumber, fromDate, toDate, minimum, dob)
         jsonAsString = resp.asString()
@@ -459,7 +468,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
 
 
     @When("^the Financial Status API is invoked with the following:\$")
-    public void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
+    void the_Financial_Status_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
         resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/accounts/{sortCode}/{accountNumber}/dailybalancestatus?fromDate={fromDate}&toDate={toDate}&minimum={minimum}&dob={dob}", sortCode, accountNumber, fromDate, toDate, minimum, dob)
         jsonAsString = resp.asString()
@@ -468,7 +477,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
     @When("^the FSPS Calculator API is invoked with the following\$")
-    public void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
+    void the_FSPS_Calculator_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
         resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t4/maintenance/threshold?studentType={studentType}&inLondon={inLondon}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&continuationEndDate={continuationEndDate}&tuitionFees={tuitionFees}&tuitionFeesPaid={tuitionFeesPaid}&accommodationFeesPaid={accommodationFeesPaid}&dependants={dependants}&courseType={courseType}&originalCourseStartDate={originalCourseStartDate}&dependantsOnly={dependantsOnly}", studentType, inLondon, courseStartDate, courseEndDate, continuationEndDate, tuitionFees, tuitionFeesPaid, accommodationFeesPaid, dependants, courseType, originalCourseStartDate, dependanstOnly)
         jsonAsString = resp.asString()
@@ -477,23 +486,31 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
     @When("^the FSPS Calculator Tier_Two API is invoked with the following\$")
-    public void the_FSPS_Calculator_Tier_Two_API_is_invoked_with_the_following(DataTable arg1) {
+    void the_FSPS_Calculator_Tier_Two_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
         resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t2/maintenance/threshold?applicantType={applicantType}&dependants={dependants}", applicantType, dependants)
         jsonAsString = resp.asString()
         println("FSPS API Calculator: " + jsonAsString)
     }
 
-    @When("^the FSPS Calculator Tier_five API is invoked with the following\$")
-    public void the_FSPS_Calculator_Tier_five_API_is_invoked_with_the_following(DataTable arg1) {
+    @When("^the FSPS Calculator Tier_Five API is invoked with the following\$")
+    void the_FSPS_Calculator_Tier_Five_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
-        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t5/maintenance/threshold?applicantType={applicantType}&dependants={dependants}", applicantType, dependants)
+        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t5/maintenance/threshold?applicantType={applicantType}&variantType={variantType}&dependants={dependants}", applicantType, variantType, dependants)
         jsonAsString = resp.asString()
         println("FSPS API Calculator: " + jsonAsString)
     }
 
+//    @When("^the FSPS Calculator Tier_five API is invoked with the following\$")
+//    void the_FSPS_Calculator_Tier_five_API_is_invoked_with_the_following(DataTable arg1) {
+//        getTableData(arg1)
+//        resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t5/maintenance/threshold?applicantType={applicantType}&dependants={dependants}", applicantType, dependants)
+//        jsonAsString = resp.asString()
+//        println("FSPS API Calculator: " + jsonAsString)
+//    }
+
     @When("^the Condition Code Tier 4 Other API is invoked with the following\$")
-    public void the_Condition_Code_Tier_Four_Other_API_is_invoked_with_the_following(DataTable arg1) {
+    void the_Condition_Code_Tier_Four_Other_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
         resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t4/conditioncodes?studentType={studentType}&dependantsOnly={dependantsOnly}&dependants={dependants}", studentType, dependanstOnly, dependants)
         jsonAsString = resp.asString()
@@ -502,7 +519,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
     @When("^the Condition Code Tier 4 General API is invoked with the following\$")
-    public void the_Condition_Code_Tier_Four_General_API_is_invoked_with_the_following(DataTable arg1) {
+    void the_Condition_Code_Tier_Four_General_API_is_invoked_with_the_following(DataTable arg1) {
         getTableData(arg1)
         resp = get("http://localhost:" + serverPort + "/pttg/financialstatus/v1/t4/conditioncodes?studentType={studentType}&dependantsOnly={dependantsOnly}&dependants={dependants}&courseType={courseType}&courseStartDate={courseStartDate}&courseEndDate={courseEndDate}&courseInstitution={courseInstitution}&recognisedBodyOrHEI={recognisedBodyOrHEI}", studentType, dependanstOnly, dependants, courseType, courseStartDate, courseEndDate, courseInstitution, recognisedBodyOrHEI)
         jsonAsString = resp.asString()
@@ -511,70 +528,74 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
     @When("^the Balances API is invoked\$")
-    public void the_Balances_API_is_invoked() throws Throwable {
+    void the_Balances_API_is_invoked() throws Throwable {
 
     }
 
     @When("^the Consent API is invoked\$")
-    public void the_Consent_API_is_invoked() {
+    void the_Consent_API_is_invoked() {
 
     }
+
     @When("^an account number not found at Barclays\$")
-    public void an_account_number_not_found_at_Barclays() {
+    void an_account_number_not_found_at_Barclays() {
 
     }
+
     @When("^a sort code not found at Barclays\$")
-    public void a_sort_code_not_found_at_Barclays() {
+    void a_sort_code_not_found_at_Barclays() {
 
     }
+
     @When("^Date of birth is not found at Barclays\$")
-    public void date_of_birth_is_not_found_at_Barclays() {
+    void date_of_birth_is_not_found_at_Barclays() {
 
     }
+
     @When("^Valid UK mobile number is not found at Barclays\$")
-    public void valid_UK_mobile_number_is_not_found_at_Barclays() {
+    void valid_UK_mobile_number_is_not_found_at_Barclays() {
 
     }
+
     @Then("^The Financial Status API provides the following results:\$")
-    public void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
+    void the_Financial_Status_API_provides_the_following_results(DataTable arg1) {
         //validateJsonResult(arg1)
-         validateResult(arg1)
-
-
+        validateResult(arg1)
     }
 
     @Then("^the Barclays Consent API provides the following response:\$")
-    public void the_Barclays_Consent_API_provides_the_following_response(DataTable arg1)  {
+    void the_Barclays_Consent_API_provides_the_following_response(DataTable arg1) {
         validateResult(arg1)
     }
 
     @Then("^The Tier_Two Financial Status API provides the following results:\$")
-    public void the_Tier_Two_Financial_Status_API_provides_the_following_results(DataTable arg1)  {
+    void the_Tier_Two_Financial_Status_API_provides_the_following_results(DataTable arg1) {
         validateResult(arg1)
     }
+
     @Then("^The Tier_five Financial Status API provides the following results:\$")
-    public void the_Tier_five_Financial_Status_API_provides_the_following_results(DataTable arg1) throws Throwable {
+    void the_Tier_five_Financial_Status_API_provides_the_following_results(DataTable arg1) throws Throwable {
         validateResult(arg1)
     }
 
     @Then("^FSPS Tier four general Case Worker tool API provides the following result\$")
-    public void fsps_Tier_four_general_Case_Worker_tool_API_provides_the_following_result(DataTable arg1) {
+    void fsps_Tier_four_general_Case_Worker_tool_API_provides_the_following_result(DataTable arg1) {
         validateResult(arg1)
 
     }
 
     @Then("^the service displays the following result\$")
-    public void the_service_displays_the_following_result(DataTable arg1) {
+    void the_service_displays_the_following_result(DataTable arg1) {
         validateResult(arg1)
     }
 
     @Then("^The Tier_Two Financial Status API provides the following validation results:\$")
-    public void the_Tier_Two_Financial_Status_API_provides_the_following_validation_results(DataTable arg1) {
+    void the_Tier_Two_Financial_Status_API_provides_the_following_validation_results(DataTable arg1) {
         validateResult(arg1)
     }
 
     @Then("^The Tier_five Financial Status API provides the following validation results:\$")
-    public void the_Tier_five_Financial_Status_API_provides_the_following_validation_results(DataTable arg1) {
+    void the_Tier_five_Financial_Status_API_provides_the_following_validation_results(DataTable arg1) {
         validateResult(arg1)
     }
 
@@ -600,8 +621,13 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     }
 
     @Then("^the Barclays Consent API provides the following error response:\$")
-    public void the_Barclays_Consent_API_provides_the_following_error_response(DataTable arg1) {
+    void the_Barclays_Consent_API_provides_the_following_error_response(DataTable arg1) {
         validateResult(arg1)
+    }
+
+    @And("^the consideration date is (.+)\$")
+    void theConsiderationDateIs(String date) throws Throwable {
+
     }
 
 }

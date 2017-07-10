@@ -19,7 +19,10 @@ import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
 import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
+import uk.gov.digital.ho.proving.financialstatus.domain.ApplicantTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.CourseTypeChecker
+import uk.gov.digital.ho.proving.financialstatus.domain.TierChecker
+import uk.gov.digital.ho.proving.financialstatus.domain.VariantTypeChecker
 import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ApplicantConditionCode
 import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ChildConditionCode
 import uk.gov.digital.ho.proving.financialstatus.domain.conditioncodes.ConditionCodesCalculationResult
@@ -41,14 +44,18 @@ class ConditionCodesServiceTier4Spec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
-    AuditEventPublisher auditorMock = Mock()
-    Authentication authenticatorMock = Mock()
+    AuditEventPublisher mockAuditorMock = Mock()
+    Authentication mockAuthenticatorMock = Mock()
+    TierChecker mockTierChecker = Mock()
+    ApplicantTypeChecker mockApplicantTypeChecker = Mock()
+    VariantTypeChecker mockVariantTypeChecker = Mock()
+
     ConditionCodesCalculatorProvider conditionCodesCalculatorProviderMock = Mock()
     ConditionCodesCalculator conditionCodesCalculatorMock = Mock()
 
     def conditionCodesTier4Service = new ConditionCodesServiceTier4(
-        auditorMock,
-        authenticatorMock,
+        mockAuditorMock,
+        mockAuthenticatorMock,
         new DeploymentDetails("localhost", "local"),
         conditionCodesCalculatorProviderMock,
         new StudentTypeChecker("des", "general", "pgdd", "suso"),
@@ -58,7 +65,11 @@ class ConditionCodesServiceTier4Spec extends Specification {
 
     MockMvc mockMvc = standaloneSetup(conditionCodesTier4Service)
         .setMessageConverters(new ServiceConfiguration().mappingJackson2HttpMessageConverter())
-        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper(), serviceMessages))
+        .setControllerAdvice(new ApiExceptionHandler(new ServiceConfiguration().objectMapper(),
+                                                        mockTierChecker,
+                                                        mockApplicantTypeChecker,
+                                                        mockVariantTypeChecker,
+                                                        serviceMessages))
         .build()
 
     String conditionCodeApiUrl() {
@@ -140,7 +151,7 @@ class ConditionCodesServiceTier4Spec extends Specification {
 
         then:
 
-        1 * authenticatorMock.getUserProfileFromToken(keyCloakCookieToken) >> None$.MODULE$
+        1 * mockAuthenticatorMock.getUserProfileFromToken(keyCloakCookieToken) >> None$.MODULE$
     }
 
     def 'Request and response should both be reported to the auditor'() {
@@ -165,11 +176,11 @@ class ConditionCodesServiceTier4Spec extends Specification {
         then:
 
         response.andDo(MockMvcResultHandlers.print())
-        2 * auditorMock.publishEvent(_)
+        2 * mockAuditorMock.publishEvent(_)
     }
 
     private void stubAuthenticationArbitraryUserProfile() {
-        authenticatorMock.getUserProfileFromToken(_) >> new Some(new UserProfile("", "", "", ""))
+        mockAuthenticatorMock.getUserProfileFromToken(_) >> new Some(new UserProfile("", "", "", ""))
     }
 
     private void stubconditionCodesCalculatorResult() {

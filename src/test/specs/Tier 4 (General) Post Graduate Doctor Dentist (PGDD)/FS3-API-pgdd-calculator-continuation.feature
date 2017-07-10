@@ -58,6 +58,26 @@ Feature: Total Funds Required Calculation - Continuation Tier 4 (General) Post G
             | Threshold      | 2030.00    |
             | Leave end date | 2016-03-10 |
 
+
+        #####new scenario##############
+
+    @ignore
+    Scenario: Mikel is on a 2 month PGDD continuation course. Mikel's Threshold calculated
+                when consideration date is passed the course end date.
+
+
+        Given A Service is consuming the FSPS Calculator API
+        When the FSPS Calculator API is invoked with the following
+            | Original course start date | 2015-12-15 |
+            | Course start date          | 2016-01-03 |
+            | Course end date            | 2016-02-10 |
+            | Dependants                 | 0          |
+        Then The Financial Status API provides the following results:
+            | HTTP Status    | 200        |
+            | Threshold      | 2030.00    |
+            | Leave end date | + 1 month from current date  |
+
+
     Scenario: Mike is on a 2 month PGDD continuation course. Mike's Threshold calculated
 
         Given A Service is consuming the FSPS Calculator API

@@ -2,17 +2,15 @@ package uk.gov.digital.ho.proving.financialstatus.api
 
 import java.lang.{Boolean => JBoolean}
 import java.math.{BigDecimal => JBigDecimal}
-import java.util.Optional
-import java.util.UUID
+import java.util.{Optional, UUID}
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.PropertySource
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.springframework.http.{HttpHeaders, HttpStatus, ResponseEntity}
 import org.springframework.web.bind.annotation._
-import uk.gov.digital.ho.proving.financialstatus.api.validation.{ServiceMessages, ThresholdParameterValidator}
+import uk.gov.digital.ho.proving.financialstatus.api.configuration.DependantsException
+import uk.gov.digital.ho.proving.financialstatus.api.validation.ServiceMessages
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditActions.{auditEvent, nextId}
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventType._
@@ -26,7 +24,9 @@ import uk.gov.digital.ho.proving.financialstatus.domain._
 @RequestMapping(value = Array("/pttg/financialstatus/v1/{tier:t2|t5}/maintenance"))
 @ControllerAdvice
 class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator: MaintenanceThresholdCalculatorT2AndT5,
+                                             val tierChecker: TierChecker,
                                              val applicantTypeChecker: ApplicantTypeChecker,
+                                             val variantTypeChecker: VariantTypeChecker,
                                              val serviceMessages: ServiceMessages,
                                              val auditor: AuditEventPublisher,
                                              val authenticator: Authentication,
@@ -34,86 +34,117 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
                                             ) extends FinancialStatusBaseController {
 
   private val LOGGER = LoggerFactory.getLogger(classOf[ThresholdServiceTier2And5])
+  private val YOUTH_MOBILITY_APPLICANT_TYPE = Option("youth")
 
+  // N.B. RequestMapping receives non-required request params as Java Optional, so convert to Scala Option for pattern matching
   @RequestMapping(value = Array("/threshold"), method = Array(RequestMethod.GET), produces = Array("application/json"))
-  def calculateThreshold(@RequestParam(value = "applicantType") applicantType: Optional[String],
-                         @RequestParam(value = "dependants", required = false, defaultValue = "0") dependants: Optional[Integer],
-                         @CookieValue(value = "kc-access") kcToken: Optional[String]
+  def calculateThreshold(@PathVariable(value = "tier") tierType: String,
+                         @RequestParam(value = "applicantType") applicantTypeParameter: String,
+                         @RequestParam(value = "variantType") rawVariantTypeOptional: Optional[String],
+                         @RequestParam(value = "dependants") dependantsOptional: Optional[Integer],
+                         @CookieValue(value = "kc-access") kcTokenOptional: Optional[String]
                         ): ResponseEntity[ThresholdResponse] = {
 
-    val accessToken: Option[String] = kcToken
-
-    // Get the user's profile
-    val userProfile = accessToken match {
-      case Some(token) => authenticator.getUserProfileFromToken(token)
-      case None => None
-    }
+    val tier = tierChecker.getTier(tierType)
+    val applicantType = applicantTypeChecker.getApplicantType(applicantTypeParameter)
+    val variantTypeOptional: Option[VariantType] = variantTypeChecker.getVariantType(rawVariantTypeOptional, applicantType)
+    val numberOfDependants: Int = getNumberOfDependants(dependantsOptional)
+    val userProfile = getUserProfile(kcTokenOptional)
 
     val auditEventId = nextId
-    auditSearchParams(auditEventId, applicantType, dependants, userProfile)
-    val validatedApplicantType = applicantTypeChecker.getApplicantType(applicantType.getOrElse("Unknown"))
 
-    def threshold = calculateThresholdForApplicantType(validatedApplicantType, dependants)
+    auditSearchParams(auditEventId, applicantType, numberOfDependants, userProfile)
+
+    val threshold = calculateThresholdForApplicantType(tier, variantTypeOptional, applicantType, numberOfDependants)
 
     auditSearchResult(auditEventId, threshold.getBody, userProfile)
+
     threshold
   }
 
+  def calculateThresholdForApplicantType(tier: Tier,
+                                         variantTypeOptional: Option[VariantType],
+                                         applicantType: ApplicantType,
+                                         dependants: Int): ResponseEntity[ThresholdResponse] = {
 
-  private def calculateThresholdForApplicantType(validatedApplicantType: ApplicantType, dependants: Option[Int]): ResponseEntity[ThresholdResponse] = {
-    validatedApplicantType match {
-      case UnknownApplicant(_) => buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_APPLICANT_TYPE(applicantTypeChecker.values.mkString(",")), HttpStatus.BAD_REQUEST)
-      case MainApplicant =>
-        dependants match {
-          case _ => dependants match {
-            case Some(validDependants) =>
-              if (validDependants >= 0) {
-                val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType, validDependants)
-                new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
-              } else {
-                buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
-              }
-            case None => buildErrorResponse(headers, serviceMessages.REST_INVALID_PARAMETER_VALUE, serviceMessages.INVALID_DEPENDANTS, HttpStatus.BAD_REQUEST)
+    LOGGER.error("\ncalculateThresholdForApplicantType\n" + tier + "\n" + variantTypeOptional + "\n" + applicantType + "\n" + dependants + "\n")
+
+    applicantType match {
+
+        case DependantApplicant => produceThresholdResponse(tier, applicantType, variantTypeOptional, dependants)
+        case MainApplicant =>
+
+          if (dependants > 0 && variantTypeOptional == T5YouthMobilityVariant) {
+            produceErrorResponse(headers,
+                                serviceMessages.REST_INVALID_PARAMETER_VALUE,
+                                serviceMessages.INVALID_DEPENDANTS_NOTALLOWED,
+                                HttpStatus.BAD_REQUEST)
+          } else {
+            produceThresholdResponse(tier, applicantType, variantTypeOptional, dependants)
           }
-        }
-      case DependantApplicant =>
-        val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(validatedApplicantType, dependants.getOrElse(0))
-        new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
+      }
+  }
 
+  def produceThresholdResponse(tier: Tier,
+                               validatedApplicantType: ApplicantType,
+                               variantTypeOptional: Option[VariantType],
+                               dependants: Int): ResponseEntity[ThresholdResponse] = {
+
+    val threshold = maintenanceThresholdCalculator.calculateThresholdForT2AndT5(tier, validatedApplicantType, variantTypeOptional, dependants)
+    new ResponseEntity(ThresholdResponse(threshold, None, None, StatusResponse(HttpStatus.OK.toString, serviceMessages.OK)), HttpStatus.OK)
+  }
+
+  def produceErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] = {
+    new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
+  }
+
+  def getNumberOfDependants(dependantsOptional: Optional[Integer]): Int = {
+    val numberOfDependants = dependantsOptional.getOrElse(0)
+
+    if (numberOfDependants < 0) {
+      throw new DependantsException("Invalid number of dependants: " + numberOfDependants)
+    }
+
+    numberOfDependants
+  }
+
+  def getUserProfile(kcTokenOptional: Optional[String]): Option[UserProfile] = {
+    val accessToken: Option[String] = kcTokenOptional
+
+    accessToken match {
+      case Some(token) => authenticator.getUserProfileFromToken(token)
+      case None => None
     }
   }
 
-  def auditSearchParams(auditEventId: UUID, applicantType: Option[String], dependants: Option[Int], userProfile: Option[UserProfile]): Unit = {
+  def auditSearchParams(auditEventId: UUID, applicantType: ApplicantType, numberOfDependants: Int, userProfile: Option[UserProfile]): Unit = {
 
-    val params = Map(
-      "applicantType" -> applicantType,
-      "dependants" -> dependants
-    )
-
-    val suppliedParams = for ((k, Some(v)) <- params) yield k -> v
-
-    val auditData = Map("method" -> "calculate-threshold") ++ suppliedParams
+    val auditData = Map("method" -> "calculate-threshold",
+                        "applicantType" -> applicantTypeChecker.getApplicantTypeName(applicantType),
+                        "dependants" -> numberOfDependants)
 
     val principal = userProfile match {
       case Some(user) => user.id
       case None => "anonymous"
     }
+
     auditor.publishEvent(auditEvent(deploymentConfig, principal, SEARCH, auditEventId, auditData.asInstanceOf[Map[String, AnyRef]]))
   }
 
   def auditSearchResult(auditEventId: UUID, thresholdResponse: ThresholdResponse, userProfile: Option[UserProfile]): Unit = {
-    auditor.publishEvent(auditEvent(deploymentConfig, userProfile match {
-      case Some(user) => user.id
-      case None => "anonymous"
-    }, SEARCH_RESULT, auditEventId,
-      Map(
-        "method" -> "calculate-threshold",
-        "result" -> thresholdResponse
-      )
+
+    auditor.publishEvent(auditEvent(deploymentConfig,
+                                    userProfile match {
+                                      case Some(user) => user.id
+                                      case None => "anonymous"
+                                    },
+                                    SEARCH_RESULT,
+                                    auditEventId,
+                                    Map(
+                                      "method" -> "calculate-threshold",
+                                      "result" -> thresholdResponse
+                                    )
     ))
   }
-
-  private def buildErrorResponse(headers: HttpHeaders, statusCode: String, statusMessage: String, status: HttpStatus): ResponseEntity[ThresholdResponse] =
-    new ResponseEntity(ThresholdResponse(StatusResponse(statusCode, statusMessage)), headers, status)
 
 }
