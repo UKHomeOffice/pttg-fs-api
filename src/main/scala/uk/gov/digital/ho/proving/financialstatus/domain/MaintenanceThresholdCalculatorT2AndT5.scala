@@ -16,7 +16,7 @@ class MaintenanceThresholdCalculatorT2AndT5 @Autowired()(@Value("${t2t5.main.app
 
   def calculateThresholdForT2AndT5(tier: Tier, applicantType: ApplicantType, variantTypeOptional: Option[VariantType], dependants: Int): Option[BigDecimal] = {
 
-    if (tier == Tier5 && variantTypeOptional.nonEmpty && variantTypeOptional == T5YouthMobilityVariant) {
+    if (tier == Tier5 && variantTypeOptional.nonEmpty && variantTypeOptional.get == T5YouthMobilityVariant) {
       Option(YOUTH_MOBILITY_APPLICANT_VALUE)
     } else {
       applicantType match {

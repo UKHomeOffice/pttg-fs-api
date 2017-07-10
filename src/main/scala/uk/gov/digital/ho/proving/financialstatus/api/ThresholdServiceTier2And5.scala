@@ -55,7 +55,7 @@ class ThresholdServiceTier2And5 @Autowired()(val maintenanceThresholdCalculator:
 
     auditSearchParams(auditEventId, applicantType, numberOfDependants, userProfile)
 
-    def threshold = calculateThresholdForApplicantType(tier, variantTypeOptional, applicantType, numberOfDependants)
+    val threshold = calculateThresholdForApplicantType(tier, variantTypeOptional, applicantType, numberOfDependants)
 
     auditSearchResult(auditEventId, threshold.getBody, userProfile)
 
