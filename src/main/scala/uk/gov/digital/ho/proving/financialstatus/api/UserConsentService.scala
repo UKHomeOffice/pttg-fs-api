@@ -71,14 +71,17 @@ class UserConsentService @Autowired()(val userConsentStatusChecker: UserConsentS
     }
   }
 
-  def checkConsent(sortCode: Option[String], accountNumber: Option[String],
-                   dob: Option[LocalDate], userId: String): Option[UserConsent] = {
+  def checkConsent(sortCode: Option[String],
+                   accountNumber: Option[String],
+                   dob: Option[LocalDate],
+                   userId: String): Option[UserConsent] = {
 
     val consent = for {sCode <- sortCode
                        accountNo <- accountNumber
                        dateOfBirth <- dob} yield {
 
-      val response = userConsentStatusChecker.checkUserConsent(sCode + accountNo, sCode, accountNo, dateOfBirth, userId)
+      val bankAccount = Account(sCode, accountNo)
+      val response = userConsentStatusChecker.checkUserConsent(bankAccount, dateOfBirth, userId)
       response
     }
     consent

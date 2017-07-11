@@ -20,7 +20,7 @@ trait LoggingAuditEventBsonMapper extends NewLineRemover {
   private val mapper: ObjectMapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
   mapper.registerModule(new JavaTimeModule())
-  mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"))
+  mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"))
   mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
   mapper.enable(SerializationFeature.INDENT_OUTPUT)
 

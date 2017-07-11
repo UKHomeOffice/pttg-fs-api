@@ -6,7 +6,6 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 import uk.gov.digital.ho.proving.financialstatus.api.UserConsentService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ApiExceptionHandler
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
@@ -16,12 +15,8 @@ import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
 import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
-import uk.gov.digital.ho.proving.financialstatus.domain.ApplicantTypeChecker
-import uk.gov.digital.ho.proving.financialstatus.domain.TierChecker
-import uk.gov.digital.ho.proving.financialstatus.domain.UserConsent
-import uk.gov.digital.ho.proving.financialstatus.domain.UserConsentResult
-import uk.gov.digital.ho.proving.financialstatus.domain.UserConsentStatusChecker
-import uk.gov.digital.ho.proving.financialstatus.domain.VariantTypeChecker
+import uk.gov.digital.ho.proving.financialstatus.bank.BarclaysBankService
+import uk.gov.digital.ho.proving.financialstatus.domain.*
 
 import java.time.LocalDate
 
@@ -35,7 +30,7 @@ class UserConsentServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
-    def mockBankService = Mock(BankService)
+    def mockBarclaysBankService = Mock(BarclaysBankService)
 
     AuditEventPublisher mockAuditor = Mock()
     Authentication mockAuthenticator = Mock()
@@ -43,7 +38,7 @@ class UserConsentServiceSpec extends Specification {
     ApplicantTypeChecker mockApplicantTypeChecker = Mock()
     VariantTypeChecker mockVariantTypeChecker = Mock()
 
-    def userConsentService = new UserConsentService(new UserConsentStatusChecker(mockBankService),
+    def userConsentService = new UserConsentService(new UserConsentStatusChecker(mockBarclaysBankService),
         serviceMessages, mockAuditor, mockAuthenticator, new DeploymentDetails("localhost", "local")
     )
 
@@ -73,7 +68,7 @@ class UserConsentServiceSpec extends Specification {
         def accountNumber = "00005000"
         def dob = LocalDate.of(2000,1,1)
 
-        1 * mockBankService.checkUserConsent(_, _, _, _,_) >> new UserConsent(sortCode, accountNumber, dob.toString(), new UserConsentResult("INITIATED", "INITIATED"))
+        1 * mockBarclaysBankService.checkUserConsent(_, _, _) >> new UserConsent(sortCode, accountNumber, dob.toString(), new UserConsentResult("INITIATED", "INITIATED"))
 
         expect:
         def response = callApi(sortCode,accountNumber,dob)
@@ -89,7 +84,7 @@ class UserConsentServiceSpec extends Specification {
         def accountNumber = "00005000"
         def dob = LocalDate.of(2000,1,1)
 
-        1 * mockBankService.checkUserConsent(_, _, _, _,_) >> new UserConsent(sortCode, accountNumber, dob.toString(), new UserConsentResult("PENDING", "PENDING"))
+        1 * mockBarclaysBankService.checkUserConsent(_, _, _) >> new UserConsent(sortCode, accountNumber, dob.toString(), new UserConsentResult("PENDING", "PENDING"))
 
         expect:
         def response = callApi(sortCode,accountNumber,dob)
@@ -105,7 +100,7 @@ class UserConsentServiceSpec extends Specification {
         def accountNumber = "00005000"
         def dob = LocalDate.of(2000,1,1)
 
-        1 * mockBankService.checkUserConsent(_, _, _, _,_) >> new UserConsent(sortCode, accountNumber, dob.toString(), new UserConsentResult("SUCCESS", "SUCCESS"))
+        1 * mockBarclaysBankService.checkUserConsent(_, _, _) >> new UserConsent(sortCode, accountNumber, dob.toString(), new UserConsentResult("SUCCESS", "SUCCESS"))
 
         expect:
         def response = callApi(sortCode,accountNumber,dob)
@@ -121,7 +116,7 @@ class UserConsentServiceSpec extends Specification {
         def accountNumber = "00005000"
         def dob = LocalDate.of(2000,1,1)
 
-        1 * mockBankService.checkUserConsent(_, _, _, _,_) >> new UserConsent(sortCode, accountNumber, dob.toString(), new UserConsentResult("FAILURE", "FAILURE"))
+        1 * mockBarclaysBankService.checkUserConsent(_, _, _) >> new UserConsent(sortCode, accountNumber, dob.toString(), new UserConsentResult("FAILURE", "FAILURE"))
 
         expect:
         def response = callApi(sortCode,accountNumber,dob)
@@ -137,7 +132,7 @@ class UserConsentServiceSpec extends Specification {
         def accountNumber = "00005000"
         def dob = LocalDate.of(2000,1,1)
 
-        1 * mockBankService.checkUserConsent(_, _, _, _,_) >> new UserConsent(sortCode, accountNumber, dob.toString(), new UserConsentResult("INVALID", "INVALID"))
+        1 * mockBarclaysBankService.checkUserConsent(_, _, _) >> new UserConsent(sortCode, accountNumber, dob.toString(), new UserConsentResult("INVALID", "INVALID"))
 
         expect:
         def response = callApi(sortCode,accountNumber,dob)

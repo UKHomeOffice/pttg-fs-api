@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonUnwrapped
 import uk.gov.digital.ho.proving.financialstatus.domain.Account
-import uk.gov.digital.ho.proving.financialstatus.domain.AccountDailyBalanceCheck
+import uk.gov.digital.ho.proving.financialstatus.domain.DailyBalanceCheck
 
 case class StatusResponse(code: String, message: String)
 
@@ -15,7 +15,7 @@ case class CappedValues(@JsonInclude(Include.NON_EMPTY) accommodationFeesPaid: O
                         @JsonInclude(Include.NON_EMPTY) courseLength: Option[Int] = None)
 
 case object AccountDailyBalanceStatusResponse {
-  def apply(dailyBalanceCheck: Option[AccountDailyBalanceCheck], status: StatusResponse): AccountDailyBalanceStatusResponse = {
+  def apply(dailyBalanceCheck: Option[DailyBalanceCheck], status: StatusResponse): AccountDailyBalanceStatusResponse = {
     AccountDailyBalanceStatusResponse(None, dailyBalanceCheck, status)
   }
 
@@ -25,7 +25,7 @@ case object AccountDailyBalanceStatusResponse {
 }
 
 case class AccountDailyBalanceStatusResponse(@JsonInclude(Include.NON_EMPTY) account: Option[Account],
-                                             @JsonInclude(Include.NON_EMPTY) @JsonUnwrapped dailyBalanceCheck: Option[AccountDailyBalanceCheck],
+                                             @JsonInclude(Include.NON_EMPTY) @JsonUnwrapped dailyBalanceCheck: Option[DailyBalanceCheck],
                                              @JsonInclude(Include.NON_EMPTY) status: StatusResponse)
 
 case object ThresholdResponse {

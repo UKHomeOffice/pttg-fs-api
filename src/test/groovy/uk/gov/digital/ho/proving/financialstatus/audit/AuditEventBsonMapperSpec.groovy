@@ -22,7 +22,7 @@ class AuditEventBsonMapperSpec extends Specification {
     }
 
     private static String expectedAuditEventAsBsonString =
-        "Document{{timestamp=2017-01-01T00:00:00, principal=a_principal, type=a_type, data=Document{{a_key=a_value}}}}"
+        "Document{{timestamp=2017-01-01T00:00:00+0000, principal=a_principal, type=a_type, data=Document{{a_key=a_value}}}}"
 
     private static AuditEvent createAuditEvent() {
         def data = ["a_key": "a_value"]

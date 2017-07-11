@@ -68,7 +68,7 @@ class FinancialStatusApiSteps implements ApplicationContextAware {
     @Value('${local.server.port}')
     private String serverPort
 
-    @Value('${barclays.stub.service}')
+    @Value('${barclays.service.url}')
     private String barclaysService
 
     @Value('${wiremock}')

@@ -1,20 +1,20 @@
 package uk.gov.digital.ho.proving.financialstatus.domain
 
-import java.time.{LocalDate, Period}
+import java.time.LocalDate
 import java.time.temporal.ChronoUnit.DAYS
-
 
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.stereotype.Service
-import uk.gov.digital.ho.proving.financialstatus.acl.BankService
+import uk.gov.digital.ho.proving.financialstatus.bank.{BarclaysBankService, DailyBalances}
 
 import scala.util.Try
 
 @Service
-class AccountStatusChecker @Autowired()(bankService: BankService, @Value("${daily-balance.days-to-check}") val numberConsecutiveDays1: Int) {
+class AccountStatusChecker @Autowired()(barclaysBankService: BarclaysBankService,
+                                        @Value("${daily-balance.days-to-check}") val numberConsecutiveDays1: Int) {
 
-  private def areDatesConsecutive(accountDailyBalances: AccountDailyBalances, numberConsecutiveDays: Long) = {
-    val dates = accountDailyBalances.balances.map {
+  def areDatesConsecutive(dailyBalances: DailyBalances, numberConsecutiveDays: Long): Boolean = {
+    val dates = dailyBalances.balanceRecords.map {
       _.date
     }.sortWith((date1, date2) => date1.isBefore(date2))
     val consecutive = dates.sliding(2).map { case Seq(d1, d2) => d1.plusDays(1).isEqual(d2) }.toVector
@@ -22,25 +22,30 @@ class AccountStatusChecker @Autowired()(bankService: BankService, @Value("${dail
   }
 
   def checkDailyBalancesAreAboveMinimum(account: Account, fromDate: LocalDate, toDate: LocalDate,
-                                        threshold: BigDecimal, dob: LocalDate, userId: String): Try[AccountDailyBalanceCheck] = {
+                                        threshold: BigDecimal, dob: LocalDate, userId: String): Try[DailyBalanceCheck] = {
 
     val numberConsecutiveDays = DAYS.between(fromDate, toDate) + 1 // Inclusive of last day
 
     Try {
-      val accountDailyBalances = bankService.fetchAccountDailyBalances(account, fromDate, toDate, dob, userId)
+      val dailyBalances = barclaysBankService.fetchAccountDailyBalances(account, fromDate, toDate, dob, userId)
 
-      if (accountDailyBalances.balances.length < numberConsecutiveDays) {
-        AccountDailyBalanceCheck(accountDailyBalances.accountHolderName, fromDate, toDate, threshold, false, Some(BalanceCheckFailure(recordCount = Some(accountDailyBalances.balances.length))))
+      if (dailyBalances.balanceRecords.length < numberConsecutiveDays) {
+        DailyBalanceCheck(dailyBalances.accountHolderName,
+                                  fromDate,
+                                  toDate,
+                                  threshold,
+                                  pass = false,
+                                  Some(BalanceCheckFailure(recordCount = Some(dailyBalances.balanceRecords.length))))
       } else {
-        val minimumBalance = accountDailyBalances.balances.minBy(_.balance)
-        val thresholdPassed = accountDailyBalances.balances.length == numberConsecutiveDays &&
-          areDatesConsecutive(accountDailyBalances, numberConsecutiveDays) && minimumBalance.balance >= threshold
+        val minimumBalance = dailyBalances.balanceRecords.minBy(_.balance)
+        val thresholdPassed = dailyBalances.balanceRecords.length == numberConsecutiveDays &&
+          areDatesConsecutive(dailyBalances, numberConsecutiveDays) && minimumBalance.balance >= threshold
 
         if (minimumBalance.balance < threshold) {
-          AccountDailyBalanceCheck(accountDailyBalances.accountHolderName, fromDate, toDate, threshold, thresholdPassed,
+          DailyBalanceCheck(dailyBalances.accountHolderName, fromDate, toDate, threshold, thresholdPassed,
             Some(BalanceCheckFailure(Option(minimumBalance.date), Option(minimumBalance.balance))))
         } else {
-          AccountDailyBalanceCheck(accountDailyBalances.accountHolderName, fromDate, toDate, threshold, thresholdPassed)
+          DailyBalanceCheck(dailyBalances.accountHolderName, fromDate, toDate, threshold, thresholdPassed)
         }
       }
     }

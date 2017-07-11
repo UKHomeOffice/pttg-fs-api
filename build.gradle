@@ -64,12 +64,6 @@ tasks.withType(Test) {
     reports.html.destination = file("${reporting.baseDir}/${name}")
 }
 
-processResources {
-    filesMatching("**/application.properties") {
-        expand(project.properties)
-    }
-}
-
 checkstyle {
     ignoreFailures = true
     config = project.resources.text.fromString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -105,9 +99,6 @@ repositories {
 }
 
 dependencies {
-
-    compile 'com.hod:pttg-fs-integration:0.1.0-SNAPSHOT'
-    compile 'com.hod:pttg-fs-barclays:0.1.0-SNAPSHOT'
 
     compile "org.codehaus.groovy:groovy-all:2.4.3"
     compile "org.json:json:20160212"

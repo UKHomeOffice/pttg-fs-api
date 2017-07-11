@@ -10,7 +10,6 @@ import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import steps.WireMockTestDataLoader
-import uk.gov.digital.ho.proving.financialstatus.acl.BankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.test.tier4.TestUtilsTier4
@@ -19,6 +18,7 @@ import uk.gov.digital.ho.proving.financialstatus.audit.AuditEventPublisher
 import uk.gov.digital.ho.proving.financialstatus.audit.EmbeddedMongoClientConfiguration
 import uk.gov.digital.ho.proving.financialstatus.audit.configuration.DeploymentDetails
 import uk.gov.digital.ho.proving.financialstatus.authentication.Authentication
+import uk.gov.digital.ho.proving.financialstatus.bank.BarclaysBankService
 import uk.gov.digital.ho.proving.financialstatus.client.HttpUtils
 import uk.gov.digital.ho.proving.financialstatus.domain.Account
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
@@ -60,7 +60,7 @@ class RestErrorsSpec extends Specification {
 
     HttpUtils httpUtils = new HttpUtils(customRestTemplate, maxAttempts, backoffPeriod)
 
-    BankService mockBankService = Mock(BankService)
+    BarclaysBankService mockBankService = Mock(BarclaysBankService)
 
     AuditEventPublisher auditor = Mock()
     Authentication authenticator = Mock()

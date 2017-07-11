@@ -1,9 +1,8 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test.tier4
 
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.acl.BankService
-import uk.gov.digital.ho.proving.financialstatus.acl.MockBankService
 import uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils
+import uk.gov.digital.ho.proving.financialstatus.bank.BarclaysBankService
 import uk.gov.digital.ho.proving.financialstatus.domain.Account
 import uk.gov.digital.ho.proving.financialstatus.domain.AccountStatusChecker
 
@@ -11,7 +10,7 @@ import java.time.LocalDate
 
 class AccountStatusCheckerTest extends Specification {
 
-    def mockBankService = Mock(BankService)
+    def mockBankService = Mock(BarclaysBankService)
     def accountStatusChecker = new AccountStatusChecker(mockBankService, 28)
 
     def "Check bankService returns a pass for correct data"() {

@@ -4,14 +4,13 @@ import java.time.LocalDate
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import uk.gov.digital.ho.proving.financialstatus.acl.BankService
+import uk.gov.digital.ho.proving.financialstatus.bank.BarclaysBankService
 
 @Service
-class UserConsentStatusChecker @Autowired()(bankService: BankService) {
+class UserConsentStatusChecker @Autowired()(barclaysBankService: BarclaysBankService) {
 
-  def checkUserConsent(accountId: String, sortCode: String, accountNumber: String, dob: LocalDate, userId: String) = {
-    val response = bankService.checkUserConsent(accountId, sortCode, accountNumber, dob, userId)
-    response
+  def checkUserConsent(account: Account, dob: LocalDate, userId: String) = {
+    barclaysBankService.checkUserConsent(account, dob, userId)
   }
 
 }

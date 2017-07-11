@@ -28,6 +28,8 @@ appender("FILE", FileAppender) {
 // Define logging levels for specific packages
 logger("org.springframework", INFO)
 
+logger("org.mongodb.driver", WARN)
+
 root(DEBUG, ["STDOUT"])
 
 // Check config file every 30 seconds and reload if changed
