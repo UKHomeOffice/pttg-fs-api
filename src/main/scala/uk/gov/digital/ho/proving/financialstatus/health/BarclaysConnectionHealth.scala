@@ -12,12 +12,13 @@ import scala.util.{Failure, Success, Try}
   * HealthIndicator contributing to the healthcheck endpoint that is used for readiness checks.
   */
 @Component
-class BarclaysConnectionHealth @Autowired()(rest: RestTemplate, @Value("${barclays.stub.service}") val bankService: String) extends HealthIndicator {
+class BarclaysConnectionHealth @Autowired()(rest: RestTemplate,
+                                            @Value("${barclays.service.url}") val bankService: String) extends HealthIndicator {
 
   val LOGGER: Logger = LoggerFactory.getLogger(classOf[BarclaysConnectionHealth])
 
   // todo Update for real Barclays API
-  val bankHealthUrl = s"$bankService/financialstatus/v1/010616/00001000/balances?fromDate=2016-06-01&toDate=2016-06-01"
+  val bankHealthUrl = s"$bankService/financialstatus/v1/01061600030000/balances?dateOfBirth=1975-10-10&toDate=2016-06-01&fromDate=2016-05-10"
 
   override def health(): Health = {
 

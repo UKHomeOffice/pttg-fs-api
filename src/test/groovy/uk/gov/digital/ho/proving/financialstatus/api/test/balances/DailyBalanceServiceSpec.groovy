@@ -6,7 +6,7 @@ import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import spock.lang.Specification
-import uk.gov.digital.ho.proving.financialstatus.acl.BankService
+import uk.gov.digital.ho.proving.financialstatus.bank.BarclaysBankService
 import uk.gov.digital.ho.proving.financialstatus.api.DailyBalanceService
 import uk.gov.digital.ho.proving.financialstatus.api.configuration.ServiceConfiguration
 import uk.gov.digital.ho.proving.financialstatus.api.test.DataUtils
@@ -33,7 +33,7 @@ class DailyBalanceServiceSpec extends Specification {
 
     ServiceMessages serviceMessages = new ServiceMessages(TestUtilsTier4.getMessageSource())
 
-    def mockBankService = Mock(BankService)
+    def mockBankService = Mock(BarclaysBankService)
 
     AuditEventPublisher auditor = Mock()
     Authentication authenticator = Mock()

@@ -57,7 +57,7 @@ class AuditEventPublisherIntegrationTest extends Specification {
     private static final expectedPrincipal = "user"
     private static final expectedData = ["key":"value"]
     private static final expectedTimestamp = Date.from(LocalDate.of(2017, 2, 1).atStartOfDay().toInstant(ZoneOffset.UTC))
-    private static final expectedTimestampString = "2017-02-01T00:00:00"
+    private static final expectedTimestampString = "2017-02-01T00:00:00+0000"
 
     private static createAuditApplicationEvent() {
         new AuditApplicationEvent(expectedTimestamp, expectedPrincipal, expectedType, expectedData)

@@ -1,16 +1,15 @@
 package uk.gov.digital.ho.proving.financialstatus.api.test
 
+import java.math.{BigDecimal => JBigDecimal}
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit.DAYS
 
-import uk.gov.digital.ho.proving.financialstatus.domain.{AccountDailyBalance, AccountDailyBalances, UserProfile}
+import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
+import uk.gov.digital.ho.proving.financialstatus.audit.{LoggingAuditEventBsonMapper, NewLineRemover}
+import uk.gov.digital.ho.proving.financialstatus.bank.{DailyBalance, DailyBalances}
+import uk.gov.digital.ho.proving.financialstatus.domain.UserProfile
 
 import scala.util.Random.{nextBoolean, nextFloat, nextInt}
-import java.math.{BigDecimal => JBigDecimal}
-
-import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
-import uk.gov.digital.ho.proving.financialstatus.audit.LoggingAuditEventBsonMapper
-import uk.gov.digital.ho.proving.financialstatus.audit.NewLineRemover
 
 object DataUtils {
 
@@ -23,7 +22,7 @@ object DataUtils {
     }
 
   def generateRandomDailyBalances(fromDate: LocalDate, toDate: LocalDate, lower: Float, upper: Float,
-                                  forceLower: Boolean = false, forceUpper: Boolean = false): Seq[AccountDailyBalance] = {
+                                  forceLower: Boolean = false, forceUpper: Boolean = false): Seq[DailyBalance] = {
     val (lowerIndex, upperIndex) = generateLowerandUpperIndexValues(DAYS.between(fromDate, toDate).toInt)
 
     val randomValues = (0 to DAYS.between(fromDate, toDate).toInt) map { index =>
@@ -31,34 +30,34 @@ object DataUtils {
       else if (forceUpper && index == upperIndex) upper
       else (nextFloat * (upper - lower)) + lower
 
-      AccountDailyBalance(toDate.minusDays(index), BigDecimal(randomValue.toDouble).setScale(2, BigDecimal.RoundingMode.HALF_UP))
+      DailyBalance(toDate.minusDays(index), BigDecimal(randomValue.toDouble).setScale(2, BigDecimal.RoundingMode.HALF_UP))
     }
     randomValues
   }
 
-  def generateDailyBalancesForFail(fromDate: LocalDate, toDate: LocalDate, lower: Float, upper: Float, amount: Float, offset: Int): AccountDailyBalances = {
+  def generateDailyBalancesForFail(fromDate: LocalDate, toDate: LocalDate, lower: Float, upper: Float, amount: Float, offset: Int): DailyBalances = {
     val (lowerIndex, upperIndex) = generateLowerandUpperIndexValues(DAYS.between(fromDate, toDate).toInt)
 
     val dailyBalances = (0 to DAYS.between(fromDate, toDate).toInt) map { index =>
       val value = if (index == offset) BigDecimal(amount.toDouble) else BigDecimal(((nextFloat * (upper - lower)) + lower).toDouble)
-      AccountDailyBalance(toDate.minusDays(index), value.setScale(2, BigDecimal.RoundingMode.HALF_UP))
+      DailyBalance(toDate.minusDays(index), value.setScale(2, BigDecimal.RoundingMode.HALF_UP))
     }
 
-    AccountDailyBalances("Fred Flintstone", dailyBalances)
+    DailyBalances("Fred Flintstone", dailyBalances)
   }
 
   def generateRandomBankResponseOK(fromDate: LocalDate, toDate: LocalDate, lower: Float, upper: Float,
-                                   forceLower: Boolean = false, forceUpper: Boolean = false): AccountDailyBalances = {
+                                   forceLower: Boolean = false, forceUpper: Boolean = false): DailyBalances = {
     val dailyBalances = generateRandomDailyBalances(fromDate, toDate, lower, upper, forceLower, forceUpper)
-    AccountDailyBalances("Fred Flintstone", dailyBalances)
+    DailyBalances("Fred Flintstone", dailyBalances)
   }
 
   def generateRandomBankResponseNonConsecutiveDates(fromDate: LocalDate, toDate: LocalDate, lower: Float,
-                                                    upper: Float, forceLower: Boolean = false, forceUpper: Boolean = false): AccountDailyBalances = {
+                                                    upper: Float, forceLower: Boolean = false, forceUpper: Boolean = false): DailyBalances = {
     val dailyBalances = generateRandomDailyBalances(fromDate, toDate, lower, upper, forceLower, forceUpper)
     val variance = if (nextBoolean()) 1 else 2
-    dailyBalances.map(dailyBalance => AccountDailyBalance(dailyBalance.date.plusDays(variance), dailyBalance.balance))
-    AccountDailyBalances("Fred Flintstone", dailyBalances)
+    dailyBalances.map(dailyBalance => DailyBalance(dailyBalance.date.plusDays(variance), dailyBalance.balance))
+    DailyBalances("Fred Flintstone", dailyBalances)
   }
 
   def generateDate(startDate: LocalDate, years: Int = 0, months: Int = 1, days: Int = 0): LocalDate = startDate.plusYears(years).plusMonths(months).plusDays(days)

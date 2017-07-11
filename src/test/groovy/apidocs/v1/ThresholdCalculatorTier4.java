@@ -43,7 +43,7 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 )
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(properties = {
-    "barclays.stub.service=http://localhost:8089"
+    "barclays.service.url=http://localhost:8089"
 })
 public class ThresholdCalculatorTier4 {
 
