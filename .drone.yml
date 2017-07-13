@@ -48,8 +48,25 @@ pipeline:
       event: [push, deployment]
       branch: master
 
-  deploy_to_dev:
+  deploy-to-dev-from-build-number:
     image: quay.io/ukhomeofficedigital/kd:v0.2.2
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+      - KUBE_NAMESPACE=pt-i-dev
+      - ENVIRONMENT=dev
+      - VERSION=build-${DRONE_BUILD_NUMBER}
+      - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
+    commands:
+      - echo 'In deploy-to-dev-from-build-number:'
+      - echo 'deploy build $VERSION'
+      - cd kube-pttg-fs-api
+      - ./deploy.sh
+    when:
+      branch: master
+      event: push
+
+  deploy_to_dev:
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-dev
@@ -115,4 +132,3 @@ services:
     command:
       - "-s"
       - "overlay"
-
