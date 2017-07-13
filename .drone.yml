@@ -54,13 +54,13 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-dev
       - ENVIRONMENT=dev
-      - VERSION=${DRONE_COMMIT_SHA}
+      - VERSION=build-${DRONE_BUILD_NUMBER}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
       - ./deploy.sh
     when:
-      event: impossible
+      event: push
       branch: master
 
   deploy_to_test:
@@ -69,7 +69,7 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-test
       - ENVIRONMENT=test
-      - VERSION=${DRONE_COMMIT_SHA}
+      - VERSION=build-${DRONE_BUILD_NUMBER}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
@@ -84,7 +84,7 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-preprod
       - ENVIRONMENT=preprod
-      - VERSION=${DRONE_COMMIT_SHA}
+      - VERSION=build-${DRONE_BUILD_NUMBER}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
@@ -99,7 +99,7 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-prod
       - ENVIRONMENT=prod
-      - VERSION=${DRONE_COMMIT_SHA}
+      - VERSION=build-${DRONE_BUILD_NUMBER}
       - KUBE_SERVER_PROD=https://kube.dsp.digital.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
