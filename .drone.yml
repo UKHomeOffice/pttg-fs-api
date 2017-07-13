@@ -43,7 +43,9 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
+      - echo 'In predeploy, about to clone kube project'
       - git clone https://github.com/UKHomeOffice/kube-pttg-fs-api.git
+      - echo 'In predeploy, after clone kube project'
     when:
       event: [push, deployment]
       branch: master
