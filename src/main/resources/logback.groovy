@@ -28,10 +28,10 @@ logger("org.springframework", INFO)
 
 logger("org.mongodb.driver", WARN)
 
-logger("org.apache.http", WARN)
+logger("org.apache.http", WARN) // DEBUG level will show the repeated healthcheck calls
 
 
-root(DEBUG, ["STDOUT"])
+root(INFO, ["STDOUT"])
 
 // Check config file every 30 seconds and reload if changed
 scan("30 seconds")
