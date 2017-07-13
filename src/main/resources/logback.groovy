@@ -1,7 +1,5 @@
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
-import ch.qos.logback.core.ConsoleAppender
-import ch.qos.logback.core.FileAppender
-import ch.qos.logback.core.status.OnConsoleStatusListener
+import ch.qos.logback.classic.filter.ThresholdFilter
 
 import static ch.qos.logback.classic.Level.*
 
@@ -20,7 +18,7 @@ appender("FILE", FileAppender) {
     encoder(PatternLayoutEncoder) {
         pattern = "%d{HH:mm:ss.SSS} %-4relative [%thread] %-5level %logger{35} - %msg%n"
     }
-    filter(ch.qos.logback.classic.filter.ThresholdFilter) {
+    filter(ThresholdFilter) {
         level = DEBUG
     }
 }
