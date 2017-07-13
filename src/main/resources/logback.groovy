@@ -30,6 +30,9 @@ logger("org.springframework", INFO)
 
 logger("org.mongodb.driver", WARN)
 
+logger("org.apache.http", WARN)
+
+
 root(DEBUG, ["STDOUT"])
 
 // Check config file every 30 seconds and reload if changed

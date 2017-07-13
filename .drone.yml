@@ -60,7 +60,7 @@ pipeline:
       - cd kube-pttg-fs-api
       - ./deploy.sh
     when:
-      event: push
+      event: impossible
       branch: master
 
   deploy_to_test:
