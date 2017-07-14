@@ -71,7 +71,7 @@ pipeline:
       branch: master
 
   diagnosisC:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.3
+    image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-dev
@@ -80,6 +80,34 @@ pipeline:
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - echo 'In diagnosisC'
+    when:
+      event: push
+      branch: master
+
+  diagnosisD:
+    image: quay.io/ukhomeofficedigital/kd:latest
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+      - KUBE_NAMESPACE=pt-i-dev
+      - ENVIRONMENT=dev
+      - VERSION=build-${DRONE_BUILD_NUMBER}
+      - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
+    commands:
+      - echo 'In diagnosisD'
+    when:
+      event: push
+      branch: master
+
+  diagnosisE:
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+      - KUBE_NAMESPACE=pt-i-dev
+      - ENVIRONMENT=dev
+      - VERSION=build-${DRONE_BUILD_NUMBER}
+      - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
+    commands:
+      - echo 'In diagnosisE'
     when:
       event: push
       branch: master
@@ -151,4 +179,3 @@ services:
     command:
       - "-s"
       - "overlay"
-
