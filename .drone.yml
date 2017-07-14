@@ -50,8 +50,28 @@ pipeline:
       event: [push, deployment]
       branch: master
 
-  deploy-to-dev-from-build-number:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.2
+  diagnosisA:
+    image: plugins/git
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - echo 'In diagnosisA'
+    when:
+      event: [push, deployment]
+      branch: master
+
+  diagnosisB:
+    image: plugins/git
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - echo 'In diagnosisB'
+    when:
+      event: push
+      branch: master
+
+  diagnosisC:
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-dev
@@ -59,16 +79,13 @@ pipeline:
       - VERSION=build-${DRONE_BUILD_NUMBER}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
-      - echo 'In deploy-to-dev-from-build-number:'
-      - echo 'deploy build $VERSION'
-      - cd kube-pttg-fs-api
-      - ./deploy.sh
+      - echo 'In diagnosisC'
     when:
       event: push
       branch: master
 
   deploy_to_dev:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.2
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-dev
