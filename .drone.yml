@@ -50,26 +50,6 @@ pipeline:
       event: [push, deployment]
       branch: master
 
-  diagnosisA:
-    image: plugins/git
-    environment:
-      - DOCKER_HOST=tcp://127.0.0.1:2375
-    commands:
-      - echo 'In diagnosisA'
-    when:
-      event: [push, deployment]
-      branch: master
-
-  diagnosisB:
-    image: plugins/git
-    environment:
-      - DOCKER_HOST=tcp://127.0.0.1:2375
-    commands:
-      - echo 'In diagnosisB'
-    when:
-      event: push
-      branch: master
-
   diagnosisC:
     image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
     environment:
@@ -85,7 +65,7 @@ pipeline:
       branch: master
 
   diagnosisD:
-    image: quay.io/ukhomeofficedigital/kd:latest
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-dev
@@ -95,11 +75,11 @@ pipeline:
     commands:
       - echo 'In diagnosisD'
     when:
-      event: push
       branch: master
+      event: push
 
   diagnosisE:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.3
+    image: quay.io/ukhomeofficedigital/kd:latest
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-dev
@@ -108,6 +88,16 @@ pipeline:
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - echo 'In diagnosisE'
+    when:
+      branch: master
+      event: push
+
+  diagnosisF:
+    image: plugins/git
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - echo 'In diagnosisF'
     when:
       event: push
       branch: master
@@ -124,8 +114,8 @@ pipeline:
       - cd kube-pttg-fs-api
       - ./deploy.sh
     when:
-      event: push
       branch: master
+      event: push
 
   deploy_to_test:
     image: quay.io/ukhomeofficedigital/kd:v0.2.3
