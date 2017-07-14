@@ -179,4 +179,3 @@ services:
     command:
       - "-s"
       - "overlay"
-
