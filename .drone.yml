@@ -46,13 +46,9 @@ pipeline:
       branch: master
 
   diagnosticA:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.2
+    image: plugins/git
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
-      - KUBE_NAMESPACE=pt-i-dev
-      - ENVIRONMENT=dev
-      - VERSION=${DRONE_COMMIT_SHA}
-      - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - echo "in diagnosticA with the following fs"
       - ls -la
