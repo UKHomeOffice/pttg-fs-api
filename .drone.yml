@@ -55,6 +55,7 @@ pipeline:
       - ENVIRONMENT=dev
       - VERSION=${DRONE_COMMIT_SHA}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
+      - KUBE_TOKEN=${KUBE_TOKEN}
     commands:
       - cd kube-pttg-fs-api
       - ./deploy.sh
