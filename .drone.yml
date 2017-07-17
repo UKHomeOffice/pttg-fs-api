@@ -47,49 +47,6 @@ pipeline:
       event: [push, deployment]
       branch: master
 
-  diagnosticA:
-    image: plugins/git
-    environment:
-      - DOCKER_HOST=tcp://127.0.0.1:2375
-    commands:
-      - echo "in diagnosticA with the following fs"
-      - ls -la kube-pttg-fs-api
-      - echo "in diagnosticA with the following environment"
-      - env
-    when:
-      event: [push, deployment]
-      branch: master
-
-  diagnosticB:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.3
-    environment:
-      - DOCKER_HOST=tcp://127.0.0.1:2375
-    commands:
-      - echo "in diagnosticB with the following fs"
-      - ls -la kube-pttg-fs-api
-      - echo "in diagnosticB with the following environment"
-      - env
-    when:
-      event: [push, deployment]
-      branch: master
-
-  diagnosticC:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.3
-    environment:
-      - DOCKER_HOST=tcp://127.0.0.1:2375
-      - KUBE_NAMESPACE=pt-i-dev
-      - ENVIRONMENT=dev
-      - VERSION=${DRONE_COMMIT_SHA}
-      - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
-    commands:
-      - echo "in diagnosticC with the following fs"
-      - ls -la kube-pttg-fs-api
-      - echo "in diagnosticC with the following environment"
-      - env
-    when:
-      event: [push, deployment]
-      branch: master
-
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
@@ -102,8 +59,8 @@ pipeline:
       - cd kube-pttg-fs-api
       - ./deploy.sh
     when:
-      branch: [master]
-      event: [push, tag]
+      event: [push, deployment]
+      branch: master
 
   deploy_to_test:
     image: quay.io/ukhomeofficedigital/kd:v0.2.3
