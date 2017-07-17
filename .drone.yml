@@ -54,10 +54,13 @@ pipeline:
       - VERSION=${DRONE_COMMIT_SHA}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
-      - echo "in diagnosticA"
+      - echo "in diagnosticA with the following fs"
+      - ls -la
+      - echo "in diagnosticA with the following environment"
+      - env
     when:
-      branch: [master]
-      event: [push, tag]
+      event: [push, deployment]
+      branch: master
 
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd:v0.2.2
