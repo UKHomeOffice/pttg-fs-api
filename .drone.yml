@@ -1,6 +1,6 @@
 pipeline:
 
-  build:
+  my-build:
     privileged: true
     image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
     environment:
@@ -11,9 +11,10 @@ pipeline:
       - export PTTG_GH_TOKEN=${PTTG_GH_TOKEN}
       - ./gradlew build
     when:
-      event: [push, pull_request, tag]
+      event: push
+      branch: master
 
-  docker-build:
+  my-docker-build:
     privileged: true
     image: docker:1.11
     environment:
@@ -24,7 +25,7 @@ pipeline:
       event: push
       branch: master
 
-  tag-latest-docker-image:
+  image_to_quay:
     image: docker:1.11
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
@@ -41,8 +42,6 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
       - git clone https://github.com/UKHomeOffice/kube-pttg-fs-api.git
-      - echo "in predeploy with the following environment"
-      - env
     when:
       event: [push, deployment]
       branch: master
@@ -55,12 +54,11 @@ pipeline:
       - ENVIRONMENT=dev
       - VERSION=${DRONE_COMMIT_SHA}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
-      - KUBE_TOKEN=${KUBE_TOKEN}
     commands:
       - cd kube-pttg-fs-api
       - ./deploy.sh
     when:
-      event: [push, deployment]
+      event: push
       branch: master
 
   deploy_to_test:
