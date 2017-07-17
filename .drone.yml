@@ -41,6 +41,8 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
       - git clone https://github.com/UKHomeOffice/kube-pttg-fs-api.git
+      - echo "in predeploy with the following environment"
+      - env
     when:
       event: [push, deployment]
       branch: master
@@ -51,38 +53,54 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
       - echo "in diagnosticA with the following fs"
-      - ls -la
+      - ls -la kube-pttg-fs-api
       - echo "in diagnosticA with the following environment"
       - env
     when:
       event: [push, deployment]
       branch: master
 
-  deploy_to_dev:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.2
+  diagnosticB:
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+    commands:
+      - echo "in diagnosticB with the following fs"
+      - ls -la kube-pttg-fs-api
+      - echo "in diagnosticB with the following environment"
+      - env
+    when:
+      event: [push, deployment]
+      branch: master
+
+  diagnosticC:
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-dev
       - ENVIRONMENT=dev
-      - VERSION=build-${DRONE_BUILD_NUMBER}
+      - VERSION=${DRONE_COMMIT_SHA}
+      - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
+    commands:
+      - echo "in diagnosticC with the following fs"
+      - ls -la kube-pttg-fs-api
+      - echo "in diagnosticC with the following environment"
+      - env
+    when:
+      event: [push, deployment]
+      branch: master
+
+  deploy_to_dev:
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
+    environment:
+      - DOCKER_HOST=tcp://127.0.0.1:2375
+      - KUBE_NAMESPACE=pt-i-dev
+      - ENVIRONMENT=dev
+      - VERSION=${DRONE_COMMIT_SHA}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
       - ./deploy.sh
-    when:
-      branch: [master]
-      event: [push, tag]
-
-  diagnosticB:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.2
-    environment:
-      - DOCKER_HOST=tcp://127.0.0.1:2375
-      - KUBE_NAMESPACE=pt-i-dev
-      - ENVIRONMENT=dev
-      - VERSION=build-${DRONE_BUILD_NUMBER}
-      - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
-    commands:
-      - echo "in diagnosticB"
     when:
       branch: [master]
       event: [push, tag]
@@ -93,7 +111,7 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-test
       - ENVIRONMENT=test
-      - VERSION=build-${DRONE_BUILD_NUMBER}
+      - VERSION=${DRONE_COMMIT_SHA}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
@@ -108,7 +126,7 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-preprod
       - ENVIRONMENT=preprod
-      - VERSION=build-${DRONE_BUILD_NUMBER}
+      - VERSION=${DRONE_COMMIT_SHA}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
@@ -123,7 +141,7 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-prod
       - ENVIRONMENT=prod
-      - VERSION=build-${DRONE_BUILD_NUMBER}
+      - VERSION=${DRONE_COMMIT_SHA}
       - KUBE_SERVER_PROD=https://kube.dsp.digital.homeoffice.gov.uk
     commands:
       - cd kube-pttg-fs-api
