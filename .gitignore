@@ -12,3 +12,4 @@ runtime
 *.log
 *.iml
 test.sc
+out/
