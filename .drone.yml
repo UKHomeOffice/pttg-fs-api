@@ -46,6 +46,20 @@ pipeline:
       event: [push, deployment]
       branch: master
 
+  failure1:
+    image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
+    commands:
+      - echo "The build failed after predeploy"
+    when:
+      status: [failure]
+
+  success1:
+    image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
+    commands:
+      - echo "The build succeeded after predeploy"
+    when:
+      status: [success]
+
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
@@ -60,6 +74,20 @@ pipeline:
     when:
       event: push
       branch: master
+
+  success2:
+    image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
+    commands:
+      - echo "The build succeeded after deploy_to_dev"
+    when:
+      status: [success]
+
+  failure2:
+    image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
+    commands:
+      - echo "The build failed after deploy_to_dev"
+    when:
+      status: [failure]
 
   deploy_to_test:
     image: quay.io/ukhomeofficedigital/kd:v0.2.3
