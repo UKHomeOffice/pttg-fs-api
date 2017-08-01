@@ -33,7 +33,7 @@ Feature: Not Pass - Total Funds Required Calculation - Tier 4 (General) student 
             | Sort code            | 135609       |
             | Account number       | 23568498     |
 
-#Added to Jira PT-28 - Add 'Account holder name' to FSPS API
+### Added to Jira PT-28 - Add 'Account holder name' to FSPS API
     Scenario: Brian is general student and does not have sufficient financial funds
 
     Application Raised Date 4th of July
