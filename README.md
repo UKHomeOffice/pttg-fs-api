@@ -1,6 +1,5 @@
 # pttg-financial-status-service-api
 
-
 See also
 GitHub - pttg-fs-integration
 GitLab - https://gitlab.digital.homeoffice.gov.uk/atodd/pttg-fs-barclays
