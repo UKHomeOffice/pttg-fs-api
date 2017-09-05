@@ -4,7 +4,7 @@ Feature: Calculation of condition codes for T4 General
 
     # The API should calculate the condition code using the course type selected, course length, the course institution selected and if the applicant has any dependants
     # Course Type can be one of three options which are (1) Pre-sessional (2) Main course degree or higher or (3) Main course below degree
-    # Course institution can be one of two options - Recognised body or HEI (higher education institution) or Other institutio
+    # Course institution can be one of two options - Recognised body or HEI (higher education institution) or other institution
     # Pre sessional and main course below degree level - course length is not taken in to account when generating the condition code
     # Dependant Only applications will need their own condition codes (e.g. Partner 3, Child 1)
 
@@ -42,7 +42,7 @@ Feature: Calculation of condition codes for T4 General
         Then The Financial Status API provides the following results:
             | applicantConditionCode | 2 |
             | partnerConditionCode   | 3 |
-            | childConditionCode     | 1 |
+            | childConditionCode     | 1B |
 
 ################# Main course degree or higher at HEI - with dependants - 12 months or greater #######################
 
@@ -59,8 +59,8 @@ Feature: Calculation of condition codes for T4 General
             | Course end date        | 2017-01-03 |
         Then The Financial Status API provides the following results:
             | applicantConditionCode | 2  |
-            | partnerConditionCode   | 4B |
-            | childConditionCode     | 1  |
+            | partnerConditionCode   | 4C |
+            | childConditionCode     | 1B  |
 
 ################# Pre Sessional course at HEI - applicant only  #######################
 
@@ -94,7 +94,7 @@ Feature: Calculation of condition codes for T4 General
         Then The Financial Status API provides the following results:
             | applicantConditionCode | 2A |
             | partnerConditionCode   | 3  |
-            | childConditionCode     | 1  |
+            | childConditionCode     | 1B  |
 
 ################# Main course below degree at HEI - applicant only  #######################
 
@@ -128,7 +128,7 @@ Feature: Calculation of condition codes for T4 General
         Then The Financial Status API provides the following results:
             | applicantConditionCode | 2A |
             | partnerConditionCode   | 3  |
-            | childConditionCode     | 1  |
+            | childConditionCode     | 1B |
 
 ################# Main course degree or higher at Other Institution - applicant only #######################
 
@@ -162,7 +162,7 @@ Feature: Calculation of condition codes for T4 General
         Then The Financial Status API provides the following results:
             | applicantConditionCode | 3 |
             | partnerConditionCode   | 3 |
-            | childConditionCode     | 1 |
+            | childConditionCode     | 1B |
 
 ################# Main course degree or higher at Other Institution - with dependants - greater than 12 months #######################
 
@@ -179,8 +179,8 @@ Feature: Calculation of condition codes for T4 General
             | Course end date        | 2017-01-03 |
         Then The Financial Status API provides the following results:
             | applicantConditionCode | 3  |
-            | partnerConditionCode   | 4B |
-            | childConditionCode     | 1  |
+            | partnerConditionCode   | 4C |
+            | childConditionCode     | 1B  |
 
 ################# Pre Sessional course at Other Institution - applicant only  #######################
 
@@ -215,7 +215,7 @@ Feature: Calculation of condition codes for T4 General
         Then The Financial Status API provides the following results:
             | applicantConditionCode | 3 |
             | partnerConditionCode   | 3 |
-            | childConditionCode     | 1 |
+            | childConditionCode     | 1B |
 
 ################# Main course below degree at Other Institution - applicant only  #######################
 
@@ -250,7 +250,7 @@ Feature: Calculation of condition codes for T4 General
         Then The Financial Status API provides the following results:
             | applicantConditionCode | 3 |
             | partnerConditionCode   | 3 |
-            | childConditionCode     | 1 |
+            | childConditionCode     | 1B |
 
 ################# Main course degree or higher at HEI - Dependant only - less than 12 months  #######################
 
@@ -267,7 +267,7 @@ Feature: Calculation of condition codes for T4 General
             | Course end date        | 2016-07-03 |
         Then The Financial Status API provides the following results:
             | partnerConditionCode | 3 |
-            | childConditionCode   | 1 |
+            | childConditionCode   | 1B |
 
 ################# Main course degree or higher at HEI - dependant only - greater than 12 months  #######################
 
@@ -283,8 +283,8 @@ Feature: Calculation of condition codes for T4 General
             | Course start date      | 2016-01-03 |
             | Course end date        | 2017-01-03 |
         Then The Financial Status API provides the following results:
-            | partnerConditionCode | 4B |
-            | childConditionCode   | 1  |
+            | partnerConditionCode | 4C |
+            | childConditionCode   | 1B  |
 
 ################# Pre Sessional course at HEI - dependant only #######################
 
@@ -301,7 +301,7 @@ Feature: Calculation of condition codes for T4 General
             | Course end date        | 2016-10-10    |
         Then The Financial Status API provides the following results:
             | partnerConditionCode | 3 |
-            | childConditionCode   | 1 |
+            | childConditionCode   | 1B |
 
 ################# Main course below degree at HEI - dependant only  #######################
 
@@ -318,7 +318,7 @@ Feature: Calculation of condition codes for T4 General
             | Course end date        | 2016-10-10   |
         Then The Financial Status API provides the following results:
             | partnerConditionCode | 3 |
-            | childConditionCode   | 1 |
+            | childConditionCode   | 1B |
 
 ################# Main course degree or higher at Other Institution - with dependants - less than 12 months #######################
 
@@ -335,7 +335,7 @@ Feature: Calculation of condition codes for T4 General
             | Course end date        | 2016-10-10 |
         Then The Financial Status API provides the following results:
             | partnerConditionCode | 3 |
-            | childConditionCode   | 1 |
+            | childConditionCode   | 1B |
 
 ################ Main course degree or higher at Other Institution - with dependants - greater than 12 months #######################
 
@@ -350,8 +350,8 @@ Feature: Calculation of condition codes for T4 General
             | Course start date      | 2016-01-03 |
             | Course end date        | 2017-01-03 |
         Then The Financial Status API provides the following results:
-            | partnerConditionCode | 4B |
-            | childConditionCode   | 1  |
+            | partnerConditionCode | 4C |
+            | childConditionCode   | 1B  |
 
 ################# Pre Sessional course at Other Institution - dependant only #######################
 
@@ -368,7 +368,7 @@ Feature: Calculation of condition codes for T4 General
             | Course end date        | 2016-10-10    |
         Then The Financial Status API provides the following results:
             | partnerConditionCode | 3 |
-            | childConditionCode   | 1 |
+            | childConditionCode   | 1B |
 
 ################# Main course below degree at Other Institution - dependant only #######################
 
@@ -385,4 +385,4 @@ Feature: Calculation of condition codes for T4 General
             | Course end date        | 2016-10-10   |
         Then The Financial Status API provides the following results:
             | partnerConditionCode | 3 |
-            | childConditionCode   | 1 |
+            | childConditionCode   | 1B |
