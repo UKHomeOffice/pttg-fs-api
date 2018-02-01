@@ -1,13 +1,14 @@
 package uk.gov.digital.ho.proving.financialstatus.domain
 
-import java.time.{LocalDate, Period}
+import java.time.{Clock, LocalDate, Period}
 
 import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.stereotype.Service
 import uk.gov.digital.ho.proving.financialstatus.api.CappedValues
 
 @Service
-class MaintenanceThresholdCalculatorT4 @Autowired()(@Value("${inner.london.accommodation.value}") val innerLondon: Int,
+class MaintenanceThresholdCalculatorT4 @Autowired()(val clock: Clock,
+                                                    @Value("${inner.london.accommodation.value}") val innerLondon: Int,
                                                     @Value("${non.inner.london.accommodation.value}") val nonInnerLondon: Int,
                                                     @Value("${maximum.accommodation.value}") val maxAccommodation: Int,
                                                     @Value("${inner.london.dependant.value}") val innerLondonDependants: Int,
@@ -49,7 +50,7 @@ class MaintenanceThresholdCalculatorT4 @Autowired()(@Value("${inner.london.accom
 
 
     val courseLengthInMonths = maintenancePeriod(courseStartDate, courseEndDate)
-    val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(courseStartDate, courseEndDate, originalCourseStartDate, isPreSessional)
+    val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(clock, courseStartDate, courseEndDate, originalCourseStartDate, isPreSessional)
     val leaveToRemainInMonths = maintenancePeriod(courseStartDate, leaveToRemain)
 
     val (courseLength, courseLengthCapped) = if (courseLengthInMonths > generalCappedCourseLength) {
@@ -92,7 +93,7 @@ class MaintenanceThresholdCalculatorT4 @Autowired()(@Value("${inner.london.accom
 
 
     val courseLengthInMonths = maintenancePeriod(courseStartDate, courseEndDate)
-    val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(courseStartDate, courseEndDate, originalCourseStartDate, false)
+    val leaveToRemain = LeaveToRemainCalculator.calculateLeaveToRemain(clock, courseStartDate, courseEndDate, originalCourseStartDate, preSessional = false)
     val leaveToRemainInMonths = maintenancePeriod(courseStartDate, leaveToRemain)
 
     val (courseLength, courseLengthCapped) = if (courseLengthInMonths > susoCappedCourseLength) {

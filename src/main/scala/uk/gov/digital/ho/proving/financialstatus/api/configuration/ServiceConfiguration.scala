@@ -1,7 +1,7 @@
 package uk.gov.digital.ho.proving.financialstatus.api.configuration
 
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.{Clock, LocalDate}
 
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.{ObjectMapper, SerializationFeature}
@@ -68,6 +68,9 @@ class ServiceConfiguration extends WebMvcConfigurationSupport {
   def customRestTemplate: RestTemplate = {
     new RestTemplate(customHttpRequestFactory)
   }
+
+  @Bean def clock: Clock = Clock.systemDefaultZone
+
 
   override def addResourceHandlers(registry: ResourceHandlerRegistry) {
     registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/")
