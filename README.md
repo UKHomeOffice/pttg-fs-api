@@ -8,4 +8,3 @@ GitLab - https://gitlab.digital.homeoffice.gov.uk/atodd/pttg-fs-barclays
 To run a local MongoDB to test auditing you can run something like the following:
 
 docker run --name mongo -p 27017:27017 -d mongo
-
