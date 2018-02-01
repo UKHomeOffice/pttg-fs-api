@@ -1,6 +1,6 @@
 package uk.gov.digital.ho.proving.financialstatus.domain
 
-import java.time.{LocalDate, Period}
+import java.time.{Clock, LocalDate, Period}
 
 object LeaveToRemainCalculator {
 
@@ -19,11 +19,14 @@ object LeaveToRemainCalculator {
 
   private def calculatePeriodInclusive(start: LocalDate, end: LocalDate) = calculatePeriod(start, end)
 
-  private def calculatePeriodExclusive(start: LocalDate, end: LocalDate) = calculatePeriod(start, end, false)
+  private def calculatePeriodExclusive(start: LocalDate, end: LocalDate) = calculatePeriod(start, end, inclusive = false)
 
 
-  def calculateLeaveToRemain(courseStartDate: Option[LocalDate], courseEndDate: Option[LocalDate],
-                             originalCourseStartDate: Option[LocalDate], preSessional: Boolean): Option[LocalDate] = {
+  def calculateLeaveToRemain(clock: Clock,
+                              courseStartDate: Option[LocalDate],
+                              courseEndDate: Option[LocalDate],
+                              originalCourseStartDate: Option[LocalDate],
+                              preSessional: Boolean): Option[LocalDate] = {
     for {
       start <- courseStartDate
       end <- courseEndDate
@@ -34,27 +37,48 @@ object LeaveToRemainCalculator {
         case None => start
       }
 
+      val considerationDate = LocalDate.now(clock)
+
+      val endDate = if (end.isBefore(considerationDate)) {
+                      considerationDate
+                    } else {
+                      end
+                    }
+
       val coursePeriod = calculatePeriodInclusive(startDate, end)
       println(s"coursePeriod: $coursePeriod")
 
       val wrapUpPeriod = calcWrapUpPeriod(coursePeriod, preSessional)
       println(s"wrapUpPeriod: $wrapUpPeriod")
-      end.plus(wrapUpPeriod)
+
+      endDate.plus(wrapUpPeriod)
     }
   }
 
-  def calculateLeaveToRemain(courseStartDate: LocalDate, courseEndDate: LocalDate,
-                             originalCourseStartDate: Option[LocalDate], preSessional: Boolean): LocalDate = {
+  def calculateLeaveToRemain(clock: Clock,
+                             courseStartDate: LocalDate,
+                              courseEndDate: LocalDate,
+                              originalCourseStartDate:
+                              Option[LocalDate], preSessional: Boolean): LocalDate = {
 
     val startDate = originalCourseStartDate match {
       case Some(originalStart) => originalStart
       case None => courseStartDate
     }
 
+    val considerationDate = LocalDate.now(clock)
+
+    val endDate = if (courseEndDate.isBefore(considerationDate)) {
+                    considerationDate
+                  } else {
+                    courseEndDate
+                  }
+
     val coursePeriod = calculatePeriodInclusive(startDate, courseEndDate)
 
     val wrapUpPeriod = calcWrapUpPeriod(coursePeriod, preSessional)
-    courseEndDate.plus(wrapUpPeriod)
+
+    endDate.plus(wrapUpPeriod)
   }
 
   def calculateFixedLeaveToRemain(courseEndDate: LocalDate, period: Period): LocalDate = {
