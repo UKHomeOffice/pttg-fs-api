@@ -42,26 +42,13 @@ pipeline:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
       - git clone https://github.com/UKHomeOffice/kube-pttg-fs-api.git
+      - echo "kube repo cloned, next step is deploy_to_dev to try to run the deploy.sh script"
     when:
       event: [push, deployment]
       branch: master
 
-  failure1:
-    image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
-    commands:
-      - echo "The build failed after predeploy"
-    when:
-      status: [failure]
-
-  success1:
-    image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
-    commands:
-      - echo "The build succeeded after predeploy"
-    when:
-      status: [success]
-
   deploy_to_dev:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.2
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-dev
@@ -69,28 +56,19 @@ pipeline:
       - VERSION=${DRONE_COMMIT_SHA}
       - KUBE_SERVER_DEV=https://kube-dev.dsp.notprod.homeoffice.gov.uk
     commands:
+      - echo "in deploy_to_dev, now cd to kube-pttg-fs-api"
+      - ls -la .
       - cd kube-pttg-fs-api
+      - ls -la .
+      - echo "no run the deploy.sh script"
+      - cat ./deploy.sh
       - ./deploy.sh
     when:
       event: push
       branch: master
 
-  success2:
-    image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
-    commands:
-      - echo "The build succeeded after deploy_to_dev"
-    when:
-      status: [success]
-
-  failure2:
-    image: quay.io/ukhomeofficedigital/openjdk8:v1.1.0
-    commands:
-      - echo "The build failed after deploy_to_dev"
-    when:
-      status: [failure]
-
   deploy_to_test:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.2
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-test
@@ -105,7 +83,7 @@ pipeline:
       environment: test
 
   deploy_to_preprod:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.2
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-preprod
@@ -120,7 +98,7 @@ pipeline:
       environment: preprod
 
   deploy_to_prod:
-    image: quay.io/ukhomeofficedigital/kd:v0.2.2
+    image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
       - KUBE_NAMESPACE=pt-i-prod
